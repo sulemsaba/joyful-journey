@@ -7,11 +7,17 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+<<<<<<< HEAD
   allowedDevOrigins: [
     "**.space-z.ai",
     "space-z.ai",
     "localhost",
   ],
+=======
+  turbopack: {
+    root: __dirname,
+  },
+>>>>>>> d6202a3 (this workded on my pc)
 };
 
 export default nextConfig;
