@@ -127,10 +127,10 @@ export function Navigation({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /** True when the header should be transparent (over hero, at scroll top, dark mode only).
-   *  In light mode the hero background is light enough that the header doesn't
-   *  need to be transparent — keep the default solid background. */
-  const headerOverHero = isHomePage && !scrolled && theme === "dark";
+  /** True when the header should be transparent (over hero, at scroll top).
+   *  In dark mode, forces the dark logo variant (light text on dark hero).
+   *  In light mode, forces the light logo variant (dark text on lighter hero). */
+  const headerOverHero = isHomePage && !scrolled;
   const primaryPhone = company.phones[0];
   const callHref = primaryPhone
     ? `tel:${primaryPhone.replace(/\s+/g, "")}`
@@ -230,7 +230,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className={cn("logo-light block h-11 w-auto", headerOverHero && "logo-force-dark")}
+              className={cn("logo-light block h-11 w-auto", headerOverHero && (theme === "dark" ? "logo-force-dark" : "logo-force-light"))}
             />
             <img
               src={brand.darkLogoSrc}
@@ -244,7 +244,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className={cn("logo-dark h-11 w-auto", headerOverHero && "logo-force-dark")}
+              className={cn("logo-dark h-11 w-auto", headerOverHero && (theme === "dark" ? "logo-force-dark" : "logo-force-light"))}
             />
           </a>
 
@@ -315,7 +315,7 @@ export function Navigation({
               className={cn(
                 "inline-flex xl:hidden items-center justify-center w-10 h-10 transition-colors duration-300",
                 headerOverHero
-                  ? "text-white"
+                  ? theme === "dark" ? "text-white" : "text-text"
                   : mobileMenuOpen
                     ? "text-accent-contrast"
                     : "text-text"
