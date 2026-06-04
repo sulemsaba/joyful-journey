@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Check, X, ArrowRight } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
 import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
@@ -13,8 +13,8 @@ type ServicePackagesSectionProps = {
 };
 
 /**
- * TestimonialCard — static card for the social proof wall.
- * No rotation, no auto-play. All testimonials visible at once.
+ * TestimonialCard — minimal, clean quote card.
+ * Shows the quote, star rating, and author only — no heavy card chrome.
  */
 const TestimonialCard = memo(function TestimonialCard({
   testimonial,
@@ -23,31 +23,24 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-full flex-col rounded-3xl border border-border-soft bg-surface p-6"
+      className="flex h-full flex-col py-6 px-1"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
-      <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
-        {testimonial.eyebrow}
-      </p>
-      <h3 className="mt-2 text-lg font-semibold leading-tight text-text">
-        {testimonial.headline}
-      </h3>
-      <p className="mt-2 text-sm text-text-muted line-clamp-2">
-        {testimonial.support}
-      </p>
-
-      <div className="mt-auto pt-5 border-t border-border-soft">
-        <p className="text-sm italic leading-relaxed text-text">
-          &ldquo;{testimonial.quote}&rdquo;
+      {testimonial.rating > 0 && (
+        <p className="text-star text-sm tracking-wider mb-3" aria-label={`${testimonial.rating} out of 5 stars`}>
+          {"★".repeat(Math.min(testimonial.rating, 5))}
         </p>
-        <div className="mt-3 flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-contrast">
-            {testimonial.initials}
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-text">{testimonial.name}</p>
-            <p className="text-xs text-text-muted">{testimonial.role}</p>
-          </div>
+      )}
+      <p className="text-[0.9375rem] leading-relaxed text-text-muted flex-1">
+        &ldquo;{testimonial.quote}&rdquo;
+      </p>
+      <div className="mt-4 flex items-center gap-2.5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
+          {testimonial.initials}
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-text">{testimonial.name}</p>
+          <p className="text-xs text-text-muted">{testimonial.role}</p>
         </div>
       </div>
     </article>
@@ -159,19 +152,16 @@ export function ServicePackagesSection({
         className="py-16 md:py-24"
       >
         <Container>
-          {/* ─── Social Proof Wall (Option B) ─── */}
+          {/* ─── Social Proof ─── */}
           {testimonials.length > 0 && (
             <div className="mb-12 md:mb-16">
-              <div className="grid gap-3 mb-6" data-reveal>
-                <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
-                  Client feedback
-                </p>
-                <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-tight tracking-tight text-text">
+              <div className="mb-8" data-reveal>
+                <h2 className="text-[clamp(1.25rem,2.5vw,1.75rem)] font-semibold leading-tight tracking-tight text-text">
                   What our clients say
                 </h2>
               </div>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {testimonials.map((testimonial) => (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-soft/60">
+                {testimonials.slice(0, 3).map((testimonial) => (
                   <TestimonialCard
                     key={testimonial.id}
                     testimonial={testimonial}

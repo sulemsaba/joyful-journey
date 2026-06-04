@@ -315,7 +315,7 @@ export function Navigation({
               className={cn(
                 "inline-flex xl:hidden items-center justify-center w-10 h-10 transition-colors duration-300",
                 headerOverHero
-                  ? theme === "dark" ? "text-white" : "text-text"
+                  ? "text-white"
                   : mobileMenuOpen
                     ? "text-accent-contrast"
                     : "text-text"
