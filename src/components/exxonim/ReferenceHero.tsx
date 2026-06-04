@@ -75,7 +75,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                 <a
                   href={cta.href}
                   className={cn(
-                    "group relative inline-flex h-14 items-center justify-center rounded-full bg-accent px-8 text-sm font-extrabold tracking-wide text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover",
+                    "group relative inline-flex h-14 items-center justify-center rounded-full bg-highlight px-8 text-sm font-extrabold tracking-wide text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-highlight-hover",
                     "animate-accent-pulse"
                   )}
                 >

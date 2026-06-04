@@ -271,7 +271,7 @@ function CTACard() {
       <div className="grid gap-3">
         <a
           href={routes.contact}
-          className="inline-flex items-center justify-center min-h-[3.25rem] gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+          className="inline-flex items-center justify-center min-h-[3.25rem] gap-2 rounded-full bg-highlight px-6 text-sm font-extrabold text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-highlight-hover"
         >
           Get compliance support
           <ArrowRightIcon className="h-4 w-4" />

@@ -260,13 +260,13 @@ export function Navigation({
                 Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
             <a
               href={callHref}
-              className="hidden md:inline-flex items-center gap-3 h-12 pl-3 pr-5 rounded-full bg-accent-soft hover:bg-accent-hover transition-all"
+              className="hidden md:inline-flex items-center gap-3 h-12 pl-3 pr-5 rounded-full bg-highlight-soft hover:bg-highlight-hover transition-all"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-contrast animate-phone-ring">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-highlight text-accent-contrast animate-phone-ring">
                 <Phone className="w-4 h-4" aria-hidden="true" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-accent">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-highlight">
                   {primaryPhone ? "Call Now" : `Contact ${brandName}`}
                 </span>
                 <span className="text-sm font-medium text-text">

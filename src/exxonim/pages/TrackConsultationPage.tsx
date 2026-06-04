@@ -661,7 +661,7 @@ export function TrackConsultationPage() {
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <a
-                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full bg-highlight text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-highlight-hover"
                 href={routes.contact}
               >
                 Request a Consultation
@@ -824,7 +824,7 @@ export function TrackConsultationPage() {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <a
-                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full bg-highlight text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-highlight-hover"
                 href={routes.contact}
               >
                 Request a Consultation

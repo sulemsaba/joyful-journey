@@ -251,8 +251,8 @@ export function MobileNavigationPanel({
               className={cn(
                 "flex items-center justify-center gap-2 h-11 rounded-full font-extrabold text-sm transition-all",
                 isActive(highlightLink.href)
-                  ? "bg-accent-hover text-accent-contrast ring-2 ring-accent/30"
-                  : "bg-accent text-accent-contrast hover:bg-accent-hover"
+                  ? "bg-highlight-hover text-accent-contrast ring-2 ring-highlight/30"
+                  : "bg-highlight text-accent-contrast hover:bg-highlight-hover"
               )}
             >
               <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -266,7 +266,7 @@ export function MobileNavigationPanel({
             <a
               href={callHref}
               onClick={onClose}
-              className="flex items-center justify-center gap-3 h-14 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all"
+              className="flex items-center justify-center gap-3 h-14 rounded-full bg-highlight text-accent-contrast hover:bg-highlight-hover transition-all"
             >
               <Phone className="w-5 h-5 animate-phone-ring" aria-hidden="true" />
               <span className="font-extrabold">

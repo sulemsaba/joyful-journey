@@ -19,9 +19,9 @@ export function WhatsAppButton({ phoneNumber }: WhatsAppButtonProps) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact via WhatsApp"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110"
+      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-border-soft bg-accent text-accent-contrast shadow-accent-glow transition-transform duration-150 ease-out hover:scale-110 hover:bg-accent-hover"
     >
-      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-whatsapp-pulse" />
+      <span className="absolute inset-0 rounded-full bg-accent/35 animate-whatsapp-pulse" />
       <MessageCircle className="relative h-6 w-6" aria-hidden="true" />
     </a>
   );

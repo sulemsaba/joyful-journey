@@ -145,7 +145,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
                   href={content.cta.href}
-                  className="inline-flex h-14 items-center justify-center rounded-full bg-accent px-8 text-sm font-extrabold tracking-wide text-accent-contrast transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                  className="inline-flex h-14 items-center justify-center rounded-full bg-highlight px-8 text-sm font-extrabold tracking-wide text-accent-contrast transition-all hover:-translate-y-0.5 hover:bg-highlight-hover"
                 >
                   {content.cta.label}
                 </a>
