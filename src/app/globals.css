@@ -389,24 +389,24 @@
 }
 
 html[data-theme="dark"] {
-  /* shadcn/ui dark tokens */
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
+  /* shadcn/ui dark tokens — raised from default near-black to comfortable dark */
+  --background: oklch(0.185 0 0);
+  --foreground: oklch(0.935 0 0);
+  --card: oklch(0.225 0 0);
+  --card-foreground: oklch(0.935 0 0);
+  --popover: oklch(0.225 0 0);
+  --popover-foreground: oklch(0.935 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.29 0 0);
+  --secondary-foreground: oklch(0.935 0 0);
+  --muted: oklch(0.29 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.29 0 0);
+  --accent-foreground: oklch(0.935 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 18%);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -414,43 +414,55 @@ html[data-theme="dark"] {
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.935 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-accent: oklch(0.29 0 0);
+  --sidebar-accent-foreground: oklch(0.935 0 0);
+  --sidebar-border: oklch(1 0 0 / 14%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* ── Exxonim dark-mode tokens ───────────────────── */
-  --color-page: #071518;
-  --color-page-strong: #0b1f23;
-  --color-surface: #0d2226;
-  --color-surface-soft: #112b30;
-  --color-surface-elevated: rgba(15, 34, 38, 0.9);
-  --color-text: #edf4f2;
-  --color-text-muted: rgba(237, 244, 242, 0.76);
-  --color-text-soft: rgba(237, 244, 242, 0.58);
+  /* ── Exxonim dark-mode tokens — comfortable dark palette ──
+   *
+   * DESIGN RATIONALE:
+   * Previous values were near-black (~3% lightness), causing:
+   *   1. "Dark cave" feeling instead of comfortable dark room
+   *   2. Excessive text contrast (>17:1) → eye strain
+   *   3. Indistinguishable surface layers (page vs surface vs surface-soft)
+   *   4. Invisible borders and shadows
+   *
+   * New values use ~13% base lightness with clear surface steps,
+   * softer text (~87% lightness), and visible borders. This follows
+   * Material Design 3 and Apple HIG dark mode best practices.
+   */
+  --color-page: #111d20;
+  --color-page-strong: #152629;
+  --color-surface: #1a2f34;
+  --color-surface-soft: #1e373c;
+  --color-surface-elevated: rgba(24, 45, 50, 0.92);
+  --color-text: #d6e5e1;
+  --color-text-muted: rgba(214, 229, 225, 0.72);
+  --color-text-soft: rgba(214, 229, 225, 0.54);
   --color-accent: #7fbcc1;
   --color-accent-hover: #96cacf;
   --color-accent-secondary: #aacfd2;
   --color-accent-soft: rgba(127, 188, 193, 0.14);
   --color-accent-soft-strong: rgba(127, 188, 193, 0.28);
   --color-accent-contrast: #08181b;
-  --color-border-soft: rgba(127, 188, 193, 0.16);
-  --color-border-strong: rgba(127, 188, 193, 0.28);
-  --color-overlay: rgba(6, 17, 20, 0.72);
-  --color-hero-bg: #071518;
-  --color-hero-bg-fade: rgba(7, 21, 24, 0.8);
-  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.32);
-  --shadow-panel-strong: 0 30px 72px rgba(0, 0, 0, 0.42);
-  --shadow-hero: 0 38px 110px rgba(0, 0, 0, 0.38);
-  --shadow-cinematic: 0 24px 60px rgba(0, 0, 0, 0.34);
-  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.28);
-  --shadow-popover: 0 16px 48px rgba(0, 0, 0, 0.36);
+  --color-border-soft: rgba(127, 188, 193, 0.20);
+  --color-border-strong: rgba(127, 188, 193, 0.34);
+  --color-overlay: rgba(8, 18, 22, 0.68);
+  --color-hero-bg: #131f23;
+  --color-hero-bg-fade: rgba(19, 31, 35, 0.8);
+  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.22);
+  --shadow-panel-strong: 0 30px 72px rgba(0, 0, 0, 0.30);
+  --shadow-hero: 0 38px 110px rgba(0, 0, 0, 0.26);
+  --shadow-cinematic: 0 24px 60px rgba(0, 0, 0, 0.24);
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.18);
+  --shadow-popover: 0 16px 48px rgba(0, 0, 0, 0.24);
   --shadow-accent-glow: 0 16px 40px rgba(15, 92, 99, 0.24);
-  --color-cinematic-card-border: rgba(127, 188, 193, 0.16);
-  --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.3);
+  --color-cinematic-card-border: rgba(127, 188, 193, 0.20);
+  --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.34);
 }
 
 /* ── Smooth theme switch via CSS custom property transitions

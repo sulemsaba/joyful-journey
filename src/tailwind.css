@@ -143,29 +143,29 @@
   --cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
 }
 html[data-theme="dark"] {
-  --color-page: #071518;
-  --color-page-strong: #0b1f23;
-  --color-surface: #0d2226;
-  --color-surface-soft: #112b30;
-  --color-surface-elevated: rgba(15, 34, 38, 0.9);
-  --color-text: #edf4f2;
-  --color-text-muted: rgba(237, 244, 242, 0.76);
-  --color-text-soft: rgba(237, 244, 242, 0.58);
+  --color-page: #111d20;
+  --color-page-strong: #152629;
+  --color-surface: #1a2f34;
+  --color-surface-soft: #1e373c;
+  --color-surface-elevated: rgba(24, 45, 50, 0.92);
+  --color-text: #d6e5e1;
+  --color-text-muted: rgba(214, 229, 225, 0.72);
+  --color-text-soft: rgba(214, 229, 225, 0.54);
   --color-accent: #7fbcc1;
   --color-accent-hover: #96cacf;
   --color-accent-secondary: #aacfd2;
   --color-accent-soft: rgba(127, 188, 193, 0.14);
   --color-accent-soft-strong: rgba(127, 188, 193, 0.28);
   --color-accent-contrast: #08181b;
-  --color-border-soft: rgba(127, 188, 193, 0.16);
-  --color-border-strong: rgba(127, 188, 193, 0.28);
-  --color-overlay: rgba(6, 17, 20, 0.72);
-  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.32);
-  --shadow-panel-strong: 0 30px 72px rgba(0, 0, 0, 0.42);
-  --shadow-hero: 0 38px 110px rgba(0, 0, 0, 0.38);
-  --shadow-cinematic: 0 24px 60px rgba(0, 0, 0, 0.34);
-  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.28);
-  --shadow-popover: 0 16px 48px rgba(0, 0, 0, 0.36);
-  --cinematic-card-border: rgba(127, 188, 193, 0.16);
-  --cinematic-card-hover-border: rgba(127, 188, 193, 0.3);
+  --color-border-soft: rgba(127, 188, 193, 0.20);
+  --color-border-strong: rgba(127, 188, 193, 0.34);
+  --color-overlay: rgba(8, 18, 22, 0.68);
+  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.22);
+  --shadow-panel-strong: 0 30px 72px rgba(0, 0, 0, 0.30);
+  --shadow-hero: 0 38px 110px rgba(0, 0, 0, 0.26);
+  --shadow-cinematic: 0 24px 60px rgba(0, 0, 0, 0.24);
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.18);
+  --shadow-popover: 0 16px 48px rgba(0, 0, 0, 0.24);
+  --cinematic-card-border: rgba(127, 188, 193, 0.20);
+  --cinematic-card-hover-border: rgba(127, 188, 193, 0.34);
 }

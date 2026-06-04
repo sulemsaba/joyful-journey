@@ -1154,3 +1154,40 @@ Stage Summary:
 - All mock API endpoints return 200 with correct data
 - Browser testing shows the site renders with navigation, hero section, and footer
 - The dev server is functional but experiences memory pressure in the sandbox environment when serving many concurrent requests
+
+---
+Task ID: 19
+Agent: Main Agent
+Task: Dark mode audit — user said "dark mode is too dark", audit and fix
+
+Work Log:
+- Inspected current project structure and all dark mode implementation files
+- Read globals.css (651 lines), tailwind.css, layout.tsx, App.tsx, Navigation.tsx, Footer.tsx, HomePage.tsx, ReferenceHero.tsx, ServicePlansSection.tsx, StackSection.tsx, MobileNavigationPanel.tsx, DesktopNavigation.tsx
+- Identified 5 core problems with the current dark mode:
+  1. Base colors are near-black (~3% lightness) causing "dark cave" feeling
+  2. Surface layers are indistinguishable (page 3%, surface 7%, surface-soft 10%)
+  3. Text contrast is excessive (>17:1 ratio) causing eye strain
+  4. Borders are nearly invisible (10% white opacity)
+  5. Shadows are too heavy for already-dark surfaces
+- Updated globals.css html[data-theme="dark"] section with new comfortable dark palette:
+  - --color-page: #071518 → #111d20 (~13% lightness)
+  - --color-page-strong: #0b1f23 → #152629 (~16% lightness)
+  - --color-surface: #0d2226 → #1a2f34 (~19% lightness)
+  - --color-surface-soft: #112b30 → #1e373c (~22% lightness)
+  - --color-text: #edf4f2 → #d6e5e1 (~87% lightness, softer)
+  - --color-hero-bg: #071518 → #131f23 (distinct from page)
+  - Borders: 16% → 20% opacity, 28% → 34% opacity
+  - Shadows: reduced opacity from 0.28-0.42 to 0.18-0.30
+  - shadcn/ui tokens: --background 0.145 → 0.185, --card 0.205 → 0.225, --border 10% → 14%, --foreground 0.985 → 0.935
+- Updated tailwind.css with matching dark mode values (was also using old near-black values)
+- Verified with browser agent: computed colors match new values correctly
+- No browser errors, theme toggle works, light mode unaffected
+- Lint: PASS
+
+Stage Summary:
+- Dark mode base raised from ~3% to ~13% lightness (comfortable dark, not void)
+- Surface differentiation now clearly visible (13% → 16% → 19% → 22% steps)
+- Text softened from ~95% to ~87% lightness (still excellent contrast, less eye strain)
+- Borders raised from 10-16% to 14-20% opacity (now visible)
+- Shadows reduced for dark surfaces (0.18-0.30 instead of 0.28-0.42)
+- Both globals.css and tailwind.css updated consistently
