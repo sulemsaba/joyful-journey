@@ -224,7 +224,7 @@ export function InsightsSection({
                         <div className="inline-flex min-w-0 items-center gap-2.5">
                           <span
                             aria-hidden="true"
-                            className="inline-flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-[0.78rem] font-bold tracking-wide text-text dark:from-accent/25 dark:to-accent/40 dark:text-accent-contrast"
+                            className="inline-flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-[0.78rem] font-bold tracking-wide text-text"
                           >
                             {getAuthorInitials(post.author.name)}
                           </span>

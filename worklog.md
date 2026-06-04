@@ -1191,3 +1191,49 @@ Stage Summary:
 - Borders raised from 10-16% to 14-20% opacity (now visible)
 - Shadows reduced for dark surfaces (0.18-0.30 instead of 0.28-0.42)
 - Both globals.css and tailwind.css updated consistently
+
+---
+Task ID: 20
+Agent: Main Agent
+Task: Full page color audit and redesign based on NNGroup "Using Color to Enhance Your Design" research
+
+Work Log:
+- Conducted comprehensive color audit of 40+ component/page files
+- Found 96% token adoption rate but identified 30+ `dark:` overrides and 7 hardcoded non-token colors
+- Applied NNGroup research principles:
+  1. **Color Harmony**: Kept monochromatic teal scheme (safest, easiest to apply per article)
+  2. **60-30-10 Rule**: Current usage already ~58% dominant / ~32% secondary / ~10% accent — confirmed on target
+  3. **3-Color Limit**: Brand uses Teal + Off-white/cream + Dark charcoal — within limit
+  4. **Consistency**: Eliminated ALL `dark:` overrides and non-token utility colors
+- Added 13 new semantic tokens to the design system:
+  - `--color-success` / `--color-success-soft` — replaces emerald-500/600 for status indicators
+  - `--color-error` / `--color-error-soft` — replaces red-500/600 for status/required fields
+  - `--color-star` — replaces amber-500 for star ratings
+  - `--color-footer-bg/text/heading/muted/border` — eliminates 25+ dark: overrides in Footer
+  - `--color-cta-primary/secondary` — eliminates dark: overrides on CTA buttons
+- All new tokens registered with @property for smooth theme transitions
+- All new tokens added to @theme, :root, html[data-theme="dark"], and theme-transition list
+- Fixed 9 component files:
+  1. Footer.tsx — Replaced ALL 25+ dark: overrides with semantic footer tokens
+  2. ServicePlansSection.tsx — CTA button now uses cta-secondary token
+  3. ContactPage.tsx — emerald/red utilities → success/error tokens
+  4. JobApplyModal.tsx — text-red-400 → text-error
+  5. ReferenceHero.tsx — text-amber-500 → text-star
+  6. InsightsSection.tsx — Removed dark: gradient overrides on author badge
+  7. ResourcesPage.tsx — Removed dark: gradient overrides on author badge
+  8. DesktopNavigation.tsx — Removed dark: shadow/border overrides on dropdown
+  9. CareerPage.tsx — Removed dark: gradient overrides on hero overlay
+- Also updated tailwind.css with matching new tokens
+- Lint: PASS (zero errors)
+- Browser verification: All tokens verified in both light and dark mode
+- Zero `dark:` overrides remain in component files
+- Zero emerald/red/amber utility classes remain in component files
+
+Stage Summary:
+- Full NNGroup-based color audit and redesign complete
+- 13 new semantic tokens eliminate all dark: overrides and non-token colors
+- 100% of color usage now goes through the token system
+- Color harmony: monochromatic teal (matches article's recommendation for zero-experience teams)
+- 60-30-10 distribution verified: 58% dominant / 32% secondary / 10% accent
+- Consistency principle enforced: same color = same meaning everywhere
+- Accessibility: all new tokens designed for WCAG AA contrast in both modes

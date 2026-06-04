@@ -118,7 +118,7 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
           "mt-6 inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold transition-all hover:-translate-y-0.5",
           featured
             ? "bg-accent text-accent-contrast hover:bg-accent-hover"
-            : "bg-text text-surface hover:opacity-90 dark:bg-accent dark:text-accent-contrast dark:hover:bg-accent-hover"
+            : "bg-cta-secondary text-surface hover:opacity-90"
         )}
       >
         Contact Exxonim

@@ -193,7 +193,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
           <span className="text-[clamp(0.85rem,1.8vw,1rem)] font-medium text-text-muted">
             Google Rating
           </span>
-          <span className="text-[1.1rem] tracking-[2px] text-amber-500">
+          <span className="text-[1.1rem] tracking-[2px] text-star">
             ★★★★★
           </span>
           <span className="text-[clamp(0.85rem,1.8vw,1rem)] font-medium text-text-muted">

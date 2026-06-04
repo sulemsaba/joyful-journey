@@ -229,7 +229,7 @@ function renderAuthor(post: BlogPost) {
         <img className="w-8 h-8 rounded-full object-cover" src={post.author.avatarSrc} alt={post.author.name} loading="lazy" />
       ) : (
         <span
-          className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-[0.75rem] font-bold text-text dark:from-accent/25 dark:to-accent/40 dark:text-accent-contrast"
+          className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-[0.75rem] font-bold text-text"
           aria-hidden="true"
         >
           {getAuthorInitials(post.author.name)}

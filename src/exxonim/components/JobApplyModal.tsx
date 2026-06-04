@@ -136,7 +136,7 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                         htmlFor="apply-name"
                         className="text-sm font-semibold text-text"
                       >
-                        Full name <span className="text-red-400">*</span>
+                        Full name <span className="text-error">*</span>
                       </label>
                       <input
                         id="apply-name"
@@ -155,7 +155,7 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                         htmlFor="apply-email"
                         className="text-sm font-semibold text-text"
                       >
-                        Email <span className="text-red-400">*</span>
+                        Email <span className="text-error">*</span>
                       </label>
                       <input
                         id="apply-email"

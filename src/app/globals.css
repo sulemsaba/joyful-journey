@@ -33,6 +33,18 @@
 @property --color-hero-bg-fade { syntax: '<color>'; inherits: true; initial-value: rgba(228, 240, 242, 0.8); }
 @property --color-cinematic-card-border { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, 0.54); }
 @property --color-cinematic-card-hover-border { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.28); }
+@property --color-success { syntax: '<color>'; inherits: true; initial-value: #0f8a5f; }
+@property --color-success-soft { syntax: '<color>'; inherits: true; initial-value: rgba(15, 138, 95, 0.10); }
+@property --color-error { syntax: '<color>'; inherits: true; initial-value: #c4372f; }
+@property --color-error-soft { syntax: '<color>'; inherits: true; initial-value: rgba(196, 55, 47, 0.10); }
+@property --color-star { syntax: '<color>'; inherits: true; initial-value: #d4930d; }
+@property --color-footer-bg { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+@property --color-footer-text { syntax: '<color>'; inherits: true; initial-value: rgba(247, 251, 251, 0.70); }
+@property --color-footer-text-muted { syntax: '<color>'; inherits: true; initial-value: rgba(247, 251, 251, 0.50); }
+@property --color-footer-heading { syntax: '<color>'; inherits: true; initial-value: rgba(247, 251, 251, 0.90); }
+@property --color-footer-border { syntax: '<color>'; inherits: true; initial-value: rgba(247, 251, 251, 0.12); }
+@property --color-cta-primary { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+@property --color-cta-secondary { syntax: '<color>'; inherits: true; initial-value: #102529; }
 
 /* shadcn/ui color tokens — registered for smooth transitions */
 @property --background { syntax: '<color>'; inherits: true; initial-value: oklch(1 0 0); }
@@ -128,6 +140,18 @@
   --color-hero-bg-fade: rgba(228, 240, 242, 0.8);
   --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
+  --color-success: #0f8a5f;
+  --color-success-soft: rgba(15, 138, 95, 0.10);
+  --color-error: #c4372f;
+  --color-error-soft: rgba(196, 55, 47, 0.10);
+  --color-star: #d4930d;
+  --color-footer-bg: #0f5c63;
+  --color-footer-text: rgba(247, 251, 251, 0.70);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+  --color-footer-heading: rgba(247, 251, 251, 0.90);
+  --color-footer-border: rgba(247, 251, 251, 0.12);
+  --color-cta-primary: #0f5c63;
+  --color-cta-secondary: #102529;
 
   --shadow-panel: 0 24px 60px rgba(8, 31, 35, 0.1);
   --shadow-panel-strong: 0 30px 72px rgba(8, 31, 35, 0.14);
@@ -386,6 +410,18 @@
   --shadow-accent-glow: 0 16px 40px rgba(15, 92, 99, 0.24);
   --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
+  --color-success: #0f8a5f;
+  --color-success-soft: rgba(15, 138, 95, 0.10);
+  --color-error: #c4372f;
+  --color-error-soft: rgba(196, 55, 47, 0.10);
+  --color-star: #d4930d;
+  --color-footer-bg: #0f5c63;
+  --color-footer-text: rgba(247, 251, 251, 0.70);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+  --color-footer-heading: rgba(247, 251, 251, 0.90);
+  --color-footer-border: rgba(247, 251, 251, 0.12);
+  --color-cta-primary: #0f5c63;
+  --color-cta-secondary: #102529;
 }
 
 html[data-theme="dark"] {
@@ -463,6 +499,18 @@ html[data-theme="dark"] {
   --shadow-accent-glow: 0 16px 40px rgba(15, 92, 99, 0.24);
   --color-cinematic-card-border: rgba(127, 188, 193, 0.20);
   --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.34);
+  --color-success: #34d399;
+  --color-success-soft: rgba(52, 211, 153, 0.14);
+  --color-error: #f87171;
+  --color-error-soft: rgba(248, 113, 113, 0.14);
+  --color-star: #fbbf24;
+  --color-footer-bg: #152629;
+  --color-footer-text: rgba(214, 229, 225, 0.70);
+  --color-footer-text-muted: rgba(214, 229, 225, 0.50);
+  --color-footer-heading: #d6e5e1;
+  --color-footer-border: rgba(127, 188, 193, 0.16);
+  --color-cta-primary: #7fbcc1;
+  --color-cta-secondary: #7fbcc1;
 }
 
 /* ── Smooth theme switch via CSS custom property transitions
@@ -512,6 +560,18 @@ html.theme-transition {
     --color-hero-bg-fade 0.4s ease,
     --color-cinematic-card-border 0.4s ease,
     --color-cinematic-card-hover-border 0.4s ease,
+    --color-success 0.4s ease,
+    --color-success-soft 0.4s ease,
+    --color-error 0.4s ease,
+    --color-error-soft 0.4s ease,
+    --color-star 0.4s ease,
+    --color-footer-bg 0.4s ease,
+    --color-footer-text 0.4s ease,
+    --color-footer-text-muted 0.4s ease,
+    --color-footer-heading 0.4s ease,
+    --color-footer-border 0.4s ease,
+    --color-cta-primary 0.4s ease,
+    --color-cta-secondary 0.4s ease,
     /* shadcn/ui tokens */
     --background 0.4s ease,
     --foreground 0.4s ease,

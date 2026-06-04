@@ -736,7 +736,7 @@ export function CareerPage() {
                   alt="Exxonim Consult — Career opportunities"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/90 via-accent/75 to-accent/50 dark:from-page/95 dark:via-page/80 dark:to-page/55" />
+                <div className="absolute inset-0 bg-gradient-to-r from-page/95 via-page/80 to-page/55" />
                 <div className="relative z-10 flex items-center h-full px-5 sm:px-8">
                   <div className="flex items-center gap-4 sm:gap-5 flex-1">
                     <div>

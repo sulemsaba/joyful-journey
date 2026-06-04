@@ -260,10 +260,10 @@ export function ContactPage() {
                         <span className="font-semibold text-text text-xs uppercase tracking-wider">Hours</span>
                         <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-1.5 py-0.5 rounded-full ${
                           hours.isOpen
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                            : "bg-red-500/10 text-red-600 dark:text-red-400"
+                            ? "bg-success-soft text-success"
+                            : "bg-error-soft text-error"
                         }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${hours.isOpen ? "bg-emerald-500" : "bg-red-500"}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${hours.isOpen ? "bg-success" : "bg-error"}`} />
                           {hours.label}
                         </span>
                       </div>
