@@ -324,7 +324,7 @@ function RelatedArticleCard({ post: relatedPost }: { post: BlogPost }) {
     <a
       href={resourceArticlePath(relatedPost.slug)}
       className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50
-                 hover:bg-surface-elevated hover:border-accent/30 hover:shadow-md
+                 hover:bg-surface-elevated hover:border-accent/30
                  transition-all duration-300"
     >
       {/* LEFT: Full-height image */}
@@ -387,7 +387,7 @@ function BottomCTABanner() {
               href={routes.contact}
               className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-accent
                          text-accent-contrast font-semibold text-xs sm:text-sm hover:bg-accent-hover
-                         transition-all duration-200 hover:shadow-lg"
+                         transition-all duration-200"
             >
               Contact Us
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

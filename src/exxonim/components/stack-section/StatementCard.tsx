@@ -31,7 +31,7 @@ export function StatementCard({
         <div className="flex items-center gap-3 flex-wrap mt-4">
           <a
             href={item.ctaHref || "/contact/"}
-            className="inline-flex items-center justify-center min-h-[3rem] px-6 py-3 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+            className="inline-flex h-12 items-center justify-center px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5"
           >
             {item.ctaLabel || "Contact Exxonim"}
             <span className="ml-2">→</span>

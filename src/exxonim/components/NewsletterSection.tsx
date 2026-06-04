@@ -82,7 +82,7 @@ export function NewsletterSection() {
                 </div>
                 <button
                   type="submit"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-colors hover:bg-accent-hover"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                   aria-label="Subscribe to newsletter"
                 >
                   Subscribe
@@ -152,7 +152,7 @@ export function NewsletterSection() {
                   </div>
                   <button
                     type="submit"
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast shadow-button transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                     aria-label="Subscribe to newsletter"
                   >
                     Subscribe

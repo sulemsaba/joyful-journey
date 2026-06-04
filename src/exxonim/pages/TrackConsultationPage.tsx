@@ -523,13 +523,13 @@ function TrackingNotFound({ id }: { id: string }) {
       <div className="flex flex-wrap gap-3 justify-center pt-1">
         <a
           href={routes.contact}
-          className="inline-flex items-center justify-center min-h-[2.75rem] px-5 rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover"
+          className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
         >
           Contact Exxonim
         </a>
         <a
           href={routes.support}
-          className="inline-flex items-center justify-center min-h-[2.75rem] px-5 rounded-full border border-border-soft bg-surface text-text text-sm font-extrabold transition-all hover:bg-accent-soft"
+          className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
         >
           Get Support
         </a>
@@ -556,7 +556,7 @@ function TrackingVisual() {
       {/* Center pulsing dot */}
       <div className="relative flex items-center justify-center">
         <span className="absolute w-16 h-16 rounded-full bg-accent/10 animate-ping" />
-        <span className="relative w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-accent-glow">
+        <span className="relative w-10 h-10 rounded-full bg-accent flex items-center justify-center">
           <svg className="w-5 h-5 text-accent-contrast" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -661,13 +661,13 @@ export function TrackConsultationPage() {
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <a
-                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                 href={routes.contact}
               >
                 Request a Consultation
               </a>
               <a
-                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full border border-border-soft bg-surface/60 backdrop-blur text-text text-sm font-extrabold transition-all hover:-translate-y-0.5 hover:bg-accent-soft"
+                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
                 href={routes.services}
               >
                 View All Services
@@ -677,7 +677,7 @@ export function TrackConsultationPage() {
 
           {/* Tracking lookup card */}
           <div className="relative">
-            <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-8 grid gap-5 shadow-button">
+            <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-8 grid gap-5">
               <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
                 Look up your consultation
               </span>
@@ -700,7 +700,7 @@ export function TrackConsultationPage() {
                 <button
                   type="submit"
                   disabled={isSearching || !trackingId.trim()}
-                  className="w-full inline-flex items-center justify-center min-h-[2.75rem] rounded-xl bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full inline-flex h-12 items-center justify-center rounded-xl px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   {isSearching ? (
                     <span className="inline-flex items-center gap-2">
@@ -824,13 +824,13 @@ export function TrackConsultationPage() {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <a
-                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                 href={routes.contact}
               >
                 Request a Consultation
               </a>
               <a
-                className="inline-flex items-center justify-center min-h-[3.25rem] px-6 rounded-full border border-border-soft bg-surface/70 text-text text-sm font-extrabold transition-all hover:-translate-y-0.5 hover:bg-accent-soft"
+                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
                 href={routes.services}
               >
                 Explore All Services

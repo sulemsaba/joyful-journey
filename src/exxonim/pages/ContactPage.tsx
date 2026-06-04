@@ -290,7 +290,7 @@ export function ContactPage() {
 
               {/* ── Right column: Form card ── */}
               <div
-                className="bg-surface border border-border-soft rounded-2xl p-5 sm:p-8 lg:p-10 shadow-card"
+                className="bg-surface border border-border-soft rounded-2xl p-5 sm:p-8 lg:p-10"
                 id="contact-form"
               >
                 {submissionResult ? (
@@ -450,7 +450,7 @@ export function ContactPage() {
                     <button
                       type="submit"
                       disabled={!canSubmit}
-                      className="w-full inline-flex items-center justify-center min-h-[2.75rem] sm:min-h-[3rem] px-6 py-2.5 sm:py-3 rounded-xl bg-accent text-accent-contrast font-bold text-sm transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                      className="w-full inline-flex h-12 items-center justify-center rounded-xl px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                     >
                       {submissionMutation.isPending ? "Sending request..." : "Submit request"}
                     </button>

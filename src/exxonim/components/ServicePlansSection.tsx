@@ -53,7 +53,7 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
       className={cn(
         "flex h-full flex-col rounded-3xl border p-7 transition-all",
         featured
-          ? "border-transparent bg-text text-surface shadow-card"
+          ? "border-transparent bg-text text-surface"
           : "border-border-soft bg-surface"
       )}
       aria-label={`${plan.name} service package`}

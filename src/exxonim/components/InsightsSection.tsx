@@ -200,7 +200,7 @@ export function InsightsSection({
               return (
                 <article
                   key={post.slug}
-                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-[30px] border border-border-soft bg-surface shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-border-strong hover:shadow-card [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(84vw,360px)] max-sm:rounded-[24px]"
+                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-[30px] border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(84vw,360px)] max-sm:rounded-[24px]"
                 >
                   <div
                     className="relative isolate aspect-[16/10] overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-30% after:to-overlay/50 bg-[radial-gradient(circle_at_top_right,var(--color-accent-soft-strong),transparent_48%),linear-gradient(160deg,var(--color-page-strong),var(--color-accent-soft-strong))]"

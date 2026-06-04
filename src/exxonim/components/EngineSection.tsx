@@ -42,7 +42,7 @@ export function EngineSection({ content }: EngineSectionProps) {
           {serviceGroups.map((group, groupIndex) => (
             <article
               key={group.title}
-              className={`grid gap-5 p-6 md:p-8 rounded-[22px] border border-border-soft bg-surface/88 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 [transition-delay:calc(var(--stagger-ms)*1ms)] ${
+              className={`grid gap-5 p-6 md:p-8 rounded-[22px] border border-border-soft bg-surface/88 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 [transition-delay:calc(var(--stagger-ms)*1ms)] ${
                 staggerDelayClasses[groupIndex] ?? staggerDelayClasses[staggerDelayClasses.length - 1]
               }`}
             >

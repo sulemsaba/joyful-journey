@@ -23,7 +23,7 @@ export function WhatsAppButton({ phoneNumber, className }: WhatsAppButtonProps) 
         // Appearance
         "rounded-full border border-border-soft bg-accent text-accent-contrast",
         // Effects
-        "shadow-accent-glow transition-transform duration-150 ease-out hover:scale-110 hover:bg-accent-hover",
+        "transition-transform duration-150 ease-out hover:scale-110 hover:bg-accent-hover",
         className,
       )}
     >

@@ -66,7 +66,7 @@ export function AboutPage() {
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {content.support_profiles.map((profile) => (
-                    <article key={profile.title} className="p-6 rounded-2xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-panel">
+                    <article key={profile.title} className="p-6 rounded-2xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1">
                       <strong className="text-xl font-bold text-text">{profile.title}</strong>
                       <p className="mt-3 text-text-muted leading-relaxed">{profile.description}</p>
                     </article>
@@ -84,7 +84,7 @@ export function AboutPage() {
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {content.service_scope.map((service) => (
-                    <article key={service.title} className="p-6 rounded-2xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-panel">
+                    <article key={service.title} className="p-6 rounded-2xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1">
                       <strong className="text-xl font-bold text-text">{service.title}</strong>
                       <p className="mt-3 text-text-muted leading-relaxed">{service.description}</p>
                     </article>
@@ -138,13 +138,13 @@ export function AboutPage() {
                 <p className="text-text-muted max-w-2xl mx-auto mb-8">{content.cta.description}</p>
                 <div className="flex flex-wrap justify-center gap-4">
                   <a
-                    className="inline-flex items-center justify-center min-h-[3.25rem] px-7 py-3 rounded-full bg-accent text-accent-contrast font-bold shadow-panel transition-all hover:bg-accent-hover hover:-translate-y-0.5"
+                    className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                     href={content.cta.primary.href}
                   >
                     {content.cta.primary.label}
                   </a>
                   <a
-                    className="inline-flex items-center justify-center min-h-[3.25rem] px-7 py-3 rounded-full border border-border-soft bg-surface/80 text-text font-bold transition-all hover:bg-surface"
+                    className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
                     href={content.cta.secondary.href}
                   >
                     {content.cta.secondary.label}

@@ -27,7 +27,7 @@ export function ThemeToggle({
     >
       <span
         className={cn(
-          "absolute top-1 w-5 h-5 rounded-full bg-surface shadow-md transition-transform duration-300 flex items-center justify-center",
+          "absolute top-1 w-5 h-5 rounded-full bg-surface transition-transform duration-300 flex items-center justify-center",
           theme === "dark" ? "translate-x-2.5" : "-translate-x-2.5"
         )}
         aria-hidden="true"

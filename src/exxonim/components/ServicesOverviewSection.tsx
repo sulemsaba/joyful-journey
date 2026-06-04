@@ -29,7 +29,7 @@ export function ServicesOverviewSection({
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10 grid gap-5">
           {/* Hero Section */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 items-stretch">
-            <article className="rounded-[2rem] p-6 border border-border-soft bg-surface/82 shadow-panel" data-reveal>
+            <article className="rounded-[2rem] p-6 border border-border-soft bg-surface/82" data-reveal>
               <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
                 {content.eyebrow}
               </p>
@@ -42,13 +42,13 @@ export function ServicesOverviewSection({
 
               <div className="flex flex-wrap gap-3 mt-6">
                 <a
-                  className="inline-flex items-center justify-center min-h-[3.65rem] px-6 py-4 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                  className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                   href="#packages"
                 >
                   See package plans
                 </a>
                 <a
-                  className="inline-flex items-center justify-center min-h-[3.65rem] px-6 py-4 rounded-full border border-border-soft bg-surface/80 text-text text-sm font-extrabold transition-all hover:-translate-y-0.5 hover:bg-surface/80"
+                  className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
                   href={routes.contact}
                 >
                   Contact Exxonim
@@ -57,7 +57,7 @@ export function ServicesOverviewSection({
             </article>
 
             <aside
-              className="relative overflow-hidden rounded-[2rem] p-6 border border-border-soft grid gap-4 content-start bg-gradient-to-b from-accent/10 to-accent/90 text-accent-contrast shadow-panel"
+              className="relative overflow-hidden rounded-[2rem] p-6 border border-border-soft grid gap-4 content-start bg-gradient-to-b from-accent/10 to-accent/90 text-accent-contrast"
               data-reveal
             >
               <div className="pointer-events-none absolute -bottom-[28%] -right-[12%] w-56 h-56 rounded-full bg-accent-secondary/20 blur-2xl" aria-hidden="true" />
@@ -90,7 +90,7 @@ export function ServicesOverviewSection({
             {serviceNavGroups.map((group) => (
               <a
                 key={group.title}
-                className="grid gap-3 p-5 rounded-[1.6rem] border border-border-soft bg-surface/82 shadow-panel text-inherit no-underline transition-all hover:-translate-y-1 hover:border-border-strong"
+                className="grid gap-3 p-5 rounded-[1.6rem] border border-border-soft bg-surface/82 text-inherit no-underline transition-all hover:-translate-y-1 hover:border-border-strong"
                 href={group.href}
                 data-reveal
               >
@@ -115,7 +115,7 @@ export function ServicesOverviewSection({
 
           {/* Flow Section */}
           <div className="grid grid-cols-1 lg:grid-cols-[0.82fr_1.18fr] gap-4 items-start">
-            <article className="p-5 rounded-[1.8rem] border border-border-soft bg-surface/82 shadow-panel grid gap-4" data-reveal>
+            <article className="p-5 rounded-[1.8rem] border border-border-soft bg-surface/82 grid gap-4" data-reveal>
               <p className="m-0 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">How the work moves</p>
               <h2 className="m-0 text-[clamp(2rem,3vw,3rem)] leading-none tracking-[-0.05em] text-text">Less friction. Better preparation. Clearer follow-through.</h2>
               <p className="m-0 text-text-muted leading-relaxed">
@@ -141,7 +141,7 @@ export function ServicesOverviewSection({
               {serviceFlow.map((item) => (
                 <article
                   key={item.step}
-                  className="p-5 rounded-[1.5rem] border border-border-soft bg-surface/82 shadow-panel grid gap-3 content-start"
+                  className="p-5 rounded-[1.5rem] border border-border-soft bg-surface/82 grid gap-3 content-start"
                   data-reveal
                 >
                   <span className="inline-flex items-center justify-center w-fit min-h-[2rem] px-3 rounded-full bg-accent-soft text-accent text-[0.78rem] font-extrabold tracking-[0.14em]">

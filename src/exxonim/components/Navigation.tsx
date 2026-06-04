@@ -198,10 +198,10 @@ export function Navigation({
     <>
       <header
         className={cn(
-          "fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,border-color,backdrop-filter] duration-300",
+          "fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
           headerOverHero
-            ? "bg-transparent border-b-0"
-            : "bg-page/95 backdrop-blur-xl border-b border-border-soft/50"
+            ? "bg-transparent"
+            : "bg-page/95 backdrop-blur-xl"
         )}
       >
         {/* Layout: flex on mobile (logo left, actions right), grid on xl+ (logo left, nav centered, actions right) */}

@@ -63,7 +63,7 @@ function ContentPage({
                 <div className="flex flex-wrap gap-4">
                   {nextStep.primary_action ? (
                     <a
-                      className="inline-flex items-center justify-center min-h-[3.25rem] px-6 py-3 rounded-full bg-accent text-accent-contrast font-bold shadow-panel transition-all hover:bg-accent-hover hover:-translate-y-0.5"
+                      className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                       href={nextStep.primary_action.href}
                     >
                       {nextStep.primary_action.label}
@@ -71,7 +71,7 @@ function ContentPage({
                   ) : null}
                   {nextStep.secondary_action ? (
                     <a
-                      className="inline-flex items-center justify-center min-h-[3.25rem] px-6 py-3 rounded-full border border-border-soft bg-surface/80 text-text font-bold transition-all hover:bg-surface"
+                      className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
                       href={nextStep.secondary_action.href}
                     >
                       {nextStep.secondary_action.label}

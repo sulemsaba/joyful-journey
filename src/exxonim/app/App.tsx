@@ -190,7 +190,7 @@ export function App({ initialPathname }: AppProps) {
 
         <a
           href="#top"
-          className="pointer-events-none opacity-0 focus:pointer-events-auto focus:opacity-100 fixed left-4 top-2 z-[100] inline-flex h-12 items-center rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast shadow-accent-glow transition-all focus:outline-2 focus:outline-accent"
+          className="pointer-events-none opacity-0 focus:pointer-events-auto focus:opacity-100 fixed left-4 top-2 z-[100] inline-flex h-12 items-center rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all focus:outline-2 focus:outline-accent"
         >
           Skip to content
         </a>

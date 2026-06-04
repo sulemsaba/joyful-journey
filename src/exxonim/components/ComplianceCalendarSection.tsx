@@ -234,7 +234,7 @@ function ReminderBadge() {
 
 function CTACard() {
   return (
-    <div className="rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-8 shadow-panel grid gap-5 content-start">
+    <div className="rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-8 grid gap-5 content-start">
       {/* Icon + heading */}
       <div className="flex items-start gap-3">
         <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent-soft text-accent flex-shrink-0">
@@ -271,14 +271,14 @@ function CTACard() {
       <div className="grid gap-3">
         <a
           href={routes.contact}
-          className="inline-flex items-center justify-center min-h-[3.25rem] gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
         >
           Get compliance support
           <ArrowRightIcon className="h-4 w-4" />
         </a>
         <a
           href={routes.trackConsultation}
-          className="inline-flex items-center justify-center min-h-[3.25rem] gap-2 rounded-full border border-border-soft bg-surface/80 px-6 text-sm font-extrabold text-text transition-all hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border-soft bg-surface/80 px-6 text-sm font-extrabold text-text transition-all hover:bg-surface hover:-translate-y-0.5"
         >
           Track your consultation
           <ArrowRightIcon className="h-4 w-4" />

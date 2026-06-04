@@ -145,7 +145,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
                   href={content.cta.href}
-                  className="inline-flex h-14 items-center justify-center rounded-full bg-accent px-8 text-sm font-extrabold tracking-wide text-accent-contrast transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                  className="inline-flex h-12 items-center justify-center rounded-full px-8 text-sm font-extrabold tracking-wide bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                 >
                   {content.cta.label}
                 </a>
@@ -153,8 +153,8 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                   <a
                     href={content.secondary_cta.href}
                     className={cn(
-                      "inline-flex h-14 items-center justify-center rounded-full px-8 text-sm font-extrabold tracking-wide transition-all hover:-translate-y-0.5",
-                      "border border-border-soft bg-surface/80 text-text hover:border-border-strong hover:bg-surface",
+                      "inline-flex h-12 items-center justify-center rounded-full px-8 text-sm font-extrabold tracking-wide transition-all hover:-translate-y-0.5",
+                      "border border-border-soft bg-surface/80 text-text hover:bg-surface",
                     )}
                   >
                     {content.secondary_cta.label}

@@ -80,7 +80,7 @@ const navLinkActive = "bg-accent-soft text-accent";
 /** Shared dropdown card classes — both menus have same width, radius, and min-height */
 const dropdownCardBase =
   "relative overflow-visible w-[620px] rounded-2xl border p-5 min-h-[250px] " +
-  "bg-surface border-border-soft shadow-panel";
+  "bg-surface border-border-soft";
 
 export function DesktopNavigation({
   brandName,

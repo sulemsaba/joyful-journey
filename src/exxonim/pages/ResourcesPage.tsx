@@ -253,7 +253,7 @@ function renderGridCard(post: BlogPost) {
   if (categoryLabel) metaParts.push(categoryLabel);
 
   return (
-    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[24px] border border-border-soft bg-surface shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-border-strong hover:shadow-card">
+    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[24px] border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong">
       <div className="relative isolate aspect-[16/10] overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-30% after:to-overlay/50 bg-[radial-gradient(circle_at_top_right,var(--color-accent-soft-strong),transparent_48%),linear-gradient(160deg,var(--color-page-strong),var(--color-accent-soft-strong))]">
         {renderCardMedia(post, categoryLabel)}
       </div>
@@ -319,7 +319,7 @@ function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min`);
 
   return (
-    <a href={articleLink} className="group flex gap-3.5 p-3 rounded-xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-panel">
+    <a href={articleLink} className="group flex gap-3.5 p-3 rounded-xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-0.5">
       <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0">
         <img className="w-full h-full object-cover" src={thumbnailSrc} alt={post.coverAlt ?? post.title} loading="lazy" />
       </div>
@@ -386,7 +386,7 @@ function SortToggle({
         aria-checked={sortMode === "latest"}
         className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
           sortMode === "latest"
-            ? "bg-accent text-accent-contrast shadow-sm"
+            ? "bg-accent text-accent-contrast"
             : "text-text-muted hover:text-text"
         }`}
         onClick={() => onChange("latest")}
@@ -399,7 +399,7 @@ function SortToggle({
         aria-checked={sortMode === "popular"}
         className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
           sortMode === "popular"
-            ? "bg-accent text-accent-contrast shadow-sm"
+            ? "bg-accent text-accent-contrast"
             : "text-text-muted hover:text-text"
         }`}
         onClick={() => onChange("popular")}
@@ -477,7 +477,7 @@ function EmptySearchState({ searchQuery, onClear }: { searchQuery: string; onCle
       <button
         type="button"
         onClick={onClear}
-        className="mt-5 inline-flex items-center justify-center min-h-[2.75rem] px-6 rounded-full bg-accent text-accent-contrast font-bold text-sm transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+        className="mt-5 inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
       >
         Clear search
       </button>
@@ -651,7 +651,7 @@ export function ResourcesPage() {
                   {/* Hero post */}
                   <a
                     href={resourceArticlePath(heroPost!.slug)}
-                    className="group block rounded-[24px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1 hover:shadow-card"
+                    className="group block rounded-[24px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1"
                   >
                     <div className="aspect-[16/9] overflow-hidden">
                       <img
@@ -744,7 +744,7 @@ export function ResourcesPage() {
                 <div className="flex justify-center mt-10">
                   <button
                     type="button"
-                    className="inline-flex items-center justify-center min-h-[3rem] px-8 py-2.5 rounded-full bg-accent text-accent-contrast font-bold text-sm transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                    className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                     onClick={() =>
                       setVisibleCount((currentCount) => currentCount + INITIAL_VISIBLE_COUNT)
                     }

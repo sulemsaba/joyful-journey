@@ -12,7 +12,7 @@ function CardLight({
   paragraph: string;
 }) {
   return (
-    <div className="w-[188px] min-h-[412px] rounded-3xl overflow-hidden border border-border-soft shadow-panel p-4 pb-5 bg-surface text-text max-lg:w-[160px] max-lg:min-h-[360px]">
+    <div className="w-[188px] min-h-[412px] rounded-3xl overflow-hidden border border-border-soft p-4 pb-5 bg-surface text-text max-lg:w-[160px] max-lg:min-h-[360px]">
       <div className="w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-4" />
       <div className="text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
       <div className="mt-3 text-[0.72rem] leading-relaxed opacity-70">{small}</div>
@@ -34,7 +34,7 @@ function CardDark({
   items: string[];
 }) {
   return (
-    <div className="w-[198px] min-h-[432px] rounded-3xl overflow-hidden border border-border-soft shadow-panel p-4 pb-5 bg-surface-elevated text-text max-lg:w-[170px] max-lg:min-h-[380px]">
+    <div className="w-[198px] min-h-[432px] rounded-3xl overflow-hidden border border-border-soft p-4 pb-5 bg-surface-elevated text-text max-lg:w-[170px] max-lg:min-h-[380px]">
       <div className="w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-4" />
       <div className="text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
       <div className="w-full h-px bg-current opacity-[0.12] my-4" />
@@ -60,7 +60,7 @@ function CardNarrow({
   copy: string;
 }) {
   return (
-    <div className="w-[116px] min-h-[430px] rounded-3xl overflow-hidden border border-border-soft shadow-panel p-3.5 pb-4 bg-surface-elevated text-text max-lg:w-[100px] max-lg:min-h-[380px]">
+    <div className="w-[116px] min-h-[430px] rounded-3xl overflow-hidden border border-border-soft p-3.5 pb-4 bg-surface-elevated text-text max-lg:w-[100px] max-lg:min-h-[380px]">
       <div className="w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-4" />
       <div className="text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
       <div className="mt-4 text-[0.9rem] leading-tight font-bold">{title}</div>
@@ -70,7 +70,7 @@ function CardNarrow({
 }
 
 export function ReferenceVisual({ index }: { index: number }) {
-  const shellClasses = "w-full max-w-[560px] min-h-[520px] p-8 rounded-[34px] border border-border-soft shadow-panel transition-all max-lg:max-w-full max-lg:min-h-auto max-lg:p-5";
+  const shellClasses = "w-full max-w-[560px] min-h-[520px] p-8 rounded-[34px] border border-border-soft transition-all max-lg:max-w-full max-lg:min-h-auto max-lg:p-5";
 
   if (index === 0) {
     return (
@@ -115,7 +115,7 @@ function ComposeVisual({
   messageBody: string;
 }) {
   return (
-    <div className="relative w-full max-w-[560px] min-h-[460px] p-[1.3rem] rounded-[2.2rem] border border-border-soft bg-surface shadow-panel overflow-hidden max-lg:max-w-full max-lg:aspect-[1.15/1]">
+    <div className="relative w-full max-w-[560px] min-h-[460px] p-[1.3rem] rounded-[2.2rem] border border-border-soft bg-surface overflow-hidden max-lg:max-w-full max-lg:aspect-[1.15/1]">
       <div className="absolute left-[2.4rem] top-0 bottom-0 w-[1px] bg-border-soft" aria-hidden="true" />
 
       <div className="relative z-10 grid gap-[1.1rem] max-w-[80%]">

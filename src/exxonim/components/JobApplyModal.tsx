@@ -76,7 +76,7 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
             transition={{ duration: 0.2 }}
           >
             <motion.div
-              className="relative w-full max-w-lg rounded-[1.35rem] border border-border-soft bg-surface-elevated shadow-2xl overflow-hidden"
+              className="relative w-full max-w-lg rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden"
               initial={{ scale: 0.92, y: 24 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.92, y: 24 }}
@@ -123,7 +123,7 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                     <button
                       type="button"
                       onClick={handleClose}
-                      className="inline-flex items-center justify-center min-h-[2.75rem] px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover mx-auto mt-2"
+                      className="inline-flex h-10 items-center justify-center rounded-full px-5 bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5 mx-auto mt-2"
                     >
                       Done
                     </button>
@@ -244,7 +244,7 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                     {/* Submit */}
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center min-h-[3rem] px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover w-full"
+                      className="inline-flex h-12 items-center justify-center rounded-xl px-6 bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5 w-full"
                     >
                       Submit application
                     </button>

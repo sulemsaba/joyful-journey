@@ -28,7 +28,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
   return (
     <>
       <aside
-        className="fixed inset-x-4 bottom-4 z-50 max-w-[min(42rem,calc(100vw-2rem))] ml-auto grid gap-4 p-5 rounded-2xl border border-border-soft bg-surface-elevated shadow-popover"
+        className="fixed inset-x-4 bottom-4 z-50 max-w-[min(42rem,calc(100vw-2rem))] ml-auto grid gap-4 p-5 rounded-2xl border border-border-soft bg-surface-elevated"
         aria-live="polite"
       >
         <div className="grid gap-2">
@@ -50,7 +50,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
 
         <div className="flex flex-wrap gap-3 justify-end">
           <button
-            className="rounded-full px-5 py-3 text-sm font-medium border-0 cursor-pointer bg-surface-soft text-text transition-transform hover:-translate-y-0.5"
+            className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             type="button"
             onClick={() => {
               consentMutation.mutate({
@@ -63,7 +63,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
             Necessary only
           </button>
           <button
-            className="rounded-full px-5 py-3 text-sm font-medium border-0 cursor-pointer bg-accent text-accent-contrast shadow-accent-glow transition-transform hover:-translate-y-0.5"
+            className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             type="button"
             onClick={() => {
               consentMutation.mutate({

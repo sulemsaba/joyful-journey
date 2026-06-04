@@ -68,13 +68,13 @@ export function NotFoundPage({ pathname }: NotFoundPageProps) {
               ) : null}
 
               <div className="mt-10 flex flex-wrap gap-4">
-                <a className="inline-flex items-center justify-center min-h-[3.25rem] px-7 py-3 rounded-full bg-accent text-accent-contrast font-bold shadow-panel transition-all hover:bg-accent-hover hover:-translate-y-0.5" href={routes.home}>
+                <a className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5" href={routes.home}>
                   Go home
                 </a>
-                <a className="inline-flex items-center justify-center min-h-[3.25rem] px-7 py-3 rounded-full border border-border-soft bg-surface/80 text-text font-bold transition-all hover:bg-surface" href={routes.services}>
+                <a className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5" href={routes.services}>
                   See services
                 </a>
-                <a className="inline-flex items-center justify-center min-h-[3.25rem] px-7 py-3 rounded-full border border-border-soft bg-surface/80 text-text font-bold transition-all hover:bg-surface" href={routes.contact}>
+                <a className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5" href={routes.contact}>
                   Contact Exxonim
                 </a>
               </div>

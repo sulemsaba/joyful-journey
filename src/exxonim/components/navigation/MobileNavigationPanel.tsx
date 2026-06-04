@@ -192,7 +192,7 @@ export function MobileNavigationPanel({
           aria-label="Site navigation"
           tabIndex={-1}
           className={cn(
-            "max-h-[calc(100vh-100px)] overflow-y-auto rounded-2xl border border-border-soft bg-surface p-4 shadow-popover transition-all duration-300 ease-out",
+            "max-h-[calc(100vh-100px)] overflow-y-auto rounded-2xl border border-border-soft bg-surface p-4 transition-all duration-300 ease-out",
             isOpen
               ? "translate-y-0 opacity-100 scale-100"
               : "-translate-y-3 opacity-0 scale-[0.98]"
