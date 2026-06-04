@@ -109,6 +109,28 @@ export function Navigation({
   const currentPath = normalizePathname(pathname);
   const [desktopMenu, setDesktopMenu] = useState<MenuKey | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  /* ── Scroll-based header transparency ──────────────────
+   * When at the top of the home page (over the hero), the
+   * header is transparent so the hero bleeds through.
+   * When scrolled past the hero, it gains a solid background.
+   * Only applies on the home page where a hero section exists. */
+  const isHomePage = currentPath === normalizePathname(routes.home);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  /** True when the header should be transparent (over hero, at scroll top, dark mode only).
+   *  In light mode the hero background is light enough that the header doesn't
+   *  need to be transparent — keep the default solid background. */
+  const headerOverHero = isHomePage && !scrolled && theme === "dark";
   const primaryPhone = company.phones[0];
   const callHref = primaryPhone
     ? `tel:${primaryPhone.replace(/\s+/g, "")}`
@@ -175,7 +197,12 @@ export function Navigation({
   return (
     <>
       <header
-        className="fixed top-0 inset-x-0 z-50 h-[68px] bg-page/95 backdrop-blur-xl border-b border-border-soft/50 [--header-height:68px]"
+        className={cn(
+          "fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,border-color,backdrop-filter] duration-300",
+          headerOverHero
+            ? "bg-transparent border-b-0"
+            : "bg-page/95 backdrop-blur-xl border-b border-border-soft/50"
+        )}
       >
         {/* Layout: flex on mobile (logo left, actions right), grid on xl+ (logo left, nav centered, actions right) */}
         <div className="h-full w-full px-[clamp(12px,2vw,24px)] flex xl:grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between xl:justify-center gap-4">
@@ -203,7 +230,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className="logo-light block h-11 w-auto"
+              className={cn("logo-light block h-11 w-auto", headerOverHero && "logo-force-dark")}
             />
             <img
               src={brand.darkLogoSrc}
@@ -217,7 +244,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className="logo-dark h-11 w-auto"
+              className={cn("logo-dark h-11 w-auto", headerOverHero && "logo-force-dark")}
             />
           </a>
 
@@ -286,10 +313,12 @@ export function Navigation({
                 setMobileMenuOpen((open) => !open);
               }}
               className={cn(
-                "inline-flex xl:hidden items-center justify-center w-10 h-10 transition-all",
-                mobileMenuOpen
-                  ? "text-accent-contrast"
-                  : "text-text"
+                "inline-flex xl:hidden items-center justify-center w-10 h-10 transition-colors duration-300",
+                headerOverHero
+                  ? "text-white"
+                  : mobileMenuOpen
+                    ? "text-accent-contrast"
+                    : "text-text"
               )}
             >
               <span className="sr-only">Toggle navigation</span>

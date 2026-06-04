@@ -608,6 +608,13 @@ html.theme-transition .logo-dark {
   transition: opacity 0.4s ease;
 }
 
+/* ── Force dark logo when header is transparent over hero ──
+ * The hero section always has a dark background, so when
+ * the navigation header is transparent, the dark logo must
+ * show regardless of the active theme. */
+.logo-force-dark.logo-light { opacity: 0 !important; }
+.logo-force-dark.logo-dark { opacity: 1 !important; }
+
 /* ── Hero background image opacity ────────────────────
  * The hero bg image has different opacity in light (0.25)
  * vs dark (0.8) mode. This transitions smoothly only during

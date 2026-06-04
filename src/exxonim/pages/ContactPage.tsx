@@ -56,7 +56,7 @@ interface BusinessHoursStatus {
 
 function getBusinessHoursStatus(): BusinessHoursStatus {
   if (typeof Intl === "undefined" || typeof Intl.DateTimeFormat === "undefined") {
-    return { isOpen: false, label: "Business Hours", detail: "Mon–Fri 8AM–5PM, Sat 9AM–1PM (EAT)" };
+    return { isOpen: false, label: "Business Hours", detail: "Mon–Fri 8AM–4:30PM (EAT)" };
   }
 
   const now = new Date();
@@ -69,20 +69,15 @@ function getBusinessHoursStatus(): BusinessHoursStatus {
   let isOpen = false;
   let detail = "";
 
-  if (day === 0) {
+  if (day === 0 || day === 6) {
     isOpen = false;
-    detail = "Closed today · Opens Mon 8AM";
-  } else if (day === 6) {
-    isOpen = currentMinutes >= 540 && currentMinutes < 780;
-    detail = isOpen
-      ? "Open now · Closes at 1PM"
-      : currentMinutes < 540
-        ? "Closed · Opens at 9AM"
-        : "Closed for today · Opens Mon 8AM";
+    detail = day === 6
+      ? "Closed today · Opens Mon 8AM"
+      : "Closed today · Opens Mon 8AM";
   } else {
-    isOpen = currentMinutes >= 480 && currentMinutes < 1020;
+    isOpen = currentMinutes >= 480 && currentMinutes < 990;
     detail = isOpen
-      ? "Open now · Closes at 5PM"
+      ? "Open now · Closes at 4:30PM"
       : currentMinutes < 480
         ? "Closed · Opens at 8AM"
         : "Closed for today · Opens tomorrow 8AM";
@@ -271,7 +266,7 @@ export function ContactPage() {
                         {hours.detail}
                       </p>
                       <p className="text-text-soft text-xs mt-0.5">
-                        Mon–Fri: 8AM–5PM · Sat: 9AM–1PM (EAT)
+                        Mon–Fri: 8AM–4:30PM (EAT)
                       </p>
                     </div>
                   </div>

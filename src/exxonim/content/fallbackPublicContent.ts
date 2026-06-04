@@ -2078,7 +2078,7 @@ export const fallbackSupportPage: PageRecord<InfoPageContent> = createFallbackPa
         title: "How to reach us",
         paragraphs: [
           "Use WhatsApp for quick questions, email for structured details, or phone when you need a direct conversation.",
-          "Our team responds during East African business hours (Mon–Fri, 8:00–17:00).",
+          "Our team responds during East African business hours (Mon–Fri, 8:00–16:30).",
         ],
       },
       {

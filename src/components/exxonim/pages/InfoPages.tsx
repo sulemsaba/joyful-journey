@@ -152,7 +152,7 @@ export function SupportPage() {
             <div>
               <h3 className="text-lg font-semibold text-text mb-1">Call Us</h3>
               <p className="text-sm text-text-muted mb-3">
-                Available Mon–Fri, 8:00 AM – 5:00 PM EAT
+                Available Mon–Fri, 8:00 AM – 4:30 PM EAT
               </p>
               {companyInfo.phones.map((phone, i) => (
                 <a

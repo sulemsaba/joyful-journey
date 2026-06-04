@@ -257,7 +257,7 @@ export function ContactPage() {
                 Need Immediate Help?
               </h3>
               <p className="text-sm text-accent-contrast/80 mb-4 leading-relaxed">
-                Call us directly for urgent matters. We&apos;re available Mon–Fri, 8 AM – 5 PM EAT.
+                Call us directly for urgent matters. We&apos;re available Mon–Fri, 8 AM – 4:30 PM EAT.
               </p>
               <a
                 href={`tel:${companyInfo.phones[0]?.replace(/\s/g, "")}`}
