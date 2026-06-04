@@ -495,7 +495,7 @@ export function Navigation({
             {primaryPhone && (
               <a
                 href={`tel:${primaryPhone.replace(/[^0-9+]/g, "")}`}
-                className="hidden md:inline-flex items-center gap-2 h-10 px-5 rounded-full bg-highlight text-accent-contrast text-sm font-extrabold hover:bg-highlight-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/40 hover:shadow-accent-glow/60"
+                className="hidden md:inline-flex items-center gap-2 h-10 px-5 rounded-full bg-accent text-accent-contrast text-sm font-extrabold hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/40 hover:shadow-accent-glow/60"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <Phone className="relative w-4 h-4 animate-phone-ring" aria-hidden="true" />
@@ -615,7 +615,7 @@ export function Navigation({
                 <div className="px-6 py-5 border-t border-border-soft">
                   <a
                     href={`tel:${primaryPhone.replace(/[^0-9+]/g, "")}`}
-                    className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-highlight text-accent-contrast text-sm font-extrabold hover:bg-highlight-hover transition-all duration-200 shadow-accent-glow/30"
+                    className="flex items-center justify-center gap-2 w-full h-12 rounded-full bg-accent text-accent-contrast text-sm font-extrabold hover:bg-accent-hover transition-all duration-200 shadow-accent-glow/30"
                   >
                     <Phone className="w-4 h-4 animate-phone-ring" aria-hidden="true" />
                     Call Now

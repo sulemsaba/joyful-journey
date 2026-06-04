@@ -117,7 +117,7 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
         className={cn(
           "mt-6 inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold transition-all hover:-translate-y-0.5",
           featured
-            ? "bg-highlight text-accent-contrast hover:bg-highlight-hover"
+            ? "bg-accent text-accent-contrast hover:bg-accent-hover"
             : "bg-cta-secondary text-surface hover:opacity-90"
         )}
       >

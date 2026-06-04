@@ -149,8 +149,8 @@ export function CareerPage() {
 
         {/* CTA Section */}
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-accent to-accent-hover p-8 md:p-12 lg:p-16">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,var(--color-accent-contrast),transparent_50%)] opacity-[0.12]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,var(--color-accent-contrast),transparent_50%)] opacity-[0.08]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.12),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)]" />
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent-contrast/5 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent-contrast/5 rounded-full blur-3xl" />
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, var(--color-accent-contrast) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />

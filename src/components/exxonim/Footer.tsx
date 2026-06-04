@@ -200,7 +200,7 @@ export function Footer({ brand, company, footer, theme = "light" }: FooterProps)
           </div>
           <a
             href={footer.primary_cta.href}
-            className="inline-flex items-center gap-2 rounded-full bg-highlight px-5 py-2.5 text-xs font-bold text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-highlight-hover"
+            className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-xs font-bold text-accent-contrast shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
           >
             {footer.primary_cta.label}
             <ArrowRight className="h-3.5 w-3.5" />

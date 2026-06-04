@@ -25,7 +25,7 @@ export function Button({
   )
 
   const variantStyles = {
-    primary: 'bg-highlight text-accent-contrast shadow-button hover:bg-highlight-hover',
+    primary: 'bg-accent text-accent-contrast shadow-button hover:bg-accent-hover',
     ghost: 'bg-surface/80 text-text border-border-soft hover:bg-surface',
   }
 

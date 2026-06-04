@@ -223,8 +223,8 @@ export function DesktopNavigation({
           className={cn(
             "relative inline-flex items-center gap-2 h-9 px-3.5 rounded-full text-[0.8rem] font-extrabold transition-all",
             isActive(highlightLink.href)
-              ? "bg-highlight-hover text-accent-contrast ring-2 ring-highlight/30"
-              : "bg-highlight text-accent-contrast hover:bg-highlight-hover"
+              ? "bg-accent-hover text-accent-contrast ring-2 ring-accent/30"
+              : "bg-accent text-accent-contrast hover:bg-accent-hover"
           )}
         >
           <span className="relative flex h-2 w-2" aria-hidden="true">
