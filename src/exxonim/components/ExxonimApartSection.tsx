@@ -112,28 +112,28 @@ const differentiators = [
     linkLabel: 'Learn more',
   },
   {
-    title: '5-Month Compliance Reminders',
+    title: 'Ongoing Compliance Reminders',
     description:
-      'We notify you 5 months before every compliance deadline — BRELA returns, TRA filings, license renewals, WCF, NSSF, OSHA. Never be caught off-guard again.',
+      'We send timely reminders ahead of every compliance deadline — BRELA returns, TRA filings, license renewals, WCF, NSSF, OSHA. No time limit, no cut-off. Never be caught off-guard.',
     icon: <BellIcon />,
-    link: undefined,
-    linkLabel: undefined,
+    link: routes.contact,
+    linkLabel: 'Get reminders',
   },
   {
     title: 'Authority Liaison',
     description:
       'We communicate directly with BRELA, TRA, NSSF, WCF, OSHA and other regulators on your behalf — so you don\'t have to chase offices or wait in queues.',
     icon: <ShieldBuildingIcon />,
-    link: undefined,
-    linkLabel: undefined,
+    link: routes.contact,
+    linkLabel: 'Get started',
   },
   {
     title: 'Document Readiness Review',
     description:
       'Before any filing, we review your documents for completeness and accuracy — preventing rejections, delays, and costly resubmissions.',
     icon: <ClipboardCheckIcon />,
-    link: undefined,
-    linkLabel: undefined,
+    link: routes.contact,
+    linkLabel: 'Submit documents',
   },
 ] as const;
 

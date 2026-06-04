@@ -26,3 +26,50 @@ Stage Summary:
 - Footer has distinct visual identity from CTA buttons
 - shadcn/ui components now feel part of the teal-tinted world
 - All 13 browser verification checks passed
+
+---
+Task ID: 5-6
+Agent: UI Update Agent
+Task: Update EngineSection.tsx with UI improvements (U2 + U3)
+
+Work Log:
+- Added 3 inline SVG icon components: BuildingIcon (building), ShieldIcon (shield with checkmark), GlobeIcon (globe with meridians)
+- Created groupIcons array mapping group index to icon: [BuildingIcon, ShieldIcon, GlobeIcon]
+- U2: Replaced numbered circle (01, 02, 03) with category-specific SVG icons in accent-soft circular badge; falls back to BuildingIcon for indices beyond 2
+- U3: Made each service item interactive with group hover state; added "Inquire →" link that appears on hover, linking to contact page with #inquiry hash; includes proper aria-label for accessibility
+- Verified routes import already existed in the file
+- Lint passes cleanly with no errors
+
+Stage Summary:
+- Service group cards now use semantic icons instead of numbered circles
+- Each service item has a hover-revealed "Inquire →" action linking to contact page
+- All existing functionality preserved (stagger delays, card hover effects, CTA footer)
+
+---
+Task ID: 3
+Agent: Content Update Agent
+Task: Update fallback services content in fallbackPublicContent.ts
+
+Work Log:
+- Replaced service_groups array with 3 updated groups:
+  - Business Setup: added "business-name-registration" and "trademark-registration" services (now 6 services)
+  - Compliance Support: added "annual-returns" service (now 4 services)
+  - Work Permits & Foreign Investment: replaced "Consultation Tracking" group entirely with 3 new services (work-permit, tic-registration, foreign-company-reg)
+- Replaced service_nav_groups with 3 updated nav groups matching new service structure
+- Updated first service_signal from "3+" to "4+" with detail "Registration, compliance, foreign investment, and tracking"
+- Updated fallbackServicesPage SEO metaDescription to include business name registration, trademark registration, annual returns, and work permit support
+- Replaced fallbackPricingPlans with concrete, specific features:
+  - Foundation: 6 features (4 included, 2 not included)
+  - Operating: 6 features (5 included, 1 not included)
+  - Continuity: 6 features (all included)
+- Updated fallbackHomePage hero metaDescription to include business name registration, trademark protection, and annual returns
+- Updated fallbackAboutPage metaDescription to include business name and trademark registration, and work permit advisory
+- All edits applied surgically using MultiEdit
+- Lint passes cleanly with no errors
+- Dev server compiles successfully
+
+Stage Summary:
+- Service catalog now reflects expanded scope: Business Setup (6 services), Compliance Support (4 services), Work Permits & Foreign Investment (3 services)
+- Navigation groups and signals updated to match new service areas
+- Pricing plans now have specific, concrete feature descriptions instead of generic labels
+- All meta descriptions updated across Home, About, and Services pages to reflect expanded service scope

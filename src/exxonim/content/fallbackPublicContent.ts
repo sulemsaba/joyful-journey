@@ -295,7 +295,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
     },
   },
   undefined,
-  "Exxonim Consult helps businesses, NGOs, and institutions in Tanzania with company registration, licensing, tax compliance, and proactive consultation tracking from intake to resolution."
+  "Exxonim Consult helps businesses, NGOs, and institutions with company registration, business name registration, trademark protection, licensing, tax compliance, annual returns, and proactive consultation tracking from intake to resolution."
 );
 
 /* BACKEND / ADMIN INTEGRATION NOTES:
@@ -447,7 +447,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
     },
   },
   undefined,
-  "Founded in 2020, Exxonim Consult provides structured business registration, licensing, and compliance advisory in Tanzania with proactive tracking at every milestone."
+  "Founded in 2020, Exxonim Consult provides structured business registration, business name and trademark registration, licensing, compliance, and work permit advisory with proactive tracking at every milestone."
 );
 
 /* BACKEND / ADMIN INTEGRATION NOTES:
@@ -538,28 +538,28 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
       panel_body:
         "Every engagement is tracked from intake to resolution. You always know what is complete, what is pending, and what comes next.",
       service_signals: [
-        { value: "3+", label: "Service areas", detail: "Registration, compliance, and tracking" },
+        { value: "4+", label: "Service areas", detail: "Registration, compliance, foreign investment, and tracking" },
         { value: "100%", label: "Tracked", detail: "Every consultation assigned a reference ID" },
         { value: "4", label: "Steps", detail: "Intake, preparation, submission, follow-through" },
       ],
       service_nav_groups: [
         {
           title: "Business Setup",
-          summary: "Registration support for companies, NGOs, and business names.",
+          summary: "Registration support for companies, business names, NGOs, and trademarks.",
           href: routes.services,
-          items: ["Company Registration", "TIN Application", "Business License Applications"],
+          items: ["Company Registration", "Business Name Registration", "Trademark Registration", "TIN Application"],
         },
         {
           title: "Compliance Support",
-          summary: "Recurring filings, renewals, and regulatory follow-up.",
+          summary: "Annual returns, recurring filings, renewals, and regulatory follow-up.",
           href: routes.services,
-          items: ["Statutory Filings", "Regulatory Renewals", "Operational Advisory"],
+          items: ["Annual Returns", "Statutory Filings", "Regulatory Renewals", "Operational Advisory"],
         },
         {
-          title: "Consultation Tracking",
-          summary: "Track every consultation from intake to resolution.",
-          href: routes.trackConsultation,
-          items: ["Reference ID assignment", "Status tracking", "Follow-up management"],
+          title: "Work Permits & Foreign Investment",
+          summary: "Support for international investors and expatriate workers.",
+          href: routes.services,
+          items: ["Work Permit Applications", "TIC / TISEZA Registration", "Foreign Company Registration"],
         },
       ],
       service_flow: [
@@ -586,7 +586,9 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
           description: "End-to-end registration support for new entities.",
           services: [
             { id: "company-registration", label: "Company Registration", detail: "Incorporation and first-step authority submissions." },
+            { id: "business-name-registration", label: "Business Name Registration", detail: "Sole proprietorship and trading name registration through BRELA." },
             { id: "ngo-registration", label: "NGO Registration", detail: "Non-profit entity setup and compliance baseline." },
+            { id: "trademark-registration", label: "Trademark Registration", detail: "Brand and trade name protection through BRELA intellectual property office." },
             { id: "tin-application", label: "TIN Application", detail: "Tax Identification Number registration and account setup." },
             { id: "business-license", label: "Business License Applications", detail: "License applications and regulatory approvals." },
           ],
@@ -595,18 +597,19 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
           title: "Compliance Support",
           description: "Ongoing obligations managed with clear follow-through.",
           services: [
+            { id: "annual-returns", label: "Annual Returns", detail: "BRELA annual return filing and beneficial ownership updates." },
             { id: "statutory-filings", label: "Statutory Filings", detail: "Recurring filing obligations prepared and submitted on schedule." },
             { id: "regulatory-renewals", label: "Regulatory Renewals", detail: "Proactive tracking and timely processing of renewals." },
             { id: "operational-advisory", label: "Operational Advisory", detail: "Structured guidance for teams managing multiple obligations." },
           ],
         },
         {
-          title: "Consultation Tracking",
-          description: "Visibility from intake to resolution.",
+          title: "Work Permits & Foreign Investment",
+          description: "Support for international investors and expatriate workers.",
           services: [
-            { id: "tracking", label: "Track Your Consultation", detail: "Reference ID-based tracking for every active case." },
-            { id: "status-updates", label: "Status Updates", detail: "Know what is complete, pending, and next at every stage." },
-            { id: "follow-up", label: "Follow-Up Management", detail: "Proactive follow-up with authorities on your behalf." },
+            { id: "work-permit", label: "Work Permit Applications", detail: "Residence and work permit processing for foreign investors and employees." },
+            { id: "tic-registration", label: "TIC / TISEZA Registration", detail: "Investment centre registration and compliance for foreign-owned entities." },
+            { id: "foreign-company-reg", label: "Foreign Company Registration", detail: "Branch office and subsidiary setup for international businesses." },
           ],
         },
       ],
@@ -635,7 +638,7 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
     },
   },
   undefined,
-  "Business registration, company incorporation, TIN applications, licensing, statutory filings, and compliance support services in Tanzania from Exxonim Consult."
+  "Business registration, business name registration, trademark registration, TIN applications, licensing, annual returns, statutory filings, compliance, and work permit support services from Exxonim Consult."
 );
 
 /* BACKEND / ADMIN INTEGRATION NOTES (Resources/Blog page):
@@ -1710,42 +1713,48 @@ export const fallbackPricingPlans: PricingPlan[] = [
     id: 1,
     name: "Foundation",
     badge: "Getting started",
-    description:
-      "A practical package for registration and first-step compliance work, with expert guidance throughout.",
+    description: "Registration and first-step compliance — ideal for new entities getting set up.",
     notes: "Use the Exxonim contact route for the latest package guidance.",
     recommended: false,
     features: [
-      { label: "Entity setup guidance", included: true },
-      { label: "Document checklist review", included: true },
-      { label: "Licensing follow-through", included: false },
+      { label: "Company or business name registration filed on your behalf", included: true },
+      { label: "TIN application included", included: true },
+      { label: "Document checklist and readiness review", included: true },
+      { label: "Consultation tracking with milestone updates", included: true },
+      { label: "Annual return filing", included: false },
+      { label: "Compliance reminders", included: false },
     ],
   },
   {
     id: 2,
     name: "Operating",
     badge: "Recommended",
-    description:
-      "A balanced fallback plan for teams that need registration, licensing, and recurring compliance support.",
+    description: "Registration, licensing, and recurring compliance support for active businesses.",
     notes: "Live package details return automatically after the next successful sync.",
     recommended: true,
     features: [
-      { label: "Entity setup guidance", included: true },
-      { label: "Licensing follow-through", included: true },
-      { label: "Compliance reminders", included: true },
+      { label: "Company or business name registration filed on your behalf", included: true },
+      { label: "TIN application included", included: true },
+      { label: "Business license application", included: true },
+      { label: "Annual return filing", included: true },
+      { label: "Ongoing compliance reminders", included: true },
+      { label: "Trademark registration", included: false },
     ],
   },
   {
     id: 3,
     name: "Continuity",
     badge: "Extended coverage",
-    description:
-      "A higher-touch fallback outline for teams with multiple filings, renewals, and document dependencies.",
+    description: "Full-service support — registration, compliance, work permits, and ongoing advisory.",
     notes: "Contact Exxonim directly for a tailored scope while the live catalog reconnects.",
     recommended: false,
     features: [
+      { label: "Everything in Operating", included: true },
+      { label: "Trademark registration and protection", included: true },
+      { label: "Work permit and TIC registration support", included: true },
       { label: "Priority support coordination", included: true },
-      { label: "Ongoing compliance planning", included: true },
-      { label: "Multi-stream document support", included: true },
+      { label: "Multi-stream document management", included: true },
+      { label: "Quarterly compliance review and planning", included: true },
     ],
   },
 ];

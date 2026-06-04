@@ -3,6 +3,41 @@ import { Button } from './primitives/Button'
 import { routes } from '@/exxonim/routes'
 import type { ServicesCatalogContent } from '@/exxonim/types'
 
+function BuildingIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+      <path d="M9 22v-4h6v4" />
+      <path d="M8 6h.01" /><path d="M16 6h.01" />
+      <path d="M12 6h.01" /><path d="M12 10h.01" />
+      <path d="M12 14h.01" /><path d="M16 10h.01" />
+      <path d="M16 14h.01" /><path d="M8 10h.01" />
+      <path d="M8 14h.01" />
+    </svg>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+
+function GlobeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
+    </svg>
+  );
+}
+
+const groupIcons = [<BuildingIcon key="0" />, <ShieldIcon key="1" />, <GlobeIcon key="2" />];
+
 interface EngineSectionProps {
   content: ServicesCatalogContent;
 }
@@ -48,8 +83,8 @@ export function EngineSection({ content }: EngineSectionProps) {
             >
               {/* Card Header */}
               <div className="flex items-start gap-4">
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-accent-soft text-accent font-extrabold text-sm">
-                  0{groupIndex + 1}
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-accent-soft text-accent">
+                  {groupIcons[groupIndex] ?? <BuildingIcon />}
                 </span>
                 <div>
                   <h3 className="font-display text-xl font-medium leading-tight tracking-tight">
@@ -68,11 +103,20 @@ export function EngineSection({ content }: EngineSectionProps) {
                   <li
                     key={service.id}
                     id={service.id}
-                    className="grid gap-1"
+                    className="grid gap-1 group"
                   >
-                    <strong className="text-text font-medium">
-                      {service.label}
-                    </strong>
+                    <div className="flex items-start justify-between gap-2">
+                      <strong className="text-text font-medium">
+                        {service.label}
+                      </strong>
+                      <a
+                        href={`${routes.contact}#inquiry`}
+                        className="flex-shrink-0 mt-0.5 text-[0.7rem] font-extrabold uppercase tracking-[0.08em] text-accent opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label={`Inquire about ${service.label}`}
+                      >
+                        Inquire →
+                      </a>
+                    </div>
                     <p className="text-text-muted text-sm leading-relaxed">
                       {service.detail}
                     </p>

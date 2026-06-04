@@ -227,7 +227,7 @@ function ReminderBadge() {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-accent text-[0.7rem] font-extrabold uppercase tracking-[0.1em]">
       <BellIcon className="h-3 w-3" />
-      5-month reminder
+      Ongoing reminders
     </span>
   );
 }
@@ -262,8 +262,8 @@ function CTACard() {
           <span className="block mt-1 text-text-muted text-xs leading-tight">Key deadlines tracked</span>
         </div>
         <div className="rounded-xl bg-accent-soft/60 p-3.5 text-center">
-          <span className="block text-accent text-xl font-extrabold leading-none">5mo</span>
-          <span className="block mt-1 text-text-muted text-xs leading-tight">Advance reminders</span>
+          <span className="block text-accent text-xl font-extrabold leading-none">∞</span>
+          <span className="block mt-1 text-text-muted text-xs leading-tight">Unlimited reminders</span>
         </div>
       </div>
 
@@ -312,8 +312,8 @@ export function ComplianceCalendarSection() {
             Compliance deadlines you can&apos;t afford to miss
           </h2>
           <p className="m-0 max-w-[42rem] text-base leading-relaxed text-text-muted">
-            We track these deadlines for our clients and send 5-month advance
-            reminders so you&apos;re always prepared.
+            We track these deadlines for our clients and send timely advance
+            reminders so you&apos;re always prepared — no time limit.
           </p>
         </div>
 
