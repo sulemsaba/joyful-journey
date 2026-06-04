@@ -1,0 +1,45 @@
+import type { ExtendedStackItem } from "./types";
+import { ReferenceVisual } from "./ReferenceVisual";
+
+export function StatementCard({
+  item,
+  index,
+}: {
+  item: ExtendedStackItem;
+  index: number;
+}) {
+  return (
+    <div className="grid grid-cols-[1.05fr_minmax(0,560px)] items-center gap-16 h-full max-lg:grid-cols-1 max-lg:gap-10 max-lg:h-auto">
+      <div className="grid gap-6 justify-items-start">
+        <h2 className="m-0 text-[clamp(2.2rem,3.6vw,3rem)] leading-[1.04] font-semibold text-text">
+          {item.title}
+        </h2>
+        {item.subtitle ? (
+          <p className="m-0 text-[clamp(1rem,1.3vw,1.15rem)] font-medium text-text-soft">
+            {item.subtitle}
+          </p>
+        ) : null}
+        <p className="m-0 max-w-[38rem] text-[0.94rem] leading-relaxed text-text-soft">
+          {item.description}
+        </p>
+        {item.emphasis ? (
+          <p className="m-0 text-[0.94rem] leading-relaxed text-text-soft italic border-l-2 border-accent-soft pl-4">
+            {item.emphasis}
+          </p>
+        ) : null}
+
+        <div className="flex items-center gap-3 flex-wrap mt-4">
+          <a
+            href={item.ctaHref || "/contact/"}
+            className="inline-flex items-center justify-center min-h-[3rem] px-6 py-3 rounded-full bg-accent text-accent-contrast text-sm font-extrabold shadow-accent-glow transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+          >
+            {item.ctaLabel || "Contact Exxonim"}
+            <span className="ml-2">→</span>
+          </a>
+        </div>
+      </div>
+
+      <ReferenceVisual index={index} />
+    </div>
+  );
+}

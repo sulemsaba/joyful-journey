@@ -1,0 +1,650 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ── CSS Custom Property Animation Registration ──────────
+ * @property tells the browser these custom properties hold
+ * animatable <color> values. This enables smooth transitions
+ * on :root — when a custom property transitions, ALL elements
+ * using var(--that-property) automatically update smoothly,
+ * including backgrounds, text colors, borders, AND gradients.
+ *
+ * Progressive enhancement: browsers without @property support
+ * (Firefox < 128) get instant theme swaps instead of smooth
+ * transitions. The site still works perfectly.
+ */
+@property --color-page { syntax: '<color>'; inherits: true; initial-value: #F5F5EE; }
+@property --color-page-strong { syntax: '<color>'; inherits: true; initial-value: #EAE9E2; }
+@property --color-surface { syntax: '<color>'; inherits: true; initial-value: #FAFAF7; }
+@property --color-surface-soft { syntax: '<color>'; inherits: true; initial-value: #F8F8F3; }
+@property --color-surface-elevated { syntax: '<color>'; inherits: true; initial-value: rgba(248, 249, 246, 0.88); }
+@property --color-text { syntax: '<color>'; inherits: true; initial-value: #102529; }
+@property --color-text-muted { syntax: '<color>'; inherits: true; initial-value: rgba(16, 37, 41, 0.72); }
+@property --color-text-soft { syntax: '<color>'; inherits: true; initial-value: rgba(16, 37, 41, 0.56); }
+@property --color-accent { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+@property --color-accent-hover { syntax: '<color>'; inherits: true; initial-value: #0b4b51; }
+@property --color-accent-secondary { syntax: '<color>'; inherits: true; initial-value: #7fbcc1; }
+@property --color-accent-soft { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.12); }
+@property --color-accent-soft-strong { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.22); }
+@property --color-accent-contrast { syntax: '<color>'; inherits: true; initial-value: #f7fbfb; }
+@property --color-border-soft { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.12); }
+@property --color-border-strong { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.22); }
+@property --color-overlay { syntax: '<color>'; inherits: true; initial-value: rgba(8, 24, 27, 0.54); }
+@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #e4f0f2; }
+@property --color-hero-bg-fade { syntax: '<color>'; inherits: true; initial-value: rgba(228, 240, 242, 0.8); }
+@property --color-cinematic-card-border { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, 0.54); }
+@property --color-cinematic-card-hover-border { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.28); }
+
+/* shadcn/ui color tokens — registered for smooth transitions */
+@property --background { syntax: '<color>'; inherits: true; initial-value: oklch(1 0 0); }
+@property --foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.145 0 0); }
+@property --card { syntax: '<color>'; inherits: true; initial-value: oklch(1 0 0); }
+@property --card-foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.145 0 0); }
+@property --popover { syntax: '<color>'; inherits: true; initial-value: oklch(1 0 0); }
+@property --popover-foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.145 0 0); }
+@property --primary { syntax: '<color>'; inherits: true; initial-value: oklch(0.205 0 0); }
+@property --primary-foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.985 0 0); }
+@property --secondary { syntax: '<color>'; inherits: true; initial-value: oklch(0.97 0 0); }
+@property --secondary-foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.205 0 0); }
+@property --muted { syntax: '<color>'; inherits: true; initial-value: oklch(0.97 0 0); }
+@property --muted-foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.556 0 0); }
+@property --accent { syntax: '<color>'; inherits: true; initial-value: oklch(0.97 0 0); }
+@property --accent-foreground { syntax: '<color>'; inherits: true; initial-value: oklch(0.205 0 0); }
+@property --destructive { syntax: '<color>'; inherits: true; initial-value: oklch(0.577 0.245 27.325); }
+@property --border { syntax: '<color>'; inherits: true; initial-value: oklch(0.922 0 0); }
+@property --input { syntax: '<color>'; inherits: true; initial-value: oklch(0.922 0 0); }
+@property --ring { syntax: '<color>'; inherits: true; initial-value: oklch(0.708 0 0); }
+
+/* ── Exxonim theme system ──────────────────────────────
+ * Uses data-theme attribute (not .dark class) for theme switching.
+ * Tokens: @theme generates Tailwind utility classes.
+ * Runtime values: :root (light) and html[data-theme="dark"] (dark).
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Keep shadcn/ui compatibility tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* ── Exxonim design tokens ──────────────────────────
+   * NOTE: These MUST be in @theme (not @theme inline) so that
+   * Tailwind generates utility classes using var(--color-*) refs.
+   * This allows html[data-theme="dark"] to override them at runtime.
+   * With @theme inline, values are baked into utility classes and
+   * dark mode overrides have no effect.
+   */
+  --color-page: #F5F5EE;
+  --color-page-strong: #EAE9E2;
+  --color-surface: #FAFAF7;
+  --color-surface-soft: #F8F8F3;
+  --color-surface-elevated: rgba(248, 249, 246, 0.88);
+  --color-text: #102529;
+  --color-text-muted: rgba(16, 37, 41, 0.72);
+  --color-text-soft: rgba(16, 37, 41, 0.56);
+  --color-accent: #0f5c63;
+  --color-accent-hover: #0b4b51;
+  --color-accent-secondary: #7fbcc1;
+  --color-accent-soft: rgba(15, 92, 99, 0.12);
+  --color-accent-soft-strong: rgba(15, 92, 99, 0.22);
+  --color-accent-contrast: #f7fbfb;
+  --color-border-soft: rgba(15, 92, 99, 0.12);
+  --color-border-strong: rgba(15, 92, 99, 0.22);
+  --color-overlay: rgba(8, 24, 27, 0.54);
+  --color-hero-bg: #e4f0f2;
+  --color-hero-bg-fade: rgba(228, 240, 242, 0.8);
+  --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
+  --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
+
+  --shadow-panel: 0 24px 60px rgba(8, 31, 35, 0.1);
+  --shadow-panel-strong: 0 30px 72px rgba(8, 31, 35, 0.14);
+  --shadow-hero: 0 38px 110px rgba(8, 31, 35, 0.14);
+  --shadow-cinematic: 0 24px 60px rgba(8, 31, 35, 0.12);
+  --shadow-card: 0 8px 30px rgba(8, 31, 35, 0.08);
+  --shadow-popover: 0 16px 48px rgba(8, 31, 35, 0.12);
+  --shadow-accent-glow: 0 16px 40px rgba(15, 92, 99, 0.24);
+
+  --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
+  --animate-phone-ring: phone-ring 2s ease-in-out infinite;
+  --animate-provider-marquee: provider-marquee 57s linear infinite;
+  --animate-code-pan: code-pan 12s linear infinite alternate;
+  --animate-call-shimmer: call-shimmer 4.5s linear infinite;
+  --animate-call-ping: call-ping 1.85s ease-out infinite;
+  --animate-tagline-float: footer-tagline-float 5.8s ease-in-out infinite;
+  --animate-tagline-line: footer-tagline-line 4.8s ease-in-out infinite;
+  --animate-reference-slide-primary: reference-hero-slide-primary 14s ease-in-out infinite;
+  --animate-reference-slide-secondary: reference-hero-slide-secondary 14s ease-in-out infinite;
+  --animate-page-enter: page-enter 0.6s ease-out both;
+  --animate-scale-in: scale-in 0.4s ease-out both;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-float-bob: float-bob 3.4s ease-in-out infinite;
+  --animate-float-bob-delayed: float-bob 3.4s ease-in-out 1.7s infinite;
+  --animate-accent-pulse: accent-pulse 2.2s ease-in-out infinite;
+  --animate-reveal-up: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-reveal-fade: reveal-fade 0.6s ease forwards;
+  --animate-shimmer: shimmer 2.5s ease-in-out infinite;
+  --animate-dropdown-enter: dropdown-enter 200ms ease-out;
+
+  --radius-2xl: 1.7rem;
+  --radius-pill: 999px;
+}
+
+/* ── Keyframes ─────────────────────────────────────── */
+@keyframes dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes whatsapp-pulse {
+  0% { transform: scale(1); opacity: 0.65; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes phone-ring {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-10deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-10deg); }
+  50% { transform: rotate(0deg); }
+}
+@keyframes provider-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes call-shimmer {
+  0% { transform: translateX(0) skewX(-22deg); }
+  100% { transform: translateX(420%) skewX(-22deg); }
+}
+@keyframes call-ping {
+  0% { transform: scale(0.92); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: scale(1.42); opacity: 0; }
+}
+@keyframes footer-tagline-float {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-2px); opacity: 0.92; }
+}
+@keyframes footer-tagline-line {
+  0%, 100% { transform: scaleX(0.45); opacity: 0.14; }
+  50% { transform: scaleX(1); opacity: 0.5; }
+}
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes accent-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15, 92, 99, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(15, 92, 99, 0); }
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes reference-hero-slide-primary {
+  0%, 44% { opacity: 1; transform: scale(1); }
+  50%, 94% { opacity: 0; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes reference-hero-slide-secondary {
+  0%, 44% { opacity: 0; transform: scale(1.02); }
+  50%, 94% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes gradient-rotate {
+  0% { --gradient-angle: 0deg; }
+  100% { --gradient-angle: 360deg; }
+}
+@keyframes code-pan {
+  from { transform: translateY(0); }
+  to { transform: translateY(-18%); }
+}
+@keyframes page-loader-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes page-loader-fade {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+/* ── Favicon loader: smooth scale pulse in/out ──── */
+@keyframes loader-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.12); opacity: 0.8; }
+}
+@keyframes loader-fade {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+/* ── Loading dots animation: . → .. → ... → (reset) ──
+ * Each dot fades in with a staggered delay so they
+ * appear one by one, then all reset together.
+ */
+.loader-dots span {
+  opacity: 0;
+  animation: loader-dot 1.4s ease-in-out infinite;
+}
+.loader-dots span:nth-child(1) { animation-delay: 0.0s; }
+.loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes loader-dot {
+  0%, 20%  { opacity: 0; }
+  40%, 100% { opacity: 1; }
+}
+
+/* ── Hero section — stable height (no CLS) ──────── */
+.hero-section {
+  height: 94.5svh;
+  /* Fallback for browsers without svh */
+  height: 94.5dvh;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.hero-section.hero-shrunk {
+  transform: scale(0.96);
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+/* ── Review bar — stable height (no CLS) ────────── */
+.hero-review-bar {
+  height: 5.5svh;
+  min-height: 48px;
+}
+
+/* ── Scroll-reveal: start visible, animate on first intersection
+ * Avoids initial CLS from opacity:0 + translate-y-6 */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Runtime theme variables ───────────────────────── */
+:root {
+  /* shadcn/ui tokens (kept for component compatibility) */
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* ── Exxonim light-mode tokens ──────────────────── */
+  --color-page: #F5F5EE;
+  --color-page-strong: #EAE9E2;
+  --color-surface: #FAFAF7;
+  --color-surface-soft: #F8F8F3;
+  --color-surface-elevated: rgba(248, 249, 246, 0.88);
+  --color-text: #102529;
+  --color-text-muted: rgba(16, 37, 41, 0.72);
+  --color-text-soft: rgba(16, 37, 41, 0.56);
+  --color-accent: #0f5c63;
+  --color-accent-hover: #0b4b51;
+  --color-accent-secondary: #7fbcc1;
+  --color-accent-soft: rgba(15, 92, 99, 0.12);
+  --color-accent-soft-strong: rgba(15, 92, 99, 0.22);
+  --color-accent-contrast: #f7fbfb;
+  --color-border-soft: rgba(15, 92, 99, 0.12);
+  --color-border-strong: rgba(15, 92, 99, 0.22);
+  --color-overlay: rgba(8, 24, 27, 0.54);
+  --color-hero-bg: #e4f0f2;
+  --color-hero-bg-fade: rgba(228, 240, 242, 0.8);
+  --shadow-panel: 0 24px 60px rgba(8, 31, 35, 0.1);
+  --shadow-panel-strong: 0 30px 72px rgba(8, 31, 35, 0.14);
+  --shadow-hero: 0 38px 110px rgba(8, 31, 35, 0.14);
+  --shadow-cinematic: 0 24px 60px rgba(8, 31, 35, 0.12);
+  --shadow-card: 0 8px 30px rgba(8, 31, 35, 0.08);
+  --shadow-popover: 0 16px 48px rgba(8, 31, 35, 0.12);
+  --shadow-accent-glow: 0 16px 40px rgba(15, 92, 99, 0.24);
+  --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
+  --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
+}
+
+html[data-theme="dark"] {
+  /* shadcn/ui dark tokens */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  /* ── Exxonim dark-mode tokens ───────────────────── */
+  --color-page: #071518;
+  --color-page-strong: #0b1f23;
+  --color-surface: #0d2226;
+  --color-surface-soft: #112b30;
+  --color-surface-elevated: rgba(15, 34, 38, 0.9);
+  --color-text: #edf4f2;
+  --color-text-muted: rgba(237, 244, 242, 0.76);
+  --color-text-soft: rgba(237, 244, 242, 0.58);
+  --color-accent: #7fbcc1;
+  --color-accent-hover: #96cacf;
+  --color-accent-secondary: #aacfd2;
+  --color-accent-soft: rgba(127, 188, 193, 0.14);
+  --color-accent-soft-strong: rgba(127, 188, 193, 0.28);
+  --color-accent-contrast: #08181b;
+  --color-border-soft: rgba(127, 188, 193, 0.16);
+  --color-border-strong: rgba(127, 188, 193, 0.28);
+  --color-overlay: rgba(6, 17, 20, 0.72);
+  --color-hero-bg: #071518;
+  --color-hero-bg-fade: rgba(7, 21, 24, 0.8);
+  --shadow-panel: 0 24px 60px rgba(0, 0, 0, 0.32);
+  --shadow-panel-strong: 0 30px 72px rgba(0, 0, 0, 0.42);
+  --shadow-hero: 0 38px 110px rgba(0, 0, 0, 0.38);
+  --shadow-cinematic: 0 24px 60px rgba(0, 0, 0, 0.34);
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.28);
+  --shadow-popover: 0 16px 48px rgba(0, 0, 0, 0.36);
+  --shadow-accent-glow: 0 16px 40px rgba(15, 92, 99, 0.24);
+  --color-cinematic-card-border: rgba(127, 188, 193, 0.16);
+  --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.3);
+}
+
+/* ── Smooth theme switch via CSS custom property transitions
+ * ────────────────────────────────────────────────────────
+ * ARCHITECTURE: Instead of forcing `transition` on every DOM
+ * element with `* !important` (which clobbers the toggle knob
+ * slide, hero shrink animation, and all hover effects), we
+ * transition the CSS custom properties THEMSELVES on :root.
+ *
+ * When a registered custom property (via @property) transitions
+ * on :root, ALL elements using var(--that-property) automatically
+ * see the smoothly interpolated value — including elements with
+ * gradients, box-shadows, and border-colors that reference it.
+ *
+ * This approach:
+ *   ✅ Preserves element-level transitions (knob slide, shrink)
+ *   ✅ Smooths gradients using var() (hero overlay gradients)
+ *   ✅ Smooths all color tokens everywhere (no missed elements)
+ *   ✅ Doesn't clobber hover effects or animation transitions
+ *   ✅ Progressive enhancement (older browsers: instant swap)
+ *
+ * The `.theme-transition` class is added to <html> before the
+ * theme change and removed after 400ms. Without the class,
+ * no transitions are active — so initial page load has no flash.
+ */
+html.theme-transition {
+  transition:
+    /* Exxonim design tokens */
+    --color-page 0.4s ease,
+    --color-page-strong 0.4s ease,
+    --color-surface 0.4s ease,
+    --color-surface-soft 0.4s ease,
+    --color-surface-elevated 0.4s ease,
+    --color-text 0.4s ease,
+    --color-text-muted 0.4s ease,
+    --color-text-soft 0.4s ease,
+    --color-accent 0.4s ease,
+    --color-accent-hover 0.4s ease,
+    --color-accent-secondary 0.4s ease,
+    --color-accent-soft 0.4s ease,
+    --color-accent-soft-strong 0.4s ease,
+    --color-accent-contrast 0.4s ease,
+    --color-border-soft 0.4s ease,
+    --color-border-strong 0.4s ease,
+    --color-overlay 0.4s ease,
+    --color-hero-bg 0.4s ease,
+    --color-hero-bg-fade 0.4s ease,
+    --color-cinematic-card-border 0.4s ease,
+    --color-cinematic-card-hover-border 0.4s ease,
+    /* shadcn/ui tokens */
+    --background 0.4s ease,
+    --foreground 0.4s ease,
+    --card 0.4s ease,
+    --card-foreground 0.4s ease,
+    --popover 0.4s ease,
+    --popover-foreground 0.4s ease,
+    --primary 0.4s ease,
+    --primary-foreground 0.4s ease,
+    --secondary 0.4s ease,
+    --secondary-foreground 0.4s ease,
+    --muted 0.4s ease,
+    --muted-foreground 0.4s ease,
+    --accent 0.4s ease,
+    --accent-foreground 0.4s ease,
+    --destructive 0.4s ease,
+    --border 0.4s ease,
+    --input 0.4s ease,
+    --ring 0.4s ease;
+}
+
+/* ── Logo crossfade during theme transition ───────────
+ * Both logos are always rendered — one visible, one hidden
+ * via opacity. During theme transitions, opacity smoothly
+ * crossfades between them. Without .theme-transition, the
+ * swap is instant (no initial-load flash).
+ */
+.logo-light { opacity: 1; }
+.logo-dark { opacity: 0; position: absolute; top: 0; left: 0; }
+html[data-theme="dark"] .logo-light { opacity: 0; }
+html[data-theme="dark"] .logo-dark { opacity: 1; }
+html.theme-transition .logo-light,
+html.theme-transition .logo-dark {
+  transition: opacity 0.4s ease;
+}
+
+/* ── Hero background image opacity ────────────────────
+ * The hero bg image has different opacity in light (0.25)
+ * vs dark (0.8) mode. This transitions smoothly only during
+ * theme changes — no transition on initial load.
+ */
+.hero-bg-image { opacity: 0.25; }
+html[data-theme="dark"] .hero-bg-image { opacity: 0.8; }
+html.theme-transition .hero-bg-image {
+  transition: opacity 0.4s ease;
+}
+
+/* ── Respect user motion preferences ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Base layer ──────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-page text-text;
+  }
+}
+
+/* ── Scroll-reveal animation utilities ────────────── */
+.animate-reveal-up {
+  animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+.animate-reveal-fade {
+  animation: reveal-fade 0.6s ease forwards;
+  opacity: 0;
+}
+
+/* ── Stagger delay utilities ──────────────────────── */
+.stagger-1 { animation-delay: 0.08s; }
+.stagger-2 { animation-delay: 0.16s; }
+.stagger-3 { animation-delay: 0.24s; }
+.stagger-4 { animation-delay: 0.32s; }
+.stagger-5 { animation-delay: 0.4s; }
+.stagger-6 { animation-delay: 0.48s; }
+
+/* ── Float/bob animation for hero floating chips ──── */
+.animate-float-bob {
+  animation: float-bob 4s ease-in-out infinite;
+}
+.animate-float-bob-delayed {
+  animation: float-bob 4s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* ── Shimmer loading effect ───────────────────────── */
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(127, 188, 193, 0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+/* ── Smooth page content entrance ─────────────────── */
+.animate-page-enter {
+  animation: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Pulse glow for accent elements ───────────────── */
+.animate-accent-pulse {
+  animation: accent-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── iOS safe area utilities ──────────────────────── */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pb-env {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* ── Better scrollbar styling ─────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-page);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ── Custom select dropdown chevron — dark mode ──── */
+html[data-theme="dark"] select[class*="appearance-none"] {
+  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237fbcc1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E') !important;
+}
+
+/* ── Smooth selection color ───────────────────────── */
+::selection {
+  background: rgba(15, 92, 99, 0.2);
+  color: var(--color-text);
+}
+html[data-theme="dark"] ::selection {
+  background: rgba(127, 188, 193, 0.25);
+}

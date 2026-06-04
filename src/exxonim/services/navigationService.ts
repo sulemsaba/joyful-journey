@@ -1,0 +1,65 @@
+import { api } from "@/exxonim/app/apiClient";
+import { apiRoutes } from "@/exxonim/shared/api/routes";
+import {
+  fetchWithFallbackResource,
+  fetchWithFallback,
+  getCachedPublicContentState,
+  getCachedPublicContent,
+} from "@/exxonim/shared/publicContentCache";
+import { mapNavigationItem } from "@/exxonim/utils/contentMappers";
+import type { NavigationItem } from '@/exxonim/types';
+import type { ApiNavigationItem } from "@/exxonim/types/api";
+import {
+  preloadStaticFallback,
+  getStaticFallback,
+} from "./staticFallbackService";
+import { fallbackNavigationItems } from "@/exxonim/content/fallbackPublicContent";
+
+preloadStaticFallback<NavigationItem[]>("navigation");
+
+const NAVIGATION_CACHE_KEY = "navigation";
+const NAVIGATION_TTL_MS = 1000 * 60 * 60 * 24;
+
+function isNavigationCollection(value: NavigationItem[]) {
+  return Array.isArray(value) && value.length > 0;
+}
+
+async function fetchFreshNavigation() {
+  const response = await api.get<ApiNavigationItem[]>(apiRoutes.public.navigation.list);
+  return response.data.map(
+    (item): NavigationItem => mapNavigationItem(item)
+  );
+}
+
+export function getCachedNavigation() {
+  return getCachedPublicContent<NavigationItem[]>(NAVIGATION_CACHE_KEY, getStaticFallback<NavigationItem[]>("navigation") ?? fallbackNavigationItems);
+}
+
+export function getCachedNavigationResource() {
+  return getCachedPublicContentState<NavigationItem[]>(NAVIGATION_CACHE_KEY, {
+    fallbackValue: getStaticFallback<NavigationItem[]>("navigation") ?? fallbackNavigationItems,
+    ttlMs: NAVIGATION_TTL_MS,
+  });
+}
+
+export async function getNavigation() {
+  return fetchWithFallback<NavigationItem[]>({
+    cacheKey: NAVIGATION_CACHE_KEY,
+    fallbackValue: getStaticFallback<NavigationItem[]>("navigation") ?? fallbackNavigationItems,
+    fetcher: fetchFreshNavigation,
+    ttlMs: NAVIGATION_TTL_MS,
+    validate: isNavigationCollection,
+    warningLabel: "Using cached or default navigation content.",
+  });
+}
+
+export async function getNavigationResource() {
+  return fetchWithFallbackResource<NavigationItem[]>({
+    cacheKey: NAVIGATION_CACHE_KEY,
+    fallbackValue: getStaticFallback<NavigationItem[]>("navigation") ?? fallbackNavigationItems,
+    fetcher: fetchFreshNavigation,
+    ttlMs: NAVIGATION_TTL_MS,
+    validate: isNavigationCollection,
+    warningLabel: "Using cached or default navigation content.",
+  });
+}

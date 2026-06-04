@@ -1,0 +1,25 @@
+export {
+  fallbackBlogCategories,
+  fallbackBlogPosts,
+  fallbackBrandSetting,
+  fallbackCareerPage,
+  fallbackCompanyInfoSetting,
+  fallbackContactPage,
+  fallbackCookiePage,
+  fallbackDataRightsPage,
+  fallbackFooterSetting,
+  fallbackHomePage,
+  fallbackJobs,
+  fallbackPricingPlans,
+  fallbackPrivacyPage,
+  fallbackResourcesPage,
+  fallbackTestimonials,
+  getFallbackPage,
+  getFallbackSiteSetting,
+} from "./fallbackPublicContent";
+export {
+  fallbackBrand,
+  fallbackCompanyInfo,
+  fallbackFooter,
+  fallbackNavigationItems,
+} from "./fallbackShell";
