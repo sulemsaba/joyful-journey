@@ -104,7 +104,6 @@ function TestimonialMarquee({
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [isSliding, setIsSliding] = useState(false);
   const [showArrows, setShowArrows] = useState(false);
   const [isDraggingState, setIsDraggingState] = useState(false);
@@ -116,45 +115,26 @@ function TestimonialMarquee({
   const rafRef = useRef<number>(0);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tickRef = useRef(0);
+  const scrollDelta = useRef(0); // fractional px accumulator
 
   // Duplicate items 3× for seamless infinite scroll.
   const items = [...testimonials, ...testimonials, ...testimonials];
   const CARD_WIDTH = 320; // w-80 = 20rem = 320px
-  // Base speed ≈ 15 px/s at 60fps. Sine-wave oscillation varies
-  // it between ~9 px/s (slow) and ~21 px/s (moderate) so the
+  // Base speed ≈ 18 px/s at 60fps. Sine-wave oscillation varies
+  // it between ~11 px/s (slow) and ~25 px/s (moderate) so the
   // marquee breathes naturally instead of feeling robotic.
-  const BASE_SPEED = 0.25;
-  const SPEED_AMPLITUDE = 0.1; // ±0.1 px/frame around BASE_SPEED
+  const BASE_SPEED = 0.3;
+  const SPEED_AMPLITUDE = 0.12; // ±0.12 px/frame around BASE_SPEED
   const SPEED_PERIOD = 480; // frames per full cycle ≈ 8 s at 60fps
 
-  // ── Intersection Observer: detect when section enters viewport ──
+  // ── Start auto-scroll after 3 s ──────────────────────────────
   useEffect(() => {
-    const el = wrapperRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [isVisible]);
-
-  // ── Start sliding after ~3 s delay once visible ─────────────
-  useEffect(() => {
-    if (!isVisible) return;
-
     const startDelay = setTimeout(() => {
       setIsSliding(true);
     }, 3000);
 
     return () => clearTimeout(startDelay);
-  }, [isVisible]);
+  }, []);
 
   // ── RAF-based auto-scroll (endless loop) ────────────────────
   useEffect(() => {
@@ -171,7 +151,16 @@ function TestimonialMarquee({
         // so the marquee breathes — sometimes slower, sometimes faster.
         tickRef.current += 1;
         const speed = BASE_SPEED + SPEED_AMPLITUDE * Math.sin((2 * Math.PI * tickRef.current) / SPEED_PERIOD);
-        el.scrollLeft += speed;
+        
+        // Accumulate fractional pixels; only apply integer part to
+        // scrollLeft because browsers round sub-pixel scroll values
+        // to zero, which would make tiny speeds invisible.
+        scrollDelta.current += speed;
+        const wholePixels = Math.floor(scrollDelta.current);
+        if (wholePixels >= 1) {
+          el.scrollLeft += wholePixels;
+          scrollDelta.current -= wholePixels;
+        }
 
         // Seamless loop: when we've scrolled past the first set,
         // jump back by one set's width — content is identical so
