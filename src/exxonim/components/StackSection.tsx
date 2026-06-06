@@ -42,7 +42,7 @@ export function StackSection({
   );
 
   return (
-    <section aria-label="Service guidance overview" className="relative bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-page)_52%,var(--color-page-strong)_100%)]">
+    <section aria-label="Service guidance overview" className="relative bg-[linear-gradient(180deg,var(--color-page)_0%,var(--color-page)_52%,var(--color-page-strong)_100%)]">
       {visibleItems.map((rawItem, index) => {
         const item = rawItem as ExtendedStackItem;
         const isFeatureCard = index === 1;
