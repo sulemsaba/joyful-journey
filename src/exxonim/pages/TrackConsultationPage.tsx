@@ -9,14 +9,14 @@
  * "Exxonim Client Case Tracking System — Technical Design Report v1.0"
  *
  * ── TRACKING CODE FORMAT ──
- *   6 characters, alphanumeric (A-Z, 0-9), case-insensitive
- *   Display format: "84 72 9A" (two groups of 3, space-separated)
+ *   6 characters: 5 digits + 1 uppercase letter
+ *   Display format: "84 72 9A" (three groups of 2, space-separated)
  *   Storage format: "84729A" (no spaces, uppercase, CHAR(6) UNIQUE)
  *   Generation: cryptographically secure random (secrets.choice)
- *   Keyspace: 2.17 billion (36^6), or 1.07B if ambiguous chars excluded
+ *   Keyspace: 2.6 million (10^5 × 26), or 2.4M if I,O excluded
  *
- *   Optional exclusion of I, O, 0, 1 to avoid confusion:
- *   Remaining set: 32 characters → still 1.07 billion combinations
+ *   Optional exclusion of I, O to avoid confusion:
+ *   Remaining letter set: 24 characters → still 2.4 million combinations
  *
  * ── API CONTRACT ──
  *   Endpoint: POST /api/track
@@ -76,9 +76,9 @@
  *
  * ── DEMO TRACKING CODES (mock API) ──
  *   84729A — Active case (Company Registration, 3/6 milestones done)
- *   K5BM3E — Completed case (TIN Application, all 4 milestones done)
- *   P9QX2W — On hold case (Business Licensing, awaiting client documents)
- *   Any other 6-char code → "not found"
+ *   53107B — Completed case (TIN Application, all 4 milestones done)
+ *   46283C — On hold case (Business Licensing, awaiting client documents)
+ *   Any other code matching /\d{5}[A-Z]/ → "not found"
  *
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -115,25 +115,25 @@ function normalizeTrackingCode(raw: string): string {
 
 /**
  * Validates that a normalized tracking code matches the expected format:
- * exactly 6 alphanumeric characters (A-Z, 0-9).
+ * 5 digits followed by 1 uppercase letter (e.g., "84729A").
  *
  * BACKEND: Use the same regex or equivalent validation:
  *   import re
- *   pattern = re.compile(r'^[A-Z0-9]{6}$')
+ *   pattern = re.compile(r'^[0-9]{5}[A-Z]$')
  *   if not pattern.match(code.strip().upper().replace(' ', '')):
  *       return 404
  */
 function isValidTrackingCode(code: string): boolean {
-  return /^[A-Z0-9]{6}$/.test(code);
+  return /^[0-9]{5}[A-Z]$/.test(code);
 }
 
 /**
  * Formats a raw 6-char tracking code for display: "84729A" → "84 72 9A"
- * Two groups of three, space-separated, per spec §2.1.
+ * Three groups of two, space-separated, per spec.
  */
 function formatTrackingCode(code: string): string {
   if (code.length !== 6) return code;
-  return `${code.slice(0, 3)} ${code.slice(3)}`;
+  return `${code.slice(0, 2)} ${code.slice(2, 4)} ${code.slice(4)}`;
 }
 
 /**
@@ -578,14 +578,14 @@ function TrackingNotFound({ code }: { code: string }) {
             Correct format
           </span>
           <p className="m-0 mt-1 text-sm font-mono text-text">
-            <span className="text-accent">XX</span>{" "}
-            <span className="text-accent">XX</span>{" "}
-            <span className="text-accent">XX</span>
+            <span className="text-accent">NN</span>{" "}
+            <span className="text-accent">NN</span>{" "}
+            <span className="text-accent">NA</span>
           </p>
           <p className="m-0 mt-1.5 text-xs text-text-muted leading-relaxed">
-            6 characters — letters and numbers. Spaces are optional.
-            Example: <span className="font-mono text-text">84729A</span> or{" "}
-            <span className="font-mono text-text">84 72 9A</span>
+            5 numbers + 1 letter. Spaces are optional.
+            Example: <span className="font-mono text-text">84 72 9A</span> or{" "}
+            <span className="font-mono text-text">84729A</span>
           </p>
         </div>
       )}
@@ -605,10 +605,13 @@ function TrackingNotFound({ code }: { code: string }) {
  * TRACKING CODE INPUT — auto-formatting, paste support
  *
  * UX BEHAVIOUR:
- *   - User types "847" → displays "847"
- *   - User types "8472" → displays "847 2" (auto-space after 3rd char)
- *   - User pastes "84 72 9A" → normalizes to "84729A", displays "847 29A"
- *   - Max display: 7 chars (6 code + 1 space)
+ *   - User types "84" → displays "84"
+ *   - User types "847" → displays "84 7" (auto-space after 2nd char)
+ *   - User types "8472" → displays "84 72" (auto-space after 4th char)
+ *   - User types "84729" → displays "84 72 9"
+ *   - User types "84729A" → displays "84 72 9A"
+ *   - User pastes "84 72 9A" → normalizes to "84729A", displays "84 72 9A"
+ *   - Max display: 8 chars (6 code + 2 spaces)
  *
  * BACKEND: The frontend sends the raw 6-char code (no spaces)
  * in the request body: { trackingNumber: "84729A" }
@@ -622,11 +625,12 @@ function TrackingCodeInput({
   onChange: (raw: string) => void;
   disabled: boolean;
 }) {
-  /** Display value with space formatting */
+  /** Display value with space formatting (three groups of 2) */
   const displayValue = (() => {
     const raw = normalizeTrackingCode(value);
-    if (raw.length <= 3) return raw;
-    return `${raw.slice(0, 3)} ${raw.slice(3)}`;
+    if (raw.length <= 2) return raw;
+    if (raw.length <= 4) return `${raw.slice(0, 2)} ${raw.slice(2)}`;
+    return `${raw.slice(0, 2)} ${raw.slice(2, 4)} ${raw.slice(4)}`;
   })();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -651,7 +655,7 @@ function TrackingCodeInput({
       autoComplete="off"
       autoFocus
       className="w-full h-14 px-5 rounded-xl border border-border-soft bg-surface text-text text-lg font-mono tracking-[0.2em] placeholder:text-text-soft/40 placeholder:tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent text-center disabled:opacity-50 disabled:cursor-not-allowed"
-      aria-label="Enter your 6-character tracking code"
+      aria-label="Enter your tracking code (5 numbers + 1 letter)"
     />
   );
 }
@@ -673,7 +677,7 @@ export function TrackConsultationPage() {
       createFallbackSeo(routes.trackConsultation, {
         title: "Track Your Consultation | Exxonim Consult",
         description:
-          "Look up your Exxonim Consult consultation status anytime using your 6-character tracking code. No login required.",
+          "Look up your Exxonim Consult consultation status anytime using your tracking code. No login required.",
         robots: "index,follow",
       })
     );
@@ -759,7 +763,7 @@ export function TrackConsultationPage() {
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
               Automated updates at every milestone — delivered to your WhatsApp.
-              Enter your 6-character tracking code for an instant status check.
+              Enter your tracking code (5 numbers + 1 letter) for an instant status check.
               No login, no password, no phone number required.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
@@ -844,9 +848,9 @@ export function TrackConsultationPage() {
 
               {/* Demo hint — remove in production */}
               <p className="text-[0.65rem] text-text-soft/60 text-center">
-                Demo: try <span className="font-mono">84729A</span>,{" "}
-                <span className="font-mono">K5BM3E</span>, or{" "}
-                <span className="font-mono">P9QX2W</span>
+                Demo: try <span className="font-mono">84 72 9A</span>,{" "}
+                <span className="font-mono">53 10 7B</span>, or{" "}
+                <span className="font-mono">46 28 3C</span>
               </p>
             </div>
           </div>
@@ -903,14 +907,14 @@ export function TrackConsultationPage() {
             </h2>
             <p className="m-0 text-text-muted max-w-[36rem]">
               No account, no password, no phone number to look up your case.
-              Your 6-character tracking code is the only key — and with over 2
-              billion possible combinations, it&rsquo;s secure by design.
+              Your tracking code (5 numbers + 1 letter) is the only key — and with over 2.6
+              million possible combinations, it&rsquo;s secure by design.
             </p>
             <div className="grid gap-4">
               <SecurityPoint
                 icon={<ShieldIcon className="w-5 h-5" />}
-                title="2.17 billion possible codes"
-                description="Even at 100 guesses per second, it would take over 250 days to cover 1% of the keyspace."
+                title="2.6 million possible codes"
+                description="5 digits and 1 letter create enough combinations to prevent random guessing while staying easy to read and share."
               />
               <SecurityPoint
                 icon={<ShieldIcon className="w-5 h-5" />}

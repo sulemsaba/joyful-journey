@@ -310,14 +310,14 @@ export function ContactPage() {
                       Your tracking code is:
                     </p>
                     {/*
-                      BACKEND TEAM: The tracking_id is now a 6-character alphanumeric code.
-                      Format: "84729A" in storage, displayed as "84 72 9A" (two groups of 3).
+                      BACKEND TEAM: The tracking_id is now a 6-character code (5 digits + 1 letter).
+                      Format: "84729A" in storage, displayed as "84 72 9A" (three groups of 2).
                       This code is also sent to the client via WhatsApp:
                         "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
                     */}
                     <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
                       {submissionResult.tracking_id.length === 6
-                        ? `${submissionResult.tracking_id.slice(0, 3)} ${submissionResult.tracking_id.slice(3)}`
+                        ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
                         : submissionResult.tracking_id}
                     </code>
                     <p className="text-text-muted text-sm mt-3">

@@ -109,3 +109,25 @@ Task: Revamp the Track Your Consultation page to match the new "Exxonim Client C
 - **Issue**: `lookupTrackingCode()` used the shared Axios client with absolute baseURL (`http://localhost:3000/api/v1`), which is unreachable from the browser in the sandbox/proxied environment
 - **Fix**: Changed `lookupTrackingCode()` to use native `fetch()` with a relative path (`/api/v1/track`) instead of Axios. Relative paths resolve through the caddy gateway correctly in all environments
 - **Why other pages work**: Other pages use SSR where the server can reach `localhost:3000` directly. The tracking lookup is purely client-side (user enters code, clicks button), so it must use relative paths
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Change tracking code format from 6 alphanumeric to 5 digits + 1 letter, displayed as 3 groups of 2 (e.g. "12 34 5A")
+
+Work Log:
+- Updated mock API handler (route.ts): new tracking code generator (5 random digits + 1 random letter), new validation regex `/^[0-9]{5}[A-Z]$/`, replaced demo codes (84729A, 53107B, 46283C)
+- Updated TrackConsultationPage.tsx: new validation regex, display format as 3 groups of 2, input auto-formatting with spaces after 2nd and 4th chars, updated hero text, demo hints, security stats (2.6M codes), SEO description, aria-label, not-found format hint (NN NN NA)
+- Updated ContactPage.tsx: tracking code display format changed from 2 groups of 3 to 3 groups of 2
+- Updated consultations.ts types: tracking code format description updated
+- Updated consultationService.ts: backend comments updated for new format
+- Updated api routes.ts: added tracking code format description
+- All lint checks pass
+- Browser verification: all 3 demo codes (84729A, 53107B, 46283C) work correctly for active/completed/on_hold cases; invalid codes show "not found"; display format confirmed as "84 72 9A" (3 groups of 2)
+
+Stage Summary:
+- Tracking code format changed from 6 alphanumeric to 5 digits + 1 letter
+- Display format changed from "847 29A" (2 groups of 3) to "84 72 9A" (3 groups of 2)
+- Old demo codes K5BM3E and P9QX2W replaced with 53107B and 46283C
+- P9QX2W on_hold bug is fixed (was caused by old alphanumeric format)
+- Keyspace updated from 2.17 billion to 2.6 million

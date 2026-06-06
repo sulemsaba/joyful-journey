@@ -32,24 +32,32 @@ const FALLBACK_TIMESTAMP = "2026-01-01T00:00:00Z";
  * BACKEND TEAM (FastAPI): Replace this with the real implementation:
  *
  *   import secrets, string
- *   ALPHABET = string.ascii_uppercase + string.digits  # A-Z 0-9
+ *   DIGITS = string.digits          # 0-9
+ *   LETTERS = string.ascii_uppercase # A-Z (exclude I, O optionally)
  *   def generate_tracking_code(active_codes: set) -> str:
  *       while True:
- *           code = ''.join(secrets.choice(ALPHABET) for _ in range(6))
+ *           digits_part = ''.join(secrets.choice(DIGITS) for _ in range(5))
+ *           letter_part = secrets.choice(LETTERS)
+ *           code = digits_part + letter_part
  *           if code not in active_codes:
  *               return code
  *
- * Display format: "84 72 9A" (two groups of 3, space-separated)
+ * Format: 5 digits + 1 uppercase letter = 6 characters total
+ * Display format: "84 72 9A" (three groups of 2, space-separated)
  * Storage format: "84729A" (no spaces, uppercase, CHAR(6) UNIQUE)
  *
- * Optional: Exclude I, O, 0, 1 to avoid ambiguity → 32-char alphabet → 1.07B combos
+ * Keyspace: 10^5 × 26 = 2,600,000 (2.6 million combinations)
+ * If ambiguous letters (I, O) excluded: 10^5 × 24 = 2,400,000
  * ═══════════════════════════════════════════════════════════════════════════ */
-const TRACKING_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 chars, no I/O/0/1
+const TRACKING_DIGITS = "0123456789";
+const TRACKING_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // 24 chars, no I/O
 function generateMockTrackingCode(): string {
+  // Generate 5 random digits + 1 random letter
   let code = "";
-  for (let i = 0; i < 6; i++) {
-    code += TRACKING_ALPHABET[Math.floor(Math.random() * TRACKING_ALPHABET.length)];
+  for (let i = 0; i < 5; i++) {
+    code += TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)];
   }
+  code += TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];
   return code;
 }
 
@@ -320,7 +328,8 @@ export async function POST(
     }
 
     const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
-    const isValid = /^[A-Z0-9]{6}$/.test(raw);
+    // Format: 5 digits followed by 1 uppercase letter (e.g., "84729A")
+    const isValid = /^[0-9]{5}[A-Z]$/.test(raw);
 
     if (!isValid) {
       return NextResponse.json(
@@ -357,6 +366,8 @@ export async function POST(
       totalSteps: number;
       visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
     }> = {
+      // Demo codes — format: 5 digits + 1 letter (e.g., "84729A")
+      // Display format: "84 72 9A" (three groups of 2, space-separated)
       "84729A": {
         status: "active",
         serviceType: "Company Registration",
@@ -374,7 +385,7 @@ export async function POST(
           { label: "Certificate Issued", status: "upcoming", date: null },
         ],
       },
-      "K5BM3E": {
+      "53107B": {
         status: "completed",
         serviceType: "TIN Application",
         milestone: "All processes completed",
@@ -390,7 +401,7 @@ export async function POST(
           { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
         ],
       },
-      "P9QX2W": {
+      "46283C": {
         status: "on_hold",
         serviceType: "Business Licensing",
         milestone: "Awaiting Client Documents",
@@ -434,7 +445,7 @@ export async function POST(
   // Consultations: /consultations
   //
   // BACKEND TEAM (FastAPI): When a consultation is created via the public
-  // contact form, generate a 6-char alphanumeric tracking code.
+  // contact form, generate a tracking code (5 digits + 1 letter).
   // The code is sent to the client via WhatsApp:
   //   "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
   //
@@ -448,9 +459,9 @@ export async function POST(
       service_request_id: `sr-${Date.now()}`,
       tracking_id: trackingCode,
       /**
-       * BACKEND: The tracking_id field is now a 6-character alphanumeric code.
-       * Format: CHAR(6), uppercase, no spaces in storage.
-       * Display format: "84 72 9A" (two groups of 3, space-separated).
+       * BACKEND: The tracking_id field is now a 6-character code (5 digits + 1 letter).
+       * Format: CHAR(6), uppercase, no spaces in storage. Example: "84729A"
+       * Display format: "84 72 9A" (three groups of 2, space-separated).
        * The frontend formats this for display automatically.
        */
       status: "pending",

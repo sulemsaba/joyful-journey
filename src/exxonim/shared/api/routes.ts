@@ -139,6 +139,7 @@ export const apiRoutes = {
      * When the FastAPI backend is live, update this constant to "/track"
      * and update the Next.js rewrite/proxy rules accordingly.
      *
+     * Tracking code format: 5 digits + 1 uppercase letter (e.g., "84729A")
      * Request:  { trackingNumber: "84729A" }
      * Response: ApiTrackingLookupResponse (200) or ApiTrackingNotFoundResponse (404)
      */

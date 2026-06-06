@@ -13,7 +13,7 @@ import type {
  *
  * BACKEND TEAM (FastAPI): This creates a new case in the database.
  * The backend should:
- *   1. Generate a 6-char alphanumeric tracking code (secrets.choice)
+ *   1. Generate a tracking code (5 digits + 1 letter) using secrets.choice
  *   2. Create a new case record with the tracking code
  *   3. Create case_milestones records for the service type's milestones
  *   4. Send WhatsApp notification to the client with their tracking code:
@@ -40,8 +40,9 @@ export async function submitPublicConsultation(
  * Request:  { trackingNumber: "84729A" }
  *
  * The frontend sends the raw 6-char code (spaces stripped, uppercased).
+ * Format: 5 digits + 1 uppercase letter.
  * The backend should:
- *   1. Validate the code format (6 chars, alphanumeric)
+ *   1. Validate the code format (5 digits + 1 letter)
  *   2. Query the cases table: SELECT * FROM cases WHERE tracking_code = $1
  *   3. If not found: return 404 { status: "not_found", message: "..." }
  *      (same response for invalid/expired/closed — no info leakage)

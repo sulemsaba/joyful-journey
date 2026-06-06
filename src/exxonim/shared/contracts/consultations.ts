@@ -112,12 +112,12 @@ export type ApiConsultationListResponse = ApiPaginatedResponse<ApiConsultation>;
  * These types define the API contract for the public tracking lookup feature.
  *
  * TRACKING CODE FORMAT (v1.0 spec):
- *   - 6 characters, alphanumeric (A-Z, 0-9), case-insensitive
- *   - Display format: two groups of 3, space-separated → "84 72 9A"
+ *   - 6 characters: 5 digits + 1 uppercase letter (e.g., "84729A")
+ *   - Display format: three groups of 2, space-separated → "84 72 9A"
  *   - Input: spaces stripped, uppercased before validation/lookup
  *   - Generation: cryptographically secure random (secrets.choice in Python)
- *   - Keyspace: 2.17 billion combinations (36^6)
- *   - Optional: exclude I, O, 0, 1 to avoid ambiguity → 32 chars → 1.07B combos
+ *   - Keyspace: 2.6 million combinations (10^5 × 26)
+ *   - Optional: exclude I, O to avoid ambiguity → 24 letters → 2.4M combos
  *
  * DATABASE TABLES NEEDED:
  *   - cases (id, client_name, client_phone, service_type, tracking_code CHAR(6) UNIQUE,
@@ -147,7 +147,7 @@ export type ApiConsultationListResponse = ApiPaginatedResponse<ApiConsultation>;
  * When the FastAPI backend is live, update the API route constant to match.
  */
 export interface ApiTrackingLookupRequest {
-  /** 6-character alphanumeric tracking code (spaces stripped, uppercased) */
+  /** Tracking code: 5 digits + 1 uppercase letter (spaces stripped, uppercased) */
   trackingNumber: string;
 }
 
