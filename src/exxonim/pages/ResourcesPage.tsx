@@ -62,6 +62,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
@@ -602,7 +603,7 @@ export function ResourcesPage() {
                 }}
               />
               <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                <Breadcrumb items={[{ label: "Home", href: routes.home }, { label: "Resources" }]} />
+                <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources" }]} />
               </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
                 <h1 className="text-[clamp(2rem,4vw,3.2rem)] font-semibold tracking-tight text-text leading-[1.1]">

@@ -1,3 +1,4 @@
+import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { ComplianceCalendarSection } from "@/exxonim/components/ComplianceCalendarSection";
 import { EngineSection } from "@/exxonim/components/EngineSection";
@@ -26,7 +27,7 @@ export function ServicesPage() {
       {() => { if (!page) return null; return (
         <>
         <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Breadcrumb items={[{ label: "Home", href: routes.home }, { label: "Services" }]} />
+          <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Services" }]} />
         </div>
         <ServicesOverviewSection content={page.content.overview} />
         <EngineSection content={page.content.catalog} />

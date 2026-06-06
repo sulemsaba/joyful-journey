@@ -1,3 +1,4 @@
+import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { routes } from "@/exxonim/routes";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
@@ -23,7 +24,7 @@ export function AboutPage() {
       {() => { if (!content) return null; return (
         <>
         <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Breadcrumb items={[{ label: "Home", href: routes.home }, { label: "About" }]} />
+          <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "About" }]} />
         </div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="pt-4 md:pt-8 pb-12 md:pb-20">

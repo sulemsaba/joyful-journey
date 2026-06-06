@@ -74,6 +74,7 @@
  * ═══════════════════════════════════════════════════════════ */
 
 import { useEffect, useState } from "react";
+import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { routes } from "@/exxonim/routes";
 import { applyResolvedSeo, createFallbackSeo } from '@/exxonim/seo';
@@ -641,7 +642,7 @@ export function TrackConsultationPage() {
           }}
         />
         <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Breadcrumb items={[{ label: "Home", href: routes.home }, { label: "Track Consultation" }]} />
+          <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Track Consultation" }]} />
         </div>
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           <div className="grid gap-6">

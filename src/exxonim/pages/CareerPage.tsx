@@ -67,6 +67,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
@@ -725,7 +726,7 @@ export function CareerPage() {
           <div className="min-h-screen overflow-x-hidden" onClick={() => setShowDeptDropdown(false)}>
             {/* ── Breadcrumb ── */}
             <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-              <Breadcrumb items={[{ label: "Home", href: routes.home }, { label: "Career" }]} />
+              <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Career" }]} />
             </div>
 
             {/* ═══ 1. HERO BANNER ═══ */}

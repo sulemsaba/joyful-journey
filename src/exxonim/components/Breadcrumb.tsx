@@ -1,4 +1,5 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Home } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 /**
  * Breadcrumb navigation component.
@@ -7,9 +8,14 @@ import { ChevronRight } from "lucide-react";
  * Linked items use `text-text-muted hover:text-accent`, the current (last)
  * item is `text-text font-medium` with no link.
  *
+ * Supports an optional `icon` on any item — when provided, the icon is
+ * rendered instead of the label text. The label is still used for
+ * `aria-label` and `title` for accessibility.
+ *
  * Usage:
  * ```tsx
  * <Breadcrumb items={[
+ *   { label: "Home", href: "/", icon: Home },
  *   { label: "Resources", href: "/resources/" },
  *   { label: "FAQ" },
  * ]} />
@@ -20,6 +26,8 @@ export interface BreadcrumbItem {
   label: string;
   /** If omitted, the item is treated as the current page (no link). */
   href?: string;
+  /** Optional icon — renders instead of the label. Label used for aria/title. */
+  icon?: LucideIcon;
 }
 
 interface BreadcrumbProps {
@@ -34,6 +42,12 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
       <ol className="flex items-center flex-wrap gap-1 text-sm">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
+          const Icon = item.icon;
+          const content = Icon ? (
+            <Icon className="w-4 h-4" aria-hidden="true" />
+          ) : (
+            item.label
+          );
 
           return (
             <li key={index} className="flex items-center gap-1">
@@ -48,15 +62,18 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                 <span
                   className="text-text font-medium"
                   aria-current={isLast ? "page" : undefined}
+                  title={Icon ? item.label : undefined}
                 >
-                  {item.label}
+                  {content}
                 </span>
               ) : (
                 <a
                   href={item.href}
-                  className="text-text-muted hover:text-accent transition-colors"
+                  className="text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1"
+                  aria-label={Icon ? item.label : undefined}
+                  title={Icon ? item.label : undefined}
                 >
-                  {item.label}
+                  {content}
                 </a>
               )}
             </li>
