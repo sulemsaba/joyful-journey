@@ -94,25 +94,26 @@ const sizeStyles: Record<ButtonSize, string> = {
 const variantStyles: Record<ButtonVariant, string> = {
   primary: cn(
     'bg-accent text-accent-contrast',
-    'hover:bg-accent-hover',
+    'hover:bg-accent-hover hover:text-accent-contrast',
   ),
   secondary: cn(
     'border border-border-soft bg-surface/80 text-text',
-    'hover:bg-surface',
+    'hover:bg-surface hover:text-text',
   ),
   outline: cn(
     'border border-accent text-accent',
-    'hover:bg-accent-soft',
+    'hover:bg-accent-soft hover:text-accent',
   ),
   ghost: cn(
     'bg-transparent text-text',
-    'hover:bg-accent-soft',
+    'hover:bg-accent-soft hover:text-text',
   ),
 }
 
 /* ── Shared base styles ─────────────────────────────────────── */
 const baseStyles = cn(
   'inline-flex items-center justify-center',
+  'no-underline',
   'transition-all duration-200',
   'hover:-translate-y-0.5 active:translate-y-0',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',

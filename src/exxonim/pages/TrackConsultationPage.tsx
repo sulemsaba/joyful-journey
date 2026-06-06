@@ -504,14 +504,14 @@ function TrackingNotFound({
       </div>
       <div className="flex flex-wrap gap-3 justify-center pt-1">
         <Button
-          size="hero"
+          size="standard"
           variant="primary"
           onClick={onReset}
         >
           Try Again
         </Button>
         <Button
-          size="hero"
+          size="standard"
           variant="secondary"
           href={routes.contact}
         >
@@ -754,14 +754,14 @@ export function TrackConsultationPage() {
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Button
-                size="hero"
+                size="standard"
                 variant="primary"
                 href={routes.contact}
               >
                 Request a Consultation
               </Button>
               <Button
-                size="hero"
+                size="standard"
                 variant="secondary"
                 href={routes.services}
               >
@@ -792,7 +792,7 @@ export function TrackConsultationPage() {
                   </p>
                 )}
                 <Button
-                  size="hero"
+                  size="standard"
                   variant="primary"
                   type="submit"
                   className="rounded-xl w-full"
@@ -1013,10 +1013,10 @@ export function TrackConsultationPage() {
               look it up for you.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Button size="hero" variant="primary" href={routes.contact}>
+              <Button size="standard" variant="primary" href={routes.contact}>
                 Contact Us
               </Button>
-              <Button size="hero" variant="outline" href={routes.support}>
+              <Button size="standard" variant="outline" href={routes.support}>
                 Support Centre
               </Button>
             </div>
@@ -1043,14 +1043,14 @@ export function TrackConsultationPage() {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <Button
-                size="hero"
+                size="standard"
                 variant="primary"
                 href={routes.contact}
               >
                 Request a Consultation
               </Button>
               <Button
-                size="hero"
+                size="standard"
                 variant="secondary"
                 href={routes.services}
               >
