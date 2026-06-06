@@ -45,6 +45,7 @@
 import { useEffect, useRef, useState, type FocusEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuColumns } from "@/exxonim/components/navigation/MegaMenuColumns";
+import { Button } from "@/exxonim/components/primitives/Button";
 import type { FeatureBox, HoverFeatureMap, MegaMenuLayout, MenuColumn, MenuFooterCta, MenuKey, MenuItem } from "@/exxonim/components/navigation/types";
 import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
@@ -216,15 +217,15 @@ export function DesktopNavigation({
         ))}
 
         {/* Highlight link — Track Consultation (differentiator) */}
-        <a
+        <Button
+          size="compact"
+          variant="primary"
           href={highlightLink.href}
           onClick={closeAllMenus}
           aria-current={isActive(highlightLink.href) ? "page" : undefined}
           className={cn(
-            "relative inline-flex items-center gap-2 h-9 px-3.5 rounded-full text-[0.8rem] font-extrabold transition-all",
-            isActive(highlightLink.href)
-              ? "bg-accent-hover text-accent-contrast ring-2 ring-accent/30"
-              : "bg-accent text-accent-contrast hover:bg-accent-hover"
+            "gap-2",
+            isActive(highlightLink.href) && "bg-accent-hover ring-2 ring-accent/30"
           )}
         >
           <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -232,7 +233,7 @@ export function DesktopNavigation({
             <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-contrast" />
           </span>
           {highlightLink.label}
-        </a>
+        </Button>
 
         {/* ═══════════════════════════════════════════════════════
          * DROPDOWN PANELS — centered on <nav>
@@ -286,13 +287,14 @@ export function DesktopNavigation({
               >
                 Contact {brandName}
               </a>
-              <a
+              <Button
+                size="compact"
+                variant="primary"
                 href={routes.services}
                 onClick={closeAllMenus}
-                className="inline-flex items-center justify-center h-8 px-4 rounded-full bg-accent text-accent-contrast text-xs font-bold hover:bg-accent-hover transition-all"
               >
                 See All Services
-              </a>
+              </Button>
             </div>
           </div>
         </div>

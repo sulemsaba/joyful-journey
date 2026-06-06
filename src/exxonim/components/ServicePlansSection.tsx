@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
+import { Button } from "./primitives/Button";
 import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
 import { useTestimonials } from "@/exxonim/hooks/useTestimonials";
 import { routes } from "@/exxonim/routes";
@@ -296,40 +297,38 @@ function TestimonialMarquee({
       </div>
 
       {/* Left arrow — visible on hover (desktop), hidden on mobile */}
-      <button
-        type="button"
+      <Button
+        size="icon"
+        variant="secondary"
+        className={cn(
+          "shadow-md backdrop-blur-sm",
+          "absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10",
+          "hidden md:flex",
+          "opacity-0 pointer-events-none",
+          showArrows && "md:opacity-100 md:pointer-events-auto"
+        )}
         onClick={() => handleArrowClick("left")}
         aria-label="Previous testimonials"
-        className={cn(
-          "absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10",
-          "hidden md:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center",
-          "rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm",
-          "transition-all duration-200 hover:bg-surface hover:shadow-lg hover:scale-110",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-          "opacity-0 pointer-events-none",
-          showArrows && "md:opacity-100 md:pointer-events-auto"
-        )}
       >
         <ChevronLeft className="h-5 w-5" />
-      </button>
+      </Button>
 
       {/* Right arrow — visible on hover (desktop), hidden on mobile */}
-      <button
-        type="button"
-        onClick={() => handleArrowClick("right")}
-        aria-label="Next testimonials"
+      <Button
+        size="icon"
+        variant="secondary"
         className={cn(
+          "shadow-md backdrop-blur-sm",
           "absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-10",
-          "hidden md:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center",
-          "rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm",
-          "transition-all duration-200 hover:bg-surface hover:shadow-lg hover:scale-110",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+          "hidden md:flex",
           "opacity-0 pointer-events-none",
           showArrows && "md:opacity-100 md:pointer-events-auto"
         )}
+        onClick={() => handleArrowClick("right")}
+        aria-label="Next testimonials"
       >
         <ChevronRight className="h-5 w-5" />
-      </button>
+      </Button>
     </div>
   );
 }
@@ -392,17 +391,17 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
         ))}
       </ul>
 
-      <a
+      <Button
+        size="hero"
+        variant="primary"
         href={routes.contact}
         className={cn(
-          "mt-6 inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold transition-all hover:-translate-y-0.5",
-          featured
-            ? "bg-accent text-accent-contrast hover:bg-accent-hover"
-            : "bg-cta-secondary text-surface hover:opacity-90"
+          "mt-6",
+          !featured && "bg-cta-secondary text-surface hover:opacity-90"
         )}
       >
         Contact Exxonim
-      </a>
+      </Button>
     </article>
   );
 }

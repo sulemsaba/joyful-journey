@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Home } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
+import { Button } from "@/exxonim/components/primitives/Button";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
@@ -109,11 +110,13 @@ export function ContactPage() {
     mutationFn: submitPublicConsultation,
   });
 
+  const isSubmitting = submissionMutation.isPending;
+
   const canSubmit =
     formValues.fullName.trim().length > 1 &&
     formValues.email.trim().length > 3 &&
     formValues.message.trim().length > 12 &&
-    !submissionMutation.isPending;
+    !isSubmitting;
 
   const handleFieldChange = (
     field: "fullName" | "email" | "phone" | "company" | "serviceTypeCode" | "message",
@@ -448,13 +451,16 @@ export function ContactPage() {
                     )}
 
                     {/* Submit button */}
-                    <button
+                    <Button
+                      size="hero"
+                      variant="primary"
                       type="submit"
-                      disabled={!canSubmit}
-                      className="w-full inline-flex h-12 items-center justify-center rounded-xl px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                      className="rounded-xl w-full"
+                      disabled={isSubmitting}
+                      isLoading={isSubmitting}
                     >
-                      {submissionMutation.isPending ? "Sending request..." : "Submit request"}
-                    </button>
+                      Submit request
+                    </Button>
 
                     {/* Disclaimer */}
                     <p className="text-xs text-text-soft text-center">

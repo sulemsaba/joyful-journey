@@ -1,6 +1,7 @@
 'use client';
 
 import { routes } from '@/exxonim/routes';
+import { Button } from '@/exxonim/components/primitives/Button';
 
 /**
  * ComplianceCalendarSection — visual compliance calendar for Tanzania businesses.
@@ -269,20 +270,22 @@ function CTACard() {
 
       {/* CTA buttons */}
       <div className="grid gap-3">
-        <a
+        <Button
+          size="hero"
+          variant="primary"
           href={routes.contact}
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
         >
           Get compliance support
           <ArrowRightIcon className="h-4 w-4" />
-        </a>
-        <a
+        </Button>
+        <Button
+          size="hero"
+          variant="secondary"
           href={routes.trackConsultation}
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border-soft bg-surface/80 px-6 text-sm font-extrabold text-text transition-all hover:bg-surface hover:-translate-y-0.5"
         >
           Track your consultation
           <ArrowRightIcon className="h-4 w-4" />
-        </a>
+        </Button>
       </div>
     </div>
   );

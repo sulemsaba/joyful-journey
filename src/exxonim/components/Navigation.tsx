@@ -10,6 +10,7 @@ import { useMobileMenuFocusTrap } from "@/exxonim/components/navigation/useMobil
 import { normalizePathname, routes } from "@/exxonim/routes";
 import type { BrandAssets, CompanyInfo, Theme } from '@/exxonim/types';
 import { cn } from "@/exxonim/utils/cn";
+import { Button } from "@/exxonim/components/primitives/Button";
 
 /**
  * Navigation component — the fixed site header.
@@ -285,9 +286,11 @@ export function Navigation({
                 "Contact {brandName}" link pointing to /contact/. The admin
                 should mark phone as a required field if this CTA is important.
                 Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
-            <a
+            <Button
+              size="hero"
+              variant="ghost"
               href={callHref}
-              className="hidden md:inline-flex items-center gap-3 h-12 pl-3 pr-5 rounded-full bg-accent-soft hover:bg-accent-hover transition-all"
+              className="hidden md:inline-flex bg-accent-soft hover:bg-accent-hover pl-3 pr-5 gap-3 justify-start"
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-contrast animate-phone-ring">
                 <Phone className="w-4 h-4" aria-hidden="true" />
@@ -300,25 +303,26 @@ export function Navigation({
                   {primaryPhone || "Open the contact page"}
                 </span>
               </div>
-            </a>
+            </Button>
 
-            <button
+            <Button
               ref={mobileToggleRef}
-              type="button"
+              size="icon"
+              variant="ghost"
+              aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={mobileMenuOpen}
               aria-controls={mobileMenuId}
-              aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
               onClick={() => {
                 setDesktopMenu(null);
                 setMobileMenuOpen((open) => !open);
               }}
               className={cn(
-                "inline-flex xl:hidden items-center justify-center w-10 h-10 transition-colors duration-300",
+                "xl:hidden",
                 headerOverHero
                   ? "text-white"
                   : mobileMenuOpen
                     ? "text-accent-contrast"
-                    : "text-text"
+                    : ""
               )}
             >
               <span className="sr-only">Toggle navigation</span>
@@ -330,7 +334,7 @@ export function Navigation({
                 className={cn("w-6 h-6", !mobileMenuOpen && "hidden")}
                 aria-hidden="true"
               />
-            </button>
+            </Button>
           </div>
         </div>
       </header>

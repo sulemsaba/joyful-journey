@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { renderFeatureVisual } from "./ReferenceVisual";
+import { Button } from "../primitives/Button";
 import type { ExtendedStackItem, FeatureRow, FeatureVisualContent } from "./types";
 
 function FeatureChevronIcon() {
@@ -103,13 +104,14 @@ export function FeatureAccordionCard({
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
-          <a
+          <Button
+            size="hero"
+            variant="primary"
             href={item.ctaHref || "#"}
-            className="inline-flex h-12 items-center justify-center px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5"
           >
             {item.ctaLabel || "Explore Services"}
             <span className="ml-2">{"\u2192"}</span>
-          </a>
+          </Button>
         </div>
       </div>
     </div>

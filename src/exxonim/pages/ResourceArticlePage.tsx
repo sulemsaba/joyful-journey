@@ -100,6 +100,7 @@ import { useResolvedBlogSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { resourceArticlePath, routes } from "@/exxonim/routes";
 import type { BlogPost, ResourcesPageContent } from '@/exxonim/types';
 import { siteOrigin } from "@/exxonim/seo/constants";
+import { Button } from "@/exxonim/components/primitives/Button";
 
 /** Renders BlogPosting JSON-LD structured data for Google rich results. */
 function ArticleStructuredData({ post }: { post: BlogPost }) {
@@ -236,63 +237,39 @@ function SocialShareButtons() {
   return (
     <div className="flex gap-3">
       {/* Twitter/X Share */}
-      <button
-        onClick={() => {
-          const url = encodeURIComponent(window.location.href);
-          const text = encodeURIComponent(document.title);
-          window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
-        }}
-        className="w-9 h-9 rounded-full border border-border-soft flex items-center justify-center
-                   text-text-muted hover:bg-accent-soft hover:border-accent/30
-                   hover:text-accent transition-all duration-200"
-        aria-label="Share on X"
-      >
+      <Button size="icon" variant="secondary" aria-label="Share on X" onClick={() => {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(document.title);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
+      }}>
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
         </svg>
-      </button>
+      </Button>
 
       {/* LinkedIn Share */}
-      <button
-        onClick={() => {
-          const url = encodeURIComponent(window.location.href);
-          window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, "_blank");
-        }}
-        className="w-9 h-9 rounded-full border border-border-soft flex items-center justify-center
-                   text-text-muted hover:bg-accent-soft hover:border-accent/30
-                   hover:text-accent transition-all duration-200"
-        aria-label="Share on LinkedIn"
-      >
+      <Button size="icon" variant="secondary" aria-label="Share on LinkedIn" onClick={() => {
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, "_blank");
+      }}>
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
         </svg>
-      </button>
+      </Button>
 
       {/* WhatsApp Share */}
-      <button
-        onClick={() => {
-          const url = encodeURIComponent(window.location.href);
-          const text = encodeURIComponent(document.title);
-          window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
-        }}
-        className="w-9 h-9 rounded-full border border-border-soft flex items-center justify-center
-                   text-text-muted hover:bg-accent-soft hover:border-accent/30
-                   hover:text-accent transition-all duration-200"
-        aria-label="Share on WhatsApp"
-      >
+      <Button size="icon" variant="secondary" aria-label="Share on WhatsApp" onClick={() => {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(document.title);
+        window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
+      }}>
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12.01 2.014a9.96 9.96 0 0 0-8.52 15.11L2 22l4.985-1.465a9.961 9.961 0 1 0 5.025-18.52Zm0 18.067a8.093 8.093 0 0 1-4.14-1.134l-.297-.176-3.082.906.924-2.977-.193-.306A8.098 8.098 0 1 1 12.01 20.08Zm4.437-6.042c-.244-.122-1.439-.711-1.662-.793-.223-.081-.385-.122-.547.122-.162.244-.628.793-.77.955-.142.162-.284.183-.528.061-1.18-.56-2.072-1.1-2.884-2.522-.083-.146-.01-.223.111-.345.11-.11.244-.284.366-.427.122-.142.162-.244.244-.407.081-.162.041-.305-.02-.427-.061-.122-.547-1.32-.75-1.808-.198-.475-.399-.411-.547-.419-.142-.008-.305-.008-.468-.008-.162 0-.427.061-.65.305-.223.244-.852.833-.852 2.032s.873 2.358.995 2.522c.122.162 1.714 2.628 4.153 3.67.58.24 1.033.383 1.385.49.582.185 1.112.158 1.531.096.47-.07 1.439-.588 1.642-1.157.203-.569.203-1.056.142-1.157-.061-.101-.223-.162-.468-.284Z" />
         </svg>
-      </button>
+      </Button>
 
       {/* Copy Link */}
-      <button
-        onClick={handleCopyLink}
-        className="w-9 h-9 rounded-full border border-border-soft flex items-center justify-center
-                   text-text-muted hover:bg-accent-soft hover:border-accent/30
-                   hover:text-accent transition-all duration-200"
-        aria-label="Copy link"
-      >
+      <Button size="icon" variant="secondary" aria-label="Copy link" onClick={handleCopyLink}>
         {copied ? (
           <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M20 6L9 17l-5-5"/>
@@ -303,7 +280,7 @@ function SocialShareButtons() {
             <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
           </svg>
         )}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -383,28 +360,8 @@ function BottomCTABanner() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2.5 shrink-0">
-            <a
-              href={routes.contact}
-              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-accent
-                         text-accent-contrast font-semibold text-xs sm:text-sm hover:bg-accent-hover
-                         transition-all duration-200"
-            >
-              Contact Us
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-            <a
-              href="tel:+255794689099"
-              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full
-                         border border-border-soft text-text font-medium text-xs sm:text-sm
-                         hover:bg-accent-soft transition-all duration-200"
-            >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
-              Call Us
-            </a>
+            <Button size="compact" variant="primary" href={routes.contact}>Contact Us →</Button>
+            <Button size="compact" variant="secondary" href="tel:+255794689099" className="gap-1.5">📞 Call Us</Button>
           </div>
         </div>
       </div>

@@ -132,7 +132,7 @@ export function EngineSection({ content }: EngineSectionProps) {
           <Button href={routes.contact}>
             Contact Exxonim
           </Button>
-          <Button href="#packages" variant="ghost">
+          <Button href="#packages" variant="secondary">
             See package plans
           </Button>
         </div>

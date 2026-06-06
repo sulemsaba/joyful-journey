@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { cn } from "@/exxonim/utils/cn";
+import { Button } from "./primitives/Button";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -98,30 +99,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             ) : null}
 
             <div className="flex flex-wrap justify-center gap-3">
-              <button
-                type="button"
+              <Button
+                size="standard"
+                variant="secondary"
                 onClick={this.handleReset}
-                className={cn(
-                  "inline-flex items-center justify-center",
-                  "h-10 px-5 rounded-full",
-                  "border border-border-soft bg-surface/80 text-text font-extrabold text-sm",
-                  "transition-all hover:bg-surface hover:-translate-y-0.5"
-                )}
               >
                 Try again
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                size="hero"
+                variant="primary"
                 onClick={this.handleReload}
-                className={cn(
-                  "inline-flex items-center justify-center",
-                  "h-12 px-6 rounded-full",
-                  "bg-accent text-accent-contrast font-extrabold text-sm",
-                  "transition-all hover:bg-accent-hover hover:-translate-y-0.5"
-                )}
               >
                 Reload page
-              </button>
+              </Button>
             </div>
           </div>
         </div>

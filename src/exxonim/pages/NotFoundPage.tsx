@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { applyResolvedSeo, createFallbackSeo } from '@/exxonim/seo';
+import { Button } from '@/exxonim/components/primitives/Button';
 import { normalizePathname, routes } from "@/exxonim/routes";
 const lightLogo = "/branding/exxonimLogoLight.webp";
 const darkLogo = "/branding/logo-dark.png";
@@ -68,15 +69,15 @@ export function NotFoundPage({ pathname }: NotFoundPageProps) {
               ) : null}
 
               <div className="mt-10 flex flex-wrap gap-4">
-                <a className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5" href={routes.home}>
+                <Button size="hero" variant="primary" href={routes.home}>
                   Go home
-                </a>
-                <a className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5" href={routes.services}>
+                </Button>
+                <Button size="hero" variant="secondary" href={routes.services}>
                   See services
-                </a>
-                <a className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5" href={routes.contact}>
+                </Button>
+                <Button size="hero" variant="secondary" href={routes.contact}>
                   Contact Exxonim
-                </a>
+                </Button>
               </div>
             </div>
 

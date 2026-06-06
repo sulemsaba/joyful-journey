@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
+import { Button } from "@/exxonim/components/primitives/Button";
 
 const heroBg = "/hero-bg.webp";
 
@@ -143,22 +144,13 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
 
               {/* CTAs — primary + optional secondary */}
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <a
-                  href={content.cta.href}
-                  className="inline-flex h-12 items-center justify-center rounded-full px-8 text-sm font-extrabold tracking-wide bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
-                >
+                <Button size="hero" variant="primary" href={content.cta.href} className="px-8">
                   {content.cta.label}
-                </a>
+                </Button>
                 {hasSecondaryCta ? (
-                  <a
-                    href={content.secondary_cta.href}
-                    className={cn(
-                      "inline-flex h-12 items-center justify-center rounded-full px-8 text-sm font-extrabold tracking-wide transition-all hover:-translate-y-0.5",
-                      "border border-border-soft bg-surface/80 text-text hover:bg-surface",
-                    )}
-                  >
+                  <Button size="hero" variant="secondary" href={content.secondary_cta.href} className="px-8">
                     {content.secondary_cta.label}
-                  </a>
+                  </Button>
                 ) : null}
               </div>
 

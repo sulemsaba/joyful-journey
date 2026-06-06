@@ -78,6 +78,7 @@ import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { routes } from "@/exxonim/routes";
 import { applyResolvedSeo, createFallbackSeo } from '@/exxonim/seo';
+import { Button } from '@/exxonim/components/primitives/Button';
 
 /* ─────────────────────────────────────────────────────────
  * SVG ICON COMPONENTS (replacing emojis — professional look)
@@ -522,18 +523,8 @@ function TrackingNotFound({ id }: { id: string }) {
         </div>
       )}
       <div className="flex flex-wrap gap-3 justify-center pt-1">
-        <a
-          href={routes.contact}
-          className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
-        >
-          Contact Exxonim
-        </a>
-        <a
-          href={routes.support}
-          className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
-        >
-          Get Support
-        </a>
+        <Button size="standard" variant="primary" href={routes.contact}>Contact Exxonim</Button>
+        <Button size="standard" variant="secondary" href={routes.support}>Get Support</Button>
       </div>
     </div>
   );
@@ -661,18 +652,8 @@ export function TrackConsultationPage() {
               SMS. Enter your tracking number for an instant status check.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
-              <a
-                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
-                href={routes.contact}
-              >
-                Request a Consultation
-              </a>
-              <a
-                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
-                href={routes.services}
-              >
-                View All Services
-              </a>
+              <Button size="hero" variant="primary" href={routes.contact}>Request a Consultation</Button>
+              <Button size="hero" variant="secondary" href={routes.services}>View All Services</Button>
             </div>
           </div>
 
@@ -698,23 +679,16 @@ export function TrackConsultationPage() {
                   placeholder="e.g., EXX-REG-00001"
                   className="w-full h-12 px-4 rounded-xl border border-border-soft bg-surface text-text text-sm font-mono placeholder:text-text-soft/50 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
                 />
-                <button
+                <Button
+                  size="hero"
+                  variant="primary"
                   type="submit"
+                  className="rounded-xl w-full"
                   disabled={isSearching || !trackingId.trim()}
-                  className="w-full inline-flex h-12 items-center justify-center rounded-xl px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  isLoading={isSearching}
                 >
-                  {isSearching ? (
-                    <span className="inline-flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      Checking…
-                    </span>
-                  ) : (
-                    "Check Status"
-                  )}
-                </button>
+                  Check Status
+                </Button>
               </form>
               <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-soft">
                 <div className="grid gap-1">
@@ -824,18 +798,8 @@ export function TrackConsultationPage() {
               informed at every step.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <a
-                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
-                href={routes.contact}
-              >
-                Request a Consultation
-              </a>
-              <a
-                className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
-                href={routes.services}
-              >
-                Explore All Services
-              </a>
+              <Button size="hero" variant="primary" href={routes.contact}>Request a Consultation</Button>
+              <Button size="hero" variant="secondary" href={routes.services}>Explore All Services</Button>
             </div>
           </div>
         </div>

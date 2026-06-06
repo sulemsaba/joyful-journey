@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { Button } from "./primitives/Button";
 
 interface PageLoaderProps {
   isLoading?: boolean;
@@ -111,13 +112,13 @@ export function PageLoader({ isLoading = true }: PageLoaderProps) {
         {timedOut && (
           <div className="flex flex-col items-center gap-3 animate-[loader-fade_0.4s_ease_forwards]">
             <p className="text-xs text-text-soft">Taking longer than expected</p>
-            <button
-              type="button"
+            <Button
+              size="compact"
+              variant="primary"
               onClick={handleRetry}
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-xs font-semibold text-accent-contrast transition-colors hover:bg-accent-hover"
             >
               Try Again
-            </button>
+            </Button>
           </div>
         )}
       </div>

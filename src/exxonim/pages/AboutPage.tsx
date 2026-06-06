@@ -1,5 +1,6 @@
 import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
+import { Button } from "@/exxonim/components/primitives/Button";
 import { routes } from "@/exxonim/routes";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { usePage } from "@/exxonim/hooks/usePage";
@@ -138,18 +139,12 @@ export function AboutPage() {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text mb-4">{content.cta.title}</h2>
                 <p className="text-text-muted max-w-2xl mx-auto mb-8">{content.cta.description}</p>
                 <div className="flex flex-wrap justify-center gap-4">
-                  <a
-                    className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
-                    href={content.cta.primary.href}
-                  >
+                  <Button size="hero" variant="primary" href={content.cta.primary.href}>
                     {content.cta.primary.label}
-                  </a>
-                  <a
-                    className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
-                    href={content.cta.secondary.href}
-                  >
+                  </Button>
+                  <Button size="hero" variant="secondary" href={content.cta.secondary.href}>
                     {content.cta.secondary.label}
-                  </a>
+                  </Button>
                 </div>
               </section>
             </div>

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPrivacyConsent, updatePrivacyConsent } from "@/exxonim/services/privacyService";
+import { Button } from "./primitives/Button";
 
 
 interface PrivacyConsentBannerProps {
@@ -49,8 +50,9 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
         </div>
 
         <div className="flex flex-wrap gap-3 justify-end">
-          <button
-            className="inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          <Button
+            size="standard"
+            variant="secondary"
             type="button"
             onClick={() => {
               consentMutation.mutate({
@@ -61,9 +63,10 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
             disabled={consentMutation.isPending}
           >
             Necessary only
-          </button>
-          <button
-            className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          </Button>
+          <Button
+            size="hero"
+            variant="primary"
             type="button"
             onClick={() => {
               consentMutation.mutate({
@@ -74,7 +77,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
             disabled={consentMutation.isPending}
           >
             Allow preferences
-          </button>
+          </Button>
         </div>
       </aside>
     </>

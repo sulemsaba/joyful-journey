@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Upload, FileText, CheckCircle2 } from "lucide-react";
+import { Button } from "./primitives/Button";
 import type { ApiCareerJob } from "@/exxonim/types/api";
 
 interface JobApplyModalProps {
@@ -96,14 +97,15 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                     {job.title} &middot; {job.department}
                   </p>
                 </div>
-                <button
-                  type="button"
+                <Button
+                  size="icon"
+                  variant="ghost"
                   onClick={handleClose}
-                  className="flex items-center justify-center w-8 h-8 rounded-full border border-border-soft bg-surface text-text-muted hover:text-text hover:bg-accent-soft transition-colors shrink-0 mt-0.5"
                   aria-label="Close modal"
+                  className="shrink-0 mt-0.5"
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
 
               {/* Body */}
@@ -120,13 +122,14 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                       Thank you for applying for {job.title}. Our team will
                       review your application and get back to you soon.
                     </p>
-                    <button
-                      type="button"
+                    <Button
+                      size="standard"
+                      variant="primary"
                       onClick={handleClose}
-                      className="inline-flex h-10 items-center justify-center rounded-full px-5 bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5 mx-auto mt-2"
+                      className="mx-auto mt-2"
                     >
                       Done
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="grid gap-5">
@@ -242,12 +245,14 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
                     </div>
 
                     {/* Submit */}
-                    <button
+                    <Button
+                      size="hero"
+                      variant="primary"
                       type="submit"
-                      className="inline-flex h-12 items-center justify-center rounded-xl px-6 bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5 w-full"
+                      className="rounded-xl w-full"
                     >
                       Submit application
-                    </button>
+                    </Button>
                   </form>
                 )}
               </div>

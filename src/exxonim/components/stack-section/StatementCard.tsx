@@ -1,5 +1,6 @@
 import type { ExtendedStackItem } from "./types";
 import { ReferenceVisual } from "./ReferenceVisual";
+import { Button } from "../primitives/Button";
 
 export function StatementCard({
   item,
@@ -29,13 +30,14 @@ export function StatementCard({
         ) : null}
 
         <div className="flex items-center gap-3 flex-wrap mt-4">
-          <a
+          <Button
+            size="hero"
+            variant="primary"
             href={item.ctaHref || "/contact/"}
-            className="inline-flex h-12 items-center justify-center px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover hover:-translate-y-0.5"
           >
             {item.ctaLabel || "Contact Exxonim"}
             <span className="ml-2">→</span>
-          </a>
+          </Button>
         </div>
       </div>
 

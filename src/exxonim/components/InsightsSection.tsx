@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { resourceArticlePath, routes } from "@/exxonim/routes";
 import type { BlogPost, HomeInsightsContent } from '@/exxonim/types';
 import { Container } from "./primitives/Container";
+import { Button } from "./primitives/Button";
 
 /**
  * Homepage "Latest insights" section — up to 4 featured blog cards in a
@@ -147,14 +148,15 @@ function RailButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
+    <Button
+      size="icon"
+      variant="secondary"
+      className="!w-12 !h-12 xl:hidden"
       onClick={onClick}
       aria-label={label}
-      className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-border-soft bg-surface text-text transition-colors hover:border-accent hover:text-accent dark:hover:text-accent xl:hidden"
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -270,12 +272,9 @@ export function InsightsSection({
             <RailButton onClick={onNext} label="Next insight">
               <ArrowRight className="h-5 w-5" />
             </RailButton>
-            <a
-              href={routes.resources}
-              className="inline-flex h-12 items-center justify-center rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
-            >
+            <Button size="hero" variant="primary" href={routes.resources}>
               See more
-            </a>
+            </Button>
           </div>
         </div>
       </Container>

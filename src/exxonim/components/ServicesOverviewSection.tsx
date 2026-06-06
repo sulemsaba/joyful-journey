@@ -1,4 +1,5 @@
 import { routes } from "@/exxonim/routes";
+import { Button } from "@/exxonim/components/primitives/Button";
 import type { ServicesOverviewContent } from '@/exxonim/types';
 
 
@@ -41,18 +42,20 @@ export function ServicesOverviewSection({
               </p>
 
               <div className="flex flex-wrap gap-3 mt-6">
-                <a
-                  className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
+                <Button
+                  size="hero"
+                  variant="primary"
                   href="#packages"
                 >
                   See package plans
-                </a>
-                <a
-                  className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
+                </Button>
+                <Button
+                  size="hero"
+                  variant="secondary"
                   href={routes.contact}
                 >
                   Contact Exxonim
-                </a>
+                </Button>
               </div>
             </article>
 

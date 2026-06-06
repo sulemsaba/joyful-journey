@@ -1,7 +1,8 @@
 import { useState, type RefObject } from "react";
 import { ChevronDown, Phone } from "lucide-react";
 import type { MenuColumn, MenuItem } from "@/exxonim/components/navigation/types";
-import { normalizePathname, routes } from "@/exxonim/routes";
+import { Button } from "@/exxonim/components/primitives/Button";
+import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
 
 /**
@@ -128,13 +129,14 @@ function MobileAccordion({
               </div>
             ))}
             <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-border-soft">
-              <a
+              <Button
+                size="compact"
+                variant="primary"
                 href={ctaHref}
                 onClick={onClose}
-                className="inline-flex items-center justify-center h-9 px-4 rounded-full bg-accent text-accent-contrast text-sm font-extrabold hover:bg-accent-hover transition-all"
               >
                 {ctaLabel}
-              </a>
+              </Button>
               <a
                 href={secondaryHref}
                 onClick={onClose}
@@ -245,14 +247,14 @@ export function MobileNavigationPanel({
             {/* Highlight link — Track Consultation (differentiator)
                 Rendered as a distinctive accent pill with animated indicator dot.
                 BACKEND: The label and href come from staticNavigation.ts highlightLink. */}
-            <a
+            <Button
+              size="standard"
+              variant="primary"
               href={highlightLink.href}
               onClick={onClose}
               className={cn(
-                "flex items-center justify-center gap-2 h-11 rounded-full font-extrabold text-sm transition-all",
-                isActive(highlightLink.href)
-                  ? "bg-accent-hover text-accent-contrast ring-2 ring-accent/30"
-                  : "bg-accent text-accent-contrast hover:bg-accent-hover"
+                "gap-2",
+                isActive(highlightLink.href) && "bg-accent-hover ring-2 ring-accent/30"
               )}
             >
               <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -260,7 +262,7 @@ export function MobileNavigationPanel({
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-contrast" />
               </span>
               {highlightLink.label}
-            </a>
+            </Button>
 
             {/* Call Now CTA */}
             <a

@@ -37,6 +37,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import type { FeatureBox, HoverFeatureMap, MegaMenuLayout, MenuColumn, MenuFooterCta, NavIcon } from "./types";
+import { Button } from "@/exxonim/components/primitives/Button";
 
 /* ── Unified Icon Renderer ── */
 
@@ -368,13 +369,14 @@ export function MegaMenuColumns({ columns, layout, featureBox, hoverFeatureMap, 
         ) : null}
         {footerCta ? (
           <div className="flex justify-end mt-auto">
-            <a
+            <Button
+              size="compact"
+              variant="primary"
               href={footerCta.primaryHref}
               onClick={onNavigate}
-              className="inline-flex items-center justify-center h-8 px-4 rounded-full bg-accent text-accent-contrast text-xs font-bold hover:bg-accent-hover transition-all"
             >
               {footerCta.primaryLabel}
-            </a>
+            </Button>
           </div>
         ) : null}
       </div>

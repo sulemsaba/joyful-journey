@@ -1,4 +1,5 @@
 import { routes } from "@/exxonim/routes";
+import { Button } from "@/exxonim/components/primitives/Button";
 import { Breadcrumb, type BreadcrumbItem } from "@/exxonim/components/Breadcrumb";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { usePage } from "@/exxonim/hooks/usePage";
@@ -62,20 +63,22 @@ function ContentPage({
                 <p className="text-text-muted leading-relaxed mb-6">{nextStep.description}</p>
                 <div className="flex flex-wrap gap-4">
                   {nextStep.primary_action ? (
-                    <a
-                      className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
+                    <Button
+                      size="hero"
+                      variant="primary"
                       href={nextStep.primary_action.href}
                     >
                       {nextStep.primary_action.label}
-                    </a>
+                    </Button>
                   ) : null}
                   {nextStep.secondary_action ? (
-                    <a
-                      className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
+                    <Button
+                      size="hero"
+                      variant="secondary"
                       href={nextStep.secondary_action.href}
                     >
                       {nextStep.secondary_action.label}
-                    </a>
+                    </Button>
                   ) : null}
                 </div>
               </section>

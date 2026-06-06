@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import { Container } from './primitives/Container';
+import { Button } from './primitives/Button';
 
 /**
  * NewsletterSection — dual-layout newsletter CTA card.
@@ -80,14 +81,16 @@ export function NewsletterSection() {
                     className="h-11 w-full rounded-full border border-border-soft bg-surface pl-9 pr-4 text-sm text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40"
                   />
                 </div>
-                <button
+                <Button
+                  size="hero"
+                  variant="primary"
                   type="submit"
-                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
+                  className="w-full rounded-xl"
                   aria-label="Subscribe to newsletter"
                 >
                   Subscribe
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
+                </Button>
               </form>
             )}
           </div>
@@ -150,14 +153,15 @@ export function NewsletterSection() {
                       className="h-12 w-full rounded-full border border-border-soft bg-surface pl-11 pr-4 text-sm text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40"
                     />
                   </div>
-                  <button
+                  <Button
+                    size="hero"
+                    variant="primary"
                     type="submit"
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
                     aria-label="Subscribe to newsletter"
                   >
                     Subscribe
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
+                  </Button>
                 </form>
               )}
             </div>

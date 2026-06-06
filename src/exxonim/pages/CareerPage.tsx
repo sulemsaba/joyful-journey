@@ -79,6 +79,7 @@ import {
   getPublishedJobs,
 } from "@/exxonim/services/jobsService";
 import type { ApiCareerJob, CareerPageContent } from "@/exxonim/types";
+import { Button } from "@/exxonim/components/primitives/Button";
 
 /* ── Constants ── */
 const FALLBACK_BANNER = "/careers/banner-enhanced.png";
@@ -126,7 +127,11 @@ function SocialShareButtons() {
 
   return (
     <div className="flex gap-2">
-      <button
+      <Button
+        size="icon"
+        variant="ghost"
+        aria-label="Share on X"
+        className="border border-accent-contrast/20 text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast"
         onClick={() => {
           const url = encodeURIComponent(window.location.href);
           const text = encodeURIComponent(document.title);
@@ -135,15 +140,16 @@ function SocialShareButtons() {
             "_blank"
           );
         }}
-        className="w-8 h-8 rounded-full border border-accent-contrast/20 flex items-center justify-center
-                   text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast transition-all duration-200"
-        aria-label="Share on X"
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
+        size="icon"
+        variant="ghost"
+        aria-label="Share on LinkedIn"
+        className="border border-accent-contrast/20 text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast"
         onClick={() => {
           const url = encodeURIComponent(window.location.href);
           window.open(
@@ -151,33 +157,32 @@ function SocialShareButtons() {
             "_blank"
           );
         }}
-        className="w-8 h-8 rounded-full border border-accent-contrast/20 flex items-center justify-center
-                   text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast transition-all duration-200"
-        aria-label="Share on LinkedIn"
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
+        size="icon"
+        variant="ghost"
+        aria-label="Share on WhatsApp"
+        className="border border-accent-contrast/20 text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast"
         onClick={() => {
           const url = encodeURIComponent(window.location.href);
           const text = encodeURIComponent(document.title);
           window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
         }}
-        className="w-8 h-8 rounded-full border border-accent-contrast/20 flex items-center justify-center
-                   text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast transition-all duration-200"
-        aria-label="Share on WhatsApp"
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12.01 2.014a9.96 9.96 0 0 0-8.52 15.11L2 22l4.985-1.465a9.961 9.961 0 1 0 5.025-18.52Zm0 18.067a8.093 8.093 0 0 1-4.14-1.134l-.297-.176-3.082.906.924-2.977-.193-.306A8.098 8.098 0 1 1 12.01 20.08Zm4.437-6.042c-.244-.122-1.439-.711-1.662-.793-.223-.081-.385-.122-.547.122-.162.244-.628.793-.77.955-.142.162-.284.183-.528.061-1.18-.56-2.072-1.1-2.884-2.522-.083-.146-.01-.223.111-.345.11-.11.244-.284.366-.427.122-.142.162-.244.244-.407.081-.162.041-.305-.02-.427-.061-.122-.547-1.32-.75-1.808-.198-.475-.399-.411-.547-.419-.142-.008-.305-.008-.468-.008-.162 0-.427.061-.65.305-.223.244-.852.833-.852 2.032s.873 2.358.995 2.522c.122.162 1.714 2.628 4.153 3.67.58.24 1.033.383 1.385.49.582.185 1.112.158 1.531.096.47-.07 1.439-.588 1.642-1.157.203-.569.203-1.056.142-1.157-.061-.101-.223-.162-.468-.284Z" />
         </svg>
-      </button>
-      <button
+      </Button>
+      <Button
+        size="icon"
+        variant="ghost"
         onClick={handleCopyLink}
-        className="w-8 h-8 rounded-full border border-accent-contrast/20 flex items-center justify-center
-                   text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast transition-all duration-200"
         aria-label="Copy link"
+        className="border border-accent-contrast/20 text-accent-contrast/60 hover:bg-accent-contrast/10 hover:text-accent-contrast"
       >
         {copied ? (
           <svg className="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" /></svg>
@@ -187,7 +192,7 @@ function SocialShareButtons() {
             <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
           </svg>
         )}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -217,23 +222,21 @@ function CareerCTABanner({
             </p>
           </div>
           <div className="flex flex-wrap gap-2.5 shrink-0">
-            <a
-              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-accent
-                         text-accent-contrast font-semibold text-xs sm:text-sm hover:bg-accent-hover
-                         transition-all duration-200"
+            <Button
+              size="compact"
+              variant="primary"
               href={primary.href}
             >
               {primary.label}
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-            </a>
-            <a
-              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full
-                         border border-border-soft text-text font-medium text-xs sm:text-sm
-                         hover:bg-accent-soft transition-all duration-200"
+            </Button>
+            <Button
+              size="compact"
+              variant="outline"
               href={secondary.href}
             >
               {secondary.label}
-            </a>
+            </Button>
           </div>
         </div>
       </div>
@@ -429,13 +432,14 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
             <h2 className="text-base sm:text-lg font-bold text-text">Apply for this role</h2>
             <p className="text-sm text-text-muted mt-0.5 truncate">{job.title}</p>
           </div>
-          <button
+          <Button
+            size="icon"
+            variant="ghost"
             onClick={onClose}
-            className="w-9 h-9 rounded-full flex items-center justify-center bg-surface-soft hover:bg-accent-soft hover:text-accent transition-colors shrink-0"
             aria-label="Close application form"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
+          </Button>
         </div>
 
         {isSuccess ? (
@@ -448,12 +452,14 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
             <p className="text-sm text-text-muted max-w-sm mx-auto leading-relaxed">
               Thank you for applying for {job.title}. The Exxonim team will review your application and follow up.
             </p>
-            <button
+            <Button
+              size="standard"
+              variant="primary"
               onClick={onClose}
-              className="mt-6 px-6 py-2.5 text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
+              className="mt-6"
             >
               Done
-            </button>
+            </Button>
           </div>
         ) : (
           /* Form */
@@ -560,21 +566,16 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
             )}
 
             {/* Submit */}
-            <button
+            <Button
+              size="hero"
+              variant="primary"
               type="submit"
-              disabled={isSubmitting || !name.trim() || !email.trim() || !cvFile}
-              className="w-full py-3 text-sm font-semibold rounded-full bg-accent text-accent-contrast
-                         hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              isLoading={isSubmitting}
+              disabled={!name.trim() || !email.trim() || !cvFile}
+              className="rounded-xl w-full"
             >
-              {isSubmitting ? (
-                <span className="inline-flex items-center gap-2">
-                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                  Submitting...
-                </span>
-              ) : (
-                "Submit Application"
-              )}
-            </button>
+              Submit Application
+            </Button>
           </form>
         )}
       </div>
@@ -762,12 +763,14 @@ export function CareerPage() {
                   </div>
                   <div className="ml-auto flex items-center gap-3">
                     <SocialShareButtons />
-                    <a
+                    <Button
+                      size="compact"
+                      variant="outline"
                       href={routes.about}
-                      className="hidden md:inline-flex px-5 py-2 text-sm font-medium rounded-full border border-accent-contrast/30 text-accent-contrast hover:bg-accent-contrast/10 transition-colors"
+                      className="hidden md:inline-flex border-accent-contrast/30 text-accent-contrast hover:bg-accent-contrast/10"
                     >
                       About Exxonim
-                    </a>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -855,13 +858,15 @@ export function CareerPage() {
                       </div>
                     )}
                   </div>
-                  <button
+                  <Button
+                    size="compact"
+                    variant="primary"
                     onClick={() => resetAndGoToPage1()}
-                    className="flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors shrink-0"
+                    className="shrink-0"
                   >
                     <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
                     <span className="hidden sm:inline">Find Jobs</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -992,12 +997,14 @@ export function CareerPage() {
                                   </div>
 
                                   {!isExpanded && (
-                                    <button
+                                    <Button
+                                      size="compact"
+                                      variant="primary"
                                       onClick={(e) => { e.stopPropagation(); openApplyModal(job); }}
-                                      className="px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors shrink-0"
+                                      className="shrink-0"
                                     >
                                       Apply Now
-                                    </button>
+                                    </Button>
                                   )}
                                 </div>
                               </div>
@@ -1011,12 +1018,13 @@ export function CareerPage() {
                                     {job.summary || job.description}
                                   </p>
                                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-                                    <button
+                                    <Button
+                                      size="compact"
+                                      variant="primary"
                                       onClick={(e) => { e.stopPropagation(); openApplyModal(job); }}
-                                      className="px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                                     >
                                       Apply Now
-                                    </button>
+                                    </Button>
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
@@ -1105,13 +1113,16 @@ export function CareerPage() {
 
                                   {/* Action buttons */}
                                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
-                                    <button
+                                    <Button
+                                      size="compact"
+                                      variant="primary"
                                       onClick={(e) => { e.stopPropagation(); openApplyModal(job); }}
-                                      className="px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                                     >
                                       Apply Now
-                                    </button>
-                                    <button
+                                    </Button>
+                                    <Button
+                                      size="compact"
+                                      variant="secondary"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         if (navigator.share) {
@@ -1124,11 +1135,10 @@ export function CareerPage() {
                                           navigator.clipboard.writeText(window.location.href);
                                         }
                                       }}
-                                      className="px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-full border border-border-soft text-text hover:border-accent/30 transition-colors inline-flex items-center gap-1.5"
                                     >
                                       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" /></svg>
                                       Share
-                                    </button>
+                                    </Button>
                                   </div>
                                 </div>
                               </div>
@@ -1161,13 +1171,15 @@ export function CareerPage() {
                         </div>
                         {/* Bottom row: prev / page numbers / next */}
                         <div className="flex items-center justify-center gap-1 overflow-x-auto">
-                          <button
+                          <Button
+                            size="icon"
+                            variant="ghost"
                             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                             disabled={currentPage === 1}
-                            className="p-2 rounded-lg hover:bg-accent-soft transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                            className="rounded-lg shrink-0"
                           >
                             <svg className="w-4 h-4 text-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                          </button>
+                          </Button>
                           {Array.from({ length: totalPages }, (_, i) => i + 1)
                             .filter((p) => {
                               /* Show first, last, current ±1; hide the rest as "…" */
@@ -1185,26 +1197,26 @@ export function CareerPage() {
                               item === "ellipsis" ? (
                                 <span key={`ellipsis-${i}`} className="w-8 h-8 flex items-center justify-center text-text-muted text-sm">…</span>
                               ) : (
-                                <button
+                                <Button
                                   key={item}
+                                  size="icon"
+                                  variant={currentPage === item ? "primary" : "ghost"}
                                   onClick={() => setCurrentPage(item)}
-                                  className={`w-8 h-8 text-sm font-medium rounded-lg transition-colors shrink-0 ${
-                                    currentPage === item
-                                      ? "bg-accent text-accent-contrast"
-                                      : "text-text hover:bg-accent-soft"
-                                  }`}
+                                  className="text-sm font-medium rounded-lg shrink-0"
                                 >
                                   {item}
-                                </button>
+                                </Button>
                               )
                             )}
-                          <button
+                          <Button
+                            size="icon"
+                            variant="ghost"
                             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                             disabled={currentPage === totalPages}
-                            className="p-2 rounded-lg hover:bg-accent-soft transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                            className="rounded-lg shrink-0"
                           >
                             <svg className="w-4 h-4 text-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     )}
@@ -1224,19 +1236,21 @@ export function CareerPage() {
                         : "There are no open positions at the moment. New roles are posted regularly — check back soon or reach out to express your interest."}
                     </p>
                     {hasActiveFilters ? (
-                      <button
+                      <Button
+                        size="standard"
+                        variant="primary"
                         onClick={clearFilters}
-                        className="px-6 py-2.5 text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                       >
                         View All Positions
-                      </button>
+                      </Button>
                     ) : (
-                      <a
+                      <Button
+                        size="standard"
+                        variant="primary"
                         href={content.status.primary.href}
-                        className="inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors"
                       >
                         Contact Exxonim
-                      </a>
+                      </Button>
                     )}
                   </div>
                 )}
