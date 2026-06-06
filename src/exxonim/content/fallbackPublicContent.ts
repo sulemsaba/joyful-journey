@@ -540,7 +540,7 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
       service_signals: [
         { value: "120+", label: "Companies registered", detail: "Businesses trust Exxonim for registration and compliance" },
         { value: "100%", label: "Tracked", detail: "Every consultation assigned a reference ID" },
-        { value: "4", label: "Steps", detail: "Intake, preparation, submission, follow-through" },
+        { value: "58+", label: "Google reviews", detail: "Verified reviews from real clients on Google" },
       ],
       service_nav_groups: [
         {
