@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { memo, useEffect, useRef, useState } from "react";
+import { Check, X } from "lucide-react";
 import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
 import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
@@ -54,7 +54,7 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-[220px] flex-col py-6 px-4"
+      className="flex h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-6 px-4 mx-1.5"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
       {/* Star rating — always 5 stars */}
@@ -78,44 +78,35 @@ const TestimonialCard = memo(function TestimonialCard({
 });
 
 /* ═══════════════════════════════════════════════════════════════
- * InteractiveTestimonialCarousel
+ * TestimonialMarquee
+ *
+ * Endless-looping marquee — identical behaviour to the "Trusted by"
+ * logo ribbon above it.
  *
  * Behaviour:
  *  1. Static when visitor first scrolls it into view.
- *  2. After ~2.5 s, auto-scroll begins (smooth slide every 4 s).
- *  3. Left / Right arrow buttons for click navigation.
- *  4. Drag / swipe to scroll freely (mouse + touch).
- *  5. Auto-scroll pauses on hover / drag / arrow click, resumes 3 s after last interaction.
- *  6. Full-bleed with 15% / 85% edge fade masks (same as Trusted By logos).
- *  7. Scroll-snap keeps cards neatly aligned after every interaction.
+ *  2. After ~3 s, the CSS marquee animation kicks in — slides
+ *     left endlessly in one direction like a cycle.
+ *  3. Pauses on hover (user can read a card).
+ *  4. Full-bleed with 15%/85% edge-fade masks (same as Trusted By).
+ *  5. Cards are duplicated 2× (original + clone) so translateX(-50%)
+ *     loops seamlessly with no gap/jump.
  * ═══════════════════════════════════════════════════════════════ */
-function InteractiveTestimonialCarousel({
+function TestimonialMarquee({
   testimonials,
 }: {
   testimonials: Testimonial[];
 }) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const autoScrollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [isDraggingState, setIsDraggingState] = useState(false);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const scrollStart = useRef(0);
+  const [isSliding, setIsSliding] = useState(false);
 
-  // Duplicate items enough to fill viewport + some overflow
-  const items = testimonials.length <= 3
-    ? [...testimonials, ...testimonials, ...testimonials]
-    : testimonials;
+  // Duplicate items 2× for seamless infinite scroll (translateX 0 → -50%)
+  const items = [...testimonials, ...testimonials];
 
-  const CARD_WIDTH = 320; // w-80 = 20rem = 320px
-
-  // ── Intersection Observer: detect visibility ──────────────
+  // ── Intersection Observer: detect when section enters viewport ──
   useEffect(() => {
-    const el = scrollerRef.current;
+    const el = wrapperRef.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
@@ -124,177 +115,45 @@ function InteractiveTestimonialCarousel({
           setIsVisible(true);
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.15 }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, [isVisible]);
 
-  // ── Start auto-scroll after 2.5 s delay once visible ─────
+  // ── Start sliding after ~3 s delay once visible ─────────────
   useEffect(() => {
     if (!isVisible) return;
 
     const startDelay = setTimeout(() => {
-      setIsAutoScrolling(true);
-    }, 2500);
+      setIsSliding(true);
+    }, 3000);
 
     return () => clearTimeout(startDelay);
   }, [isVisible]);
 
-  // ── Auto-scroll interval ─────────────────────────────────
-  useEffect(() => {
-    if (!isAutoScrolling) {
-      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-      return;
-    }
-
-    autoScrollRef.current = setInterval(() => {
-      const el = scrollerRef.current;
-      if (!el || isDragging.current) return;
-
-      // If we've scrolled past the original set, loop back seamlessly
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      if (el.scrollLeft >= maxScroll - 2) {
-        el.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        el.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
-      }
-    }, 4000);
-
-    return () => {
-      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-    };
-  }, [isAutoScrolling]);
-
-  // ── Update scroll arrows state ───────────────────────────
-  const updateScrollButtons = useCallback(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    updateScrollButtons();
-    el.addEventListener("scroll", updateScrollButtons, { passive: true });
-    return () => el.removeEventListener("scroll", updateScrollButtons);
-  }, [updateScrollButtons]);
-
-  // ── Pause auto-scroll on interaction, resume after 3 s ───
-  const pauseAutoScroll = useCallback(() => {
-    setIsAutoScrolling(false);
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-    pauseTimerRef.current = setTimeout(() => {
-      setIsAutoScrolling(true);
-    }, 3000);
-  }, []);
-
-  // ── Arrow click handler ──────────────────────────────────
-  const handleArrowClick = useCallback(
-    (direction: "left" | "right") => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      el.scrollBy({
-        left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH,
-        behavior: "smooth",
-      });
-      pauseAutoScroll();
-    },
-    [pauseAutoScroll]
-  );
-
-  // ── Drag / swipe handlers ────────────────────────────────
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      isDragging.current = true;
-      setIsDraggingState(true);
-      startX.current = e.clientX;
-      scrollStart.current = el.scrollLeft;
-      el.setPointerCapture(e.pointerId);
-      pauseAutoScroll();
-    },
-    [pauseAutoScroll]
-  );
-
-  const handlePointerMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      const el = scrollerRef.current;
-      if (!el || !isDragging.current) return;
-      const dx = e.clientX - startX.current;
-      el.scrollLeft = scrollStart.current - dx;
-    },
-    []
-  );
-
-  const handlePointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      isDragging.current = false;
-      setIsDraggingState(false);
-      el.releasePointerCapture(e.pointerId);
-    },
-    []
-  );
-
   return (
     <div
+      ref={wrapperRef}
       className="relative overflow-hidden w-screen -ml-[50vw] left-1/2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
       aria-label="Client testimonials"
     >
-      {/* Scrollable track */}
       <div
-        ref={scrollerRef}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onMouseEnter={pauseAutoScroll}
-        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none select-none touch-pan-y"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-          cursor: isDraggingState ? "grabbing" : "grab",
-        }}
+        className={cn(
+          "flex items-center w-max",
+          isSliding && "animate-testimonial-marquee hover:[animation-play-state:paused]"
+        )}
       >
         {items.map((testimonial, index) => (
           <div
             key={`${testimonial.id}-${index}`}
-            className="flex-none w-80 snap-center"
+            className="flex-none w-80"
           >
             <TestimonialCard testimonial={testimonial} />
           </div>
         ))}
       </div>
-
-      {/* Left arrow */}
-      {canScrollLeft && (
-        <button
-          type="button"
-          onClick={() => handleArrowClick("left")}
-          aria-label="Previous testimonials"
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm transition-all hover:bg-surface hover:shadow-lg hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-      )}
-
-      {/* Right arrow */}
-      {canScrollRight && (
-        <button
-          type="button"
-          onClick={() => handleArrowClick("right")}
-          aria-label="Next testimonials"
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm transition-all hover:bg-surface hover:shadow-lg hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      )}
     </div>
   );
 }
@@ -412,9 +271,8 @@ export function ServicePackagesSection({
                   What our clients say
                 </h2>
               </div>
-              {/* Interactive carousel: static on arrival, auto-slides after delay,
-                  user can drag/swipe or click arrows */}
-              <InteractiveTestimonialCarousel testimonials={testimonials} />
+              {/* Endless-loop marquee: static on arrival, slides after ~3 s, pauses on hover */}
+              <TestimonialMarquee testimonials={testimonials} />
             </div>
           )}
 
