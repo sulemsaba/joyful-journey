@@ -115,11 +115,17 @@ function TestimonialMarquee({
   const scrollStart = useRef(0);
   const rafRef = useRef<number>(0);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tickRef = useRef(0);
 
   // Duplicate items 3× for seamless infinite scroll.
   const items = [...testimonials, ...testimonials, ...testimonials];
   const CARD_WIDTH = 320; // w-80 = 20rem = 320px
-  const SPEED = 0.5; // px per frame at 60fps ≈ 30 px/s
+  // Base speed ≈ 15 px/s at 60fps. Sine-wave oscillation varies
+  // it between ~9 px/s (slow) and ~21 px/s (moderate) so the
+  // marquee breathes naturally instead of feeling robotic.
+  const BASE_SPEED = 0.25;
+  const SPEED_AMPLITUDE = 0.1; // ±0.1 px/frame around BASE_SPEED
+  const SPEED_PERIOD = 480; // frames per full cycle ≈ 8 s at 60fps
 
   // ── Intersection Observer: detect when section enters viewport ──
   useEffect(() => {
@@ -161,7 +167,11 @@ function TestimonialMarquee({
 
     const step = () => {
       if (!isPaused.current && !isDragging.current) {
-        el.scrollLeft += SPEED;
+        // Natural speed variation: gentle sine-wave oscillation
+        // so the marquee breathes — sometimes slower, sometimes faster.
+        tickRef.current += 1;
+        const speed = BASE_SPEED + SPEED_AMPLITUDE * Math.sin((2 * Math.PI * tickRef.current) / SPEED_PERIOD);
+        el.scrollLeft += speed;
 
         // Seamless loop: when we've scrolled past the first set,
         // jump back by one set's width — content is identical so
