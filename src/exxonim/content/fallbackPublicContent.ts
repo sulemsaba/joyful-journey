@@ -315,20 +315,20 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
   {
     hero: {
       eyebrow: "About Exxonim Consult",
-      title: "Business consulting built on clarity, follow-through, and proactive communication.",
+      title: "Your business obligations — handled, tracked, and delivered without the office visits.",
       description:
-        "Founded in 2020, Exxonim Consult helps businesses, NGOs, and institutions move through registration, licensing, and regulatory compliance — with automated tracking that keeps you informed at every milestone.",
+        "Founded in 2020, Exxonim Consult helps businesses, NGOs, and institutions move through registration, licensing, and regulatory compliance — with proactive tracking that keeps you informed at every milestone. No office visits required.",
     },
     company_profile: {
       eyebrow: "Who we are",
-      title: "A Tanzanian advisory practice built around real operational outcomes.",
+      title: "We built Exxonim so you never have to chase an office again.",
       paragraphs: [
         "Exxonim was founded to address a specific gap: organisations in Tanzania often face unclear processes, missed deadlines, and avoidable delays when navigating registration, licensing, and compliance obligations.",
         "The practice provides structured guidance through entity registration, document preparation, tax applications, licensing, and recurring regulatory follow-up — so teams can focus on operations instead of deadline recovery.",
         "Every engagement is tracked from intake to resolution, and the next action stays visible at every stage.",
       ],
       working_style_label: "Working style",
-      working_style: "Structured, visible, and follow-through oriented.",
+      working_style: "Structured. Visible. Follow-through oriented.",
     },
     support_profiles_section: {
       title: "What we support",
@@ -339,17 +339,17 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       {
         title: "Business setup",
         description:
-          "Company, NGO, and business-name registration support — from entity type selection through to authority submission.",
+          "Company, NGO, and business-name registration — from entity type selection through to certificate. Legally trade within 5–10 business days.",
       },
       {
         title: "Compliance",
         description:
-          "Licensing, renewals, and practical filing follow-up so recurring obligations do not become last-minute recovery work.",
+          "Licensing, renewals, and filing follow-up managed on your behalf. Never miss a deadline again — we send unlimited reminders.",
       },
       {
         title: "Consultation tracking",
         description:
-          "Every consultation is assigned a reference ID and tracked from intake to resolution. You always know what is complete and what comes next.",
+          "Every consultation gets a 6-character tracking code. Check your status anytime — no login required. Automatic updates via WhatsApp, email, or SMS.",
       },
     ],
     service_scope_section: {
@@ -435,7 +435,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
     cta: {
       title: "Ready to get started?",
       description:
-        "Reach out and Exxonim will guide you through the next step for your registration, licensing, or compliance need.",
+        "Book a free consultation and receive a tracking code that keeps you informed at every step — from intake to resolution.",
       primary: {
         label: "Contact Exxonim",
         href: routes.contact,
