@@ -96,3 +96,39 @@ Stage Summary:
 - The `**.space-z.ai` wildcard properly matches subdomains like `preview-chat-e2f80624-6ea6-47be-935a-08b7a09744e2.space-z.ai`
 - Server runs stably with no errors
 - All pages (home, services, about, etc.) load and render correctly
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Reapply all lost changes from previous session after git pull
+
+Work Log:
+- Pulled nextjs-wip branch which overwrote previous local changes
+- Identified 7 items that needed reapplying from conversation history
+- Footer was already clean (no testimonials) — confirmed
+- Applied testimonial marquee slideshow to ServicePlansSection.tsx:
+  - Replaced static 3-column grid with full-bleed marquee (same as Trusted By logos)
+  - 15%/85% edge fade masks, 3× repeat for seamless loop, pause on hover
+  - Fixed-height cards (h-[220px]) with mt-auto for author info at bottom
+  - Responsive avatar (h-7 w-7 md:h-8 md:w-8) with shrink-0 to prevent oval distortion
+  - Star rating always 5 (★★★★★ hardcoded, not from testimonial.rating)
+- Added comprehensive admin/API comments to:
+  - TestimonialCard component (API endpoints, form fields, validation rules)
+  - Testimonial interface in domain.ts (backend validation rules, char limits)
+  - FaqPageContent interface in domain.ts (API endpoints, reorder, validation)
+  - FaqPage.tsx (admin reorder comment above items grid)
+- Added CSS animation for testimonial marquee:
+  - @keyframes testimonial-marquee (translateX -33.3333% for 3× repeat)
+  - --animate-testimonial-marquee: 40s linear infinite in @theme block
+- Character limits enforced: name 50, role 80, quote 250, eyebrow 30, FAQ question 120, FAQ answer 500
+- Lint passes clean
+- Browser verification: homepage, services page, FAQ page all render correctly
+- Testimonials scroll in marquee on both homepage and services page
+
+Stage Summary:
+- All 7 lost changes successfully reapplied
+- Testimonial marquee works with fixed-height cards and responsive avatars
+- Star rating always shows 5 stars
+- Admin/API comments documented in codebase for testimonials and FAQ
+- Backend-enforced character limits documented in types
+- No errors in dev.log, lint passes clean

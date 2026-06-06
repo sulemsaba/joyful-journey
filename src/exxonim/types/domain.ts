@@ -136,14 +136,35 @@ export interface BlogPost {
   content?: BlogArticleContent;
 }
 
+/**
+ * Testimonial — a client quote displayed in the marquee slideshow.
+ *
+ * BACKEND VALIDATION RULES (enforced on create/update):
+ *   name:   required, max 50 characters. Backend rejects if exceeded.
+ *   role:   required, max 80 characters. Backend rejects if exceeded.
+ *   quote:  required, max 250 characters. Admin must shorten if too long — NO UI truncation.
+ *   rating: always 5. Not stored in DB; rendered as ★★★★★ on the frontend.
+ *   eyebrow: max 30 characters.
+ *   sort_order: integer, controls display order. Lower = shown first.
+ *   is_active: boolean, only active testimonials appear publicly.
+ *   initials: auto-generated from name (first letter of first and last word).
+ *   avatar_url: optional. Falls back to initials circle if empty.
+ */
 export interface Testimonial {
   id: number;
+  /** Max 30 chars. Short label above the quote (e.g. "REGISTRATION"). */
   eyebrow: string;
+  /** Not currently rendered in the marquee card. Kept for future use. */
   headline: string;
+  /** Not currently rendered in the marquee card. Kept for future use. */
   support: string;
+  /** Max 250 chars. The testimonial quote text. Backend must reject if exceeded. */
   quote: string;
+  /** Max 50 chars. Full name of the person giving the testimonial. */
   name: string;
+  /** Max 80 chars. Role/organization (e.g. "Operations Team, Utec Tanzania"). */
   role: string;
+  /** Auto-generated from name. Displayed in avatar circle when no avatar_url. */
   initials: string;
 }
 
@@ -327,6 +348,28 @@ export interface AboutPageContent {
   };
 }
 
+/**
+ * FAQ page content — question/answer pairs displayed on the public FAQ page.
+ *
+ * ADMIN FRONTEND / API REQUIREMENTS:
+ * ─────────────────────────────────
+ * API Endpoints:
+ *   GET    /api/v1/faq                — List all FAQ items (public, active only)
+ *   GET    /api/v1/faq/:id            — Get single FAQ item
+ *   POST   /api/v1/faq                — Create FAQ item (admin only)
+ *   PUT    /api/v1/faq/:id            — Update FAQ item (admin only)
+ *   DELETE /api/v1/faq/:id            — Delete FAQ item (admin only)
+ *   PATCH  /api/v1/faq/reorder        — Reorder FAQ items (admin only, body: { id, sort_order }[])
+ *
+ * Admin Form Fields:
+ *   question   — Text input, required, max 120 characters
+ *   answer     — Textarea, required, max 500 characters (backend must reject if exceeded)
+ *   sort_order — Number input. Controls display order. Lower = shown first.
+ *   is_active  — Toggle. Only active items appear on the public FAQ page.
+ *
+ * The FAQ page renders items sorted by sort_order (ascending).
+ * Admin can drag-and-drop to reorder items (PATCH /api/v1/faq/reorder).
+ */
 export interface FaqPageContent {
   hero: {
     eyebrow: string;
@@ -334,7 +377,9 @@ export interface FaqPageContent {
     description: string;
   };
   items: Array<{
+    /** Max 120 chars. The FAQ question. Backend must reject if exceeded. */
     question: string;
+    /** Max 500 chars. The FAQ answer. Backend must reject if exceeded. */
     answer: string;
   }>;
 }

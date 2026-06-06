@@ -13,8 +13,37 @@ type ServicePackagesSectionProps = {
 };
 
 /**
- * TestimonialCard — minimal, clean quote card.
- * Shows the quote, star rating, and author only — no heavy card chrome.
+ * TestimonialCard — displays a single client testimonial.
+ *
+ * ADMIN FRONTEND / API REQUIREMENTS:
+ * ─────────────────────────────────
+ * API Endpoints:
+ *   GET    /api/v1/testimonials           — List all testimonials (public, active only)
+ *   GET    /api/v1/testimonials/:id       — Get single testimonial
+ *   POST   /api/v1/testimonials           — Create testimonial (admin only)
+ *   PUT    /api/v1/testimonials/:id       — Update testimonial (admin only)
+ *   DELETE /api/v1/testimonials/:id       — Delete testimonial (admin only)
+ *   PATCH  /api/v1/testimonials/reorder   — Reorder testimonials (admin only, body: { id, sort_order }[])
+ *
+ * Admin Form Fields:
+ *   name       — Text input, required, max 50 chars. Auto-generates `initials` from first/last words.
+ *   role       — Text input, required, max 80 chars. e.g. "Operations Team, Utec Tanzania"
+ *   quote      — Textarea, required, max 250 chars. Backend MUST reject if exceeded — no UI truncation.
+ *   rating     — Hidden field, always 5. Not editable by admin. All testimonials show ★★★★★.
+ *   avatar_url — Optional image upload. Falls back to initials circle if empty.
+ *   sort_order — Number input. Controls display order in the marquee. Lower = first.
+ *   is_active  — Toggle. Only active testimonials appear on the public site.
+ *
+ * Validation Rules (backend-enforced):
+ *   - name: required, string, max 50 characters
+ *   - role: required, string, max 80 characters
+ *   - quote: required, string, max 250 characters (admin must shorten if too long, NOT truncated in UI)
+ *   - rating: fixed at 5 (not editable)
+ *   - sort_order: integer, default 0
+ *   - is_active: boolean, default true
+ *
+ * The marquee displays testimonials sorted by sort_order (ascending).
+ * Short quotes in tall cards are acceptable — cards have uniform height.
  */
 const TestimonialCard = memo(function TestimonialCard({
   testimonial,
@@ -23,19 +52,18 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-full flex-col py-6 px-1"
+      className="flex h-[220px] flex-col py-6 px-1"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
-      {testimonial.rating > 0 && (
-        <p className="text-star text-sm tracking-wider mb-3" aria-label={`${testimonial.rating} out of 5 stars`}>
-          {"★".repeat(Math.min(testimonial.rating, 5))}
-        </p>
-      )}
+      {/* Star rating — always 5 stars */}
+      <p className="text-star text-sm tracking-wider mb-3" aria-label="5 out of 5 stars">
+        ★★★★★
+      </p>
       <p className="text-[0.9375rem] leading-relaxed text-text-muted flex-1">
         &ldquo;{testimonial.quote}&rdquo;
       </p>
-      <div className="mt-4 flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
+      <div className="mt-auto flex items-center gap-2.5">
+        <div className="flex h-7 w-7 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
           {testimonial.initials}
         </div>
         <div>
@@ -160,13 +188,18 @@ export function ServicePackagesSection({
                   What our clients say
                 </h2>
               </div>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border-soft/60">
-                {testimonials.slice(0, 3).map((testimonial) => (
-                  <TestimonialCard
-                    key={testimonial.id}
-                    testimonial={testimonial}
-                  />
-                ))}
+              {/* Testimonial marquee — full-bleed with 15% edge fades, same pattern as Trusted By logos */}
+              <div
+                className="overflow-hidden relative w-screen -ml-[50vw] left-1/2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+                aria-label="Client testimonials"
+              >
+                <div className="flex items-center w-max animate-testimonial-marquee hover:[animation-play-state:paused]">
+                  {Array.from({ length: 3 }, () => testimonials).flat().map((testimonial, index) => (
+                    <div key={`${testimonial.id}-${index}`} className="flex-none w-80">
+                      <TestimonialCard testimonial={testimonial} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}

@@ -61,6 +61,8 @@ export function FaqPage() {
                 <p className="mt-4 text-lg text-text-muted max-w-3xl">{content.hero.description}</p>
               </div>
 
+              {/* FAQ items — sorted by sort_order from backend. Admin can reorder via PATCH /api/v1/faq/reorder.
+                  Backend enforces: question max 120 chars, answer max 500 chars. */}
               <div className="grid gap-6 md:grid-cols-2">
                 {content.items.map((item) => (
                   <article key={item.question} className="p-6 rounded-2xl border border-border-soft bg-surface/60 backdrop-blur-sm" data-reveal>
