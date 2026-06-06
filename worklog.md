@@ -81,7 +81,7 @@ Task: Revamp the Track Your Consultation page to match the new "Exxonim Client C
 - `src/exxonim/types/api.ts` — Added new type re-exports
 - `src/exxonim/shared/api/routes.ts` — Added `public.track.lookup` route
 - `src/app/api/v1/[...slug]/route.ts` — Added POST /track mock with 3 demo cases, fixed POST /consultations code generation
-- `src/exxonim/services/consultationService.ts` — Added `lookupTrackingCode()` with 404 handling
+- `src/exxonim/services/consultationService.ts` — Added `lookupTrackingCode()` using `fetch()` with relative paths (not Axios) to work through caddy gateway
 - `src/exxonim/services/index.ts` — Added `lookupTrackingCode` export
 - `src/exxonim/pages/TrackConsultationPage.tsx` — Complete rewrite (812→630+ lines, new UI, new code format)
 - `src/exxonim/pages/ContactPage.tsx` — Updated success state to display formatted 6-char code
@@ -104,3 +104,8 @@ Task: Revamp the Track Your Consultation page to match the new "Exxonim Client C
 - ✅ Contact form generates 6-char codes (e.g., "GA26PF")
 - ✅ How It Works, Security, Lost Code, and CTA sections all render
 - ✅ Footer sticks to bottom properly
+
+### Bug Fix: Browser API calls failing
+- **Issue**: `lookupTrackingCode()` used the shared Axios client with absolute baseURL (`http://localhost:3000/api/v1`), which is unreachable from the browser in the sandbox/proxied environment
+- **Fix**: Changed `lookupTrackingCode()` to use native `fetch()` with a relative path (`/api/v1/track`) instead of Axios. Relative paths resolve through the caddy gateway correctly in all environments
+- **Why other pages work**: Other pages use SSR where the server can reach `localhost:3000` directly. The tracking lookup is purely client-side (user enters code, clicks button), so it must use relative paths

@@ -56,21 +56,44 @@ export async function submitPublicConsultation(
  *   - Use POST (not GET) to keep codes out of URLs and server logs
  *   - All communication over HTTPS
  *   - Return same 404 shape for all failure cases (no info leakage)
+ *
+ * IMPLEMENTATION NOTE: This uses fetch() with a RELATIVE path instead of the
+ * shared Axios client. The Axios client uses an absolute baseURL which may not
+ * be reachable from the browser in proxied/sandbox environments. A relative
+ * path (/api/v1/track) resolves through the caddy gateway correctly in all
+ * environments.
  */
 export async function lookupTrackingCode(
   payload: ApiTrackingLookupRequest
 ): Promise<ApiTrackingLookupResult> {
+  const url = `/api/v1${apiRoutes.public.track.lookup}`;
+
   try {
-    const response = await api.post<ApiTrackingLookupResult>(
-      apiRoutes.public.track.lookup,
-      payload
-    );
-    return response.data;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // 404 is a valid business response for tracking lookups (not_found).
+      // Return the data as-is so the page can render the not-found card.
+      // BACKEND: Always returns same 404 shape for invalid/expired/non-existent
+      // codes to prevent information leakage.
+      if (response.status === 404) {
+        return data as ApiTrackingLookupResult;
+      }
+      // Other errors (500, 429 rate-limited, etc.) — throw to show generic error
+      throw new Error(data.message || data.detail || "Lookup failed");
+    }
+
+    return data as ApiTrackingLookupResult;
   } catch (error) {
-    // Axios throws on non-2xx status codes, but 404 is a valid business
-    // response for tracking lookups (not_found). Extract and return it.
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return error.response.data as ApiTrackingLookupResult;
+    // Re-throw fetch errors (network failure, CORS, etc.)
+    if (error instanceof TypeError) {
+      throw new Error("Network error. Please check your connection and try again.");
     }
     throw error;
   }
