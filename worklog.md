@@ -398,3 +398,65 @@ Stage Summary:
 - Compact tier has invisible touch-target expansion (::before pseudo-element)
 - Form submits use Tier 1 (hero) with rounded-xl override for 48px mobile touch target
 - Design drift eliminated — single source of truth for button styles
+
+---
+Task ID: 3
+Agent: full-stack-developer
+Task: Add Prisma FaqItem model + seed data + API route
+
+Work Log:
+- Added FaqItem model to prisma/schema.prisma
+- Ran db:push to create table
+- Created seed script and seeded FAQ data
+- Added GET /api/v1/faq endpoint
+- Created useFaqItems hook
+- Added faq route to apiRoutes.public
+
+Stage Summary:
+- FaqItem model with question, answer, category, sort_order, is_active fields
+- 6 FAQ items seeded into database
+- API endpoint returns active FAQ items sorted by sort_order
+- React Query hook created for frontend consumption
+
+---
+Task ID: 12
+Agent: Main Agent
+Task: Fix breadcrumb alignment across ALL pages + Redesign FAQ page + Database-driven FAQ
+
+Work Log:
+- Fixed breadcrumb alignment inconsistency across all pages:
+  - FaqPage: Removed `pt-4 md:pt-8` from section and extra `pt-4` from inner div, breadcrumb now standalone div with `pt-4`
+  - InfoPages: Removed `pt-4 md:pt-8` from section and extra `pt-4`, breadcrumb moved before section, header gets `pt-8 md:pt-12`
+  - ResourcesPage: Moved breadcrumb outside hero section into standalone div with `pt-4`
+  - TrackConsultationPage: Moved breadcrumb outside hero section into standalone div with `pt-4`
+  - Added Home icon to all InfoPage breadcrumbs (Support, Terms, Privacy, Cookie, Data Rights)
+  - All breadcrumbs now use identical container: `max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4`
+- Completely redesigned FAQ page with beautiful modern UI:
+  - Hero section with gradient background, animated accent pill, search bar
+  - Stats bar: "6 Questions answered", "5 Categories", "Updated regularly"
+  - Category filter pills with counts (Registration 2, Licensing 1, Tax & TIN 1, Tracking 1, General 1)
+  - FAQ accordion items with numbered badges (01-06), left accent bar on expand, category pills
+  - Sidebar: "Can't find your answer?" CTA card + "Helpful links" navigation
+  - Mobile: Inline contact CTA below FAQ items
+  - Newsletter section at bottom
+  - JSON-LD structured data preserved
+  - Search filters by question and answer text
+  - Category inference function (temporary until DB categories are used)
+  - Fixed category inference bug: "tra" in tax condition matched "track" before tracking condition
+- Added Prisma FaqItem model + seed data + API endpoint (via subagent):
+  - FaqItem model: id, question, answer, category, sort_order, is_active, timestamps
+  - 6 FAQ items seeded into database with proper categories
+  - GET /api/v1/faq endpoint returns active items sorted by sort_order
+  - useFaqItems React Query hook created
+- Verified with Agent Browser + VLM analysis:
+  - Breadcrumbs at same vertical position across all pages
+  - FAQ page design rated 7/10 by VLM (professional, polished, good hierarchy)
+  - Search, category filter, and accordion interactivity all work correctly
+  - Category counts correct: Registration=2, Licensing=1, Tax & TIN=1, Tracking=1, General=1
+
+Stage Summary:
+- All breadcrumbs standardized at identical vertical position (pt-4 container)
+- FAQ page completely redesigned with search, categories, stats bar, sidebar CTA
+- Database layer ready for FAQ admin CRUD (model, API, hook all in place)
+- Category inference is temporary — will be replaced when admin assigns categories in DB
+- Lint passes clean, no errors

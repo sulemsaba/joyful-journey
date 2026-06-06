@@ -172,5 +172,8 @@ export const apiRoutes = {
     privacy: {
       consent: "/privacy/consent",
     },
+    faq: {
+      list: "/faq",
+    },
   },
 } as const;

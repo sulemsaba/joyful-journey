@@ -623,8 +623,13 @@ export function TrackConsultationPage() {
 
   return (
     <>
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Track Consultation" }]} />
+      </div>
+
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden pt-4 pb-20 md:pt-8 md:pb-28">
+      <section className="relative overflow-hidden pb-20 md:pb-28">
         <div
           className="absolute inset-0 -z-10 opacity-70"
           style={{
@@ -632,10 +637,7 @@ export function TrackConsultationPage() {
               "radial-gradient(60% 50% at 80% 0%, hsl(var(--accent) / 0.18), transparent 70%), radial-gradient(40% 40% at 10% 20%, hsl(var(--accent) / 0.10), transparent 70%)",
           }}
         />
-        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Track Consultation" }]} />
-        </div>
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           <div className="grid gap-6">
             <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
               <span className="relative flex h-2 w-2">

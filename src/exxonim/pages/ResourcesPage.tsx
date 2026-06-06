@@ -588,6 +588,11 @@ export function ResourcesPage() {
         if (!page) return null;
         return (
           <div>
+            {/* ── Breadcrumb ── */}
+            <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+              <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources" }]} />
+            </div>
+
             {/* ── Hero ── */}
             <section className="relative overflow-hidden pb-12 md:pb-16">
               <div
@@ -597,9 +602,6 @@ export function ResourcesPage() {
                     "radial-gradient(50% 60% at 80% 0%, hsl(var(--accent) / 0.14), transparent 70%), radial-gradient(30% 40% at 10% 20%, hsl(var(--accent) / 0.08), transparent 70%)",
                 }}
               />
-              <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-                <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources" }]} />
-              </div>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
                 <h1 className="text-[clamp(2rem,4vw,3.2rem)] font-semibold tracking-tight text-text leading-[1.1]">
                   {page.content.hero_title}

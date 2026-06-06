@@ -30,3 +30,14 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model FaqItem {
+  id         String   @id @default(cuid())
+  question   String   // max 120 chars
+  answer     String   // max 500 chars
+  category   String   @default("general") // registration, licensing, tax, tracking, general
+  sort_order Int      @default(0)
+  is_active  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

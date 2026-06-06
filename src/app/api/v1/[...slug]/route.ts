@@ -22,6 +22,7 @@ import {
   fallbackSupportPage,
   fallbackTrackConsultationPage,
 } from "@/exxonim/content/fallbackPublicContent";
+import { db } from "@/lib/db";
 
 const FALLBACK_TIMESTAMP = "2026-01-01T00:00:00Z";
 
@@ -233,6 +234,23 @@ export async function GET(
   // Pricing plans: /pricing/plans
   if (path === "pricing/plans") {
     return NextResponse.json({ items: [], total: 0, page: 1, limit: 50, pages: 0 });
+  }
+
+  // FAQ items: /faq
+  if (path === "faq") {
+    try {
+      const items = await db.faqItem.findMany({
+        where: { is_active: true },
+        orderBy: { sort_order: "asc" },
+      });
+      return NextResponse.json({ items, total: items.length });
+    } catch (error) {
+      console.error("Failed to fetch FAQ items:", error);
+      return NextResponse.json(
+        { detail: "Failed to fetch FAQ items" },
+        { status: 500 }
+      );
+    }
   }
 
   return NextResponse.json({ detail: "Not found" }, { status: 404 });

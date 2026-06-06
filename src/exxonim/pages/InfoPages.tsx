@@ -1,3 +1,4 @@
+import { Home } from "lucide-react";
 import { routes } from "@/exxonim/routes";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { Breadcrumb, type BreadcrumbItem } from "@/exxonim/components/Breadcrumb";
@@ -26,12 +27,14 @@ function ContentPage({
 }: ContentPageProps) {
   return (
     <>
-<section className="pt-4 md:pt-8 pb-16 relative bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-page)_100%)] backdrop-blur-[8px]">
-        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+<div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           {breadcrumbItems && breadcrumbItems.length > 0 && (
             <Breadcrumb items={breadcrumbItems} />
           )}
-          <header className="mb-16">
+        </div>
+<section className="pb-16 relative bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-page)_100%)] backdrop-blur-[8px]">
+        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8">
+          <header className="mb-16 pt-8 md:pt-12">
             <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-elevated text-xs font-bold tracking-widest uppercase text-text-muted">
               <span className="w-2 h-2 rounded-full bg-accent"></span>
               {eyebrow}
@@ -135,7 +138,7 @@ export function SupportPage() {
       slug="support"
       canonicalPath={routes.support}
       loadingLabel="Loading support page..."
-      breadcrumbItems={[{ label: "Resources", href: routes.resources }, { label: "Support" }]}
+      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Support" }]}
     />
   );
 }
@@ -146,7 +149,7 @@ export function TermsPage() {
       slug="terms"
       canonicalPath={routes.terms}
       loadingLabel="Loading terms..."
-      breadcrumbItems={[{ label: "Resources", href: routes.resources }, { label: "Terms" }]}
+      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Terms" }]}
     />
   );
 }
@@ -157,7 +160,7 @@ export function PrivacyPage() {
       slug="privacy"
       canonicalPath={routes.privacy}
       loadingLabel="Loading privacy policy..."
-      breadcrumbItems={[{ label: "Resources", href: routes.resources }, { label: "Privacy" }]}
+      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Privacy" }]}
     />
   );
 }
@@ -168,7 +171,7 @@ export function CookiePage() {
       slug="cookies"
       canonicalPath={routes.cookies}
       loadingLabel="Loading cookie notice..."
-      breadcrumbItems={[{ label: "Resources", href: routes.resources }, { label: "Cookie Notice" }]}
+      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Cookie Notice" }]}
     />
   );
 }
@@ -179,7 +182,7 @@ export function DataRightsPage() {
       slug="data-rights"
       canonicalPath={routes.dataRights}
       loadingLabel="Loading data rights..."
-      breadcrumbItems={[{ label: "Resources", href: routes.resources }, { label: "Data Rights" }]}
+      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Data Rights" }]}
     />
   );
 }
