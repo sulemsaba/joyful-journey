@@ -26,6 +26,12 @@ export type {
   ApiConsultationStatusHistory,
   ApiPublicConsultationSubmission,
   ApiPublicConsultationSubmissionResponse,
+  ApiTrackingCaseStatus,
+  ApiTrackingLookupRequest,
+  ApiTrackingLookupResponse,
+  ApiTrackingLookupResult,
+  ApiTrackingMilestone,
+  ApiTrackingNotFoundResponse,
 } from "./consultations";
 export type {
   ApiActivityEvent,

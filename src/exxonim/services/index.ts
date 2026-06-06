@@ -8,7 +8,7 @@ export {
   listPublicBlogCategories,
   listPublicBlogPosts,
 } from "./blogService";
-export { submitPublicConsultation } from "./consultationService";
+export { lookupTrackingCode, submitPublicConsultation } from "./consultationService";
 export { getCachedPublishedJobs, getPublishedJobs } from "./jobsService";
 export {
   getCachedNavigation,

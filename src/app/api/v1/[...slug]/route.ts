@@ -26,6 +26,33 @@ import { db } from "@/lib/db";
 
 const FALLBACK_TIMESTAMP = "2026-01-01T00:00:00Z";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+ * TRACKING CODE GENERATOR (Mock)
+ * ═══════════════════════════════════════════════════════════════════════════
+ * BACKEND TEAM (FastAPI): Replace this with the real implementation:
+ *
+ *   import secrets, string
+ *   ALPHABET = string.ascii_uppercase + string.digits  # A-Z 0-9
+ *   def generate_tracking_code(active_codes: set) -> str:
+ *       while True:
+ *           code = ''.join(secrets.choice(ALPHABET) for _ in range(6))
+ *           if code not in active_codes:
+ *               return code
+ *
+ * Display format: "84 72 9A" (two groups of 3, space-separated)
+ * Storage format: "84729A" (no spaces, uppercase, CHAR(6) UNIQUE)
+ *
+ * Optional: Exclude I, O, 0, 1 to avoid ambiguity → 32-char alphabet → 1.07B combos
+ * ═══════════════════════════════════════════════════════════════════════════ */
+const TRACKING_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 chars, no I/O/0/1
+function generateMockTrackingCode(): string {
+  let code = "";
+  for (let i = 0; i < 6; i++) {
+    code += TRACKING_ALPHABET[Math.floor(Math.random() * TRACKING_ALPHABET.length)];
+  }
+  return code;
+}
+
 /* ── Site settings ────────────────────────────────────── */
 const siteSettingsMap: Record<string, object> = {
   brand: {
@@ -263,13 +290,169 @@ export async function POST(
   const { slug } = await params;
   const path = slug.join("/");
 
+  // ═══════════════════════════════════════════════════════════════════
+  // Public tracking lookup: POST /track
+  //
+  // BACKEND TEAM (FastAPI): This is the core public endpoint.
+  // Spec: POST /api/track  →  { trackingNumber: "84729A" }
+  //
+  // Response shapes:
+  //   200 — ApiTrackingLookupResponse (see consultations.ts)
+  //   404 — ApiTrackingNotFoundResponse (generic, no info leakage)
+  //
+  // RATE LIMITING (enforced by backend):
+  //   - Per IP: 20 failed lookups/min → IP blocked 5 min
+  //   - Per tracking code: 10 failed attempts total → code locked 24h
+  //
+  // SECURITY: Always return the same 404 shape for invalid/expired/
+  // not-found codes. Never distinguish "code doesn't exist" from
+  // "code exists but case is closed/blocked".
+  // ═══════════════════════════════════════════════════════════════════
+  if (path === "track") {
+    let body: { trackingNumber?: string };
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { status: "not_found", message: "No matching consultation found. Please check your tracking number." },
+        { status: 404 }
+      );
+    }
+
+    const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
+    const isValid = /^[A-Z0-9]{6}$/.test(raw);
+
+    if (!isValid) {
+      return NextResponse.json(
+        { status: "not_found", message: "No matching consultation found. Please check your tracking number." },
+        { status: 404 }
+      );
+    }
+
+    /* ── Mock demo data ──────────────────────────────────────────────
+     * BACKEND: Replace this entire block with a real database query:
+     *
+     *   case = db.query("SELECT * FROM cases WHERE tracking_code = $1 AND status != 'closed'", [raw])
+     *   if not case:
+     *       return 404 { status: "not_found", message: "..." }
+     *
+     *   milestones = db.query("""
+     *       SELECT m.name, m.client_label, m.visible_to_client, cm.completed_at
+     *       FROM milestones m
+     *       LEFT JOIN case_milestones cm ON cm.milestone_id = m.id AND cm.case_id = $1
+     *       WHERE m.service_type = $2
+     *       ORDER BY m.sequence_order ASC
+     *   """, [case.id, case.service_type])
+     *
+     *   visible = [m for m in milestones if m.visible_to_client]
+     *   ─────────────────────────────────────────────────────────────── */
+    const mockCases: Record<string, {
+      status: "active" | "completed" | "on_hold";
+      serviceType: string;
+      milestone: string;
+      lastUpdated: string;
+      nextMilestone: string | null;
+      message?: string;
+      completedSteps: number;
+      totalSteps: number;
+      visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
+    }> = {
+      "84729A": {
+        status: "active",
+        serviceType: "Company Registration",
+        milestone: "Document Verification",
+        lastUpdated: "2026-06-04T09:42:00Z",
+        nextMilestone: "Submission to BRELA",
+        completedSteps: 3,
+        totalSteps: 6,
+        visibleMilestones: [
+          { label: "Consultation Received", status: "completed", date: "2026-05-20" },
+          { label: "Name Clearance Filed", status: "completed", date: "2026-05-22" },
+          { label: "Name Approved", status: "completed", date: "2026-05-28" },
+          { label: "Document Verification", status: "current", date: null },
+          { label: "Submission to BRELA", status: "upcoming", date: null },
+          { label: "Certificate Issued", status: "upcoming", date: null },
+        ],
+      },
+      "K5BM3E": {
+        status: "completed",
+        serviceType: "TIN Application",
+        milestone: "All processes completed",
+        lastUpdated: "2026-05-30T14:30:00Z",
+        nextMilestone: null,
+        message: "Your consultation is complete. Contact us if you have any questions.",
+        completedSteps: 4,
+        totalSteps: 4,
+        visibleMilestones: [
+          { label: "Consultation Received", status: "completed", date: "2026-05-10" },
+          { label: "Document Preparation", status: "completed", date: "2026-05-15" },
+          { label: "TRA Submission", status: "completed", date: "2026-05-22" },
+          { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
+        ],
+      },
+      "P9QX2W": {
+        status: "on_hold",
+        serviceType: "Business Licensing",
+        milestone: "Awaiting Client Documents",
+        lastUpdated: "2026-06-01T11:00:00Z",
+        nextMilestone: "Document Verification",
+        message: "Your case is on hold pending additional documents. Please check your WhatsApp for details.",
+        completedSteps: 1,
+        totalSteps: 5,
+        visibleMilestones: [
+          { label: "Consultation Received", status: "completed", date: "2026-05-25" },
+          { label: "Awaiting Client Documents", status: "current", date: null },
+          { label: "Document Verification", status: "upcoming", date: null },
+          { label: "Licence Application", status: "upcoming", date: null },
+          { label: "Licence Issued", status: "upcoming", date: null },
+        ],
+      },
+    };
+
+    const mockCase = mockCases[raw];
+    if (!mockCase) {
+      return NextResponse.json(
+        { status: "not_found", message: "No matching consultation found. Please check your tracking number." },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      status: mockCase.status,
+      trackingCode: raw,
+      serviceType: mockCase.serviceType,
+      milestone: mockCase.milestone,
+      lastUpdated: mockCase.lastUpdated,
+      nextMilestone: mockCase.nextMilestone,
+      message: mockCase.message ?? null,
+      completedSteps: mockCase.completedSteps,
+      totalSteps: mockCase.totalSteps,
+      visibleMilestones: mockCase.visibleMilestones,
+    });
+  }
+
   // Consultations: /consultations
+  //
+  // BACKEND TEAM (FastAPI): When a consultation is created via the public
+  // contact form, generate a 6-char alphanumeric tracking code.
+  // The code is sent to the client via WhatsApp:
+  //   "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
+  //
+  // Also send via email if the client provided one.
+  //
+  // Database: INSERT INTO cases (tracking_code, ...) VALUES (generate_tracking_code(active_codes), ...)
   if (path === "consultations") {
-    const trackingId = `EXX-${Math.floor(Math.random() * 90000 + 10000)}`;
+    const trackingCode = generateMockTrackingCode();
     return NextResponse.json({
       consultation_id: Math.floor(Math.random() * 9000 + 1000),
       service_request_id: `sr-${Date.now()}`,
-      tracking_id: trackingId,
+      tracking_id: trackingCode,
+      /**
+       * BACKEND: The tracking_id field is now a 6-character alphanumeric code.
+       * Format: CHAR(6), uppercase, no spaces in storage.
+       * Display format: "84 72 9A" (two groups of 3, space-separated).
+       * The frontend formats this for display automatically.
+       */
       status: "pending",
       message: "Your consultation request has been received. We will follow up shortly.",
       received_at: new Date().toISOString(),

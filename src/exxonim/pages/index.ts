@@ -14,3 +14,4 @@ export { NotFoundPage } from "./NotFoundPage";
 export { ResourceArticlePage } from "./ResourceArticlePage";
 export { ResourcesPage } from "./ResourcesPage";
 export { ServicesPage } from "./ServicesPage";
+export { TrackConsultationPage } from "./TrackConsultationPage";

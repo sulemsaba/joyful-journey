@@ -306,12 +306,28 @@ export function ContactPage() {
                       </svg>
                     </span>
                     <h3 className="text-lg font-bold text-text mb-2">Your request has been received.</h3>
-                    <p className="text-text-muted text-sm mb-2">
-                      Keep this tracking ID for follow-up:{" "}
-                      <code className="px-2 py-0.5 rounded bg-accent-soft text-accent font-mono text-sm">{submissionResult.tracking_id}</code>
+                    <p className="text-text-muted text-sm mb-1">
+                      Your tracking code is:
                     </p>
-                    <p className="text-text-muted text-sm">
-                      Exxonim will review your request and respond using the contact details you provided.
+                    {/*
+                      BACKEND TEAM: The tracking_id is now a 6-character alphanumeric code.
+                      Format: "84729A" in storage, displayed as "84 72 9A" (two groups of 3).
+                      This code is also sent to the client via WhatsApp:
+                        "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
+                    */}
+                    <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
+                      {submissionResult.tracking_id.length === 6
+                        ? `${submissionResult.tracking_id.slice(0, 3)} ${submissionResult.tracking_id.slice(3)}`
+                        : submissionResult.tracking_id}
+                    </code>
+                    <p className="text-text-muted text-sm mt-3">
+                      Use this code to check your status at any time on our{" "}
+                      <a href={routes.trackConsultation} className="text-accent hover:underline font-medium">
+                        tracking page
+                      </a>. No login required.
+                    </p>
+                    <p className="text-text-soft text-xs mt-1">
+                      We&apos;ve also sent this code to your WhatsApp.
                     </p>
                   </div>
                 ) : (
