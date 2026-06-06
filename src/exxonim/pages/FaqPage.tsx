@@ -37,49 +37,12 @@ function FaqStructuredData({ items }: { items: Array<{ question: string; answer:
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * FAQ CATEGORIES — grouped by topic for the left sidebar filter
- *
- * BACKEND / ADMIN NOTE:
- * When FAQ items come from the database, each item should have
- * a `category` field (e.g., "registration", "licensing", "tax",
- * "tracking", "general"). Admin can assign categories when
- * creating/editing FAQ items. The categories below define the
- * display order and labels.
- * ═══════════════════════════════════════════════════════════════ */
-const FAQ_CATEGORIES = [
-  { id: "all", label: "General questions" },
-  { id: "registration", label: "Registration" },
-  { id: "licensing", label: "Licensing" },
-  { id: "tax", label: "Tax & TIN" },
-  { id: "tracking", label: "Tracking" },
-  { id: "general", label: "Other" },
-] as const;
-
-type FaqCategoryId = typeof FAQ_CATEGORIES[number]["id"];
-
-/**
- * Assigns a category to a FAQ item based on keyword matching.
- *
- * BACKEND NOTE: When FAQ items are stored in the database with a
- * `category` column, this function becomes unnecessary — the
- * category will come directly from the API response.
- */
-function inferCategory(question: string, _answer: string): FaqCategoryId {
-  const q = question.toLowerCase();
-  if (q.includes("register") || q.includes("entity") || q.includes("company") || q.includes("brela")) return "registration";
-  if (q.includes("licenc") || q.includes("license") || q.includes("renewal") || q.includes("permit")) return "licensing";
-  if (q.includes("tin") || q.includes("tax")) return "tax";
-  if (q.includes("track") || q.includes("status") || q.includes("consultation")) return "tracking";
-  return "general";
-}
-
-/* ═══════════════════════════════════════════════════════════════
  * FaqAccordionItem — single expandable FAQ item
  *
- * Design: Clean white card row with Plus/X toggle icon,
- * matching the reference design. Plus icon when collapsed,
- * X icon when expanded. Smooth grid-rows animation for
- * the answer reveal.
+ * Design: Flat list with straight-line dividers, Plus/X toggle
+ * icon. No container card — just clean separator lines between
+ * items. Plus icon when collapsed, X icon when expanded.
+ * Smooth grid-rows animation for the answer reveal.
  * ═══════════════════════════════════════════════════════════════ */
 function FaqAccordionItem({
   question,
@@ -99,29 +62,29 @@ function FaqAccordionItem({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 py-5 px-6 text-left cursor-pointer group transition-colors hover:bg-surface-soft/40"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left cursor-pointer group"
         aria-expanded={isOpen}
       >
         <h3
           className={`text-[0.9375rem] sm:text-base leading-snug transition-colors duration-200 flex-1 min-w-0 ${
-            isOpen ? "font-semibold text-text" : "font-normal text-text group-hover:text-text"
+            isOpen ? "font-semibold text-text" : "font-normal text-text-muted group-hover:text-text"
           }`}
         >
           {question}
         </h3>
 
         <span
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+          className={`flex h-6 w-6 shrink-0 items-center justify-center transition-all duration-300 ${
             isOpen
-              ? "bg-accent/10 text-accent"
-              : "text-accent/60 group-hover:text-accent group-hover:bg-accent/5"
+              ? "text-accent"
+              : "text-accent/50 group-hover:text-accent"
           }`}
           aria-hidden="true"
         >
           {isOpen ? (
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" strokeWidth={2.5} />
           ) : (
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4" strokeWidth={2.5} />
           )}
         </span>
       </button>
@@ -133,7 +96,7 @@ function FaqAccordionItem({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="px-6 pb-5">
+          <div className="pb-5">
             <p className="text-sm sm:text-[0.9375rem] leading-relaxed text-text-muted">
               {answer}
             </p>
@@ -145,45 +108,7 @@ function FaqAccordionItem({
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * CategoryNavItem — sidebar category link in left column
- * ═══════════════════════════════════════════════════════════════ */
-function CategoryNavItem({
-  label,
-  count,
-  isActive,
-  onClick,
-}: {
-  label: string;
-  count: number;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex items-center justify-between w-full text-left py-2.5 px-3 rounded-xl transition-all cursor-pointer ${
-        isActive
-          ? "bg-accent/10 text-accent font-semibold"
-          : "text-text-muted hover:text-text hover:bg-surface-soft/60"
-      }`}
-      role="radio"
-      aria-checked={isActive}
-    >
-      <span className="text-sm">{label}</span>
-      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-        isActive
-          ? "bg-accent/15 text-accent"
-          : "bg-surface-soft text-text-soft"
-      }`}>
-        {count}
-      </span>
-    </button>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
- * EmptyState — shown when search/filter returns no results
+ * EmptyState — shown when search returns no results
  * ═══════════════════════════════════════════════════════════════ */
 function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: () => void }) {
   return (
@@ -195,7 +120,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
         No results for &ldquo;{searchQuery}&rdquo;
       </h3>
       <p className="text-text-muted text-sm max-w-sm mx-auto mb-5">
-        Try different keywords or browse all questions by category.
+        Try different keywords or browse all questions.
       </p>
       <Button size="standard" variant="primary" onClick={onClear}>
         Clear search
@@ -205,7 +130,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * FaqPage — Full page with two-column layout matching reference
+ * FaqPage — Two-column layout with flat accordion list
  *
  * ═══════════════════════════════════════════════════════════════
  * BACKEND / ADMIN INTEGRATION NOTES
@@ -238,7 +163,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  * ADMIN FORM SPECIFICATION:
  *   question   — Text input, required, max 200 chars
  *     Placeholder: "e.g. How do I register a company in Tanzania?"
- *   answer     — Textarea, required, max 1000 chars, supports basic formatting
+ *   answer     — Textarea, required, max 1000 chars
  *     Placeholder: "Provide a clear, concise answer..."
  *   category   — Select dropdown, required
  *     Options: registration, licensing, tax, tracking, general
@@ -248,36 +173,27 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  * DATA STRUCTURE EXPECTED BY THIS COMPONENT:
  *   interface FaqPageContent {
  *     hero: {
- *       eyebrow: string;     // e.g. "Frequently Asked Questions"
+ *       eyebrow: string;
  *       title: string;       // e.g. "Questions?"
- *       description: string; // e.g. "If you have questions, we have answers..."
+ *       description: string; // e.g. "If you have questions..."
  *     };
  *     items: Array<{
  *       question: string;
  *       answer: string;
- *       // category will come from DB when available
  *     }>;
  *   }
  *
  * MIGRATION PATH (from static to DB-driven):
  *   1. Add FaqItem model to prisma/schema.prisma
  *   2. Run `bun run db:push` to create the table
- *   3. Seed with existing fallback FAQ items (from exxonim-data.ts)
+ *   3. Seed with existing fallback FAQ items
  *   4. Add GET /api/v1/faq endpoint with ?category & ?search support
  *   5. Create useFaqItems() hook (React Query) to fetch from API
  *   6. Replace the usePage<FaqPageContent>("faq") call with the new hook
- *   7. Remove the inferCategory() function — category comes from DB
- *   8. Update FAQ_CATEGORIES to be fetched from API (admin-manageable)
+ *   7. Categories can be re-added as a filter when the DB provides them
  *
- * SEO CONSIDERATIONS:
- *   - FaqStructuredData renders JSON-LD for Google rich results
- *   - Keep this even after DB migration — it helps search ranking
- *   - Each FAQ item's question/answer becomes a Question/Answer schema
- *
- * PERFORMANCE NOTES:
- *   - For < 50 FAQ items: client-side search/filter is sufficient
- *   - For > 50 FAQ items: move search to server-side (?search= API param)
- *   - Consider pagination if FAQ grows beyond 100 items
+ * SEO: FaqStructuredData renders JSON-LD for Google rich results.
+ * Keep this even after DB migration — it helps search ranking.
  * ═══════════════════════════════════════════════════════════════ */
 export function FaqPage() {
   const { data: page, isPending, error } = usePage<FaqPageContent>("faq");
@@ -285,37 +201,16 @@ export function FaqPage() {
 
   const content = page?.content;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<FaqCategoryId>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleToggle = useCallback((index: number) => {
     setOpenIndex((prev) => (prev === index ? null : index));
   }, []);
 
-  /* ── Enrich items with categories ── */
-  const enrichedItems = useMemo(() => {
-    if (!content) return [];
-    return content.items.map((item) => ({
-      ...item,
-      category: inferCategory(item.question, item.answer),
-    }));
-  }, [content]);
-
-  /* ── Category counts ── */
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: enrichedItems.length };
-    for (const item of enrichedItems) {
-      counts[item.category] = (counts[item.category] ?? 0) + 1;
-    }
-    return counts;
-  }, [enrichedItems]);
-
-  /* ── Filter items ── */
+  /* ── Filter items by search ── */
   const filteredItems = useMemo(() => {
-    let items = enrichedItems;
-    if (selectedCategory !== "all") {
-      items = items.filter((item) => item.category === selectedCategory);
-    }
+    if (!content) return [];
+    let items = content.items;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       items = items.filter(
@@ -325,13 +220,7 @@ export function FaqPage() {
       );
     }
     return items;
-  }, [enrichedItems, selectedCategory, searchQuery]);
-
-  /* ── Reset open index when filters change ── */
-  const handleCategorySelect = useCallback((id: FaqCategoryId) => {
-    setSelectedCategory(id);
-    setOpenIndex(null);
-  }, []);
+  }, [content, searchQuery]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchQuery(value);
@@ -363,7 +252,7 @@ export function FaqPage() {
               <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-14">
                 <div className="grid lg:grid-cols-[2fr_3fr] lg:gap-16 gap-10 items-start">
 
-                  {/* ═══ LEFT COLUMN: Title + Category Nav ═══ */}
+                  {/* ═══ LEFT COLUMN: Title + Search + CTA ═══ */}
                   <div className="lg:sticky lg:top-28">
                     {/* Title block */}
                     <h1 className="text-[clamp(2.25rem,5vw,3.5rem)] font-bold tracking-tight text-text leading-[1.05]">
@@ -387,58 +276,10 @@ export function FaqPage() {
                         />
                         {searchQuery && (
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[0.7rem] font-semibold text-text-soft">
-                            {filteredItems.length}/{enrichedItems.length}
+                            {filteredItems.length}/{content.items.length}
                           </span>
                         )}
                       </div>
-                    </div>
-
-                    {/* Category navigation */}
-                    <nav className="mt-8 hidden lg:block" aria-label="FAQ categories">
-                      <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-text-soft mb-3">
-                        Categories
-                      </p>
-                      <div className="flex flex-col gap-1" role="radiogroup">
-                        {FAQ_CATEGORIES.map((cat) => (
-                          <CategoryNavItem
-                            key={cat.id}
-                            label={cat.label}
-                            count={categoryCounts[cat.id] ?? 0}
-                            isActive={selectedCategory === cat.id}
-                            onClick={() => handleCategorySelect(cat.id as FaqCategoryId)}
-                          />
-                        ))}
-                      </div>
-                    </nav>
-
-                    {/* Mobile category pills */}
-                    <div className="mt-6 lg:hidden flex flex-wrap gap-2" role="radiogroup" aria-label="FAQ categories">
-                      {FAQ_CATEGORIES.map((cat) => {
-                        const isActive = selectedCategory === cat.id;
-                        return (
-                          <button
-                            key={cat.id}
-                            type="button"
-                            role="radio"
-                            aria-checked={isActive}
-                            onClick={() => handleCategorySelect(cat.id as FaqCategoryId)}
-                            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-sm font-semibold transition-all ${
-                              isActive
-                                ? "bg-accent text-accent-contrast border-accent shadow-sm shadow-accent/20"
-                                : "border-border-soft bg-surface/60 text-text-muted hover:bg-surface hover:text-text hover:border-border-strong"
-                            }`}
-                          >
-                            {cat.label}
-                            <span className={`text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full ${
-                              isActive
-                                ? "bg-accent-contrast/20 text-accent-contrast"
-                                : "bg-surface-soft text-text-soft"
-                            }`}>
-                              {categoryCounts[cat.id] ?? 0}
-                            </span>
-                          </button>
-                        );
-                      })}
                     </div>
 
                     {/* Contact CTA — left column (desktop) */}
@@ -464,35 +305,28 @@ export function FaqPage() {
                     </div>
                   </div>
 
-                  {/* ═══ RIGHT COLUMN: FAQ Accordion ═══ */}
+                  {/* ═══ RIGHT COLUMN: FAQ Accordion (flat, no container) ═══ */}
                   <div>
-                    {/* Active category label */}
-                    <div className="mb-4">
-                      <h2 className="text-xl sm:text-2xl font-bold text-text">
-                        {FAQ_CATEGORIES.find(c => c.id === selectedCategory)?.label ?? "General questions"}
-                      </h2>
-                      {searchQuery && (
-                        <p className="mt-1 text-sm text-text-soft">
-                          {filteredItems.length} result{filteredItems.length !== 1 ? "s" : ""} found
-                        </p>
-                      )}
-                    </div>
+                    {/* Search result count */}
+                    {searchQuery && (
+                      <p className="mb-4 text-sm text-text-soft">
+                        {filteredItems.length} result{filteredItems.length !== 1 ? "s" : ""} found
+                      </p>
+                    )}
 
-                    {/* FAQ accordion card */}
-                    <div className="rounded-2xl border border-border-soft bg-surface shadow-sm overflow-hidden">
+                    {/* FAQ list — flat with straight line dividers, no card wrapper */}
+                    <div>
                       {filteredItems.length > 0 ? (
-                        <div className="divide-y-0">
-                          {filteredItems.map((item, index) => (
-                            <FaqAccordionItem
-                              key={item.question}
-                              question={item.question}
-                              answer={item.answer}
-                              isOpen={openIndex === index}
-                              onToggle={() => handleToggle(index)}
-                              isLast={index === filteredItems.length - 1}
-                            />
-                          ))}
-                        </div>
+                        filteredItems.map((item, index) => (
+                          <FaqAccordionItem
+                            key={item.question}
+                            question={item.question}
+                            answer={item.answer}
+                            isOpen={openIndex === index}
+                            onToggle={() => handleToggle(index)}
+                            isLast={index === filteredItems.length - 1}
+                          />
+                        ))
                       ) : (
                         <EmptyState
                           searchQuery={searchQuery}
@@ -527,7 +361,7 @@ export function FaqPage() {
 
             {/* ─── Newsletter / Still have questions ─── */}
             <section className="pb-16 md:pb-24">
-              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8">
                 <NewsletterSection
                   heading="Still have questions?"
                   description="Get answers to new compliance questions delivered to your inbox as we publish them. No spam — just what matters for your business in Tanzania."
