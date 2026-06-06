@@ -22,4 +22,7 @@ export { StackSection } from "./StackSection";
 export { WhatsAppButton } from "./WhatsAppButton";
 export { ScrollToTopButton } from "./ScrollToTopButton";
 export { Breadcrumb } from "./Breadcrumb";
+export { FinalCtaSection } from "./FinalCtaSection";
+export { ProblemFramingSection } from "./ProblemFramingSection";
+export { ServicesFaqSection } from "./ServicesFaqSection";
 export { Button, Card, Container, Section } from "./primitives";

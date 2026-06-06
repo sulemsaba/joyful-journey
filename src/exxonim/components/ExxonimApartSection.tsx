@@ -1,105 +1,23 @@
 'use client';
 
+import { CheckCircle, Bell, ShieldCheck, ClipboardCheck, Globe } from 'lucide-react';
 import { routes } from '@/exxonim/routes';
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ExxonimApartSection — "What sets Exxonim apart" differentiator grid
  *
- * Displays 4 core differentiator cards in a 2×2 grid (1 col on mobile).
- * This section is designed for the Services page to highlight what makes
- * Exxonim Consult different from competitors.
+ * Displays 5 core differentiator cards in a responsive grid (1 col on mobile,
+ * 2 on tablet, 3 on desktop). This section is designed for the Services page
+ * to highlight what makes Exxonim Consult different from competitors.
  *
  * BACKEND / ADMIN INTEGRATION NOTES:
  * ──────────────────────────────────
  * Currently all content is static. If the CMS needs to manage these cards:
  *   - Add an "apart_section" field to the services page content type
  *   - Each card: { title, description, icon_key, link? }
- *   - Icon key maps to the inline SVG switch below
+ *   - Icon key maps to the Lucide icon switch below
  *   - Link is optional — only "track-consultation" currently links out
  * ──────────────────────────────────────────────────────────────────────────── */
-
-/** Checkmark-in-circle SVG icon */
-function CheckCircleIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="m9 12 2 2 4-4" />
-    </svg>
-  );
-}
-
-/** Bell SVG icon */
-function BellIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  );
-}
-
-/** Shield/building SVG icon — represents authority liaison */
-function ShieldBuildingIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      <path d="M9 12h2v4" />
-      <path d="M15 12h-2v4" />
-      <rect x="10" y="8" width="4" height="4" rx="0.5" />
-    </svg>
-  );
-}
-
-/** Clipboard-check SVG icon */
-function ClipboardCheckIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <path d="m9 14 2 2 4-4" />
-    </svg>
-  );
-}
 
 /** Differentiator card data — all static content */
 const differentiators = [
@@ -107,7 +25,7 @@ const differentiators = [
     title: 'Live Consultation Tracking',
     description:
       'Track every consultation from intake to resolution. Receive automatic updates at every milestone via WhatsApp, email, or SMS — no login required.',
-    icon: <CheckCircleIcon />,
+    icon: <CheckCircle className="h-6 w-6" />,
     link: routes.trackConsultation,
     linkLabel: 'Learn more',
   },
@@ -115,7 +33,7 @@ const differentiators = [
     title: 'Ongoing Compliance Reminders',
     description:
       'We send timely reminders ahead of every compliance deadline — BRELA returns, TRA filings, license renewals, WCF, NSSF, OSHA. No time limit, no cut-off. Never be caught off-guard.',
-    icon: <BellIcon />,
+    icon: <Bell className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Get reminders',
   },
@@ -123,7 +41,7 @@ const differentiators = [
     title: 'Authority Liaison',
     description:
       'We communicate directly with BRELA, TRA, NSSF, WCF, OSHA and other regulators on your behalf — so you don\'t have to chase offices or wait in queues.',
-    icon: <ShieldBuildingIcon />,
+    icon: <ShieldCheck className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Get started',
   },
@@ -131,9 +49,17 @@ const differentiators = [
     title: 'Document Readiness Review',
     description:
       'Before any filing, we review your documents for completeness and accuracy — preventing rejections, delays, and costly resubmissions.',
-    icon: <ClipboardCheckIcon />,
+    icon: <ClipboardCheck className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Submit documents',
+  },
+  {
+    title: 'No Office Visits Required',
+    description:
+      'We file everything electronically and keep you updated via WhatsApp. Our team liaises with BRELA, TRA, NSSF, WCF, and OSHA on your behalf — no queues, no travel, no wasted time.',
+    icon: <Globe className="h-6 w-6" />,
+    link: routes.contact,
+    linkLabel: 'Work remotely with us',
   },
 ] as const;
 
@@ -158,7 +84,7 @@ export function ExxonimApartSection() {
         </div>
 
         {/* ─── Differentiator Cards Grid ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {differentiators.map((card) => (
             <article
               key={card.title}

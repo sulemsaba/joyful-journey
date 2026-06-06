@@ -199,11 +199,15 @@ export interface ServiceCatalogItem {
   id: string;
   label: string;
   detail: string;
+  /** Starting price display, e.g. "From TZS 350,000". Omit if not applicable. */
+  startingPrice?: string;
 }
 
 export interface ServiceCatalogGroup {
   title: string;
   description: string;
+  /** Benefit-driven subhead, e.g. "Legally trade within 5–10 business days" */
+  benefitHeadline?: string;
   services: ServiceCatalogItem[];
 }
 
@@ -473,10 +477,30 @@ export interface RequestConsultationPageContent {
   };
 }
 
+export interface ServicesFaqItem {
+  /** Max 120 chars. The FAQ question. */
+  question: string;
+  /** Max 500 chars. The FAQ answer. */
+  answer: string;
+  /** Optional micro-CTA after this answer */
+  cta?: {
+    label: string;
+    href: string;
+  };
+}
+
+export interface ProblemFramingItem {
+  icon: string;
+  quote: string;
+  description: string;
+}
+
 export interface ServicesPageContent {
   overview: ServicesOverviewContent;
   catalog: ServicesCatalogContent;
   tracking_section: TrackingSectionContent;
+  problem_framing?: ProblemFramingItem[];
+  faq?: ServicesFaqItem[];
 }
 
 export interface ResourcesPageContent {

@@ -333,6 +333,13 @@ function TestimonialMarquee({
   );
 }
 
+/** Static price mapping — will be replaced by CMS data later */
+const PLAN_PRICES: Record<string, string> = {
+  "Foundation": "From TZS 350,000",
+  "Operating": "From TZS 650,000",
+  "Continuity": "From TZS 1,200,000",
+};
+
 function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) {
   return (
     <article
@@ -364,6 +371,13 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
       <div className={cn("mt-2 text-xs", featured ? "text-surface/60" : "text-text-muted")}>
         {plan.notes}
       </div>
+
+      {/* Price display */}
+      {PLAN_PRICES[plan.name] && (
+        <p className={cn("mt-3 text-xl font-bold", featured ? "text-surface" : "text-text")}>
+          {PLAN_PRICES[plan.name]}
+        </p>
+      )}
 
       <div className={cn("my-5 h-px", featured ? "bg-surface/20" : "bg-border-soft")} />
 
@@ -400,7 +414,7 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
           !featured && "bg-cta-secondary text-surface hover:opacity-90"
         )}
       >
-        Contact Exxonim
+        {featured ? 'Book a Free Consultation' : 'Get Started'}
       </Button>
     </article>
   );

@@ -530,15 +530,15 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
   "Business Registration, Licensing & Compliance Services",
   {
     overview: {
-      eyebrow: "Our services",
-      title: "Registration, licensing, and compliance support — structured and followed through.",
+      eyebrow: "Registration & Compliance",
+      title: "Your business, registered and kept compliant — without the office visits",
       description:
-        "Exxonim provides practical guidance across the main operational areas where organisations need reliable follow-through, from first registration to recurring obligations.",
-      panel_title: "Structured support from start to finish",
+        "From first registration to recurring filings, Exxonim handles every step so you can focus on running your business. No office visits required — we file everything electronically and keep you updated via WhatsApp.",
+      panel_title: "Trusted by businesses across Tanzania",
       panel_body:
         "Every engagement is tracked from intake to resolution. You always know what is complete, what is pending, and what comes next.",
       service_signals: [
-        { value: "4+", label: "Service areas", detail: "Registration, compliance, foreign investment, and tracking" },
+        { value: "120+", label: "Companies registered", detail: "Businesses trust Exxonim for registration and compliance" },
         { value: "100%", label: "Tracked", detail: "Every consultation assigned a reference ID" },
         { value: "4", label: "Steps", detail: "Intake, preparation, submission, follow-through" },
       ],
@@ -584,36 +584,98 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
         {
           title: "Business Setup",
           description: "End-to-end registration support for new entities.",
+          benefitHeadline: "Legally trade within 5–10 business days",
           services: [
-            { id: "company-registration", label: "Company Registration", detail: "Incorporation and first-step authority submissions." },
-            { id: "business-name-registration", label: "Business Name Registration", detail: "Sole proprietorship and trading name registration through BRELA." },
-            { id: "ngo-registration", label: "NGO Registration", detail: "Non-profit entity setup and compliance baseline." },
-            { id: "trademark-registration", label: "Trademark Registration", detail: "Brand and trade name protection through BRELA intellectual property office." },
-            { id: "tin-application", label: "TIN Application", detail: "Tax Identification Number registration and account setup." },
+            { id: "company-registration", label: "Company Registration", detail: "Incorporation and first-step authority submissions.", startingPrice: "From TZS 350,000" },
+            { id: "business-name-registration", label: "Business Name Registration", detail: "Sole proprietorship and trading name registration through BRELA.", startingPrice: "From TZS 150,000" },
+            { id: "ngo-registration", label: "NGO Registration", detail: "Non-profit entity setup and compliance baseline.", startingPrice: "From TZS 500,000" },
+            { id: "trademark-registration", label: "Trademark Registration", detail: "Brand and trade name protection through BRELA intellectual property office.", startingPrice: "From TZS 200,000" },
+            { id: "tin-application", label: "TIN Application", detail: "Tax Identification Number registration and account setup.", startingPrice: "From TZS 100,000" },
             { id: "business-license", label: "Business License Applications", detail: "License applications and regulatory approvals." },
           ],
         },
         {
           title: "Compliance Support",
           description: "Ongoing obligations managed with clear follow-through.",
+          benefitHeadline: "Never miss a filing deadline again",
           services: [
-            { id: "annual-returns", label: "Annual Returns", detail: "BRELA annual return filing and beneficial ownership updates." },
-            { id: "statutory-filings", label: "Statutory Filings", detail: "Recurring filing obligations prepared and submitted on schedule." },
-            { id: "regulatory-renewals", label: "Regulatory Renewals", detail: "Proactive tracking and timely processing of renewals." },
+            { id: "annual-returns", label: "Annual Returns", detail: "BRELA annual return filing and beneficial ownership updates.", startingPrice: "From TZS 150,000" },
+            { id: "statutory-filings", label: "Statutory Filings", detail: "Recurring filing obligations prepared and submitted on schedule.", startingPrice: "From TZS 100,000" },
+            { id: "regulatory-renewals", label: "Regulatory Renewals", detail: "Proactive tracking and timely processing of renewals.", startingPrice: "From TZS 100,000" },
             { id: "operational-advisory", label: "Operational Advisory", detail: "Structured guidance for teams managing multiple obligations." },
           ],
         },
         {
           title: "Work Permits & Foreign Investment",
           description: "Support for international investors and expatriate workers.",
+          benefitHeadline: "Set up in Tanzania without leaving home",
           services: [
-            { id: "work-permit", label: "Work Permit Applications", detail: "Residence and work permit processing for foreign investors and employees." },
-            { id: "tic-registration", label: "TIC / TISEZA Registration", detail: "Investment centre registration and compliance for foreign-owned entities." },
-            { id: "foreign-company-reg", label: "Foreign Company Registration", detail: "Branch office and subsidiary setup for international businesses." },
+            { id: "work-permit", label: "Work Permit Applications", detail: "Residence and work permit processing for foreign investors and employees.", startingPrice: "From TZS 500,000" },
+            { id: "tic-registration", label: "TIC / TISEZA Registration", detail: "Investment centre registration and compliance for foreign-owned entities.", startingPrice: "From TZS 800,000" },
+            { id: "foreign-company-reg", label: "Foreign Company Registration", detail: "Branch office and subsidiary setup for international businesses.", startingPrice: "From TZS 600,000" },
           ],
         },
       ],
     },
+    problem_framing: [
+      {
+        icon: "frustrated",
+        quote: "I spent 3 days going back and forth to BRELA...",
+        description: "Multiple office visits, unclear requirements, and long queues waste time you don't have.",
+      },
+      {
+        icon: "documents",
+        quote: "I never know which documents are right until they get rejected.",
+        description: "Incomplete submissions mean rejections, delays, and costly resubmissions.",
+      },
+      {
+        icon: "clock",
+        quote: "I missed the BRELA return deadline again.",
+        description: "Deadline surprises lead to penalties and compliance risks you could have avoided.",
+      },
+    ],
+    faq: [
+      {
+        question: "Do I need to visit any office in person?",
+        answer: "No. We file everything electronically and keep you updated via WhatsApp. Our team liaises with all regulators — BRELA, TRA, NSSF, WCF, OSHA — on your behalf.",
+        cta: { label: "Book a free consultation", href: routes.contact },
+      },
+      {
+        question: "How long does company registration take?",
+        answer: "Typically 5–10 business days from when we receive your complete documents. Delays can occur if BRELA requests additional information, but we follow up proactively.",
+        cta: { label: "Get started with registration", href: routes.contact },
+      },
+      {
+        question: "What documents do I need to get started?",
+        answer: "It depends on the service. For company registration, you'll need director details, a proposed company name, and a registered office address. We'll send you a clear checklist after your consultation.",
+        cta: { label: "Request a consultation", href: routes.contact },
+      },
+      {
+        question: "Can I track my consultation status?",
+        answer: "Yes — every engagement gets a 6-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.",
+        cta: { label: "Track your consultation", href: routes.trackConsultation },
+      },
+      {
+        question: "What's included in the compliance reminders?",
+        answer: "We track all major compliance deadlines — BRELA returns, TRA filings, WCF, NSSF, OSHA renewals — and send you advance reminders via WhatsApp. No time limit, no cut-off.",
+        cta: { label: "Get compliance support", href: routes.contact },
+      },
+      {
+        question: "Do you handle work permits for foreign employees?",
+        answer: "Yes. We process work permits, residence permits, and TIC/TISEZA registration for foreign investors and employees. Everything is handled remotely — no office visits needed.",
+        cta: { label: "Apply for a work permit", href: routes.contact },
+      },
+      {
+        question: "What are your service fees?",
+        answer: "Fees vary by service. Company registration starts from TZS 350,000. We provide a clear quote before any work begins — no hidden charges, no surprises.",
+        cta: { label: "Get a quote", href: routes.contact },
+      },
+      {
+        question: "What happens after I submit an inquiry?",
+        answer: "You'll receive a tracking code via WhatsApp within one business day. Use it to check your status anytime. We also send milestone updates automatically.",
+        cta: { label: "Submit an inquiry", href: routes.contact },
+      },
+    ],
     tracking_section: {
       eyebrow: "Consultation tracking",
       title: "Track every consultation from intake to resolution",

@@ -1,7 +1,8 @@
-import { Container } from './primitives/Container'
-import { Button } from './primitives/Button'
-import { routes } from '@/exxonim/routes'
-import type { ServicesCatalogContent } from '@/exxonim/types'
+import { CheckCircle } from 'lucide-react';
+import { Container } from './primitives/Container';
+import { Button } from './primitives/Button';
+import { routes } from '@/exxonim/routes';
+import type { ServicesCatalogContent } from '@/exxonim/types';
 
 function BuildingIcon() {
   return (
@@ -55,7 +56,6 @@ export function EngineSection({ content }: EngineSectionProps) {
   const serviceGroups = content.service_groups;
 
   return (
-
     <section id="services" className="py-16 md:py-24 bg-page-strong">
       <Container>
         {/* Section Header */}
@@ -93,8 +93,14 @@ export function EngineSection({ content }: EngineSectionProps) {
                   <p className="text-text-muted text-sm leading-relaxed mt-1">
                     {group.description}
                   </p>
+                  {/* Benefit headline */}
+                  {group.benefitHeadline && (
+                    <p className="flex items-center gap-1.5 text-accent text-sm font-semibold mt-2">
+                      <CheckCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                      {group.benefitHeadline}
+                    </p>
+                  )}
                 </div>
-
               </div>
 
               {/* Services List */}
@@ -103,7 +109,7 @@ export function EngineSection({ content }: EngineSectionProps) {
                   <li
                     key={service.id}
                     id={service.id}
-                    className="grid gap-1 group"
+                    className="grid gap-1"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <strong className="text-text font-medium">
@@ -111,15 +117,20 @@ export function EngineSection({ content }: EngineSectionProps) {
                       </strong>
                       <a
                         href={`${routes.contact}#inquiry`}
-                        className="flex-shrink-0 mt-0.5 text-[0.7rem] font-extrabold uppercase tracking-[0.08em] text-accent opacity-0 group-hover:opacity-100 transition-opacity"
-                        aria-label={`Inquire about ${service.label}`}
+                        className="flex-shrink-0 mt-0.5 text-accent text-xs font-bold whitespace-nowrap"
+                        aria-label={`Get started with ${service.label}`}
                       >
-                        Inquire →
+                        Get Started →
                       </a>
                     </div>
                     <p className="text-text-muted text-sm leading-relaxed">
                       {service.detail}
                     </p>
+                    {service.startingPrice && (
+                      <p className="text-accent text-xs font-semibold">
+                        From {service.startingPrice.replace(/^From\s+/i, '')}
+                      </p>
+                    )}
                   </li>
                 ))}
               </ul>
