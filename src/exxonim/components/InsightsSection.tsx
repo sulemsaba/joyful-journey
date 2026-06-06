@@ -272,7 +272,7 @@ export function InsightsSection({
             <RailButton onClick={onNext} label="Next insight">
               <ArrowRight className="h-5 w-5" />
             </RailButton>
-            <Button size="hero" variant="primary" href={routes.resources}>
+            <Button size="standard" variant="primary" href={routes.resources}>
               See more
             </Button>
           </div>

@@ -223,7 +223,7 @@ function CareerCTABanner({
           </div>
           <div className="flex flex-wrap gap-2.5 shrink-0">
             <Button
-              size="compact"
+              size="standard"
               variant="primary"
               href={primary.href}
             >
@@ -231,7 +231,7 @@ function CareerCTABanner({
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </Button>
             <Button
-              size="compact"
+              size="standard"
               variant="outline"
               href={secondary.href}
             >
@@ -567,7 +567,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
 
             {/* Submit */}
             <Button
-              size="hero"
+              size="standard"
               variant="primary"
               type="submit"
               isLoading={isSubmitting}
@@ -764,7 +764,7 @@ export function CareerPage() {
                   <div className="ml-auto flex items-center gap-3">
                     <SocialShareButtons />
                     <Button
-                      size="compact"
+                      size="standard"
                       variant="outline"
                       href={routes.about}
                       className="hidden md:inline-flex border-accent-contrast/30 text-accent-contrast hover:bg-accent-contrast/10"
@@ -859,7 +859,7 @@ export function CareerPage() {
                     )}
                   </div>
                   <Button
-                    size="compact"
+                    size="standard"
                     variant="primary"
                     onClick={() => resetAndGoToPage1()}
                     className="shrink-0"
@@ -998,7 +998,7 @@ export function CareerPage() {
 
                                   {!isExpanded && (
                                     <Button
-                                      size="compact"
+                                      size="standard"
                                       variant="primary"
                                       onClick={(e) => { e.stopPropagation(); openApplyModal(job); }}
                                       className="shrink-0"
@@ -1019,7 +1019,7 @@ export function CareerPage() {
                                   </p>
                                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
                                     <Button
-                                      size="compact"
+                                      size="standard"
                                       variant="primary"
                                       onClick={(e) => { e.stopPropagation(); openApplyModal(job); }}
                                     >
@@ -1114,14 +1114,14 @@ export function CareerPage() {
                                   {/* Action buttons */}
                                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
                                     <Button
-                                      size="compact"
+                                      size="standard"
                                       variant="primary"
                                       onClick={(e) => { e.stopPropagation(); openApplyModal(job); }}
                                     >
                                       Apply Now
                                     </Button>
                                     <Button
-                                      size="compact"
+                                      size="standard"
                                       variant="secondary"
                                       onClick={(e) => {
                                         e.stopPropagation();

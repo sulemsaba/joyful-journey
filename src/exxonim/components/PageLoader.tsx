@@ -113,7 +113,7 @@ export function PageLoader({ isLoading = true }: PageLoaderProps) {
           <div className="flex flex-col items-center gap-3 animate-[loader-fade_0.4s_ease_forwards]">
             <p className="text-xs text-text-soft">Taking longer than expected</p>
             <Button
-              size="compact"
+              size="standard"
               variant="primary"
               onClick={handleRetry}
             >

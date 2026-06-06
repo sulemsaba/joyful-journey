@@ -144,11 +144,11 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
 
               {/* CTAs — primary + optional secondary */}
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Button size="hero" variant="primary" href={content.cta.href} className="px-8">
+                <Button size="standard" variant="primary" href={content.cta.href} className="px-8">
                   {content.cta.label}
                 </Button>
                 {hasSecondaryCta ? (
-                  <Button size="hero" variant="secondary" href={content.secondary_cta.href} className="px-8">
+                  <Button size="standard" variant="secondary" href={content.secondary_cta.href} className="px-8">
                     {content.secondary_cta.label}
                   </Button>
                 ) : null}

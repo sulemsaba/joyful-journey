@@ -139,10 +139,10 @@ export function AboutPage() {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text mb-4">{content.cta.title}</h2>
                 <p className="text-text-muted max-w-2xl mx-auto mb-8">{content.cta.description}</p>
                 <div className="flex flex-wrap justify-center gap-4">
-                  <Button size="hero" variant="primary" href={content.cta.primary.href}>
+                  <Button size="standard" variant="primary" href={content.cta.primary.href}>
                     {content.cta.primary.label}
                   </Button>
-                  <Button size="hero" variant="secondary" href={content.cta.secondary.href}>
+                  <Button size="standard" variant="secondary" href={content.cta.secondary.href}>
                     {content.cta.secondary.label}
                   </Button>
                 </div>

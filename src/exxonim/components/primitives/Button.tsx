@@ -8,10 +8,11 @@ import { forwardRef, type ReactNode } from 'react'
  * Replaces all hand-coded button classes across the site.
  *
  * TIERS (static heights, responsive padding):
- *   hero     — h-12 (48px) — Hero sections, page CTAs, form submits
- *   standard — h-10 (40px) — Inline CTAs, cookie consent, error recovery
- *   compact  — h-8  (32px) — Sidebar CTAs, mega menu, bottom bars
- *                            (invisible touch-target expansion on mobile)
+ *   hero     — h-12 (48px) — Reserved for top-level hero banners only
+ *   standard — h-10 (40px) — Default for all page buttons: CTAs, form submits,
+ *                            cookie consent, error recovery, inline actions
+ *   compact  — h-8  (32px) — Navigation components only (sidebar, mega menu,
+ *                            bottom bars; invisible touch-target expansion on mobile)
  *   icon     — w-9 h-9 (36px) — Close, share, arrows, toggles
  *
  * VARIANTS:
@@ -21,7 +22,7 @@ import { forwardRef, type ReactNode } from 'react'
  *   ghost     — bg-transparent text-text (subtle / contextual)
  *
  * USAGE:
- *   <Button size="hero" variant="primary" href="/contact">Contact Us</Button>
+ *   <Button size="standard" variant="primary" href="/contact">Contact Us</Button>
  *   <Button size="standard" variant="secondary" onClick={handleClick}>Cancel</Button>
  *   <Button size="icon" variant="ghost" aria-label="Close"><XIcon /></Button>
  * ═══════════════════════════════════════════════════════════════ */

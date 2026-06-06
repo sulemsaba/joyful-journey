@@ -31,7 +31,7 @@ export function StatementCard({
 
         <div className="flex items-center gap-3 flex-wrap mt-4">
           <Button
-            size="hero"
+            size="standard"
             variant="primary"
             href={item.ctaHref || "/contact/"}
           >

@@ -360,8 +360,8 @@ function BottomCTABanner() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2.5 shrink-0">
-            <Button size="compact" variant="primary" href={routes.contact}>Contact Us →</Button>
-            <Button size="compact" variant="secondary" href="tel:+255794689099" className="gap-1.5">📞 Call Us</Button>
+            <Button size="standard" variant="primary" href={routes.contact}>Contact Us →</Button>
+            <Button size="standard" variant="secondary" href="tel:+255794689099" className="gap-1.5">📞 Call Us</Button>
           </div>
         </div>
       </div>

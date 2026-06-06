@@ -107,7 +107,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 Try again
               </Button>
               <Button
-                size="hero"
+                size="standard"
                 variant="primary"
                 onClick={this.handleReload}
               >

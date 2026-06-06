@@ -468,7 +468,7 @@ export function ContactPage() {
 
                     {/* Submit button */}
                     <Button
-                      size="hero"
+                      size="standard"
                       variant="primary"
                       type="submit"
                       className="rounded-xl w-full"

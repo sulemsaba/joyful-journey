@@ -69,13 +69,13 @@ export function NotFoundPage({ pathname }: NotFoundPageProps) {
               ) : null}
 
               <div className="mt-10 flex flex-wrap gap-4">
-                <Button size="hero" variant="primary" href={routes.home}>
+                <Button size="standard" variant="primary" href={routes.home}>
                   Go home
                 </Button>
-                <Button size="hero" variant="secondary" href={routes.services}>
+                <Button size="standard" variant="secondary" href={routes.services}>
                   See services
                 </Button>
-                <Button size="hero" variant="secondary" href={routes.contact}>
+                <Button size="standard" variant="secondary" href={routes.contact}>
                   Contact Exxonim
                 </Button>
               </div>

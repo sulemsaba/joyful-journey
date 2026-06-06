@@ -82,7 +82,7 @@ export function NewsletterSection() {
                   />
                 </div>
                 <Button
-                  size="hero"
+                  size="standard"
                   variant="primary"
                   type="submit"
                   className="w-full rounded-xl"
@@ -154,7 +154,7 @@ export function NewsletterSection() {
                     />
                   </div>
                   <Button
-                    size="hero"
+                    size="standard"
                     variant="primary"
                     type="submit"
                     aria-label="Subscribe to newsletter"

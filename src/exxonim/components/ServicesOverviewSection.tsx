@@ -43,14 +43,14 @@ export function ServicesOverviewSection({
 
               <div className="flex flex-wrap gap-3 mt-6">
                 <Button
-                  size="hero"
+                  size="standard"
                   variant="primary"
                   href="#packages"
                 >
                   See package plans
                 </Button>
                 <Button
-                  size="hero"
+                  size="standard"
                   variant="secondary"
                   href={routes.contact}
                 >

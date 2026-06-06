@@ -349,7 +349,7 @@ export function FaqPage() {
                             Our team responds within one business day.
                           </p>
                         </div>
-                        <Button size="compact" variant="primary" href={routes.contact} className="shrink-0">
+                        <Button size="standard" variant="primary" href={routes.contact} className="shrink-0">
                           Contact us
                         </Button>
                       </div>

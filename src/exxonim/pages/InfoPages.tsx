@@ -67,7 +67,7 @@ function ContentPage({
                 <div className="flex flex-wrap gap-4">
                   {nextStep.primary_action ? (
                     <Button
-                      size="hero"
+                      size="standard"
                       variant="primary"
                       href={nextStep.primary_action.href}
                     >
@@ -76,7 +76,7 @@ function ContentPage({
                   ) : null}
                   {nextStep.secondary_action ? (
                     <Button
-                      size="hero"
+                      size="standard"
                       variant="secondary"
                       href={nextStep.secondary_action.href}
                     >

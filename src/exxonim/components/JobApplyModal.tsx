@@ -246,7 +246,7 @@ export function JobApplyModal({ job, open, onClose }: JobApplyModalProps) {
 
                     {/* Submit */}
                     <Button
-                      size="hero"
+                      size="standard"
                       variant="primary"
                       type="submit"
                       className="rounded-xl w-full"

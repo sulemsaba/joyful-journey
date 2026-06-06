@@ -65,7 +65,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
             Necessary only
           </Button>
           <Button
-            size="hero"
+            size="standard"
             variant="primary"
             type="button"
             onClick={() => {

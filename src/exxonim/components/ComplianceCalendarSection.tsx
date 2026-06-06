@@ -271,7 +271,7 @@ function CTACard() {
       {/* CTA buttons */}
       <div className="grid gap-3">
         <Button
-          size="hero"
+          size="standard"
           variant="primary"
           href={routes.contact}
         >
@@ -279,7 +279,7 @@ function CTACard() {
           <ArrowRightIcon className="h-4 w-4" />
         </Button>
         <Button
-          size="hero"
+          size="standard"
           variant="secondary"
           href={routes.trackConsultation}
         >

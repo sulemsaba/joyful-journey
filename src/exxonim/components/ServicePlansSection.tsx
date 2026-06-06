@@ -392,7 +392,7 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
       </ul>
 
       <Button
-        size="hero"
+        size="standard"
         variant="primary"
         href={routes.contact}
         className={cn(
