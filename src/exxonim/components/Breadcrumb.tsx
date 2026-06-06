@@ -38,7 +38,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
   if (!items.length) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="py-3">
+    <nav aria-label="Breadcrumb" className="pt-3 pb-3">
       <ol className="flex items-center flex-wrap gap-1 text-sm">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

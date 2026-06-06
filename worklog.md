@@ -460,3 +460,46 @@ Stage Summary:
 - Database layer ready for FAQ admin CRUD (model, API, hook all in place)
 - Category inference is temporary — will be replaced when admin assigns categories in DB
 - Lint passes clean, no errors
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Study current FAQ page and Breadcrumbs component code
+
+Work Log:
+- Read FaqPage.tsx (579 lines) — current FAQ page with hero section, search bar, category pills, accordion items with numbered badges, right sidebar
+- Read Breadcrumb.tsx (85 lines) — custom component with icon support, Home icon breadcrumb
+- Read globals.css — Exxonim theme tokens, accent color #0f5c63 (teal)
+- Read all page files to check breadcrumb usage patterns
+- Found breadcrumbs on: AboutPage, ServicesPage, FaqPage, ContactPage, ResourcesPage, CareerPage, TrackConsultationPage, InfoPages
+- All pages use identical breadcrumb wrapper: `max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4`
+
+Stage Summary:
+- Current FAQ page has hero section with gradient, stats bar, category pills, numbered accordion items with chevron icons
+- Breadcrumb alignment is consistent across all pages (same pt-4 wrapper)
+- All pages use the same Breadcrumb component with py-3 padding
+---
+Task ID: 2
+Agent: Main Agent
+Task: Redesign FAQ page to match reference image and add backend notes
+
+Work Log:
+- Analyzed reference image using VLM — two-column layout, Plus/X toggle icons, clean minimalist design
+- Redesigned FaqPage.tsx with:
+  - Two-column layout: Left (40%) with title, subtitle, search bar, category nav, contact CTA; Right (60%) with FAQ accordion
+  - Replaced ChevronDown icons with Plus/X toggle icons
+  - Replaced category pills with sidebar category navigation (desktop) and pills (mobile)
+  - Removed hero gradient section and stats bar
+  - Added white card container for accordion with subtle shadow
+  - Kept newsletter section at bottom
+  - Added comprehensive backend/DB integration notes
+- Fixed breadcrumb wrapper to use `max-w-` (matching all other pages)
+- Verified page renders correctly with agent browser
+- VLM analysis confirmed: two-column layout visible, Plus icons on items, breadcrumb at top, search bar visible, no visual issues
+
+Stage Summary:
+- FAQ page completely redesigned matching reference image
+- Two-column layout with category nav in left column
+- Plus/X toggle icons instead of chevrons
+- Comprehensive backend notes for DB migration (schema, API, admin form, migration path)
+- Breadcrumb alignment is consistent across all pages

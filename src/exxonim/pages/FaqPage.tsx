@@ -8,7 +8,7 @@ import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
-import { Home, MessageCircle, Search, ChevronDown } from "lucide-react";
+import { Home, Search, Plus, X, MessageCircle } from "lucide-react";
 import type { FaqPageContent } from '@/exxonim/types';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -37,7 +37,7 @@ function FaqStructuredData({ items }: { items: Array<{ question: string; answer:
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * FAQ CATEGORIES — grouped by topic for the filter pills
+ * FAQ CATEGORIES — grouped by topic for the left sidebar filter
  *
  * BACKEND / ADMIN NOTE:
  * When FAQ items come from the database, each item should have
@@ -47,12 +47,12 @@ function FaqStructuredData({ items }: { items: Array<{ question: string; answer:
  * display order and labels.
  * ═══════════════════════════════════════════════════════════════ */
 const FAQ_CATEGORIES = [
-  { id: "all", label: "All Questions" },
+  { id: "all", label: "General questions" },
   { id: "registration", label: "Registration" },
   { id: "licensing", label: "Licensing" },
   { id: "tax", label: "Tax & TIN" },
   { id: "tracking", label: "Tracking" },
-  { id: "general", label: "General" },
+  { id: "general", label: "Other" },
 ] as const;
 
 type FaqCategoryId = typeof FAQ_CATEGORIES[number]["id"];
@@ -76,84 +76,53 @@ function inferCategory(question: string, _answer: string): FaqCategoryId {
 /* ═══════════════════════════════════════════════════════════════
  * FaqAccordionItem — single expandable FAQ item
  *
- * Design: Clean card with numbered badge, smooth grid-rows
- * animation, and a subtle accent left border when expanded.
+ * Design: Clean white card row with Plus/X toggle icon,
+ * matching the reference design. Plus icon when collapsed,
+ * X icon when expanded. Smooth grid-rows animation for
+ * the answer reveal.
  * ═══════════════════════════════════════════════════════════════ */
 function FaqAccordionItem({
-  index,
   question,
   answer,
-  category,
   isOpen,
   onToggle,
+  isLast,
 }: {
-  index: number;
   question: string;
   answer: string;
-  category: string;
   isOpen: boolean;
   onToggle: () => void;
+  isLast: boolean;
 }) {
   return (
-    <div
-      className={`group relative rounded-2xl border transition-all duration-300 ${
-        isOpen
-          ? "border-accent/30 bg-surface shadow-sm shadow-accent/5"
-          : "border-border-soft bg-surface/60 hover:border-border-strong hover:bg-surface/90"
-      }`}
-    >
-      {/* Left accent bar when expanded */}
-      <div
-        className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full transition-all duration-300 ${
-          isOpen ? "bg-accent opacity-100" : "bg-accent opacity-0"
-        }`}
-      />
-
+    <div className={!isLast ? "border-b border-border-soft" : ""}>
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-start gap-4 p-5 sm:p-6 text-left cursor-pointer"
+        className="flex w-full items-center justify-between gap-4 py-5 px-6 text-left cursor-pointer group transition-colors hover:bg-surface-soft/40"
         aria-expanded={isOpen}
       >
-        {/* Number badge */}
-        <span
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-all duration-300 ${
-            isOpen
-              ? "bg-accent text-accent-contrast"
-              : "bg-accent-soft/60 text-accent group-hover:bg-accent group-hover:text-accent-contrast"
-          }`}
-        >
-          {String(index + 1).padStart(2, "0")}
-        </span>
-
-        <div className="flex-1 min-w-0">
-          <h3
-          className={`text-[0.9375rem] sm:text-base leading-snug transition-colors duration-200 ${
-            isOpen ? "font-semibold text-text" : "font-medium text-text-muted group-hover:text-text"
+        <h3
+          className={`text-[0.9375rem] sm:text-base leading-snug transition-colors duration-200 flex-1 min-w-0 ${
+            isOpen ? "font-semibold text-text" : "font-normal text-text group-hover:text-text"
           }`}
         >
           {question}
         </h3>
-          {/* Category pill — visible when collapsed */}
-          {!isOpen && (
-            <span className="mt-1.5 inline-flex items-center rounded-md bg-accent-soft/40 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-accent/70">
-              {category}
-            </span>
-          )}
-        </div>
 
         <span
           className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
             isOpen
               ? "bg-accent/10 text-accent"
-              : "bg-transparent text-text-soft group-hover:bg-accent-soft group-hover:text-accent"
+              : "text-accent/60 group-hover:text-accent group-hover:bg-accent/5"
           }`}
           aria-hidden="true"
         >
-          <ChevronDown
-            className="w-4 h-4 transition-transform duration-300"
-            style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-          />
+          {isOpen ? (
+            <X className="w-4 h-4" />
+          ) : (
+            <Plus className="w-4 h-4" />
+          )}
         </span>
       </button>
 
@@ -164,8 +133,7 @@ function FaqAccordionItem({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="px-5 sm:px-6 pb-5 sm:pb-6 pl-[4.5rem] sm:pl-[5rem]">
-            <div className="h-px bg-border-soft mb-4" />
+          <div className="px-6 pb-5">
             <p className="text-sm sm:text-[0.9375rem] leading-relaxed text-text-muted">
               {answer}
             </p>
@@ -177,82 +145,40 @@ function FaqAccordionItem({
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * SearchBar — filter FAQ items by question/answer text
+ * CategoryNavItem — sidebar category link in left column
  * ═══════════════════════════════════════════════════════════════ */
-function FaqSearchBar({
-  value,
-  onChange,
-  resultCount,
-  totalCount,
+function CategoryNavItem({
+  label,
+  count,
+  isActive,
+  onClick,
 }: {
-  value: string;
-  onChange: (value: string) => void;
-  resultCount: number;
-  totalCount: number;
+  label: string;
+  count: number;
+  isActive: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div className="relative w-full max-w-lg">
-      <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-text-soft" />
-      <input
-        type="search"
-        placeholder="Search questions..."
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full h-11 pl-11 pr-20 rounded-xl border border-border-soft bg-surface text-text placeholder:text-text-soft text-sm outline-none transition-all focus:border-accent/40 focus:ring-2 focus:ring-accent/15"
-        aria-label="Search FAQ questions"
-      />
-      {value && (
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[0.7rem] font-semibold text-text-soft">
-          {resultCount}/{totalCount}
-        </span>
-      )}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
- * CategoryPills — filter pills for FAQ categories
- * ═══════════════════════════════════════════════════════════════ */
-function CategoryPills({
-  categories,
-  selected,
-  onSelect,
-  counts,
-}: {
-  categories: readonly { id: string; label: string }[];
-  selected: FaqCategoryId;
-  onSelect: (id: FaqCategoryId) => void;
-  counts: Record<string, number>;
-}) {
-  return (
-    <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="FAQ categories">
-      {categories.map((cat) => {
-        const isActive = selected === cat.id;
-        return (
-          <button
-            key={cat.id}
-            type="button"
-            role="radio"
-            aria-checked={isActive}
-            onClick={() => onSelect(cat.id as FaqCategoryId)}
-            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-semibold transition-all ${
-              isActive
-                ? "bg-accent text-accent-contrast border-accent shadow-sm shadow-accent/20"
-                : "border-border-soft bg-surface/60 text-text-muted hover:bg-surface hover:text-text hover:border-border-strong"
-            }`}
-          >
-            {cat.label}
-            <span className={`text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full ${
-              isActive
-                ? "bg-accent-contrast/20 text-accent-contrast"
-                : "bg-surface-soft text-text-soft"
-            }`}>
-              {counts[cat.id] ?? 0}
-            </span>
-          </button>
-        );
-      })}
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex items-center justify-between w-full text-left py-2.5 px-3 rounded-xl transition-all cursor-pointer ${
+        isActive
+          ? "bg-accent/10 text-accent font-semibold"
+          : "text-text-muted hover:text-text hover:bg-surface-soft/60"
+      }`}
+      role="radio"
+      aria-checked={isActive}
+    >
+      <span className="text-sm">{label}</span>
+      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+        isActive
+          ? "bg-accent/15 text-accent"
+          : "bg-surface-soft text-text-soft"
+      }`}>
+        {count}
+      </span>
+    </button>
   );
 }
 
@@ -279,7 +205,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * FaqPage — Full page with hero, search, categories, accordion
+ * FaqPage — Full page with two-column layout matching reference
  *
  * ═══════════════════════════════════════════════════════════════
  * BACKEND / ADMIN INTEGRATION NOTES
@@ -288,8 +214,8 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  * DATABASE SCHEMA (Prisma):
  *   model FaqItem {
  *     id         String   @id @default(cuid())
- *     question   String   // max 120 chars — backend must validate
- *     answer     String   // max 500 chars — backend must validate
+ *     question   String   // max 200 chars — backend must validate
+ *     answer     String   // max 1000 chars — backend must validate
  *     category   String   // "registration" | "licensing" | "tax" | "tracking" | "general"
  *     sort_order Int      @default(0) // lower = shown first
  *     is_active  Boolean  @default(true) // only active items appear publicly
@@ -299,27 +225,59 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  *
  * API ENDPOINTS:
  *   GET    /api/v1/faq              — List all active FAQ items (public)
+ *     Query params: ?category=<id> — filter by category
+ *     Query params: ?search=<q>    — search by question/answer text
+ *     Response: { items: FaqItem[], total: number }
  *   GET    /api/v1/faq/:id          — Get single FAQ item
  *   POST   /api/v1/faq              — Create FAQ item (admin only)
  *   PUT    /api/v1/faq/:id          — Update FAQ item (admin only)
  *   DELETE /api/v1/faq/:id          — Delete FAQ item (admin only)
  *   PATCH  /api/v1/faq/reorder      — Reorder items (admin only)
+ *     Body: { items: [{ id: string, sort_order: number }] }
  *
- * ADMIN FORM:
- *   question   — Text input, required, max 120 chars
- *   answer     — Textarea, required, max 500 chars
- *   category   — Select dropdown (registration, licensing, tax, tracking, general)
- *   sort_order — Number input (drag-and-drop reorder in admin UI)
- *   is_active  — Toggle switch
+ * ADMIN FORM SPECIFICATION:
+ *   question   — Text input, required, max 200 chars
+ *     Placeholder: "e.g. How do I register a company in Tanzania?"
+ *   answer     — Textarea, required, max 1000 chars, supports basic formatting
+ *     Placeholder: "Provide a clear, concise answer..."
+ *   category   — Select dropdown, required
+ *     Options: registration, licensing, tax, tracking, general
+ *   sort_order — Number input (drag-and-drop reorder in admin UI preferred)
+ *   is_active  — Toggle switch, default: true
  *
- * MIGRATION PATH:
+ * DATA STRUCTURE EXPECTED BY THIS COMPONENT:
+ *   interface FaqPageContent {
+ *     hero: {
+ *       eyebrow: string;     // e.g. "Frequently Asked Questions"
+ *       title: string;       // e.g. "Questions?"
+ *       description: string; // e.g. "If you have questions, we have answers..."
+ *     };
+ *     items: Array<{
+ *       question: string;
+ *       answer: string;
+ *       // category will come from DB when available
+ *     }>;
+ *   }
+ *
+ * MIGRATION PATH (from static to DB-driven):
  *   1. Add FaqItem model to prisma/schema.prisma
  *   2. Run `bun run db:push` to create the table
- *   3. Seed with existing fallback FAQ items
- *   4. Add GET /api/v1/faq endpoint to the catch-all API route
+ *   3. Seed with existing fallback FAQ items (from exxonim-data.ts)
+ *   4. Add GET /api/v1/faq endpoint with ?category & ?search support
  *   5. Create useFaqItems() hook (React Query) to fetch from API
  *   6. Replace the usePage<FaqPageContent>("faq") call with the new hook
  *   7. Remove the inferCategory() function — category comes from DB
+ *   8. Update FAQ_CATEGORIES to be fetched from API (admin-manageable)
+ *
+ * SEO CONSIDERATIONS:
+ *   - FaqStructuredData renders JSON-LD for Google rich results
+ *   - Keep this even after DB migration — it helps search ranking
+ *   - Each FAQ item's question/answer becomes a Question/Answer schema
+ *
+ * PERFORMANCE NOTES:
+ *   - For < 50 FAQ items: client-side search/filter is sufficient
+ *   - For > 50 FAQ items: move search to server-side (?search= API param)
+ *   - Consider pagination if FAQ grows beyond 100 items
  * ═══════════════════════════════════════════════════════════════ */
 export function FaqPage() {
   const { data: page, isPending, error } = usePage<FaqPageContent>("faq");
@@ -400,162 +358,168 @@ export function FaqPage() {
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "FAQ" }]} />
             </div>
 
-            {/* ─── Hero Section ─── */}
-            <section className="relative overflow-hidden">
-              {/* Decorative gradient background */}
-              <div
-                className="absolute inset-0 -z-10 opacity-60"
-                style={{
-                  background:
-                    "radial-gradient(50% 60% at 80% 0%, hsl(var(--accent) / 0.12), transparent 70%), radial-gradient(30% 40% at 10% 20%, hsl(var(--accent) / 0.06), transparent 70%)",
-                }}
-              />
-
-              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 md:pt-16 md:pb-16" data-reveal>
-                <div className="max-w-2xl">
-                  <p className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent-soft text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-accent mb-5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                    {content.hero.eyebrow}
-                  </p>
-                  <h1 className="text-[clamp(2rem,5vw,3.25rem)] font-bold tracking-tight text-text leading-[1.1]">
-                    {content.hero.title}
-                  </h1>
-                  <p className="mt-4 text-base sm:text-lg text-text-muted leading-relaxed max-w-xl">
-                    {content.hero.description}
-                  </p>
-                </div>
-
-                {/* Search bar */}
-                <div className="mt-8">
-                  <FaqSearchBar
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    resultCount={filteredItems.length}
-                    totalCount={enrichedItems.length}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* ─── Stats Bar ─── */}
-            <div className="border-b border-border-soft bg-surface-elevated/50">
-              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-accent">{content.items.length}</span>
-                    <span className="text-text-muted">Questions answered</span>
-                  </div>
-                  <div className="hidden sm:block h-6 w-px bg-border-soft" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-text">{FAQ_CATEGORIES.length - 1}</span>
-                    <span className="text-text-muted">Categories</span>
-                  </div>
-                  <div className="hidden sm:block h-6 w-px bg-border-soft" />
-                  <div className="flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4 text-accent" />
-                    <span className="text-text-muted">Updated regularly</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* ─── FAQ Accordion Section ─── */}
+            {/* ─── Two-Column FAQ Section ─── */}
             <section className="pb-16 md:pb-24">
-              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
-                {/* Category pills */}
-                <div className="mb-8">
-                  <CategoryPills
-                    categories={FAQ_CATEGORIES}
-                    selected={selectedCategory}
-                    onSelect={handleCategorySelect}
-                    counts={categoryCounts}
-                  />
-                </div>
+              <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-14">
+                <div className="grid lg:grid-cols-[2fr_3fr] lg:gap-16 gap-10 items-start">
 
-                <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
-                  {/* ─── FAQ Accordion List ─── */}
-                  <div className="flex flex-col gap-3">
-                    {filteredItems.length > 0 ? (
-                      filteredItems.map((item, index) => (
-                        <FaqAccordionItem
-                          key={item.question}
-                          index={index}
-                          question={item.question}
-                          answer={item.answer}
-                          category={FAQ_CATEGORIES.find(c => c.id === item.category)?.label ?? item.category}
-                          isOpen={openIndex === index}
-                          onToggle={() => handleToggle(index)}
+                  {/* ═══ LEFT COLUMN: Title + Category Nav ═══ */}
+                  <div className="lg:sticky lg:top-28">
+                    {/* Title block */}
+                    <h1 className="text-[clamp(2.25rem,5vw,3.5rem)] font-bold tracking-tight text-text leading-[1.05]">
+                      {content.hero.title || "Questions?"}
+                    </h1>
+                    <p className="mt-4 text-base sm:text-[0.9375rem] text-text-muted leading-relaxed max-w-md">
+                      {content.hero.description || "If you have questions, we have answers for you here. In case we don't, please feel free to reach out to us."}
+                    </p>
+
+                    {/* Search bar */}
+                    <div className="mt-6">
+                      <div className="relative w-full max-w-sm">
+                        <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-soft" />
+                        <input
+                          type="search"
+                          placeholder="Search questions..."
+                          value={searchQuery}
+                          onChange={(e) => handleSearchChange(e.target.value)}
+                          className="w-full h-10 pl-10 pr-4 rounded-xl border border-border-soft bg-surface text-text placeholder:text-text-soft text-sm outline-none transition-all focus:border-accent/40 focus:ring-2 focus:ring-accent/15"
+                          aria-label="Search FAQ questions"
                         />
-                      ))
-                    ) : (
-                      <EmptyState
-                        searchQuery={searchQuery}
-                        onClear={() => handleSearchChange("")}
-                      />
-                    )}
+                        {searchQuery && (
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[0.7rem] font-semibold text-text-soft">
+                            {filteredItems.length}/{enrichedItems.length}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Category navigation */}
+                    <nav className="mt-8 hidden lg:block" aria-label="FAQ categories">
+                      <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-text-soft mb-3">
+                        Categories
+                      </p>
+                      <div className="flex flex-col gap-1" role="radiogroup">
+                        {FAQ_CATEGORIES.map((cat) => (
+                          <CategoryNavItem
+                            key={cat.id}
+                            label={cat.label}
+                            count={categoryCounts[cat.id] ?? 0}
+                            isActive={selectedCategory === cat.id}
+                            onClick={() => handleCategorySelect(cat.id as FaqCategoryId)}
+                          />
+                        ))}
+                      </div>
+                    </nav>
+
+                    {/* Mobile category pills */}
+                    <div className="mt-6 lg:hidden flex flex-wrap gap-2" role="radiogroup" aria-label="FAQ categories">
+                      {FAQ_CATEGORIES.map((cat) => {
+                        const isActive = selectedCategory === cat.id;
+                        return (
+                          <button
+                            key={cat.id}
+                            type="button"
+                            role="radio"
+                            aria-checked={isActive}
+                            onClick={() => handleCategorySelect(cat.id as FaqCategoryId)}
+                            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-sm font-semibold transition-all ${
+                              isActive
+                                ? "bg-accent text-accent-contrast border-accent shadow-sm shadow-accent/20"
+                                : "border-border-soft bg-surface/60 text-text-muted hover:bg-surface hover:text-text hover:border-border-strong"
+                            }`}
+                          >
+                            {cat.label}
+                            <span className={`text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full ${
+                              isActive
+                                ? "bg-accent-contrast/20 text-accent-contrast"
+                                : "bg-surface-soft text-text-soft"
+                            }`}>
+                              {categoryCounts[cat.id] ?? 0}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Contact CTA — left column (desktop) */}
+                    <div className="mt-8 hidden lg:block">
+                      <div className="rounded-2xl border border-accent/12 bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent p-5">
+                        <div className="flex items-start gap-3">
+                          <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-accent/10 text-accent shrink-0">
+                            <MessageCircle className="w-4.5 h-4.5" />
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-text mb-1">
+                              Can&apos;t find your answer?
+                            </p>
+                            <p className="text-xs text-text-muted leading-relaxed">
+                              Our team responds within one business day.
+                            </p>
+                          </div>
+                        </div>
+                        <Button size="standard" variant="primary" href={routes.contact} className="w-full mt-4">
+                          Contact Exxonim
+                        </Button>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* ─── Right Sidebar (desktop) ─── */}
-                  <aside className="hidden lg:block">
-                    <div className="sticky top-28 space-y-6">
-                      {/* Contact CTA card */}
-                      <div className="relative overflow-hidden rounded-2xl border border-accent/15 bg-gradient-to-br from-accent/5 via-accent/[0.02] to-transparent p-6">
-                        <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-accent/5" />
-                        <div className="absolute -left-2 -bottom-2 w-14 h-14 rounded-full bg-accent/[0.03]" />
-                        <div className="relative">
-                          <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent mb-4">
-                            <MessageCircle className="w-5 h-5" />
-                          </span>
-                          <p className="text-sm font-bold text-text mb-2">
+                  {/* ═══ RIGHT COLUMN: FAQ Accordion ═══ */}
+                  <div>
+                    {/* Active category label */}
+                    <div className="mb-4">
+                      <h2 className="text-xl sm:text-2xl font-bold text-text">
+                        {FAQ_CATEGORIES.find(c => c.id === selectedCategory)?.label ?? "General questions"}
+                      </h2>
+                      {searchQuery && (
+                        <p className="mt-1 text-sm text-text-soft">
+                          {filteredItems.length} result{filteredItems.length !== 1 ? "s" : ""} found
+                        </p>
+                      )}
+                    </div>
+
+                    {/* FAQ accordion card */}
+                    <div className="rounded-2xl border border-border-soft bg-surface shadow-sm overflow-hidden">
+                      {filteredItems.length > 0 ? (
+                        <div className="divide-y-0">
+                          {filteredItems.map((item, index) => (
+                            <FaqAccordionItem
+                              key={item.question}
+                              question={item.question}
+                              answer={item.answer}
+                              isOpen={openIndex === index}
+                              onToggle={() => handleToggle(index)}
+                              isLast={index === filteredItems.length - 1}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <EmptyState
+                          searchQuery={searchQuery}
+                          onClear={() => handleSearchChange("")}
+                        />
+                      )}
+                    </div>
+
+                    {/* Mobile: Contact CTA */}
+                    <div className="lg:hidden mt-6 p-5 rounded-2xl bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent border border-accent/12">
+                      <div className="flex items-start gap-4">
+                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent shrink-0">
+                          <MessageCircle className="w-5 h-5" />
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-text mb-1">
                             Can&apos;t find your answer?
                           </p>
-                          <p className="text-xs text-text-muted mb-5 leading-relaxed">
-                            Reach out to our team and we&apos;ll get back to you within one business day.
+                          <p className="text-xs text-text-muted leading-relaxed">
+                            Our team responds within one business day.
                           </p>
-                          <Button size="standard" variant="primary" href={routes.contact} className="w-full">
-                            Contact Exxonim
-                          </Button>
                         </div>
-                      </div>
-
-                      {/* Helpful links */}
-                      <div className="rounded-2xl border border-border-soft bg-surface/60 p-5">
-                        <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-text-soft mb-3">
-                          Helpful links
-                        </p>
-                        <nav className="flex flex-col gap-2">
-                          <a href={routes.services} className="text-sm text-text-muted hover:text-accent transition-colors">
-                            Our Services &rarr;
-                          </a>
-                          <a href={routes.trackConsultation} className="text-sm text-text-muted hover:text-accent transition-colors">
-                            Track Consultation &rarr;
-                          </a>
-                          <a href={routes.resources} className="text-sm text-text-muted hover:text-accent transition-colors">
-                            Resources & Guides &rarr;
-                          </a>
-                        </nav>
+                        <Button size="compact" variant="primary" href={routes.contact} className="shrink-0">
+                          Contact us
+                        </Button>
                       </div>
                     </div>
-                  </aside>
-                </div>
-
-                {/* ─── Mobile: Contact CTA ─── */}
-                <div className="lg:hidden mt-8 p-5 rounded-2xl bg-gradient-to-br from-accent/5 via-accent/[0.02] to-transparent border border-accent/15">
-                  <div className="flex items-start gap-4">
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent shrink-0">
-                      <MessageCircle className="w-5 h-5" />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-text mb-1">
-                        Can&apos;t find your answer?
-                      </p>
-                      <p className="text-xs text-text-muted leading-relaxed">
-                        Our team responds within one business day.
-                      </p>
-                    </div>
-                    <Button size="compact" variant="primary" href={routes.contact} className="shrink-0">
-                      Contact us
-                    </Button>
                   </div>
                 </div>
               </div>
