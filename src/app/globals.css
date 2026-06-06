@@ -37,6 +37,8 @@
 @property --color-success-soft { syntax: '<color>'; inherits: true; initial-value: rgba(15, 138, 95, 0.10); }
 @property --color-error { syntax: '<color>'; inherits: true; initial-value: #c4372f; }
 @property --color-error-soft { syntax: '<color>'; inherits: true; initial-value: rgba(196, 55, 47, 0.10); }
+@property --color-warning { syntax: '<color>'; inherits: true; initial-value: #b45309; }
+@property --color-warning-soft { syntax: '<color>'; inherits: true; initial-value: rgba(180, 83, 9, 0.10); }
 @property --color-star { syntax: '<color>'; inherits: true; initial-value: #d4930d; }
 @property --color-footer-bg { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
 @property --color-footer-text { syntax: '<color>'; inherits: true; initial-value: rgba(247, 251, 251, 0.70); }
@@ -142,6 +144,8 @@
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
   --color-success: #0f8a5f;
   --color-success-soft: rgba(15, 138, 95, 0.10);
+  --color-warning: #b45309;
+  --color-warning-soft: rgba(180, 83, 9, 0.10);
   --color-error: #c4372f;
   --color-error-soft: rgba(196, 55, 47, 0.10);
   --color-star: #d4930d;
@@ -412,6 +416,8 @@
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
   --color-success: #0f8a5f;
   --color-success-soft: rgba(15, 138, 95, 0.10);
+  --color-warning: #b45309;
+  --color-warning-soft: rgba(180, 83, 9, 0.10);
   --color-error: #c4372f;
   --color-error-soft: rgba(196, 55, 47, 0.10);
   --color-star: #d4930d;
@@ -501,6 +507,8 @@ html[data-theme="dark"] {
   --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.34);
   --color-success: #34d399;
   --color-success-soft: rgba(52, 211, 153, 0.14);
+  --color-warning: #fbbf24;
+  --color-warning-soft: rgba(251, 191, 36, 0.14);
   --color-error: #f87171;
   --color-error-soft: rgba(248, 113, 113, 0.14);
   --color-star: #fbbf24;
@@ -562,6 +570,8 @@ html.theme-transition {
     --color-cinematic-card-hover-border 0.4s ease,
     --color-success 0.4s ease,
     --color-success-soft 0.4s ease,
+    --color-warning 0.4s ease,
+    --color-warning-soft 0.4s ease,
     --color-error 0.4s ease,
     --color-error-soft 0.4s ease,
     --color-star 0.4s ease,

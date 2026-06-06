@@ -15,64 +15,18 @@
  *   Generation: cryptographically secure random (secrets.choice)
  *   Keyspace: 2.6 million (10^5 × 26), or 2.4M if I,O excluded
  *
- *   Optional exclusion of I, O to avoid confusion:
- *   Remaining letter set: 24 characters → still 2.4 million combinations
- *
  * ── API CONTRACT ──
  *   Endpoint: POST /api/track
  *   (Next.js mock uses POST /api/v1/track — update when FastAPI is live)
  *
  *   Request:  { "trackingNumber": "84729A" }
- *     - Spaces are stripped, string is uppercased before sending
- *
- *   Response (200 — case found):
- *     {
- *       "status": "active" | "completed" | "on_hold",
- *       "trackingCode": "84729A",           // optional, for display
- *       "serviceType": "Company Registration", // optional
- *       "milestone": "Document Verification",
- *       "lastUpdated": "2026-06-06T10:00:00Z",
- *       "nextMilestone": "Submission to BRELA" | null,
- *       "message": null,                     // optional
- *       "completedSteps": 3,                 // extended, for progress bar
- *       "totalSteps": 6,                     // extended, for progress bar
- *       "visibleMilestones": [               // extended, for timeline
- *         { "label": "Consultation Received", "status": "completed", "date": "2026-05-20" },
- *         { "label": "Document Verification", "status": "current", "date": null },
- *         { "label": "Certificate Issued", "status": "upcoming", "date": null }
- *       ]
- *     }
- *
- *   Response (404 — not found / invalid / expired):
- *     {
- *       "status": "not_found",
- *       "message": "No matching consultation found. Please check your tracking number."
- *     }
+ *   Response (200): { status, trackingCode, serviceType, milestone,
+ *                     lastUpdated, nextMilestone, message, completedSteps,
+ *                     totalSteps, visibleMilestones[] }
+ *   Response (404): { status: "not_found", message: "..." }
  *
  *   SECURITY: Always return the SAME 404 shape for invalid, expired,
- *   or non-existent codes. Never distinguish between "code doesn't exist"
- *   and "code exists but case is closed" — this prevents information leakage.
- *
- * ── RATE LIMITING (defence in depth) ──
- *   Per IP: 20 failed lookups/min → IP blocked for 5 min
- *   Per tracking code: 10 failed attempts total → code locked for 24h
- *   Use slowapi or custom middleware in FastAPI
- *
- * ── DATABASE TABLES NEEDED ──
- *   cases (id, client_name, client_phone, service_type, tracking_code CHAR(6) UNIQUE,
- *          current_milestone_id FK, status, created_at, updated_at)
- *   milestones (id, service_type, sequence_order, name, description,
- *               visible_to_client BOOLEAN, client_label, auto_notify_client BOOLEAN)
- *   case_milestones (id, case_id FK, milestone_id FK, completed_at TIMESTAMPTZ NULL)
- *
- * ── WHATSAPP NOTIFICATIONS (automatic) ──
- *   1. New case created → "Your tracking number is 84 72 9A. Check your file
- *      status anytime at exxonim.tz/track."
- *   2. Milestone completed (if auto_notify_client = TRUE) → "Good news!
- *      [Client-facing milestone name] has been completed. Next step: [Next
- *      visible milestone]. Track progress: exxonim.tz/track with code 84 72 9A."
- *   3. Case completed → "Your consultation is now complete. Thank you for
- *      choosing Exxonim. For any questions, reach us at [support contact]."
+ *   or non-existent codes to prevent information leakage.
  *
  * ── DEMO TRACKING CODES (mock API) ──
  *   84729A — Active case (Company Registration, 3/6 milestones done)
@@ -83,8 +37,18 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState, useCallback } from "react";
-import { Home } from "lucide-react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import {
+  Home,
+  Search,
+  ShieldCheck,
+  Bell,
+  Clock,
+  UserRoundX,
+  MessageCircle,
+  X,
+  RotateCcw,
+} from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { routes } from "@/exxonim/routes";
 import { applyResolvedSeo, createFallbackSeo } from "@/exxonim/seo";
@@ -99,38 +63,16 @@ import type {
 
 /* ─────────────────────────────────────────────────────────
  * TRACKING CODE HELPERS
- *
- * BACKEND TEAM: These match the spec's validation rules.
- * The frontend normalizes input BEFORE sending to the API,
- * but the backend MUST also validate (never trust client input).
  * ───────────────────────────────────────────────────────── */
 
-/**
- * Strips spaces and uppercases a tracking code input.
- * BACKEND: Must also strip spaces and uppercase before DB lookup.
- */
 function normalizeTrackingCode(raw: string): string {
   return raw.replace(/\s/g, "").toUpperCase();
 }
 
-/**
- * Validates that a normalized tracking code matches the expected format:
- * 5 digits followed by 1 uppercase letter (e.g., "84729A").
- *
- * BACKEND: Use the same regex or equivalent validation:
- *   import re
- *   pattern = re.compile(r'^[0-9]{5}[A-Z]$')
- *   if not pattern.match(code.strip().upper().replace(' ', '')):
- *       return 404
- */
 function isValidTrackingCode(code: string): boolean {
   return /^[0-9]{5}[A-Z]$/.test(code);
 }
 
-/**
- * Formats a raw 6-char tracking code for display: "84729A" → "84 72 9A"
- * Three groups of two, space-separated, per spec.
- */
 function formatTrackingCode(code: string): string {
   if (code.length !== 6) return code;
   return `${code.slice(0, 2)} ${code.slice(2, 4)} ${code.slice(4)}`;
@@ -138,10 +80,22 @@ function formatTrackingCode(code: string): string {
 
 /**
  * Formats an ISO 8601 timestamp into a human-readable date string.
+ * Shows relative time for dates within the last 7 days, absolute otherwise.
  */
 function formatDate(isoString: string): string {
   try {
     const d = new Date(isoString);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+
     return d.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "short",
@@ -153,13 +107,36 @@ function formatDate(isoString: string): string {
 }
 
 /**
- * Returns a human-readable label and color class for a case status.
- *
- * BACKEND: The status values are defined in the `cases` table:
- *   "active"    — Case is in progress
- *   "completed" — All milestones done
- *   "on_hold"   — Awaiting client action or external dependency
+ * Returns absolute date string for tooltip display.
  */
+function formatAbsoluteDate(isoString: string): string {
+  try {
+    const d = new Date(isoString);
+    return d.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return isoString;
+  }
+}
+
+/** Returns progress bar color class based on case status. */
+function getProgressBarClass(status: ApiTrackingCaseStatus): string {
+  switch (status) {
+    case "completed":
+      return "bg-success";
+    case "on_hold":
+      return "bg-warning";
+    case "active":
+    default:
+      return "bg-accent";
+  }
+}
+
 function getStatusDisplay(
   status: ApiTrackingCaseStatus
 ): { label: string; colorClass: string; dotClass: string } {
@@ -186,111 +163,32 @@ function getStatusDisplay(
 }
 
 /* ─────────────────────────────────────────────────────────
- * SVG ICON COMPONENTS
+ * DEMO CODES — env-gated
  * ───────────────────────────────────────────────────────── */
-function SearchIcon({ className = "w-7 h-7" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-      />
-    </svg>
-  );
-}
+const SHOW_DEMO_HINT =
+  typeof window !== "undefined" &&
+  process.env.NEXT_PUBLIC_SHOW_DEMO_HINT === "true";
 
-function ShieldIcon({ className = "w-8 h-8" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-    </svg>
-  );
-}
-
-function WhatsAppIcon({ className = "w-6 h-6" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M12.01 2.014a9.96 9.96 0 0 0-8.52 15.11L2 22l4.985-1.465a9.961 9.961 0 1 0 5.025-18.52Zm0 18.067a8.093 8.093 0 0 1-4.14-1.134l-.297-.176-3.082.906.924-2.977-.193-.306A8.098 8.098 0 1 1 12.01 20.08Zm4.437-6.042c-.244-.122-1.439-.711-1.662-.793-.223-.081-.385-.122-.547.122-.162.244-.628.793-.77.955-.142.162-.284.183-.528.061-1.18-.56-2.072-1.1-2.884-2.522-.083-.146-.01-.223.111-.345.11-.11.244-.284.366-.427.122-.142.162-.244.244-.407.081-.162.041-.305-.02-.427-.061-.122-.547-1.32-.75-1.808-.198-.475-.399-.411-.547-.419-.142-.008-.305-.008-.468-.008-.162 0-.427.061-.65.305-.223.244-.852.833-.852 2.032s.873 2.358.995 2.522c.122.162 1.714 2.628 4.153 3.67.58.24 1.033.383 1.385.49.582.185 1.112.158 1.531.096.47-.07 1.439-.588 1.642-1.157.203-.569.203-1.056.142-1.157-.061-.101-.223-.162-.468-.284Z" />
-    </svg>
-  );
-}
+const DEMO_CODES = ["84729A", "53107B", "46283C"] as const;
 
 /* ─────────────────────────────────────────────────────────
- * STATIC CONTENT
+ * HOW IT WORKS STEPS — uses Lucide icons
  * ───────────────────────────────────────────────────────── */
 const HOW_IT_WORKS_STEPS = [
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
+    icon: <Clock className="w-8 h-8" />,
     title: "Get your tracking code",
     detail:
       "Assigned automatically when you start a consultation. Sent via WhatsApp or email.",
   },
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-      </svg>
-    ),
+    icon: <Search className="w-8 h-8" />,
     title: "Check your status",
     detail:
       "Enter your 6-character code on this page. No login, no password, no phone number needed.",
   },
   {
-    icon: (
-      <svg
-        className="w-8 h-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-      </svg>
-    ),
+    icon: <Bell className="w-8 h-8" />,
     title: "Get notified automatically",
     detail:
       "Every milestone update is sent to you via WhatsApp. You don't have to keep checking.",
@@ -299,18 +197,13 @@ const HOW_IT_WORKS_STEPS = [
 
 /* ─────────────────────────────────────────────────────────
  * TRACKING RESULT COMPONENT
- *
- * BACKEND TEAM: This component renders the response from POST /api/track.
- * It supports both the minimal spec response (status + milestone + nextMilestone)
- * and the extended response (with visibleMilestones for a timeline).
- *
- * If the backend returns visibleMilestones, a full timeline is shown.
- * If not, a simpler card with current/next milestone is displayed.
  * ───────────────────────────────────────────────────────── */
 function TrackingResultCard({
   result,
+  onReset,
 }: {
   result: ApiTrackingLookupResponse;
+  onReset: () => void;
 }) {
   const statusDisplay = getStatusDisplay(result.status);
   const hasMilestones =
@@ -324,11 +217,11 @@ function TrackingResultCard({
     <div className="grid gap-6">
       {/* ── Status header card ── */}
       <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
-        {/* Progress bar */}
+        {/* Progress bar — color matches status */}
         {totalCount > 0 && (
           <div className="h-1.5 bg-surface-soft">
             <div
-              className="h-full bg-accent transition-all duration-700 ease-out rounded-r-full"
+              className={`h-full ${getProgressBarClass(result.status)} transition-all duration-700 ease-out rounded-r-full`}
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -365,8 +258,8 @@ function TrackingResultCard({
             </span>
           </div>
 
-          {/* Row 2: Key details */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y border-border-soft">
+          {/* Row 2: Key details — responsive grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y border-border-soft">
             {result.serviceType && (
               <DetailItem label="Service" value={result.serviceType} />
             )}
@@ -374,6 +267,7 @@ function TrackingResultCard({
             <DetailItem
               label="Last Updated"
               value={formatDate(result.lastUpdated)}
+              tooltip={formatAbsoluteDate(result.lastUpdated)}
             />
             <DetailItem
               label="Next Step"
@@ -425,7 +319,7 @@ function TrackingResultCard({
         </div>
       </div>
 
-      {/* ── Milestone timeline (if visibleMilestones provided) ── */}
+      {/* ── Milestone timeline ── */}
       {hasMilestones && (
         <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8">
           <div className="flex items-center justify-between mb-6">
@@ -440,22 +334,53 @@ function TrackingResultCard({
                 key={milestone.label}
                 milestone={milestone}
                 isLast={index === result.visibleMilestones!.length - 1}
+                /** Track whether the previous milestone was completed for connector style */
+                prevCompleted={
+                  index > 0
+                    ? result.visibleMilestones![index - 1].status === "completed"
+                    : false
+                }
               />
             ))}
           </div>
         </div>
       )}
+
+      {/* ── Look up another code ── */}
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={onReset}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Look up another code
+        </button>
+      </div>
     </div>
   );
 }
 
-function DetailItem({ label, value }: { label: string; value: string }) {
+function DetailItem({
+  label,
+  value,
+  tooltip,
+}: {
+  label: string;
+  value: string;
+  tooltip?: string;
+}) {
   return (
     <div className="grid gap-0.5">
       <span className="text-[0.68rem] font-extrabold tracking-[0.14em] uppercase text-text-muted">
         {label}
       </span>
-      <span className="text-sm font-semibold text-text">{value}</span>
+      <span
+        className="text-sm font-semibold text-text"
+        title={tooltip}
+      >
+        {value}
+      </span>
     </div>
   );
 }
@@ -463,12 +388,22 @@ function DetailItem({ label, value }: { label: string; value: string }) {
 function MilestoneItem({
   milestone,
   isLast,
+  prevCompleted,
 }: {
   milestone: ApiTrackingMilestone;
   isLast: boolean;
+  prevCompleted: boolean;
 }) {
   const isCompleted = milestone.status === "completed";
   const isCurrent = milestone.status === "current";
+
+  /** Connector between previous and current: intermediate style for "in progress" */
+  function getConnectorClass(): string {
+    if (isCompleted) return "bg-accent/40";
+    // Connector from the last completed node to the current node
+    if (isCurrent && prevCompleted) return "bg-accent/20 border-l border-dashed border-accent/30";
+    return "bg-border-soft";
+  }
 
   return (
     <div className="flex gap-4">
@@ -504,7 +439,7 @@ function MilestoneItem({
         </div>
         {!isLast && (
           <div
-            className={`w-0.5 flex-1 min-h-[2rem] ${isCompleted ? "bg-accent/40" : "bg-border-soft"}`}
+            className={`w-0.5 flex-1 min-h-[2rem] ${getConnectorClass()}`}
           />
         )}
       </div>
@@ -530,7 +465,10 @@ function MilestoneItem({
           )}
         </div>
         {milestone.date && (
-          <span className="text-xs mt-0.5 inline-block font-mono text-text-muted/70">
+          <span
+            className="text-xs mt-0.5 inline-block font-mono text-text-muted"
+            title={formatAbsoluteDate(milestone.date)}
+          >
             {formatDate(milestone.date)}
           </span>
         )}
@@ -542,60 +480,73 @@ function MilestoneItem({
 /* ─────────────────────────────────────────────────────────
  * NOT FOUND COMPONENT
  *
- * BACKEND TEAM: This is shown when the API returns 404.
- * The message is intentionally generic — it does NOT reveal
- * whether the code exists in the database or not.
+ * SECURITY: Generic message — no format hints or pattern leakage.
  * ───────────────────────────────────────────────────────── */
-function TrackingNotFound({ code }: { code: string }) {
-  const normalized = normalizeTrackingCode(code);
-  const isValid = isValidTrackingCode(normalized);
-
+function TrackingNotFound({
+  code,
+  onReset,
+}: {
+  code: string;
+  onReset: () => void;
+}) {
   return (
     <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 text-center grid gap-4">
       <div className="w-14 h-14 rounded-full bg-surface-soft mx-auto flex items-center justify-center">
-        <SearchIcon className="w-7 h-7 text-text-muted" />
+        <Search className="w-7 h-7 text-text-muted" />
       </div>
       <div className="grid gap-2">
         <h3 className="m-0 text-lg font-semibold text-text">
           No consultation found
         </h3>
         <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
-          We couldn&rsquo;t find a consultation with tracking code{" "}
-          <strong className="font-mono text-text">
-            {isValid
-              ? formatTrackingCode(normalized)
-              : code.toUpperCase()}
-          </strong>
-          .
-          {isValid
-            ? " This code may not have been activated yet, or the case may have been closed."
-            : " The format doesn't match our tracking codes."}
+          No matching consultation found. Please check your tracking code and try again.
         </p>
       </div>
-      {!isValid && (
-        <div className="rounded-xl bg-surface-soft/60 border border-border-soft p-4 text-left max-w-[28rem] mx-auto">
-          <span className="text-xs font-bold uppercase tracking-wider text-text-soft">
-            Correct format
-          </span>
-          <p className="m-0 mt-1 text-sm font-mono text-text">
-            <span className="text-accent">NN</span>{" "}
-            <span className="text-accent">NN</span>{" "}
-            <span className="text-accent">NA</span>
-          </p>
-          <p className="m-0 mt-1.5 text-xs text-text-muted leading-relaxed">
-            5 numbers + 1 letter. Spaces are optional.
-            Example: <span className="font-mono text-text">84 72 9A</span> or{" "}
-            <span className="font-mono text-text">84729A</span>
-          </p>
-        </div>
-      )}
       <div className="flex flex-wrap gap-3 justify-center pt-1">
-        <Button size="standard" variant="primary" href={routes.contact}>
-          Contact Exxonim
+        <Button
+          size="standard"
+          variant="primary"
+          onClick={onReset}
+        >
+          Try Again
         </Button>
-        <Button size="standard" variant="secondary" href={routes.support}>
-          Get Support
+        <Button
+          size="standard"
+          variant="secondary"
+          href={routes.contact}
+        >
+          Forgot Your Code?
         </Button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+ * SKELETON LOADING CARD
+ * ───────────────────────────────────────────────────────── */
+function TrackingSkeleton() {
+  return (
+    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
+      <div className="h-1.5 bg-surface-soft">
+        <div className="h-full w-1/2 bg-accent/20 animate-shimmer rounded-r-full" />
+      </div>
+      <div className="p-6 md:p-8 grid gap-5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="grid gap-2">
+            <div className="h-3 w-24 rounded bg-surface-soft animate-shimmer" />
+            <div className="h-8 w-40 rounded bg-surface-soft animate-shimmer" />
+          </div>
+          <div className="h-8 w-28 rounded-full bg-surface-soft animate-shimmer" />
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-border-soft">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="grid gap-2">
+              <div className="h-3 w-16 rounded bg-surface-soft animate-shimmer" />
+              <div className="h-4 w-24 rounded bg-surface-soft animate-shimmer" />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -605,27 +556,26 @@ function TrackingNotFound({ code }: { code: string }) {
  * TRACKING CODE INPUT — auto-formatting, paste support
  *
  * UX BEHAVIOUR:
- *   - User types "84" → displays "84"
- *   - User types "847" → displays "84 7" (auto-space after 2nd char)
- *   - User types "8472" → displays "84 72" (auto-space after 4th char)
- *   - User types "84729" → displays "84 72 9"
- *   - User types "84729A" → displays "84 72 9A"
- *   - User pastes "84 72 9A" → normalizes to "84729A", displays "84 72 9A"
- *   - Max display: 8 chars (6 code + 2 spaces)
+ *   User types "84" → displays "84"
+ *   User types "847" → displays "84 7" (auto-space after 2nd char)
+ *   User types "8472" → displays "84 72" (auto-space after 4th char)
+ *   User types "84729A" → displays "84 72 9A"
+ *   User pastes "84 72 9A" → normalizes to "84729A", displays "84 72 9A"
  *
- * BACKEND: The frontend sends the raw 6-char code (no spaces)
- * in the request body: { trackingNumber: "84729A" }
+ * SECURITY: No format validation messages are shown.
+ * The button enables only when input length = 6 after stripping spaces.
  * ───────────────────────────────────────────────────────── */
 function TrackingCodeInput({
   value,
   onChange,
   disabled,
+  inputRef,
 }: {
   value: string;
   onChange: (raw: string) => void;
   disabled: boolean;
+  inputRef: React.RefObject<HTMLInputElement | null>;
 }) {
-  /** Display value with space formatting (three groups of 2) */
   const displayValue = (() => {
     const raw = normalizeTrackingCode(value);
     if (raw.length <= 2) return raw;
@@ -635,17 +585,15 @@ function TrackingCodeInput({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    // Strip everything except alphanumeric and spaces
     const cleaned = input.replace(/[^A-Za-z0-9\s]/g, "");
-    // Normalize: strip spaces to get raw code
     const raw = normalizeTrackingCode(cleaned);
-    // Cap at 6 characters
     const capped = raw.slice(0, 6);
     onChange(capped);
   };
 
   return (
     <input
+      ref={inputRef}
       id="tracking-code"
       type="text"
       value={displayValue}
@@ -653,9 +601,8 @@ function TrackingCodeInput({
       placeholder="84 72 9A"
       disabled={disabled}
       autoComplete="off"
-      autoFocus
       className="w-full h-14 px-5 rounded-xl border border-border-soft bg-surface text-text text-lg font-mono tracking-[0.2em] placeholder:text-text-soft/40 placeholder:tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent text-center disabled:opacity-50 disabled:cursor-not-allowed"
-      aria-label="Enter your tracking code (5 numbers + 1 letter)"
+      aria-label="Enter your 6-character tracking code"
     />
   );
 }
@@ -670,6 +617,8 @@ export function TrackConsultationPage() {
   const [notFound, setNotFound] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // SEO
   useEffect(() => {
@@ -681,6 +630,13 @@ export function TrackConsultationPage() {
         robots: "index,follow",
       })
     );
+  }, []);
+
+  const scrollToResult = useCallback(() => {
+    // Small delay to allow React to render the result
+    requestAnimationFrame(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }, []);
 
   const handleLookup = useCallback(
@@ -699,14 +655,13 @@ export function TrackConsultationPage() {
           trackingNumber: normalized,
         });
 
-        // Check if it's a not_found response
         if ("status" in result && result.status === "not_found") {
           setNotFound(true);
         } else {
           setLookupResult(result as ApiTrackingLookupResponse);
         }
+        scrollToResult();
       } catch {
-        // Network error or API failure
         setSearchError(
           "We couldn't check your tracking code right now. Please try again in a moment."
         );
@@ -714,21 +669,52 @@ export function TrackConsultationPage() {
         setIsSearching(false);
       }
     },
-    [rawCode]
+    [rawCode, scrollToResult]
   );
 
   const handleCodeChange = useCallback((newCode: string) => {
     setRawCode(newCode);
-    // Clear previous results when user changes the code
     setLookupResult(null);
     setNotFound(false);
     setSearchError(null);
   }, []);
 
-  const canSearch = rawCode.trim().length === 6;
+  const handleReset = useCallback(() => {
+    setRawCode("");
+    setLookupResult(null);
+    setNotFound(false);
+    setSearchError(null);
+    // Focus the input after state clears
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
+    // Scroll back to the input card
+    inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
+
+  const handleDismissError = useCallback(() => {
+    setSearchError(null);
+  }, []);
+
+  const canSearch = rawCode.length === 6;
+
+  /** Fill the input with a demo code */
+  const handleDemoFill = useCallback(
+    (code: string) => {
+      setRawCode(code);
+      setLookupResult(null);
+      setNotFound(false);
+      setSearchError(null);
+      // Auto-focus after fill
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    },
+    []
+  );
 
   return (
-    <>
+    <main>
       {/* ── Breadcrumb ── */}
       <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <Breadcrumb
@@ -745,7 +731,7 @@ export function TrackConsultationPage() {
           className="absolute inset-0 -z-10 opacity-70"
           style={{
             background:
-              "radial-gradient(60% 50% at 80% 0%, hsl(var(--accent) / 0.18), transparent 70%), radial-gradient(40% 40% at 10% 20%, hsl(var(--accent) / 0.10), transparent 70%)",
+              "radial-gradient(60% 50% at 80% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), radial-gradient(40% 40% at 10% 20%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 70%)",
           }}
         />
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
@@ -763,7 +749,7 @@ export function TrackConsultationPage() {
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
               Automated updates at every milestone — delivered to your WhatsApp.
-              Enter your tracking code (5 numbers + 1 letter) for an instant status check.
+              Enter your 6-character tracking code for an instant status check.
               No login, no password, no phone number required.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
@@ -798,7 +784,13 @@ export function TrackConsultationPage() {
                   value={rawCode}
                   onChange={handleCodeChange}
                   disabled={isSearching}
+                  inputRef={inputRef}
                 />
+                {canSearch && !isSearching && (
+                  <p className="text-[0.65rem] text-text-soft text-center">
+                    Press Enter to check
+                  </p>
+                )}
                 <Button
                   size="hero"
                   variant="primary"
@@ -811,61 +803,110 @@ export function TrackConsultationPage() {
                 </Button>
               </form>
 
-              {/* Error state */}
+              {/* Error state — dismissible */}
               {searchError && (
                 <div
-                  className="p-3 rounded-xl bg-error-soft/30 border border-error/10 text-error text-sm"
+                  className="p-3 rounded-xl bg-error-soft/30 border border-error/10 text-error text-sm flex items-start justify-between gap-2"
                   role="alert"
                 >
-                  {searchError}
+                  <span>{searchError}</span>
+                  <button
+                    type="button"
+                    onClick={handleDismissError}
+                    className="text-error/60 hover:text-error transition-colors flex-shrink-0 mt-0.5"
+                    aria-label="Dismiss error"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
               )}
 
-              {/* Quick stats */}
+              {/* Quick stats — meaningful, icon-led */}
               <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-soft">
-                <div className="grid gap-1">
-                  <strong className="text-[1.5rem] leading-none text-text">
-                    0
-                  </strong>
-                  <span className="text-xs text-text-muted">Logins needed</span>
+                <div className="grid gap-1 items-center text-center">
+                  <UserRoundX className="w-5 h-5 text-accent mx-auto" />
+                  <span className="text-xs text-text-muted font-semibold">
+                    No Account Needed
+                  </span>
                 </div>
-                <div className="grid gap-1">
-                  <strong className="text-[1.5rem] leading-none text-text">
-                    1
-                  </strong>
-                  <span className="text-xs text-text-muted">Code to enter</span>
+                <div className="grid gap-1 items-center text-center">
+                  <Clock className="w-5 h-5 text-accent mx-auto" />
+                  <span className="text-xs text-text-muted font-semibold">
+                    Instant Results
+                  </span>
                 </div>
-                <div className="grid gap-1">
-                  <div className="flex items-center gap-1">
-                    <WhatsAppIcon className="w-5 h-5 text-accent" />
-                    <strong className="text-[1.5rem] leading-none text-accent">
-                      ∞
-                    </strong>
-                  </div>
-                  <span className="text-xs text-text-muted">Auto-updates</span>
+                <div className="grid gap-1 items-center text-center">
+                  <MessageCircle className="w-5 h-5 text-accent mx-auto" />
+                  <span className="text-xs text-text-muted font-semibold">
+                    WhatsApp Updates
+                  </span>
                 </div>
               </div>
 
-              {/* Demo hint — remove in production */}
-              <p className="text-[0.65rem] text-text-soft/60 text-center">
-                Demo: try <span className="font-mono">84 72 9A</span>,{" "}
-                <span className="font-mono">53 10 7B</span>, or{" "}
-                <span className="font-mono">46 28 3C</span>
-              </p>
+              {/* Demo hint — env-gated, clickable chips, no pattern text */}
+              {SHOW_DEMO_HINT && (
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <span className="text-[0.65rem] text-text-soft/60">Demo:</span>
+                  {DEMO_CODES.map((code) => (
+                    <button
+                      key={code}
+                      type="button"
+                      onClick={() => handleDemoFill(code)}
+                      className="text-[0.65rem] font-mono text-accent hover:bg-accent-soft px-1.5 py-0.5 rounded transition-colors"
+                    >
+                      {formatTrackingCode(code)}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Tracking result ── */}
-      {(lookupResult || notFound) && (
-        <section className="pb-16 md:pb-20">
-          <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
-            {lookupResult && <TrackingResultCard result={lookupResult} />}
-            {notFound && <TrackingNotFound code={rawCode} />}
-          </div>
-        </section>
-      )}
+      <div ref={resultRef}>
+        {isSearching && (
+          <section className="pb-16 md:pb-20">
+            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+              <TrackingSkeleton />
+            </div>
+          </section>
+        )}
+
+        {!isSearching && (lookupResult || notFound) && (
+          <section className="pb-16 md:pb-20">
+            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+              {lookupResult && (
+                <TrackingResultCard
+                  result={lookupResult}
+                  onReset={handleReset}
+                />
+              )}
+              {notFound && (
+                <TrackingNotFound
+                  code={rawCode}
+                  onReset={handleReset}
+                />
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ── Empty state placeholder ── */}
+        {!isSearching && !lookupResult && !notFound && (
+          <section className="pb-16 md:pb-20">
+            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+              <div className="rounded-[1.35rem] border border-dashed border-border-soft bg-surface-elevated/40 p-8 text-center">
+                <Search className="w-8 h-8 text-text-soft/30 mx-auto mb-3" />
+                <p className="m-0 text-text-soft text-sm">
+                  Your tracking result will appear here
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
 
       {/* ── How it works ── */}
       <section className="py-16 md:py-20 bg-surface-soft/40">
@@ -907,22 +948,22 @@ export function TrackConsultationPage() {
             </h2>
             <p className="m-0 text-text-muted max-w-[36rem]">
               No account, no password, no phone number to look up your case.
-              Your tracking code (5 numbers + 1 letter) is the only key — and with over 2.6
+              Your tracking code is the only key — and with over 2.6
               million possible combinations, it&rsquo;s secure by design.
             </p>
             <div className="grid gap-4">
               <SecurityPoint
-                icon={<ShieldIcon className="w-5 h-5" />}
+                icon={<ShieldCheck className="w-5 h-5" />}
                 title="2.6 million possible codes"
-                description="5 digits and 1 letter create enough combinations to prevent random guessing while staying easy to read and share."
+                description="Enough combinations to prevent random guessing while staying easy to read and share."
               />
               <SecurityPoint
-                icon={<ShieldIcon className="w-5 h-5" />}
+                icon={<ShieldCheck className="w-5 h-5" />}
                 title="Rate-limited lookups"
                 description="20 failed attempts per minute triggers a temporary block. 10 failures on a single code locks it for 24 hours."
               />
               <SecurityPoint
-                icon={<ShieldIcon className="w-5 h-5" />}
+                icon={<ShieldCheck className="w-5 h-5" />}
                 title="No information leakage"
                 description="Invalid, expired, and non-existent codes all return the same response. No way to tell which codes are real."
               />
@@ -940,13 +981,13 @@ export function TrackConsultationPage() {
             <div className="relative flex items-center justify-center">
               <span className="absolute w-16 h-16 rounded-full bg-accent/10 animate-ping" />
               <span className="relative w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                <ShieldIcon className="w-5 h-5 text-accent-contrast" />
+                <ShieldCheck className="w-5 h-5 text-accent-contrast" />
               </span>
             </div>
             <div className="absolute top-[18%] right-[22%]">
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-elevated/80 border border-accent/20 text-[0.65rem] font-bold text-accent backdrop-blur">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                Encrypted
+                Secure Lookup
               </span>
             </div>
             <div className="absolute bottom-[22%] left-[12%]">
@@ -990,7 +1031,7 @@ export function TrackConsultationPage() {
             className="relative overflow-hidden rounded-[2rem] p-10 md:p-14 grid gap-6 text-center border border-border-soft"
             style={{
               background:
-                "radial-gradient(80% 100% at 50% 0%, hsl(var(--accent) / 0.22), transparent 70%), hsl(var(--surface))",
+                "radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 70%), var(--color-surface)",
             }}
           >
             <h2 className="m-0 text-[clamp(1.6rem,3vw,2.4rem)] font-semibold tracking-tight text-text max-w-[36rem] mx-auto">
@@ -1019,7 +1060,7 @@ export function TrackConsultationPage() {
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 }
 
