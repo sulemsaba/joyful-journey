@@ -88,11 +88,13 @@ const TestimonialCard = memo(function TestimonialCard({
  *  2. After ~3 s, auto-slide begins via requestAnimationFrame —
  *     slides left endlessly in one direction like a cycle.
  *  3. Left / Right arrow buttons for click navigation.
+ *     – Desktop: arrows fade in on hover, hidden by default.
+ *     – Mobile: arrows always hidden (touch/swipe is natural).
  *  4. Drag / swipe to scroll freely (mouse + touch).
  *  5. Auto-slide pauses on hover / drag / arrow click,
  *     resumes 3 s after last interaction.
  *  6. Full-bleed with 15% / 85% edge fade masks (same as Trusted By).
- *  7. Cards are duplicated 2× so the scroll position wraps at
+ *  7. Cards are duplicated 3× so the scroll position wraps at
  *     the midpoint, creating a seamless infinite loop.
  * ═══════════════════════════════════════════════════════════════ */
 function TestimonialMarquee({
@@ -104,8 +106,7 @@ function TestimonialMarquee({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isSliding, setIsSliding] = useState(false);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [showArrows, setShowArrows] = useState(false);
   const [isDraggingState, setIsDraggingState] = useState(false);
 
   const isPaused = useRef(false);
@@ -116,8 +117,6 @@ function TestimonialMarquee({
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Duplicate items 3× for seamless infinite scroll.
-  // We need enough items so that maxScroll (scrollWidth - clientWidth) >= halfWidth,
-  // otherwise the browser can't scroll far enough for the midpoint wrap to work.
   const items = [...testimonials, ...testimonials, ...testimonials];
   const CARD_WIDTH = 320; // w-80 = 20rem = 320px
   const SPEED = 0.5; // px per frame at 60fps ≈ 30 px/s
@@ -158,7 +157,6 @@ function TestimonialMarquee({
     const el = scrollerRef.current;
     if (!el) return;
 
-    // Width of one complete set of items (1/3 of scrollWidth with 3× dup)
     const getSetWidth = () => el.scrollWidth / 3;
 
     const step = () => {
@@ -182,31 +180,6 @@ function TestimonialMarquee({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [isSliding]);
-
-  // ── Update arrow button visibility ──────────────────────────
-  // In an endless-loop marquee both directions always have content,
-  // so both arrows are visible whenever the track is scrollable.
-  const updateArrows = useCallback(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const hasOverflow = el.scrollWidth > el.clientWidth + 4;
-    const setWidth = el.scrollWidth / 3;
-    setCanScrollLeft(hasOverflow && el.scrollLeft > 4);
-    // Show right arrow if there's still content in the current set
-    setCanScrollRight(hasOverflow && el.scrollLeft < setWidth * 2 - el.clientWidth);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    // Defer initial arrow update to avoid synchronous setState in effect
-    const raf = requestAnimationFrame(() => updateArrows());
-    el.addEventListener("scroll", updateArrows, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      el.removeEventListener("scroll", updateArrows);
-    };
-  }, [updateArrows]);
 
   // ── Pause auto-scroll, resume 3 s after last interaction ────
   const pauseAndResume = useCallback(() => {
@@ -274,13 +247,15 @@ function TestimonialMarquee({
     []
   );
 
-  // ── Hover pause ─────────────────────────────────────────────
+  // ── Hover: show arrows (desktop) + pause auto-scroll ────────
   const handleMouseEnter = useCallback(() => {
+    setShowArrows(true);
     isPaused.current = true;
     if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
   }, []);
 
   const handleMouseLeave = useCallback(() => {
+    setShowArrows(false);
     // Only resume if not actively dragging
     if (!isDragging.current) {
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
@@ -293,7 +268,7 @@ function TestimonialMarquee({
   return (
     <div
       ref={wrapperRef}
-      className="relative overflow-hidden w-screen -ml-[50vw] left-1/2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+      className="group relative overflow-hidden w-screen -ml-[50vw] left-1/2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
       aria-label="Client testimonials"
     >
       {/* Scrollable track */}
@@ -321,29 +296,41 @@ function TestimonialMarquee({
         ))}
       </div>
 
-      {/* Left arrow */}
-      {canScrollLeft && (
-        <button
-          type="button"
-          onClick={() => handleArrowClick("left")}
-          aria-label="Previous testimonials"
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm transition-all hover:bg-surface hover:shadow-lg hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-      )}
+      {/* Left arrow — visible on hover (desktop), hidden on mobile */}
+      <button
+        type="button"
+        onClick={() => handleArrowClick("left")}
+        aria-label="Previous testimonials"
+        className={cn(
+          "absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10",
+          "hidden md:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center",
+          "rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm",
+          "transition-all duration-200 hover:bg-surface hover:shadow-lg hover:scale-110",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+          "opacity-0 pointer-events-none",
+          showArrows && "md:opacity-100 md:pointer-events-auto"
+        )}
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </button>
 
-      {/* Right arrow */}
-      {canScrollRight && (
-        <button
-          type="button"
-          onClick={() => handleArrowClick("right")}
-          aria-label="Next testimonials"
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm transition-all hover:bg-surface hover:shadow-lg hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      )}
+      {/* Right arrow — visible on hover (desktop), hidden on mobile */}
+      <button
+        type="button"
+        onClick={() => handleArrowClick("right")}
+        aria-label="Next testimonials"
+        className={cn(
+          "absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-10",
+          "hidden md:flex h-9 w-9 md:h-10 md:w-10 items-center justify-center",
+          "rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm",
+          "transition-all duration-200 hover:bg-surface hover:shadow-lg hover:scale-110",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+          "opacity-0 pointer-events-none",
+          showArrows && "md:opacity-100 md:pointer-events-auto"
+        )}
+      >
+        <ChevronRight className="h-5 w-5" />
+      </button>
     </div>
   );
 }
