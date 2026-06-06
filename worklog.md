@@ -161,3 +161,31 @@ Stage Summary:
 - Testimonials now interactive: static on arrival, auto-slide after delay, user can drag/swipe or click arrows
 - Footer copyright simplified to just "© 2026 Exxonim Company Limited" (no PDPC text)
 - No testimonials in footer (confirmed still clean)
+
+---
+Task ID: 10
+Agent: Main Agent
+Task: Continue session — verify and finalize interactive testimonials + footer PDPC removal
+
+Work Log:
+- Verified InteractiveTestimonialCarousel component already has all requested features:
+  - IntersectionObserver detects when section is visible
+  - Static when visitor first sees it, auto-scroll begins after 2.5s
+  - Left/Right arrow buttons for click navigation
+  - Drag/swipe support (pointer events with setPointerCapture)
+  - Auto-scroll pauses on hover/drag/arrow click, resumes 3s after interaction
+  - Full-bleed with 15%/85% edge fade masks
+  - Scroll-snap keeps cards aligned
+- Updated Footer.tsx copyright:
+  - Hardcoded "© {currentYear} Exxonim Company Limited" (no longer uses footer.copyright from API)
+  - Removed PDPC text regardless of what API returns
+  - Changed `footer` prop to `_footer` (only social_links still used from it)
+  - Centered copyright text with text-center class
+- Lint passes clean
+- curl verification: no PDPC text in rendered HTML, "Exxonim Company Limited" present
+- Dev server was unstable with agent-browser (known sandbox issue), verified via curl instead
+
+Stage Summary:
+- Testimonials carousel fully interactive with all requested behaviors
+- Footer copyright now always shows "© 2026 Exxonim Company Limited" centered, no PDPC text
+- Code changes verified through linting and curl response analysis

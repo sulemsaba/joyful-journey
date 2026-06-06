@@ -56,12 +56,11 @@ const resourceLinks = [
   { label: "Terms of Service", href: routes.terms },
 ];
 
-export function Footer({ brand, company: _company, footer }: FooterProps) {
+export function Footer({ brand, company: _company, footer: _footer }: FooterProps) {
   const currentYear = new Date().getFullYear();
-  const copyrightText = footer.copyright.replace("{YEAR}", String(currentYear));
   const socialLinks = footerSocialPlatforms
     .map((platform) =>
-      (footer.social_links ?? []).find(
+      (_footer.social_links ?? []).find(
         (link) => link.platform === platform && link.isActive && link.url.trim()
       )
     )
@@ -266,7 +265,7 @@ export function Footer({ brand, company: _company, footer }: FooterProps) {
 
         {/* Bottom — copyright */}
         <p className="text-footer-text-muted text-sm text-center">
-          {copyrightText}
+          © {currentYear} Exxonim Company Limited
         </p>
       </Container>
     </footer>
