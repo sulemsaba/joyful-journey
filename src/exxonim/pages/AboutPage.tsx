@@ -9,6 +9,18 @@ import { usePage } from '@/exxonim/hooks/usePage';
 import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
 import type { AboutPageContent } from '@/exxonim/types';
 
+/* ── Google logo SVG (official 4-color) ──────────────────────── */
+function GoogleLogo({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+    </svg>
+  );
+}
+
 /* ── Icon map for support profiles ───────────────────── */
 const profileIcons: Record<string, React.ReactNode> = {
   'Business setup': <ShieldCheck className="h-5 w-5" />,
@@ -16,13 +28,25 @@ const profileIcons: Record<string, React.ReactNode> = {
   'Consultation tracking': <Eye className="h-5 w-5" />,
 };
 
-/* ── Icon map for operating model steps ───────────────── */
-const stepIcons = [<Target className="h-5 w-5" key="0" />, <Users className="h-5 w-5" key="1" />, <ShieldCheck className="h-5 w-5" key="2" />, <Clock className="h-5 w-5" key="3" />];
-
 export function AboutPage() {
   const { data: page, isPending, error } = usePage<AboutPageContent>('about');
   useResolvedPageSeo(page, routes.about);
   const content = page?.content;
+
+  /* ─────────────────────────────────────────────────────────────────────────────
+   * GOOGLE REVIEW DATA
+   * ────────────────────────────────────────────
+   * The review count below is currently hardcoded.
+   * BACKEND INTEGRATION: Replace this with a live value fetched from
+   * Google Business Profile API (or your backend proxy endpoint).
+   * Suggested API: GET /api/v1/google-reviews/stats
+   * Response shape: { rating: number, review_count: number }
+   * When integrated, replace the hardcoded number with the API value.
+   * ──────────────────────────────────────────────────────────────────────────── */
+  const GOOGLE_REVIEW_RATING = 4.9;
+  // REVIEW_COUNT: Hardcoded fallback — replace with API value on integration.
+  // Example: const REVIEW_COUNT = googleReviewData?.review_count ?? 58;
+  const REVIEW_COUNT = 58;
 
   return (
     <LoadBoundary
@@ -43,15 +67,17 @@ export function AboutPage() {
             </div>
 
             {/* ──────────────────────────────────────────────────────────────
-             *  SECTION 1: Hero — benefit headline + trust stats
+             *  SECTION 1: Hero — clean headline + Google review panel
+             *  No gradients, no blur circles, no accent-contrast panels.
+             *  Clean surface/82 cards with border-soft — matches services page.
              * ────────────────────────────────────────────────────────────── */}
             <section
-              className="py-10 md:py-16"
+              className="relative overflow-hidden pt-6 pb-16 md:pb-20"
               aria-labelledby="about-hero-title"
             >
-              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-5 items-stretch">
-                  {/* Left — headline card */}
+              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 items-start">
+                  {/* Left — benefit headline + CTA */}
                   <article
                     className="rounded-[2rem] p-6 md:p-8 border border-border-soft bg-surface/82"
                     data-reveal
@@ -68,75 +94,111 @@ export function AboutPage() {
                     <p className="text-base leading-relaxed text-text-muted mt-4">
                       {content.hero.description}
                     </p>
+
+                    {/* Single primary CTA */}
                     <div className="mt-6">
                       <Button size="standard" variant="primary" href={routes.contact}>
                         Book a Free Consultation
                         <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
                       </Button>
                     </div>
+
+                    {/* "No office visits" trust signal under CTA */}
+                    <div className="inline-flex items-center gap-2 mt-5 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
+                      <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
+                      No office visits required
+                    </div>
                   </article>
 
-                  {/* Right — trust stats panel */}
-                  <aside
-                    className="relative overflow-hidden rounded-[2rem] p-6 md:p-8 border border-border-soft bg-gradient-to-b from-accent/10 to-accent/90 text-accent-contrast"
-                    data-reveal
-                  >
-                    {/* Decorative blur circle */}
-                    <div
-                      className="pointer-events-none absolute -bottom-[28%] -right-[12%] w-56 h-56 rounded-full bg-accent-secondary/20 blur-2xl"
-                      aria-hidden="true"
-                    />
+                  {/* Right — Google review panel + key stats */}
+                  <div className="grid gap-5">
+                    {/* Google review trust panel */}
+                    <aside
+                      className="rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
+                      data-reveal
+                    >
+                      {/* Google branding row */}
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <GoogleLogo className="h-5 w-5 flex-shrink-0" />
+                        <span className="text-sm font-semibold text-text">
+                          Google Reviews
+                        </span>
+                      </div>
 
-                    <div className="relative z-10">
-                      <p className="text-sm font-semibold text-accent-contrast/90 mb-5">
-                        Why clients choose Exxonim
+                      {/* Rating + stars + count */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl font-bold text-text leading-none">
+                          {GOOGLE_REVIEW_RATING}
+                        </span>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-[1rem] tracking-[1.5px] text-star leading-none">
+                            ★★★★★
+                          </span>
+                          {/* REVIEW_COUNT: This "+N" display is sourced from the hardcoded
+                              REVIEW_COUNT constant above. When integrating with Google
+                              Business Profile API, this will auto-update from the live data.
+                              API suggestion: GET /api/v1/google-reviews/stats → { review_count } */}
+                          <span className="text-xs text-text-muted">
+                            {REVIEW_COUNT}+ reviews
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Selling word — trust headline */}
+                      <p className="text-sm font-semibold text-text leading-snug">
+                        Trusted by businesses across Tanzania
+                      </p>
+                      <p className="text-xs text-text-muted mt-1 leading-relaxed">
+                        Real reviews from real clients on Google
                       </p>
 
+                      {/* CTA to see reviews */}
+                      <a
+                        href="https://www.google.com/search?q=Exxonim+Consult+reviews"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
+                      >
+                        See all reviews
+                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                      </a>
+                    </aside>
+
+                    {/* Key company stats */}
+                    <aside
+                      className="rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
+                      data-reveal
+                    >
+                      <p className="text-sm font-semibold text-text mb-4">
+                        Why clients choose Exxonim
+                      </p>
                       <div className="grid gap-3">
-                        <article className="grid grid-cols-[auto_1fr] gap-3 items-center p-3.5 rounded-xl bg-accent-contrast/10 border border-accent-contrast/20">
-                          <span className="inline-flex items-center justify-center min-h-[2.5rem] px-3 rounded-full bg-accent-contrast/15 text-accent-contrast font-extrabold text-sm">
+                        <div className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-accent-soft/40">
+                          <span className="inline-flex items-center justify-center min-h-[2.25rem] min-w-[2.25rem] px-2 rounded-full bg-accent text-accent-contrast font-extrabold text-xs">
                             120+
                           </span>
                           <div>
-                            <strong className="block text-sm leading-tight">Companies registered</strong>
-                            <span className="block mt-1 text-sm text-accent-contrast/75 leading-relaxed">
+                            <strong className="block text-sm leading-tight text-text">Companies registered</strong>
+                            <span className="block mt-0.5 text-xs text-text-muted leading-relaxed">
                               Businesses trust Exxonim for registration and compliance
                             </span>
                           </div>
-                        </article>
+                        </div>
 
-                        <article className="grid grid-cols-[auto_1fr] gap-3 items-center p-3.5 rounded-xl bg-accent-contrast/10 border border-accent-contrast/20">
-                          <span className="inline-flex items-center justify-center min-h-[2.5rem] px-3 rounded-full bg-accent-contrast/15 text-accent-contrast font-extrabold text-sm">
+                        <div className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-accent-soft/40">
+                          <span className="inline-flex items-center justify-center min-h-[2.25rem] min-w-[2.25rem] px-2 rounded-full bg-accent text-accent-contrast font-extrabold text-xs">
                             100%
                           </span>
                           <div>
-                            <strong className="block text-sm leading-tight">Tracked</strong>
-                            <span className="block mt-1 text-sm text-accent-contrast/75 leading-relaxed">
+                            <strong className="block text-sm leading-tight text-text">Tracked</strong>
+                            <span className="block mt-0.5 text-xs text-text-muted leading-relaxed">
                               Every consultation assigned a reference ID
                             </span>
                           </div>
-                        </article>
-
-                        <article className="grid grid-cols-[auto_1fr] gap-3 items-center p-3.5 rounded-xl bg-accent-contrast/10 border border-accent-contrast/20">
-                          <span className="inline-flex items-center justify-center min-h-[2.5rem] px-3 rounded-full bg-accent-contrast/15 text-accent-contrast font-extrabold text-sm">
-                            4.9★
-                          </span>
-                          <div>
-                            <strong className="block text-sm leading-tight">Google rating</strong>
-                            <span className="block mt-1 text-sm text-accent-contrast/75 leading-relaxed">
-                              58+ verified reviews from real clients
-                            </span>
-                          </div>
-                        </article>
+                        </div>
                       </div>
-
-                      {/* No office visits badge */}
-                      <div className="inline-flex items-center gap-2 mt-5 px-3 py-2 rounded-full bg-accent-contrast/10 border border-accent-contrast/20 text-accent-contrast/90 text-xs font-semibold">
-                        <ShieldCheck className="w-4 h-4" aria-hidden="true" />
-                        No office visits required
-                      </div>
-                    </div>
-                  </aside>
+                    </aside>
+                  </div>
                 </div>
               </div>
             </section>
@@ -231,7 +293,7 @@ export function AboutPage() {
 
                   {/* Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    {content.support_profiles.map((profile, i) => (
+                    {content.support_profiles.map((profile) => (
                       <article
                         key={profile.title}
                         className="rounded-[1.5rem] border border-border-soft bg-surface/88 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
