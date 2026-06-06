@@ -1,5 +1,6 @@
 import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
+import { Container } from "@/exxonim/components/primitives/Container";
 import { ComplianceCalendarSection } from "@/exxonim/components/ComplianceCalendarSection";
 import { EngineSection } from "@/exxonim/components/EngineSection";
 import { ExxonimApartSection } from "@/exxonim/components/ExxonimApartSection";
@@ -49,6 +50,11 @@ export function ServicesPage() {
     >
       {() => { if (!page) return null; return (
         <>
+          {/* Breadcrumb */}
+          <Container>
+            <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Services" }]} />
+          </Container>
+
           {/* 1. Hero — benefit headline + trust panel */}
           <ServicesOverviewSection content={page.content.overview} />
 

@@ -67,7 +67,7 @@ export function ExxonimApartSection() {
   return (
     <section
       aria-labelledby="exxonim-apart-title"
-      className="py-16 md:py-24 bg-page-strong"
+      className="py-16 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         {/* ─── Section Header ─── */}

@@ -31,7 +31,7 @@ export function ServicesFaqSection({ items }: ServicesFaqSectionProps) {
   return (
     <section
       aria-labelledby="services-faq-title"
-      className="py-16 md:py-24 bg-page-strong"
+      className="py-16 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         {/* ─── Section Header ─── */}

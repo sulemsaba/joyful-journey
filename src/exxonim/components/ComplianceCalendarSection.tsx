@@ -297,7 +297,7 @@ export function ComplianceCalendarSection() {
   return (
     <section
       aria-labelledby="compliance-calendar-title"
-      className="py-16 md:py-24 bg-page"
+      className="py-16 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         {/* ── Section header ── */}

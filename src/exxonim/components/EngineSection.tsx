@@ -56,7 +56,7 @@ export function EngineSection({ content }: EngineSectionProps) {
   const serviceGroups = content.service_groups;
 
   return (
-    <section id="services" className="py-16 md:py-24 bg-page-strong">
+    <section id="services" className="py-16 md:py-24">
       <Container>
         {/* Section Header */}
         <div className="grid gap-4 text-center max-w-[min(52ch,90%)] mx-auto mb-12 md:mb-16">

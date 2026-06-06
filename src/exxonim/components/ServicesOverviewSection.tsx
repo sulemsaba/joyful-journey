@@ -23,13 +23,6 @@ export function ServicesOverviewSection({
       </div>
 
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
-        {/* Breadcrumb */}
-        <nav className="mb-5 text-text-soft text-xs font-semibold tracking-[0.1em] uppercase" aria-label="Breadcrumb">
-          <span>Home</span>
-          <span className="mx-2 opacity-40">›</span>
-          <span>Services</span>
-        </nav>
-
         {/* Hero grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 items-stretch">
           {/* Left column — benefit headline */}
