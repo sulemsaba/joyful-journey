@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Search, ArrowRight, ShieldCheck } from 'lucide-react';
 import { routes } from '@/exxonim/routes';
 import { Button } from '@/exxonim/components/primitives/Button';
@@ -26,7 +26,8 @@ export function ServicesOverviewSection({
   content,
 }: ServicesOverviewSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Flatten all services from nav groups for search
   const allServices = useMemo(() => {
@@ -52,6 +53,46 @@ export function ServicesOverviewSection({
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchQuery(value);
+    setIsDropdownOpen(true);
+  }, []);
+
+  /* ── Click-outside handler to close dropdown ──────────────────
+   * Uses a document-level mousedown listener so clicking anywhere
+   * outside the search container closes the dropdown. This avoids
+   * the onBlur + setTimeout pattern which can destroy <a> targets
+   * before the click event reaches the router.                          */
+  useEffect(() => {
+    function handleDocumentMouseDown(e: MouseEvent) {
+      if (!searchContainerRef.current) return;
+      if (!searchContainerRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleDocumentMouseDown);
+    return () => document.removeEventListener('mousedown', handleDocumentMouseDown);
+  }, []);
+
+  /* ── Handle clicking a search result ──────────────────────────
+   * Prevents default <a> navigation and instead scrolls to the
+   * target service element programmatically. This avoids the
+   * race condition where React re-renders remove the <a> from
+   * the DOM before the router's click listener can process it.
+   *
+   * The service items in EngineSection have id={service.id}, e.g.
+   * id="company-registration". We derive the same ID from the
+   * service name by lowercasing and replacing spaces with hyphens.   */
+  const handleResultClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, serviceName: string) => {
+    e.preventDefault();
+
+    // Derive the element ID the same way EngineSection does: service.id
+    const targetId = serviceName.toLowerCase().replace(/\s+/g, '-');
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    setIsDropdownOpen(false);
+    setSearchQuery('');
   }, []);
 
   /* ─────────────────────────────────────────────────────────────────────────────
@@ -71,6 +112,7 @@ export function ServicesOverviewSection({
 
   const hasResults = searchQuery.trim().length > 0 && filteredServices.length > 0;
   const noResults = searchQuery.trim().length > 0 && filteredServices.length === 0;
+  const showDropdown = isDropdownOpen || searchQuery.trim().length > 0;
 
   return (
     <section
@@ -121,6 +163,7 @@ export function ServicesOverviewSection({
           <div className="grid gap-5">
             {/* Service search box */}
             <div
+              ref={searchContainerRef}
               className="relative rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
               data-reveal
             >
@@ -130,8 +173,7 @@ export function ServicesOverviewSection({
                   type="search"
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                  onFocus={() => setIsDropdownOpen(true)}
                   placeholder="Search for a service..."
                   aria-label="Search services"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-soft bg-page/60 text-text text-sm placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/25 focus:border-accent/40 transition-all"
@@ -139,14 +181,15 @@ export function ServicesOverviewSection({
               </div>
 
               {/* Search results dropdown */}
-              {(isSearchFocused || searchQuery.trim().length > 0) && (
-                <div className="mt-3">
+              {showDropdown && (
+                <div id="services-search-dropdown" className="mt-3">
                   {hasResults && (
                     <ul className="grid gap-1">
                       {filteredServices.slice(0, 6).map((service) => (
                         <li key={service.name}>
                           <a
                             href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
+                            onClick={(e) => handleResultClick(e, service.name)}
                             className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors group"
                           >
                             <span className="flex items-center gap-2">
@@ -173,6 +216,7 @@ export function ServicesOverviewSection({
                         <a
                           key={service.name}
                           href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
+                          onClick={(e) => handleResultClick(e, service.name)}
                           className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors"
                         >
                           <Search className="w-3 h-3 text-text-soft" aria-hidden="true" />
