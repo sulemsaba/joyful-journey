@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
-import { Check, X } from "lucide-react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
 import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
@@ -80,29 +80,47 @@ const TestimonialCard = memo(function TestimonialCard({
 /* ═══════════════════════════════════════════════════════════════
  * TestimonialMarquee
  *
- * Endless-looping marquee — identical behaviour to the "Trusted by"
- * logo ribbon above it.
+ * Endless-looping marquee — same visual as "Trusted by" logos,
+ * but with full interactivity.
  *
  * Behaviour:
  *  1. Static when visitor first scrolls it into view.
- *  2. After ~3 s, the CSS marquee animation kicks in — slides
- *     left endlessly in one direction like a cycle.
- *  3. Pauses on hover (user can read a card).
- *  4. Full-bleed with 15%/85% edge-fade masks (same as Trusted By).
- *  5. Cards are duplicated 2× (original + clone) so translateX(-50%)
- *     loops seamlessly with no gap/jump.
+ *  2. After ~3 s, auto-slide begins via requestAnimationFrame —
+ *     slides left endlessly in one direction like a cycle.
+ *  3. Left / Right arrow buttons for click navigation.
+ *  4. Drag / swipe to scroll freely (mouse + touch).
+ *  5. Auto-slide pauses on hover / drag / arrow click,
+ *     resumes 3 s after last interaction.
+ *  6. Full-bleed with 15% / 85% edge fade masks (same as Trusted By).
+ *  7. Cards are duplicated 2× so the scroll position wraps at
+ *     the midpoint, creating a seamless infinite loop.
  * ═══════════════════════════════════════════════════════════════ */
 function TestimonialMarquee({
   testimonials,
 }: {
   testimonials: Testimonial[];
 }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isSliding, setIsSliding] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isDraggingState, setIsDraggingState] = useState(false);
 
-  // Duplicate items 2× for seamless infinite scroll (translateX 0 → -50%)
-  const items = [...testimonials, ...testimonials];
+  const isPaused = useRef(false);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollStart = useRef(0);
+  const rafRef = useRef<number>(0);
+  const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Duplicate items 3× for seamless infinite scroll.
+  // We need enough items so that maxScroll (scrollWidth - clientWidth) >= halfWidth,
+  // otherwise the browser can't scroll far enough for the midpoint wrap to work.
+  const items = [...testimonials, ...testimonials, ...testimonials];
+  const CARD_WIDTH = 320; // w-80 = 20rem = 320px
+  const SPEED = 0.5; // px per frame at 60fps ≈ 30 px/s
 
   // ── Intersection Observer: detect when section enters viewport ──
   useEffect(() => {
@@ -133,17 +151,165 @@ function TestimonialMarquee({
     return () => clearTimeout(startDelay);
   }, [isVisible]);
 
+  // ── RAF-based auto-scroll (endless loop) ────────────────────
+  useEffect(() => {
+    if (!isSliding) return;
+
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    // Width of one complete set of items (1/3 of scrollWidth with 3× dup)
+    const getSetWidth = () => el.scrollWidth / 3;
+
+    const step = () => {
+      if (!isPaused.current && !isDragging.current) {
+        el.scrollLeft += SPEED;
+
+        // Seamless loop: when we've scrolled past the first set,
+        // jump back by one set's width — content is identical so
+        // the user sees no gap or jump.
+        const setWidth = getSetWidth();
+        if (el.scrollLeft >= setWidth) {
+          el.scrollLeft -= setWidth;
+        }
+      }
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [isSliding]);
+
+  // ── Update arrow button visibility ──────────────────────────
+  // In an endless-loop marquee both directions always have content,
+  // so both arrows are visible whenever the track is scrollable.
+  const updateArrows = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const hasOverflow = el.scrollWidth > el.clientWidth + 4;
+    const setWidth = el.scrollWidth / 3;
+    setCanScrollLeft(hasOverflow && el.scrollLeft > 4);
+    // Show right arrow if there's still content in the current set
+    setCanScrollRight(hasOverflow && el.scrollLeft < setWidth * 2 - el.clientWidth);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    // Defer initial arrow update to avoid synchronous setState in effect
+    const raf = requestAnimationFrame(() => updateArrows());
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("scroll", updateArrows);
+    };
+  }, [updateArrows]);
+
+  // ── Pause auto-scroll, resume 3 s after last interaction ────
+  const pauseAndResume = useCallback(() => {
+    isPaused.current = true;
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => {
+      isPaused.current = false;
+    }, 3000);
+  }, []);
+
+  // ── Arrow click handler ─────────────────────────────────────
+  const handleArrowClick = useCallback(
+    (direction: "left" | "right") => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      el.scrollBy({
+        left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH,
+        behavior: "smooth",
+      });
+      pauseAndResume();
+    },
+    [pauseAndResume]
+  );
+
+  // ── Drag / swipe handlers ───────────────────────────────────
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      isDragging.current = true;
+      setIsDraggingState(true);
+      startX.current = e.clientX;
+      scrollStart.current = el.scrollLeft;
+      el.setPointerCapture(e.pointerId);
+      // Pause immediately and cancel any pending resume timer
+      isPaused.current = true;
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    },
+    []
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const el = scrollerRef.current;
+      if (!el || !isDragging.current) return;
+      const dx = e.clientX - startX.current;
+      el.scrollLeft = scrollStart.current - dx;
+    },
+    []
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      isDragging.current = false;
+      setIsDraggingState(false);
+      el.releasePointerCapture(e.pointerId);
+      // Resume auto-scroll after 3 s of inactivity
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+      pauseTimerRef.current = setTimeout(() => {
+        isPaused.current = false;
+      }, 3000);
+    },
+    []
+  );
+
+  // ── Hover pause ─────────────────────────────────────────────
+  const handleMouseEnter = useCallback(() => {
+    isPaused.current = true;
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    // Only resume if not actively dragging
+    if (!isDragging.current) {
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+      pauseTimerRef.current = setTimeout(() => {
+        isPaused.current = false;
+      }, 3000);
+    }
+  }, []);
+
   return (
     <div
       ref={wrapperRef}
       className="relative overflow-hidden w-screen -ml-[50vw] left-1/2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
       aria-label="Client testimonials"
     >
+      {/* Scrollable track */}
       <div
-        className={cn(
-          "flex items-center w-max",
-          isSliding && "animate-testimonial-marquee hover:[animation-play-state:paused]"
-        )}
+        ref={scrollerRef}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="flex overflow-x-auto scrollbar-none select-none touch-pan-y"
+        style={{
+          WebkitOverflowScrolling: "touch",
+          cursor: isDraggingState ? "grabbing" : "grab",
+        }}
       >
         {items.map((testimonial, index) => (
           <div
@@ -154,6 +320,30 @@ function TestimonialMarquee({
           </div>
         ))}
       </div>
+
+      {/* Left arrow */}
+      {canScrollLeft && (
+        <button
+          type="button"
+          onClick={() => handleArrowClick("left")}
+          aria-label="Previous testimonials"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm transition-all hover:bg-surface hover:shadow-lg hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+      )}
+
+      {/* Right arrow */}
+      {canScrollRight && (
+        <button
+          type="button"
+          onClick={() => handleArrowClick("right")}
+          aria-label="Next testimonials"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 text-text shadow-md border border-border-soft backdrop-blur-sm transition-all hover:bg-surface hover:shadow-lg hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      )}
     </div>
   );
 }
@@ -271,7 +461,8 @@ export function ServicePackagesSection({
                   What our clients say
                 </h2>
               </div>
-              {/* Endless-loop marquee: static on arrival, slides after ~3 s, pauses on hover */}
+              {/* Endless-loop marquee with arrows + drag: static on arrival,
+                  slides after ~3 s, pauses on hover/drag/arrow, resumes 3 s after */}
               <TestimonialMarquee testimonials={testimonials} />
             </div>
           )}
