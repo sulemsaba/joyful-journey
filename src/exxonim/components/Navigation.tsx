@@ -129,8 +129,9 @@ export function Navigation({
   }, []);
 
   /** True when the header should be transparent (over hero, at scroll top).
-   *  In dark mode, forces the dark logo variant (light text on dark hero).
-   *  In light mode, forces the light logo variant (dark text on lighter hero). */
+   *  Sets data-over-hero attribute on <header> so CSS can handle logo
+   *  visibility WITHOUT React — preventing flash on page refresh.
+   *  CSS uses header[data-over-hero] + html[data-theme] to pick the right logo. */
   const headerOverHero = isHomePage && !scrolled;
   const primaryPhone = company.phones[0];
   const callHref = primaryPhone
@@ -198,6 +199,7 @@ export function Navigation({
   return (
     <>
       <header
+        data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
           "fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
           headerOverHero
@@ -216,8 +218,9 @@ export function Navigation({
           >
             {/* Logo crossfade — both logos always rendered, opacity
               controlled by .logo-light/.logo-dark CSS classes.
-              During theme transition, they smoothly crossfade.
-              Without .theme-transition, the swap is instant (no flash on load).
+              CSS uses header[data-over-hero] + html[data-theme] to pick
+              the right logo INSTANTLY — no React flash on refresh.
+              mix-blend-mode on both removes their solid backgrounds.
               BACKEND: Admin should recommend SVG or WebP format for logos.
               Min width: 140px, max height: 72px. */}
             <img
@@ -231,7 +234,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className={cn("logo-light block h-11 w-auto", headerOverHero && (theme === "dark" ? "logo-force-dark" : "logo-force-light"))}
+              className="logo-light block h-11 w-auto"
             />
             <img
               src={brand.darkLogoSrc}
@@ -245,7 +248,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className={cn("logo-dark h-11 w-auto", headerOverHero && (theme === "dark" ? "logo-force-dark" : "logo-force-light"))}
+              className="logo-dark h-11 w-auto"
             />
           </a>
 
@@ -319,7 +322,7 @@ export function Navigation({
               className={cn(
                 "xl:hidden",
                 headerOverHero
-                  ? "text-white"
+                  ? "text-white dark-header-icon"
                   : mobileMenuOpen
                     ? "text-accent-contrast"
                     : ""

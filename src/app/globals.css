@@ -598,28 +598,93 @@ html.theme-transition {
  * via opacity. During theme transitions, opacity smoothly
  * crossfades between them. Without .theme-transition, the
  * swap is instant (no initial-load flash).
+ *
+ * BLEND MODES: The logo images have solid colored backgrounds
+ * (light logo = teal text on white, dark logo = white text on black).
+ * mix-blend-mode eliminates these backgrounds:
+ *   - logo-light uses multiply → white bg becomes transparent
+ *   - logo-dark uses screen → black bg becomes transparent
+ * This makes both logos appear as if they have transparent backgrounds.
+ *
+ * NO-FLASH ARCHITECTURE: Logo visibility is controlled ENTIRELY by CSS
+ * using html[data-theme]. The data-theme attribute is set by a blocking
+ * <script> in <head> BEFORE first paint, so the correct logo shows
+ * instantly on every page load — no React hydration flash.
+ *
+ * header[data-over-hero] is set on the <header> when it's transparent
+ * (homepage, scroll top). In light mode over hero, the header elements
+ * need dark text/icons. In dark mode over hero, they need light text/icons.
+ * CSS handles this with attribute selectors — zero React dependency.
  */
-.logo-light { opacity: 1; }
-.logo-dark { opacity: 0; position: absolute; top: 0; left: 0; }
+
+/* ── Default: light mode ─────────────────────────── */
+.logo-light {
+  opacity: 1;
+  mix-blend-mode: multiply;
+}
+.logo-dark {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  mix-blend-mode: screen;
+}
+
+/* ── Dark mode ───────────────────────────────────── */
 html[data-theme="dark"] .logo-light { opacity: 0; }
 html[data-theme="dark"] .logo-dark { opacity: 1; }
+
+/* ── Smooth crossfade during theme transition ────── */
 html.theme-transition .logo-light,
 html.theme-transition .logo-dark {
   transition: opacity 0.4s ease;
 }
 
-/* ── Force logo variant when header is transparent over hero ──
- * The hero section has a dark background in dark mode and a
- * lighter background in light mode. When the navigation header
- * is transparent, we force the correct logo variant regardless
- * of the active theme.
+/* ── Header elements when transparent over hero ────
+ * In light mode over hero: elements need to be dark (hero is light teal).
+ * In dark mode over hero: elements need to be light (hero is dark).
+ * The default CSS above already handles this correctly:
+ *   - Light mode → logo-light visible (dark text) ✓
+ *   - Dark mode → logo-dark visible (light text) ✓
+ * No overrides needed — the theme-based CSS just works.
  *
- * Dark mode over hero → show dark logo (light text on dark bg)
- * Light mode over hero → show light logo (dark text on lighter bg) */
-.logo-force-dark.logo-light { opacity: 0 !important; }
-.logo-force-dark.logo-dark { opacity: 1 !important; }
-.logo-force-light.logo-light { opacity: 1 !important; }
-.logo-force-light.logo-dark { opacity: 0 !important; }
+ * However, for the hamburger icon, theme toggle, and other nav elements
+ * that use Tailwind color classes (not logo images), we need CSS overrides
+ * when the header is transparent over the hero.
+ */
+
+/* Light mode over hero: nav elements need dark color for readability
+ * (hero bg is light teal #e4f0f2) — already handled by default text colors.
+ * But if the header was previously showing white text (e.g., from a
+ * dark→light theme switch while at scroll top), these ensure correct colors. */
+
+/* Dark mode over hero: nav elements need light/white color
+ * (hero bg is dark #131f23) — override text colors to white */
+html[data-theme="dark"] header[data-over-hero] {
+  color: #f7fbfb;
+}
+/* Force nav link colors when header is over hero in dark mode */
+html[data-theme="dark"] header[data-over-hero] a,
+html[data-theme="dark"] header[data-over-hero] button {
+  color: #f7fbfb;
+}
+
+/* Light mode over hero: ensure dark text (not white)
+ * This overrides any stale white from a theme transition */
+html:not([data-theme="dark"]) header[data-over-hero] .dark-header-icon {
+  color: #102529;
+}
+
+/* ── Navigation logo blend modes ────────────────────
+ * The nav logo images have solid colored backgrounds
+ * (light logo = teal text on white, dark logo = white text on black).
+ * mix-blend-mode eliminates these backgrounds:
+ *   - logo-light uses multiply → white bg becomes transparent
+ *   - logo-dark uses screen → black bg becomes transparent
+ * Scoped to header only so favicons/PageLoader are unaffected.
+ */
+header .logo-light { mix-blend-mode: multiply; }
+header .logo-dark { mix-blend-mode: screen; }
 
 /* ── Hero background image opacity ────────────────────
  * The hero bg image has different opacity in light (0.25)

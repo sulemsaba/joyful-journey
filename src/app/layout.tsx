@@ -55,7 +55,9 @@ export default function RootLayout({
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         {/* Blocking script: read saved theme from localStorage and set data-theme
-            BEFORE first paint, preventing a flash of the wrong theme. */}
+            BEFORE first paint, preventing a flash of the wrong theme.
+            This ensures the correct logo shows instantly (CSS uses html[data-theme]
+            for logo visibility — no React dependency). */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('exxonim-theme')||localStorage.getItem('koro-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}}catch(e){}})()`,
