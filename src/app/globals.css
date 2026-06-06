@@ -164,7 +164,6 @@
   --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
   --animate-phone-ring: phone-ring 2s ease-in-out infinite;
   --animate-provider-marquee: provider-marquee 57s linear infinite;
-  --animate-testimonial-marquee: testimonial-marquee 40s linear infinite;
   --animate-code-pan: code-pan 12s linear infinite alternate;
   --animate-call-shimmer: call-shimmer 4.5s linear infinite;
   --animate-call-ping: call-ping 1.85s ease-out infinite;
@@ -213,10 +212,6 @@
 @keyframes provider-marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
-}
-@keyframes testimonial-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-33.3333%); }
 }
 @keyframes call-shimmer {
   0% { transform: translateX(0) skewX(-22deg); }
@@ -728,6 +723,15 @@ html.theme-transition .hero-bg-image {
 /* ── Custom select dropdown chevron — dark mode ──── */
 html[data-theme="dark"] select[class*="appearance-none"] {
   background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237fbcc1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E') !important;
+}
+
+/* ── Hide scrollbar for carousel / marquee tracks ── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* ── Smooth selection color ───────────────────────── */

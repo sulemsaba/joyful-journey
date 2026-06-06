@@ -213,5 +213,5 @@ export const fallbackFooter: SiteSettingFooterValue = {
   },
   social_links: [],
   /* Dynamic year: Footer.tsx replaces {YEAR} with new Date().getFullYear() at render time. */
-  copyright: "© {YEAR} Exxonim Company Limited. Registered Data Controller under Act No. 11 of 2022 (PDPC).",
+  copyright: "© {YEAR} Exxonim Company Limited",
 };

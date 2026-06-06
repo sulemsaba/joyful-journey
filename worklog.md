@@ -132,3 +132,32 @@ Stage Summary:
 - Admin/API comments documented in codebase for testimonials and FAQ
 - Backend-enforced character limits documented in types
 - No errors in dev.log, lint passes clean
+
+---
+Task ID: 9
+Agent: Main Agent
+Task: Make testimonials interactive + fix footer copyright
+
+Work Log:
+- Replaced CSS-only marquee with interactive JS-driven carousel (InteractiveTestimonialCarousel)
+- Carousel behaviour:
+  - Static when visitor scrolls into view (IntersectionObserver with 25% threshold)
+  - After 2.5s delay, auto-scroll begins (smooth slide every 4s)
+  - Left/Right arrow buttons (ChevronLeft/ChevronRight) for click navigation
+  - Drag/swipe to scroll freely (pointer events with setPointerCapture)
+  - Auto-scroll pauses on hover/drag/arrow click, resumes 3s after last interaction
+  - Full-bleed with 15%/85% edge fade masks (same as Trusted By logos)
+  - Scroll-snap keeps cards aligned after every interaction
+  - Arrow buttons show/hide based on scroll position
+  - For ≤3 testimonials: items are tripled to fill the carousel
+- Added scrollbar-none CSS utility (hides horizontal scrollbar on carousel track)
+- Removed @keyframes testimonial-marquee and --animate-testimonial-marquee theme token (no longer needed)
+- Fixed footer copyright: removed "Registered Data Controller under Act No. 11 of 2022 (PDPC)."
+  - Changed from "© {YEAR} Exxonim Company Limited. Registered Data Controller under Act No. 11 of 2022 (PDPC)."
+  - To "© {YEAR} Exxonim Company Limited"
+- Lint passes clean, all pages return 200 with no errors
+
+Stage Summary:
+- Testimonials now interactive: static on arrival, auto-slide after delay, user can drag/swipe or click arrows
+- Footer copyright simplified to just "© 2026 Exxonim Company Limited" (no PDPC text)
+- No testimonials in footer (confirmed still clean)
