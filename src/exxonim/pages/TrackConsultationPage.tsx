@@ -504,14 +504,14 @@ function TrackingNotFound({
       </div>
       <div className="flex flex-wrap gap-3 justify-center pt-1">
         <Button
-          size="standard"
+          size="hero"
           variant="primary"
           onClick={onReset}
         >
           Try Again
         </Button>
         <Button
-          size="standard"
+          size="hero"
           variant="secondary"
           href={routes.contact}
         >
@@ -1013,10 +1013,10 @@ export function TrackConsultationPage() {
               look it up for you.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Button size="standard" variant="primary" href={routes.contact}>
+              <Button size="hero" variant="primary" href={routes.contact}>
                 Contact Us
               </Button>
-              <Button size="standard" variant="outline" href={routes.support}>
+              <Button size="hero" variant="outline" href={routes.support}>
                 Support Centre
               </Button>
             </div>
