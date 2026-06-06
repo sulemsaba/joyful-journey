@@ -92,14 +92,14 @@ export function ProviderSection({ content }: ProviderSectionProps) {
             return (
               <div
                 key={`${logo.alt}-${index}`}
-                className="flex items-center justify-center flex-none w-44 h-16"
+                className="flex items-center justify-center flex-none w-24 sm:w-32 md:w-44 h-12 sm:h-14 md:h-16"
                 aria-label={logo.alt}
                 role="img"
               >
                 <img
                   className={cn(
                     "block w-auto object-contain",
-                    isSolid ? "max-h-12" : "max-h-16"
+                    isSolid ? "max-h-8 sm:max-h-10 md:max-h-12" : "max-h-10 sm:max-h-14 md:max-h-16"
                   )}
                   src={resolveLogoSrc(logo.src)}
                   alt={`${logo.alt} logo`}
