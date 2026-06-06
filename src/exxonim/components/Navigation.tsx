@@ -295,14 +295,14 @@ export function Navigation({
               href={callHref}
               className="hidden md:inline-flex bg-accent-soft hover:bg-accent-hover pl-3 pr-5 gap-3 justify-start group/call"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-contrast group-hover/call:bg-accent-hover transition-colors animate-phone-ring">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-contrast group-hover/call:bg-accent-contrast/20 transition-colors animate-phone-ring">
                 <Phone className="w-4 h-4" aria-hidden="true" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-accent group-hover/call:text-accent-hover transition-colors">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-accent group-hover/call:text-accent-contrast transition-colors">
                   {primaryPhone ? "Call Now" : `Contact ${brandName}`}
                 </span>
-                <span className="text-sm font-medium text-text group-hover/call:text-accent transition-colors">
+                <span className="text-sm font-medium text-text group-hover/call:text-accent-contrast transition-colors">
                   {primaryPhone || "Open the contact page"}
                 </span>
               </div>
