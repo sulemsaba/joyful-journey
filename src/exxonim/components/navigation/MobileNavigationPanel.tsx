@@ -268,21 +268,10 @@ export function MobileNavigationPanel({
             <a
               href={callHref}
               onClick={onClose}
-              className="flex items-center justify-center gap-3 py-3.5 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all"
+              className="flex items-center justify-center gap-2 h-12 rounded-full bg-accent text-accent-contrast text-sm font-semibold hover:bg-accent-hover transition-colors duration-200"
             >
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-contrast/15">
-                <Phone className="w-4 h-4 animate-phone-ring" aria-hidden="true" />
-              </span>
-              <span className="flex flex-col leading-none">
-                <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-80">
-                  {primaryPhone ? "Call Now" : `Contact ${brandName}`}
-                </span>
-                {primaryPhone ? (
-                  <span className="text-sm font-bold tracking-wide">{primaryPhone}</span>
-                ) : (
-                  <span className="text-sm font-bold tracking-wide">Get in touch</span>
-                )}
-              </span>
+              <Phone className="w-4 h-4" aria-hidden="true" />
+              {primaryPhone || `Contact ${brandName}`}
             </a>
           </div>
         </div>

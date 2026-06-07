@@ -291,20 +291,10 @@ export function Navigation({
                 Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
             <a
               href={callHref}
-              className="hidden md:inline-flex items-center gap-2.5 py-2.5 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/25 hover:shadow-accent-glow/45"
+              className="hidden md:inline-flex items-center gap-2 h-9 px-4 rounded-full bg-accent text-accent-contrast text-sm font-semibold hover:bg-accent-hover transition-colors duration-200"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-              <span className="relative flex items-center justify-center w-7 h-7 rounded-full bg-accent-contrast/15">
-                <Phone className="w-3.5 h-3.5 animate-phone-ring" aria-hidden="true" />
-              </span>
-              <span className="relative flex flex-col leading-none">
-                <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-80">
-                  {primaryPhone ? "Call Now" : `Contact ${brandName}`}
-                </span>
-                <span className="text-xs font-bold tracking-wide">
-                  {primaryPhone || "Get in touch"}
-                </span>
-              </span>
+              <Phone className="w-4 h-4" aria-hidden="true" />
+              {primaryPhone || `Contact ${brandName}`}
             </a>
 
             <Button
