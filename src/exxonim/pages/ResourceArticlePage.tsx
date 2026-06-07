@@ -393,58 +393,50 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
   /* ── Ref for the article body container (scrollspy observer target) ── */
   const articleBodyRef = useRef<HTMLDivElement>(null);
 
-  /* ── Scrollspy: scroll-based heading tracker ──
-   * On each scroll event, finds the h2 heading closest to the top
-   * of the viewport (accounting for the fixed 70px header) and
-   * highlights the corresponding TOC item with a vertical accent line.
-   *
-   * This replaces the previous IntersectionObserver approach which
-   * had issues: (1) the cleanup function was returned from inside
-   * setTimeout instead of useEffect, so the observer was never
-   * disconnected; (2) IntersectionObserver only fires when elements
-   * cross the threshold boundary, making it unreliable for tracking
-   * the "current" section during continuous scrolling.
+  /* ── Scrollspy: IntersectionObserver watches all h2 headings ──
+   * When an h2 enters the viewport (or is near the top), the
+   * activeHeadingId is updated so the TOC highlights the
+   * corresponding section with a vertical accent line.
    *
    * BACKEND: No configuration needed. The observer auto-attaches
    * to h2 elements that have IDs (injected by extractTocFromHtml).
    */
   useEffect(() => {
-    if (!post?.slug) return;
+    if (!articleBodyRef.current) return;
 
-    const headerOffset = 96; // 68px nav + 28px breathing room
+    const container = articleBodyRef.current;
 
-    function updateActiveHeading() {
-      const headings = document.querySelectorAll(".article-body h2[id]");
+    // Small delay to ensure IDs are injected into the DOM
+    const timer = setTimeout(() => {
+      const headings = container.querySelectorAll("h2[id]");
       if (headings.length < 2) return;
 
-      // Find the last heading that has been scrolled past the trigger line.
-      // This is the "current" section the user is reading.
-      let activeId: string | null = null;
-
-      headings.forEach((heading) => {
-        const rect = heading.getBoundingClientRect();
-        if (rect.top <= headerOffset) {
-          // This heading has been scrolled past — it's a candidate.
-          // Since we iterate in order, the last match wins (most recently passed).
-          activeId = heading.id;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          // Find the topmost visible heading
+          const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+          if (visibleEntries.length > 0) {
+            // Use the one closest to the top
+            const topEntry = visibleEntries.reduce((prev, curr) =>
+              prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
+            );
+            setActiveHeadingId(topEntry.target.id);
+          }
+        },
+        {
+          // Trigger when heading is in the top 40% of the viewport
+          rootMargin: "-10% 0px -60% 0px",
+          threshold: 0,
         }
-      });
+      );
 
-      // If no heading has been scrolled past yet (page top), default to first heading
-      if (!activeId && headings.length > 0) {
-        activeId = headings[0].id;
-      }
+      headings.forEach((heading) => observer.observe(heading));
 
-      if (activeId) {
-        setActiveHeadingId(activeId);
-      }
-    }
+      // Cleanup on unmount or re-run
+      return () => observer.disconnect();
+    }, 100);
 
-    // Initial check
-    updateActiveHeading();
-
-    window.addEventListener("scroll", updateActiveHeading, { passive: true });
-    return () => window.removeEventListener("scroll", updateActiveHeading);
+    return () => clearTimeout(timer);
   }, [post?.slug]);
 
   /* ── Smooth scroll to heading when TOC item is clicked ── */
@@ -624,7 +616,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                        *     updates and the TOC highlights it with a vertical
                        *     accent line.
                        */}
-                      <div className="article-body" ref={articleBodyRef} data-article-content>
+                      <div className="article-body" ref={articleBodyRef}>
                         {articleHtml ? (
                           <div
                             className="text-sm sm:text-base text-text-muted leading-relaxed max-w-none
@@ -703,16 +695,15 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                     </div>
                   </main>
 
-                  {/* ═══ RIGHT: Sidebar (sticky, below fixed header) ═══
+                  {/* ═══ RIGHT: Sidebar (sticky, vertically centered in viewport) ═══
                    *
                    * Contains ONLY:
                    *   1. Share buttons — social sharing + copy link (ABOVE TOC).
                    *   2. Table of Contents — auto-extracted from article headings.
                    *
-                   * The sidebar is sticky and positioned just below the fixed
-                   * 68px navigation header (top-[84px] with padding). It fills
-                   * the available viewport height minus the header offset, and
-                   * scrolls internally if the TOC is longer than the viewport.
+                   * The sidebar is sticky and vertically centered in the viewport
+                   * height using top-[35vh]. This means as the user scrolls,
+                   * the TOC stays at the vertical middle of their screen.
                    *
                    * SCROLLSPY: The activeId prop comes from the IntersectionObserver
                    * in the parent useEffect. When a section scrolls into view,
@@ -724,8 +715,8 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                    * the TOC section is hidden but share buttons remain.
                    */}
                   <aside
-                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[84px]
-                               lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2
+                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[35vh]
+                               lg:max-h-[60vh] lg:overflow-y-auto lg:pr-2
                                [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent
                                [&::-webkit-scrollbar-thumb]:bg-border-soft [&::-webkit-scrollbar-thumb]:rounded-full"
                   >

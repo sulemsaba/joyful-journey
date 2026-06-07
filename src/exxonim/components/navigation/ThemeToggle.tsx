@@ -13,23 +13,38 @@ export function ThemeToggle({
   theme,
   onToggleTheme,
 }: ThemeToggleProps) {
-  const isDark = theme === "dark";
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center w-8 h-8 rounded-full text-text-muted hover:text-accent hover:bg-accent/10 transition-all duration-200",
+        "relative inline-flex items-center justify-center w-12 h-7 rounded-full border border-border-soft bg-surface-soft transition-all",
+        "hover:border-accent/50",
         className
       )}
       type="button"
-      aria-pressed={isDark}
+      aria-pressed={theme === "dark"}
       onClick={onToggleTheme}
       aria-label={`Toggle theme. Current theme is ${theme}.`}
     >
-      {isDark ? (
-        <Sun className="w-[16px] h-[16px] transition-opacity" aria-hidden="true" />
-      ) : (
-        <Moon className="w-[16px] h-[16px] transition-opacity" aria-hidden="true" />
-      )}
+      <span
+        className={cn(
+          "absolute top-1 w-5 h-5 rounded-full bg-surface transition-transform duration-300 flex items-center justify-center",
+          theme === "dark" ? "translate-x-2.5" : "-translate-x-2.5"
+        )}
+        aria-hidden="true"
+      >
+        <Sun
+          className={cn(
+            "w-3 h-3 text-accent transition-opacity",
+            theme === "dark" ? "opacity-0" : "opacity-100"
+          )}
+        />
+        <Moon
+          className={cn(
+            "absolute w-3 h-3 text-accent transition-opacity",
+            theme === "dark" ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </span>
     </button>
   );
 }
