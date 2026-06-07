@@ -90,9 +90,12 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Home } from "lucide-react";
+import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { ErrorMessage } from "@/exxonim/components/ErrorMessage";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
+import { ReadingProgressBar } from "@/exxonim/components/ReadingProgressBar";
 import { useBlogPost } from "@/exxonim/hooks/useBlogPost";
 import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
 import { usePage } from "@/exxonim/hooks/usePage";
@@ -499,19 +502,16 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
             return (
             <div className="min-h-screen">
               <ArticleStructuredData post={post} />
+              <ReadingProgressBar />
 
-              {/* ── Back button only (no breadcrumb) ── */}
-              <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
-                <a
-                  href={routes.resources}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-text-muted
-                             hover:text-accent transition-colors group"
-                >
-                  <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                  </svg>
-                  Back to Resources
-                </a>
+              {/* ── Breadcrumb navigation ── */}
+              <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-4">
+                <Breadcrumb items={[
+                  { label: "Home", href: routes.home, icon: Home },
+                  { label: "Resources", href: routes.resources },
+                  ...(categoryLabel ? [{ label: categoryLabel, href: `${routes.resources}?category=${encodeURIComponent(categoryLabel)}` }] : []),
+                  { label: post.title },
+                ]} />
               </div>
 
               {/* ── 2-Column Grid: Article (wide, left) | Sidebar (right, sticky) ──

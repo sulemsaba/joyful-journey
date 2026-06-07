@@ -234,6 +234,7 @@ function renderGridCard(post: BlogPost) {
   const categoryLabel = post.category?.label;
   const articleLink = resourceArticlePath(post.slug);
   const metaParts = [formatBlogDate(post.publishedAt)];
+  if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
   if (categoryLabel) metaParts.push(categoryLabel);
 
   return (
@@ -243,7 +244,7 @@ function renderGridCard(post: BlogPost) {
       </div>
       <div className="flex flex-1 flex-col bg-surface p-5 pb-[18px]">
         <span className="mb-2.5 text-[0.72rem] font-bold uppercase tracking-[0.09em] text-text-soft">
-          {metaParts.join(" | ")}
+          {metaParts.join(" · ")}
         </span>
         <h3 className="m-0 mb-2 text-[clamp(1.1rem,1.8vw,1.35rem)] font-medium leading-tight tracking-tight text-text line-clamp-2">
           {post.title}

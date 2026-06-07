@@ -87,6 +87,13 @@ export default function RootLayout({
           media="(prefers-color-scheme: dark)"
           id="favicon-dark"
         />
+        {/* RSS auto-discovery — feed readers detect this automatically */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Exxonim Consult Blog"
+          href="/blog/rss.xml"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-page text-text font-sans`}
