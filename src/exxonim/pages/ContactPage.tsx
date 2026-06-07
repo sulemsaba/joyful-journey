@@ -13,6 +13,7 @@ import type {
   ApiPublicConsultationSubmissionResponse,
 } from "@/exxonim/types/api";
 import type { ContactPageContent } from "@/exxonim/types";
+import { StructuredData } from "@/exxonim/components/StructuredData";
 
 /* ────────────────────────────────────────────
    Form helpers
@@ -171,6 +172,7 @@ export function ContactPage() {
     >
       {() => (
         <section className="bg-page">
+          <StructuredData heroTitle="Contact Exxonim Consult" heroDescription="Reach Exxonim for registration, compliance, and advisory support." breadcrumbs={[{ name: 'Contact', path: routes.contact }]} />
           {/* Breadcrumb */}
           <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
             <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Contact" }]} />

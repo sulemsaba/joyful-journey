@@ -7,6 +7,7 @@ import { routes } from '@/exxonim/routes';
 import { LoadBoundary } from '@/exxonim/components/LoadBoundary';
 import { usePage } from '@/exxonim/hooks/usePage';
 import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
+import { StructuredData } from '@/exxonim/components/StructuredData';
 import type { AboutPageContent } from '@/exxonim/types';
 
 /* ── Google logo SVG (official 4-color) ──────────────────────── */
@@ -61,6 +62,11 @@ export function AboutPage() {
         if (!content) return null;
         return (
           <>
+            <StructuredData
+              heroTitle={content.hero.title}
+              heroDescription={content.hero.description}
+              breadcrumbs={[{ name: 'About', path: routes.about }]}
+            />
             {/* Breadcrumb */}
             <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
               <Breadcrumb items={[{ label: 'Home', href: routes.home, icon: Home }, { label: 'About' }]} />

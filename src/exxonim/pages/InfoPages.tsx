@@ -3,6 +3,7 @@ import { routes } from "@/exxonim/routes";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { Breadcrumb, type BreadcrumbItem } from "@/exxonim/components/Breadcrumb";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
+import { StructuredData } from "@/exxonim/components/StructuredData";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import type { ContentSection, InfoPageContent } from '@/exxonim/types';
@@ -15,6 +16,8 @@ interface ContentPageProps {
   sections: ContentSection[];
   nextStep?: InfoPageContent["next_step"];
   breadcrumbItems?: BreadcrumbItem[];
+  /** Structured Data breadcrumb items for JSON-LD (name + path pairs) */
+  structuredBreadcrumbs?: Array<{ name: string; path?: string }>;
 }
 
 function ContentPage({
@@ -24,9 +27,15 @@ function ContentPage({
   sections,
   nextStep,
   breadcrumbItems,
+  structuredBreadcrumbs,
 }: ContentPageProps) {
   return (
     <>
+      <StructuredData
+        heroTitle={title}
+        heroDescription={description}
+        breadcrumbs={structuredBreadcrumbs}
+      />
 <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           {breadcrumbItems && breadcrumbItems.length > 0 && (
             <Breadcrumb items={breadcrumbItems} />
@@ -98,6 +107,7 @@ interface InfoPageRouteProps {
   canonicalPath: string;
   loadingLabel: string;
   breadcrumbItems: BreadcrumbItem[];
+  structuredBreadcrumbs: Array<{ name: string; path?: string }>;
 }
 
 function InfoPageRoute({
@@ -105,6 +115,7 @@ function InfoPageRoute({
   canonicalPath,
   loadingLabel,
   breadcrumbItems,
+  structuredBreadcrumbs,
 }: InfoPageRouteProps) {
   const { data: page, isPending, error } = usePage<InfoPageContent>(slug);
   useResolvedPageSeo(page, canonicalPath);
@@ -126,6 +137,7 @@ function InfoPageRoute({
           sections={page?.content.sections}
           nextStep={page?.content.next_step}
           breadcrumbItems={breadcrumbItems}
+          structuredBreadcrumbs={structuredBreadcrumbs}
         />
       );}}
     </LoadBoundary>
@@ -139,6 +151,7 @@ export function SupportPage() {
       canonicalPath={routes.support}
       loadingLabel="Loading support page..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Support" }]}
+      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Support", path: routes.support }]}
     />
   );
 }
@@ -150,6 +163,7 @@ export function TermsPage() {
       canonicalPath={routes.terms}
       loadingLabel="Loading terms..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Terms" }]}
+      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Terms", path: routes.terms }]}
     />
   );
 }
@@ -161,6 +175,7 @@ export function PrivacyPage() {
       canonicalPath={routes.privacy}
       loadingLabel="Loading privacy policy..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Privacy" }]}
+      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Privacy", path: routes.privacy }]}
     />
   );
 }
@@ -172,6 +187,7 @@ export function CookiePage() {
       canonicalPath={routes.cookies}
       loadingLabel="Loading cookie notice..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Cookie Notice" }]}
+      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Cookie Notice", path: routes.cookies }]}
     />
   );
 }
@@ -183,6 +199,7 @@ export function DataRightsPage() {
       canonicalPath={routes.dataRights}
       loadingLabel="Loading data rights..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Data Rights" }]}
+      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Data Rights", path: routes.dataRights }]}
     />
   );
 }

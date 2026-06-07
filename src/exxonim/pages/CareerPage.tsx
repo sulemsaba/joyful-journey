@@ -79,6 +79,7 @@ import {
   getPublishedJobs,
 } from "@/exxonim/services/jobsService";
 import type { ApiCareerJob, CareerPageContent } from "@/exxonim/types";
+import { StructuredData } from "@/exxonim/components/StructuredData";
 import { Button } from "@/exxonim/components/primitives/Button";
 
 /* ── Constants ── */
@@ -725,6 +726,7 @@ export function CareerPage() {
 
         return (
           <div className="min-h-screen overflow-x-hidden" onClick={() => setShowDeptDropdown(false)}>
+            <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'Careers', path: routes.career }]} pageType="CollectionPage" />
             {/* ── Breadcrumb ── */}
             <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Career" }]} />

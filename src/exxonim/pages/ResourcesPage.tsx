@@ -77,31 +77,13 @@ import type {
   BlogPost,
   ResourcesPageContent,
 } from '@/exxonim/types';
-import { buildResourcesBlogLayout, getVisibleBlogPosts } from "@/exxonim/utils/blog";
+import { StructuredData } from '@/exxonim/components/StructuredData';
+import { buildResourcesBlogLayout, formatBlogDate, getAuthorInitials, getVisibleBlogPosts } from "@/exxonim/utils/blog";
 import { Button } from "@/exxonim/components/primitives/Button";
 
 const INITIAL_VISIBLE_COUNT = 6;
 type ActiveCategory = BlogCategoryId | "all";
 type SortMode = "latest" | "popular";
-
-const blogDateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
-
-function formatBlogDate(date: string) {
-  return blogDateFormatter.format(new Date(`${date}T00:00:00Z`));
-}
-
-function getAuthorInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
 
 /* ── Popular sort heuristic ── */
 function comparePostsPopularFirst(left: BlogPost, right: BlogPost) {
@@ -588,6 +570,7 @@ export function ResourcesPage() {
         if (!page) return null;
         return (
           <div>
+            <StructuredData heroTitle="Resources & Insights" heroDescription="Practical guidance for registration, compliance, and operational planning." breadcrumbs={[{ name: 'Resources', path: routes.resources }]} pageType="CollectionPage" />
             {/* ── Breadcrumb ── */}
             <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources" }]} />

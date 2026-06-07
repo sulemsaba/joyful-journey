@@ -14,6 +14,7 @@ import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
 import type { ServicesPageContent } from '@/exxonim/types';
+import { StructuredData } from '@/exxonim/components/StructuredData';
 
 /**
  * Services page — the primary service listing and conversion page for Exxonim.
@@ -50,6 +51,7 @@ export function ServicesPage() {
     >
       {() => { if (!page) return null; return (
         <>
+          <StructuredData heroTitle={page.content.overview.title} heroDescription={page.content.overview.description} breadcrumbs={[{ name: 'Services', path: routes.services }]} />
           {/* Breadcrumb */}
           <Container>
             <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Services" }]} />

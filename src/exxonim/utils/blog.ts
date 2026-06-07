@@ -9,6 +9,31 @@ function toUtcDateValue(date: string) {
   return new Date(`${date}T00:00:00Z`).getTime();
 }
 
+/* ── Shared formatters ────────────────────────────────── */
+
+const blogDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+});
+
+/** Formats a blog publish date string (YYYY-MM-DD) into a human-readable form (e.g., "January 15, 2025"). */
+export function formatBlogDate(date: string) {
+  return blogDateFormatter.format(new Date(`${date}T00:00:00Z`));
+}
+
+/** Extracts initials from an author name (up to 2 words). E.g., "John Smith" → "JS". */
+export function getAuthorInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+/* ── HTML sanitization ───────────────────────────────── */
+
 function cleanText(value?: string | null) {
   return typeof value === "string" ? value.trim() : "";
 }

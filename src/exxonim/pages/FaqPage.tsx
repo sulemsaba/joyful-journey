@@ -10,6 +10,7 @@ import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
 import { Home, Search, Plus, X, MessageCircle } from "lucide-react";
 import type { FaqPageContent } from '@/exxonim/types';
+import { StructuredData } from '@/exxonim/components/StructuredData';
 
 /* ═══════════════════════════════════════════════════════════════
  * FaqStructuredData — JSON-LD for Google rich results
@@ -241,6 +242,7 @@ export function FaqPage() {
         return (
           <>
             <FaqStructuredData items={content.items} />
+            <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'FAQ', path: routes.faq }]} pageType="FAQPage" />
 
             {/* ─── Breadcrumb ─── */}
             <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">

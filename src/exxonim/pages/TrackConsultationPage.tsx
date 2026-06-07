@@ -54,6 +54,7 @@ import { routes } from "@/exxonim/routes";
 import { applyResolvedSeo, createFallbackSeo } from "@/exxonim/seo";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { lookupTrackingCode } from "@/exxonim/services/consultationService";
+import { StructuredData } from "@/exxonim/components/StructuredData";
 import type {
   ApiTrackingLookupResponse,
   ApiTrackingNotFoundResponse,
@@ -715,6 +716,7 @@ export function TrackConsultationPage() {
 
   return (
     <main>
+      <StructuredData heroTitle="Track Your Consultation" heroDescription="Check the status of your consultation with Exxonim using your tracking code." breadcrumbs={[{ name: 'Track Consultation', path: routes.trackConsultation }]} />
       {/* ── Breadcrumb ── */}
       <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <Breadcrumb

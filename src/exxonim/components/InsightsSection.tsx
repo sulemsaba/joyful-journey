@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { resourceArticlePath, routes } from "@/exxonim/routes";
 import type { BlogPost, HomeInsightsContent } from '@/exxonim/types';
+import { formatBlogDate, getAuthorInitials } from "@/exxonim/utils/blog";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
 
@@ -50,23 +51,6 @@ interface InsightsSectionProps {
   onPrev: () => void;
   onNext: () => void;
 }
-
-const blogDateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
-
-const formatBlogDate = (date: string) =>
-  blogDateFormatter.format(new Date(`${date}T00:00:00Z`));
-
-const getAuthorInitials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
 
 function Tag({ label }: { label: string }) {
   return (
