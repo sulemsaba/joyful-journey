@@ -495,11 +495,16 @@ export function Navigation({
             {primaryPhone && (
               <a
                 href={`tel:${primaryPhone.replace(/[^0-9+]/g, "")}`}
-                className="hidden md:inline-flex items-center gap-2 h-12 py-3 px-6 rounded-full bg-accent text-accent-contrast text-sm font-extrabold hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/40 hover:shadow-accent-glow/60"
+                className="hidden md:inline-flex items-center gap-2.5 py-2 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/30 hover:shadow-accent-glow/50"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                <Phone className="relative w-4 h-4 animate-phone-ring" aria-hidden="true" />
-                <span className="relative">Call Now</span>
+                <span className="relative flex items-center justify-center w-7 h-7 rounded-full bg-accent-contrast/15">
+                  <Phone className="w-3.5 h-3.5 animate-phone-ring" aria-hidden="true" />
+                </span>
+                <span className="relative flex flex-col leading-none">
+                  <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-80">Call Now</span>
+                  <span className="text-xs font-bold tracking-wide">{primaryPhone}</span>
+                </span>
               </a>
             )}
 
@@ -615,10 +620,15 @@ export function Navigation({
                 <div className="px-6 py-5 border-t border-border-soft">
                   <a
                     href={`tel:${primaryPhone.replace(/[^0-9+]/g, "")}`}
-                    className="flex items-center justify-center gap-2 w-full h-14 py-4 rounded-full bg-accent text-accent-contrast text-sm font-extrabold hover:bg-accent-hover transition-all duration-200 shadow-accent-glow/30"
+                    className="flex items-center justify-center gap-3 w-full py-3.5 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all duration-200 shadow-accent-glow/30"
                   >
-                    <Phone className="w-4 h-4 animate-phone-ring" aria-hidden="true" />
-                    Call Now
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-contrast/15">
+                      <Phone className="w-4 h-4 animate-phone-ring" aria-hidden="true" />
+                    </span>
+                    <span className="flex flex-col leading-none">
+                      <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-80">Call Now</span>
+                      <span className="text-sm font-bold tracking-wide">{primaryPhone}</span>
+                    </span>
                   </a>
                 </div>
               )}

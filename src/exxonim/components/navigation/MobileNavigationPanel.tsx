@@ -268,15 +268,21 @@ export function MobileNavigationPanel({
             <a
               href={callHref}
               onClick={onClose}
-              className="flex items-center justify-center gap-3 h-14 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all"
+              className="flex items-center justify-center gap-3 py-3.5 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all"
             >
-              <Phone className="w-5 h-5 animate-phone-ring" aria-hidden="true" />
-              <span className="font-extrabold">
-                {primaryPhone ? "Call Now" : `Contact ${brandName}`}
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-contrast/15">
+                <Phone className="w-4 h-4 animate-phone-ring" aria-hidden="true" />
               </span>
-              {primaryPhone ? (
-                <span className="text-accent-contrast/80 text-sm">{primaryPhone}</span>
-              ) : null}
+              <span className="flex flex-col leading-none">
+                <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-80">
+                  {primaryPhone ? "Call Now" : `Contact ${brandName}`}
+                </span>
+                {primaryPhone ? (
+                  <span className="text-sm font-bold tracking-wide">{primaryPhone}</span>
+                ) : (
+                  <span className="text-sm font-bold tracking-wide">Get in touch</span>
+                )}
+              </span>
             </a>
           </div>
         </div>

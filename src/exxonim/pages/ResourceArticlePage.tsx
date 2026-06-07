@@ -430,6 +430,11 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
         }
       });
 
+      // If no heading has been scrolled past yet (page top), default to first heading
+      if (!activeId && headings.length > 0) {
+        activeId = headings[0].id;
+      }
+
       if (activeId) {
         setActiveHeadingId(activeId);
       }
@@ -619,7 +624,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                        *     updates and the TOC highlights it with a vertical
                        *     accent line.
                        */}
-                      <div className="article-body" ref={articleBodyRef}>
+                      <div className="article-body" ref={articleBodyRef} data-article-content>
                         {articleHtml ? (
                           <div
                             className="text-sm sm:text-base text-text-muted leading-relaxed max-w-none
