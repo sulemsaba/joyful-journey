@@ -495,7 +495,7 @@ export function Navigation({
             {primaryPhone && (
               <a
                 href={`tel:${primaryPhone.replace(/[^0-9+]/g, "")}`}
-                className="hidden md:inline-flex items-center gap-2.5 py-2 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/30 hover:shadow-accent-glow/50"
+                className="hidden md:inline-flex items-center gap-2.5 py-3 px-5 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/30 hover:shadow-accent-glow/50"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="relative flex items-center justify-center w-7 h-7 rounded-full bg-accent-contrast/15">
