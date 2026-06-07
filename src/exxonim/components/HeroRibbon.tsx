@@ -85,11 +85,11 @@ export function HeroRibbon() {
       // Line styling
       ctx!.globalAlpha = isDark ? 0.35 : 0.18;
       ctx!.strokeStyle = accentColor;
-      ctx!.lineWidth = 1.2;
+      ctx!.lineWidth = 1.0;
 
-      // Ribbon configuration
-      const lineCount = 40;
-      const spacingY = 2.5;
+      // Ribbon configuration — dense cluster of flowing lines
+      const lineCount = 90;
+      const spacingY = 1.8;
       const ribbonCenterY = cssH / 2;
 
       // Organic shape morphing
