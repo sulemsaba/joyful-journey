@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 
 /**
- * Reading progress bar — a thin accent-colored bar fixed at the top of the
- * viewport that fills proportionally as the user scrolls through an article.
+ * Reading progress bar — a thin accent-colored bar fixed at the bottom of the
+ * navigation header that fills proportionally as the user scrolls through an article.
  *
  * BEHAVIOUR:
  *   - Hidden when scroll progress is 0% (page top).
  *   - Opacity fade-in during the first 3% of progress.
  *   - Full opacity from 3%–100%.
  *   - Uses `window.scrollY` + `scrollHeight` for calculation.
+ *   - Sits just below the fixed 70px navigation header for visibility.
  *
  * ACCESSIBILITY:
  *   - `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`.
@@ -46,7 +47,7 @@ export function ReadingProgressBar() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[9999] h-[3px]"
+      className="fixed top-[70px] left-0 right-0 z-[60] h-[3px]"
       aria-hidden="true"
     >
       <div
