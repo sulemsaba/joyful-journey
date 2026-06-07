@@ -411,7 +411,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
   useEffect(() => {
     if (!post?.slug) return;
 
-    const headerOffset = 100; // 70px nav + 30px breathing room
+    const headerOffset = 96; // 68px nav + 28px breathing room
 
     function updateActiveHeading() {
       const headings = document.querySelectorAll(".article-body h2[id]");
@@ -710,7 +710,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                    *   2. Table of Contents — auto-extracted from article headings.
                    *
                    * The sidebar is sticky and positioned just below the fixed
-                   * 70px navigation header (top-[100px] with padding). It fills
+                   * 68px navigation header (top-[84px] with padding). It fills
                    * the available viewport height minus the header offset, and
                    * scrolls internally if the TOC is longer than the viewport.
                    *
@@ -724,7 +724,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                    * the TOC section is hidden but share buttons remain.
                    */}
                   <aside
-                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[100px]
+                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[84px]
                                lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2
                                [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent
                                [&::-webkit-scrollbar-thumb]:bg-border-soft [&::-webkit-scrollbar-thumb]:rounded-full"

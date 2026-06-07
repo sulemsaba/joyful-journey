@@ -42,8 +42,8 @@ export function ReadingProgressBar() {
         const articleTop = articleRect.top + scrollTop; // absolute top of article
         const articleBottom = articleTop + articleRect.height; // absolute bottom of article
 
-        // Reading starts when the article top reaches the nav bottom (70px)
-        start = articleTop - 70;
+        // Reading starts when the article top reaches the nav bottom (68px)
+        start = articleTop - 68;
         // Reading ends when the article bottom reaches the nav bottom
         end = articleBottom - window.innerHeight;
       } else {
@@ -74,7 +74,7 @@ export function ReadingProgressBar() {
 
   return (
     <div
-      className="fixed top-[70px] left-0 right-0 z-[60] h-[3px]"
+      className="fixed top-[68px] left-0 right-0 z-[60] h-[3px]"
       aria-hidden="true"
     >
       <div

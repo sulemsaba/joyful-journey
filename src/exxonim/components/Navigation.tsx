@@ -289,24 +289,23 @@ export function Navigation({
                 "Contact {brandName}" link pointing to /contact/. The admin
                 should mark phone as a required field if this CTA is important.
                 Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
-            <Button
-              size="standard"
-              variant="ghost"
+            <a
               href={callHref}
-              className="hidden md:inline-flex bg-accent-soft hover:bg-accent-hover pl-3 pr-5 gap-3 justify-start group/call"
+              className="hidden md:inline-flex items-center gap-2.5 py-2.5 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-all duration-200 relative overflow-hidden group shadow-accent-glow/25 hover:shadow-accent-glow/45"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-accent-contrast group-hover/call:bg-accent-contrast/20 transition-colors animate-phone-ring">
-                <Phone className="w-4 h-4" aria-hidden="true" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-accent group-hover/call:text-accent-contrast transition-colors">
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative flex items-center justify-center w-7 h-7 rounded-full bg-accent-contrast/15">
+                <Phone className="w-3.5 h-3.5 animate-phone-ring" aria-hidden="true" />
+              </span>
+              <span className="relative flex flex-col leading-none">
+                <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-80">
                   {primaryPhone ? "Call Now" : `Contact ${brandName}`}
                 </span>
-                <span className="text-sm font-medium text-text group-hover/call:text-accent-contrast transition-colors">
-                  {primaryPhone || "Open the contact page"}
+                <span className="text-xs font-bold tracking-wide">
+                  {primaryPhone || "Get in touch"}
                 </span>
-              </div>
-            </Button>
+              </span>
+            </a>
 
             <Button
               ref={mobileToggleRef}
