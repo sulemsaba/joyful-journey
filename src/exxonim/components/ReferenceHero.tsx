@@ -5,8 +5,6 @@ import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
 
-const heroBg = "/hero-bg.webp";
-
 interface ReferenceHeroProps {
   content: HomeHeroContent;
 }
@@ -87,16 +85,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
       >
         {/* ── Background assets ───────────────────────────── */}
 
-        {/* Background image — abstract wave illustration.
-            Opacity controlled by .hero-bg-image class:
-            light=0.25, dark=0.8, smooth transition during theme change. */}
-        <div
-          aria-hidden="true"
-          className="hero-bg-image pointer-events-none absolute inset-0 -z-10 bg-no-repeat bg-right bg-contain sm:bg-cover"
-          style={{
-            backgroundImage: `url(${heroBg})`,
-          }}
-        />
+        {/* Hero background image removed — now relies on gradient overlays only */}
         {/* Gradient overlays for depth — uses var(--color-hero-bg)
             which smoothly transitions via @property on :root.
             Gradients CAN'T be CSS-transitioned normally, but because
