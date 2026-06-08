@@ -411,7 +411,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
   useEffect(() => {
     if (!post?.slug) return;
 
-    const headerOffset = 96; // 68px nav + 28px breathing room
+    const headerOffset = 88; // 60px mobile nav + 28px breathing room
 
     function updateActiveHeading() {
       const headings = document.querySelectorAll(".article-body h2[id]");
@@ -724,7 +724,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                    * the TOC section is hidden but share buttons remain.
                    */}
                   <aside
-                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[84px]
+                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[76px]
                                lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2
                                [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent
                                [&::-webkit-scrollbar-thumb]:bg-border-soft [&::-webkit-scrollbar-thumb]:rounded-full"

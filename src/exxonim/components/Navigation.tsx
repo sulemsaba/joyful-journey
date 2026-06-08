@@ -201,7 +201,7 @@ export function Navigation({
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
-          "fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
+          "fixed top-0 inset-x-0 z-50 h-[60px] sm:h-[68px] [--header-height:60px] sm:[--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
           headerOverHero
             ? "bg-transparent"
             : "bg-page/95 backdrop-blur-xl"
@@ -234,7 +234,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className="logo-light block h-11 w-auto"
+              className="logo-light block h-8 sm:h-11 w-auto"
             />
             <img
               src={brand.darkLogoSrc}
@@ -248,7 +248,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className="logo-dark h-11 w-auto"
+              className="logo-dark h-8 sm:h-11 w-auto"
             />
           </a>
 
@@ -278,7 +278,7 @@ export function Navigation({
           />
 
           {/* Right: Actions — theme toggle, Call Now CTA, mobile menu button */}
-          <div className="flex items-center gap-2 md:gap-3 justify-end">
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 justify-end">
             <ThemeToggle
               theme={theme}
               onToggleTheme={onToggleTheme}
@@ -291,13 +291,10 @@ export function Navigation({
                 Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
             <a
               href={callHref}
-              className="hidden md:inline-flex items-center gap-2.5 h-10 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors duration-200"
+              className="hidden md:inline-flex items-center gap-2 h-9 px-3.5 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors duration-200"
             >
-              <Phone className="w-4 h-4 shrink-0" aria-hidden="true" />
-              <span className="flex flex-col leading-none">
-                <span className="text-[0.6rem] font-semibold uppercase tracking-wider opacity-75">Call Now</span>
-                <span className="text-[0.8rem] font-bold">{primaryPhone || `Contact ${brandName}`}</span>
-              </span>
+              <Phone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <span className="text-[13px] font-semibold">{primaryPhone || `Contact ${brandName}`}</span>
             </a>
 
             <Button

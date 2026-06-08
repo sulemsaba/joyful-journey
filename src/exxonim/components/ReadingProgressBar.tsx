@@ -74,7 +74,7 @@ export function ReadingProgressBar() {
 
   return (
     <div
-      className="fixed top-[68px] left-0 right-0 z-[60] h-[3px]"
+      className="fixed top-[60px] sm:top-[68px] left-0 right-0 z-[60] h-[3px]"
       aria-hidden="true"
     >
       <div

@@ -73,7 +73,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         aria-label="Hero introduction"
         className={cn(
           "relative isolate overflow-hidden",
-          "-mt-[68px] pt-[68px]",
+          "-mt-[60px] sm:-mt-[68px] pt-[60px] sm:pt-[68px]",
           "flex items-center",
           "origin-top",
           "bg-hero-bg",
