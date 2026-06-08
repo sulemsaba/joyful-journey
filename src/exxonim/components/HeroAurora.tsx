@@ -154,7 +154,8 @@ export function HeroAurora() {
     if (!ctx) return;
 
     function resize() {
-      const dpr = window.devicePixelRatio || 1;
+      // Cap DPR at 2 to prevent huge buffers on 3x Retina
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cssW = canvas!.clientWidth;
       const cssH = canvas!.clientHeight;
       if (canvas!.width !== cssW * dpr || canvas!.height !== cssH * dpr) {
@@ -167,23 +168,30 @@ export function HeroAurora() {
     resize();
     window.addEventListener("resize", resize);
 
+    // Cache accent color + theme — only re-read every 500ms, not every frame
+    let cachedAccent = "#0f5c63";
+    let cachedIsDark = false;
+    let lastStyleRead = 0;
+
     function animate(ts: number) {
       if (lastFrameRef.current === 0) lastFrameRef.current = ts;
       const delta = Math.min(ts - lastFrameRef.current, 50);
       lastFrameRef.current = ts;
       timeRef.current += (delta / 1000) * DEFAULT_CONFIG.speed * 0.5;
 
+      // Throttle expensive getComputedStyle to ~2Hz
+      if (ts - lastStyleRead > 500) {
+        const style = getComputedStyle(document.documentElement);
+        cachedAccent = style.getPropertyValue("--color-accent").trim();
+        cachedIsDark = document.documentElement.getAttribute("data-theme") === "dark";
+        lastStyleRead = ts;
+      }
+
       const cssW = canvas!.clientWidth;
       const cssH = canvas!.clientHeight;
 
       ctx!.clearRect(0, 0, cssW, cssH);
-
-      // Read brand accent color from CSS custom property
-      const style = getComputedStyle(document.documentElement);
-      const accentColor = style.getPropertyValue("--color-accent").trim();
-      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-
-      draw(ctx!, cssW, cssH, timeRef.current, DEFAULT_CONFIG, accentColor, isDark);
+      draw(ctx!, cssW, cssH, timeRef.current, DEFAULT_CONFIG, cachedAccent, cachedIsDark);
 
       ctx!.globalAlpha = 1;
       rafIdRef.current = requestAnimationFrame(animate);
