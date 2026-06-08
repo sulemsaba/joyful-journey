@@ -173,7 +173,7 @@ export function InsightsSection({
          * Breaks out of Container so cards can centre across the full viewport.
          * Desktop (xl+): justify-center centres all 4 cards.
          * Mobile: scrollable with snap + arrow buttons. */}
-        <div className="w-screen ml-[calc(50%-50vw)] overflow-x-clip" data-reveal>
+        <div className="full-bleed overflow-x-clip" data-reveal>
           <div
             ref={railRef}
             className="flex gap-6 overflow-x-auto px-[clamp(20px,4vw,44px)] py-2 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [overscroll-behavior-x:contain] [&::-webkit-scrollbar]:hidden xl:justify-center"

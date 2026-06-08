@@ -66,3 +66,31 @@ Stage Summary:
 - Google Review panel added to About page (consistent with services page)
 - Key stats moved from accent-contrast panel to clean accent-soft cards
 - No visual regressions in other sections
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix horizontal scroll on iPhone and animations not working on iPhone
+
+Work Log:
+- Identified root cause of horizontal overflow: 4 components using `w-screen` (= `width: 100vw`) which on iOS Safari includes scrollbar width (~15px wider than viewport)
+- Created `.full-bleed` CSS utility class using `100dvw` instead of `100vw` with fallback
+- Replaced `w-screen -ml-[50vw] left-1/2` pattern in ProviderSection.tsx and ServicePlansSection.tsx
+- Replaced `w-screen ml-[calc(50%-50vw)]` pattern in StackSection.tsx and InsightsSection.tsx
+- Also fixed duplicate ProviderSection.tsx in src/components/exxonim/
+- Added `overflow-hidden` to WhatsAppButton to prevent pulse animation overflow
+- Fixed scroll-reveal animations for iOS Safari:
+  - Removed negative `rootMargin` from IntersectionObserver (can fail on iOS with `overflow-x:clip`)
+  - Simplified threshold to 0.05 for more reliable triggering
+  - Added 5-second safety fallback that reveals all remaining unrevealed elements
+  - Added `-webkit-` prefixed transform and transition for older iOS Safari compatibility
+- Verified with Agent Browser on iPhone 14 viewport: scrollWidth (390) === innerWidth (390), zero horizontal overflow
+- All 6 data-reveal elements now get `revealed` class properly
+- Marquee animation confirmed running
+- Zero console errors
+- Lint passes cleanly
+
+Stage Summary:
+- Horizontal overflow on iPhone: FIXED
+- Scroll-reveal animations on iPhone: FIXED
+- Both desktop and iPhone viewport verified working
+- Key files modified: globals.css, ProviderSection.tsx, ServicePlansSection.tsx, StackSection.tsx, InsightsSection.tsx, WhatsAppButton.tsx, useRevealOnScroll.ts

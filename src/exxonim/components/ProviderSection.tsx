@@ -86,7 +86,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
 
       {/* Logo marquee — full-bleed with 15% edge fades */}
       <div
-        className="overflow-hidden relative w-screen -ml-[50vw] left-1/2 pb-5 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+        className="full-bleed overflow-hidden relative pb-5 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
         aria-label="Partner logos"
       >
         <div className="provider-marquee-track flex items-center w-max will-change-transform animate-provider-marquee hover:[animation-play-state:paused]">

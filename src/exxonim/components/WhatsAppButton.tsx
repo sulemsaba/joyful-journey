@@ -19,7 +19,7 @@ export function WhatsAppButton({ phoneNumber, className }: WhatsAppButtonProps) 
       className={cn(
         // WhatsApp button target classes
         // Layout
-        "fixed bottom-6 right-6 z-[30] inline-flex h-14 w-14 items-center justify-center",
+        "fixed bottom-6 right-6 z-[30] inline-flex h-14 w-14 items-center justify-center overflow-hidden",
         // Appearance
         "rounded-full border border-border-soft bg-accent text-accent-contrast",
         // Effects

@@ -8,6 +8,12 @@ import { useEffect } from "react";
  *   - Batch reveals in a single rAF instead of one per element
  *   - Auto-disconnects MutationObserver after 15s (all lazy pages will have loaded by then)
  *   - Skips already-revealed elements during scans
+ *
+ * iOS SAFARI FIXES (v3):
+ *   - Removed negative rootMargin which can prevent IntersectionObserver from
+ *     firing on iOS Safari when combined with overflow-x:clip on body
+ *   - Added 5s safety fallback: any unrevealed elements get revealed automatically
+ *   - Use simpler threshold (0.05) for more reliable iOS triggering
  */
 
 export function useRevealOnScroll() {
@@ -28,7 +34,9 @@ export function useRevealOnScroll() {
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      // Use simple threshold without negative rootMargin —
+      // negative rootMargin can fail on iOS Safari with overflow-x:clip
+      { threshold: 0.05 }
     );
 
     // Batch reveal elements that are already in viewport
@@ -81,11 +89,24 @@ export function useRevealOnScroll() {
       }
     }, 15000);
 
+    // iOS SAFETY FALLBACK: After 5 seconds, reveal any elements that
+    // are still hidden. This catches cases where IntersectionObserver
+    // failed to fire on iOS Safari (e.g., due to overflow-x:clip or
+    // other iOS rendering quirks). Better to show content without
+    // animation than to leave it invisible forever.
+    const safetyTimer = setTimeout(() => {
+      document.querySelectorAll("[data-reveal]:not(.revealed)").forEach((el) => {
+        el.classList.add("revealed");
+      });
+      observer.disconnect();
+    }, 5000);
+
     return () => {
       mutationObserver.disconnect();
       observer.disconnect();
       if (debounceTimer) clearTimeout(debounceTimer);
       if (autoDisconnectTimer) clearTimeout(autoDisconnectTimer);
+      clearTimeout(safetyTimer);
     };
   }, []);
 }

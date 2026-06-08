@@ -50,7 +50,7 @@ export function StackSection({
         return (
           <article
             key={`${item.title}-${index}`}
-            className={`relative w-screen ml-[calc(50%-50vw)] overflow-x-hidden lg:sticky max-lg:mb-8 [top:var(--stack-top)] [z-index:var(--stack-z)] ${
+            className={`full-bleed relative overflow-x-hidden lg:sticky max-lg:mb-8 [top:var(--stack-top)] [z-index:var(--stack-z)] ${
               stackPositionClasses[index] ??
               stackPositionClasses[stackPositionClasses.length - 1]
             } bg-page`}

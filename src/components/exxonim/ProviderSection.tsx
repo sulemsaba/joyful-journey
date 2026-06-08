@@ -36,7 +36,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
       </Container>
 
       {/* Full-width marquee strip */}
-      <div className="overflow-hidden relative w-screen -ml-[50vw] left-1/2 py-4 bg-page [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+      <div className="full-bleed overflow-hidden relative py-4 bg-page [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
         <div className="flex items-center gap-[clamp(1.6rem,3vw,2.6rem)] w-max animate-provider-marquee hover:[animation-play-state:paused]">
           {repeatedLogos.map((logo, i) => (
             <LogoItem key={`${logo.alt}-${i}`} logo={logo} />
