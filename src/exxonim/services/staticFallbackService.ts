@@ -1,12 +1,27 @@
 /**
- * Client-side loader for pre-built static fallback JSON files.
+ * FASTAPI BACKEND ENDPOINTS:
+ * ──────────────────────────
+ * (No direct API endpoints — this service loads pre-built static fallback
+ * JSON files from /fallback/<key>.json served as static assets from the
+ * same origin. Used when the live FastAPI backend is unavailable.)
  *
- * At build time, `scripts/fetchFallbackAssets.mjs` fetches the latest API
- * content and writes it to `public/fallback/<key>.json`. This service loads
- * those files when the live API is unavailable.
+ * Static fallback files are generated at build time by scripts/fetchFallbackAssets.mjs,
+ * which fetches the latest API content and writes it to public/fallback/<key>.json.
  *
- * No cache, no service worker, no prior visit required — the file is served
- * as a static asset from the same origin.
+ * Supported keys:
+ *   testimonials   → GET /api/v1/testimonials
+ *   pages          → GET /api/v1/pages
+ *   pricing        → GET /api/v1/pricing/plans
+ *   navigation     → GET /api/v1/navigation
+ *   blog-posts     → GET /api/v1/blog/posts
+ *   blog-categories → GET /api/v1/blog/categories
+ *   jobs           → GET /api/v1/jobs
+ *   site-settings-brand → GET /api/v1/site-settings/brand
+ *   site-settings-company-info → GET /api/v1/site-settings/company_info
+ *   site-settings-footer → GET /api/v1/site-settings/footer
+ *
+ * PostgreSQL Tables:
+ *   (Indirect — see the corresponding service files for table references)
  */
 
 /* ── Module-level cache ──────────────────────────────── */

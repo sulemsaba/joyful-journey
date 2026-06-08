@@ -178,7 +178,6 @@ export function Navigation({
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: close menus on navigation
     setDesktopMenu(null);
     setMobileMenuOpen(false);
   }, [pathname]);

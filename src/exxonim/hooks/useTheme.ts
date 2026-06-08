@@ -1,3 +1,16 @@
+/**
+ * FASTAPI ENDPOINT DEPENDENCY (indirect):
+ * ─────────────────────────────────────────
+ * This hook does NOT make direct API calls. It listens for the
+ * PRIVACY_CONSENT_EVENT dispatched by the privacy consent API
+ * (GET/POST /api/v1/privacy/consent) to determine whether theme
+ * preference can be persisted to localStorage.
+ *
+ * When the user disables "preferences" consent, the stored theme
+ * is cleared and subsequent changes are kept only in memory.
+ *
+ * See: src/exxonim/services/privacyService.ts for privacy consent endpoints.
+ */
 import { useEffect, useState } from "react";
 import type { Theme } from '@/exxonim/types';
 import { PRIVACY_CONSENT_EVENT } from "@/exxonim/services/privacyService";

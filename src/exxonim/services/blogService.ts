@@ -1,3 +1,53 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS:
+ * ──────────────────────────
+ * GET    /api/v1/blog/posts                   — List blog posts (public, published only)
+ *   Query params: page, limit, category, featured_on_home, sort
+ * GET    /api/v1/blog/posts/{slug}            — Get single blog post by slug (public)
+ * POST   /api/v1/blog/posts                   — Create blog post (admin only)
+ * PUT    /api/v1/blog/posts/{id}              — Update blog post (admin only)
+ * DELETE /api/v1/blog/posts/{id}              — Delete blog post (admin only)
+ * POST   /api/v1/blog/posts/{id}/submit       — Submit for review (admin)
+ * POST   /api/v1/blog/posts/{id}/approve      — Approve blog post (admin)
+ * POST   /api/v1/blog/posts/{id}/reject       — Reject blog post (admin)
+ * POST   /api/v1/blog/posts/{id}/publish      — Publish blog post (admin)
+ * POST   /api/v1/blog/posts/{id}/archive      — Archive blog post (admin)
+ * POST   /api/v1/blog/posts/{id}/preview-token — Generate preview token (admin)
+ *
+ * GET    /api/v1/blog/categories              — List blog categories (public)
+ * POST   /api/v1/blog/categories              — Create category (admin only)
+ * PUT    /api/v1/blog/categories/{id}         — Update category (admin only)
+ * DELETE /api/v1/blog/categories/{id}         — Delete category (admin only)
+ *
+ * GET    /api/v1/blog/authors                 — List blog authors (public)
+ * GET    /api/v1/blog/authors/{slug}          — Get author by slug (public)
+ * GET    /api/v1/blog/authors/me              — Get current admin author (admin)
+ * POST   /api/v1/blog/authors                 — Create author (admin only)
+ * PUT    /api/v1/blog/authors/{id}            — Update author (admin only)
+ *
+ * PostgreSQL Tables:
+ *   blog_posts — id, slug (UNIQUE), title, excerpt, body, cover_image_url, cover_alt,
+ *                media_label, featured_slot, featured_on_home, read_time_minutes,
+ *                category_id, author_id, status, meta_title, meta_description,
+ *                published_at, created_at, updated_at
+ *   blog_categories — id, label, description, slug, created_at
+ *   blog_authors — id, name, slug, role, avatar_url, bio, created_at
+ *   blog_post_related — post_id, related_post_id
+ *
+ * Request Schema — Create Post (POST):
+ *   { title: str, slug: str, excerpt: str, body: str, cover_image_url: str | None,
+ *     category_id: int | None, author_id: int | None, featured_on_home: bool,
+ *     meta_title: str | None, meta_description: str | None }
+ *
+ * Response Schema — Post:
+ *   { id: int, slug: str, title: str, excerpt: str, publishedAt: datetime,
+ *     category: { id: str, label: str } | None, author: { id: str, name: str, role: str | None } | None,
+ *     coverImageSrc: str | None, coverAlt: str | None, mediaLabel: str,
+ *     featuredOnHome: bool, readTimeMinutes: int | None, relatedSlugs: str[] }
+ *
+ * Response Schema — Post List (paginated):
+ *   { items: ApiBlogPost[], total: int, page: int, limit: int }
+ */
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
 import {

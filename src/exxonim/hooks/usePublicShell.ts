@@ -1,3 +1,12 @@
+/**
+ * FASTAPI ENDPOINT DEPENDENCIES:
+ * ────────────────────────────────
+ * GET /api/v1/site-settings/brand         — Get brand assets (public)
+ * GET /api/v1/site-settings/footer        — Get footer content (public)
+ * GET /api/v1/site-settings/company_info  — Get company info (public)
+ *
+ * See: src/exxonim/services/siteSettingsService.ts for full endpoint documentation.
+ */
 import { useQuery } from "@tanstack/react-query";
 import {
   getCachedSiteSettingResource,

@@ -2,7 +2,39 @@
  * Career Page — Exxonim Consult
  *
  * ══════════════════════════════════════════════════════════════
- * BACKEND / ADMIN INTEGRATION NOTES
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE
+ * ══════════════════════════════════════════════════════════════
+ *
+ * Page Content (via usePage hook → pageService):
+ *   GET    /api/v1/pages/career               — Get career page content (public)
+ *
+ * Published Jobs (via getPublishedJobs → jobsService):
+ *   GET    /api/v1/jobs                        — List published jobs (public)
+ *   GET    /api/v1/jobs/{slug}                 — Get single job by slug (public)
+ *
+ * Job Application (inline modal, currently simulated):
+ *   POST   /api/v1/jobs/{id}/apply             — Submit job application (multipart/form-data)
+ *   Request: name (str, required), email (str, required), phone (str),
+ *            cover_note (str), resume (File, required), academics (File), cover_letter (File)
+ *   Response: { id: int, status: str, message: str }
+ *
+ * SEO (via useResolvedPageSeo hook → siteSettingsService):
+ *   GET    /api/v1/site-settings/seo_defaults  — SEO default settings
+ *
+ * PostgreSQL Tables:
+ *   pages — id, slug, content (JSONB with hero, focus_areas, status)
+ *   jobs — id, slug, title, department, employment_type, location_mode,
+ *          city, country, summary, description, requirements (JSONB),
+ *          responsibilities (JSONB), is_published, published_at
+ *   job_applications — id, job_id, name, email, phone, cover_note,
+ *                      resume_url, academics_url, cover_letter_url, status
+ *
+ * See service files for full endpoint documentation:
+ *   src/exxonim/services/jobsService.ts
+ *   src/exxonim/services/pageService.ts
+ *
+ * ══════════════════════════════════════════════════════════════
+ * ADMIN / UI INTEGRATION NOTES
  * ══════════════════════════════════════════════════════════════
  *
  * 1. BANNER IMAGE

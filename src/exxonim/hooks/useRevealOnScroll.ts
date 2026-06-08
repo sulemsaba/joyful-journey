@@ -1,6 +1,8 @@
-import { useEffect } from "react";
-
 /**
+ * FASTAPI ENDPOINT DEPENDENCY: None
+ * ─────────────────────────────
+ * This is a purely client-side animation hook with no backend API dependency.
+ *
  * Scroll-reveal animation using CSS classes instead of Tailwind manipulation.
  *
  * PERFORMANCE OPTIMIZATIONS (v2):
@@ -15,6 +17,8 @@ import { useEffect } from "react";
  *   - Added 5s safety fallback: any unrevealed elements get revealed automatically
  *   - Use simpler threshold (0.05) for more reliable iOS triggering
  */
+
+import { useEffect } from "react";
 
 export function useRevealOnScroll() {
   useEffect(() => {

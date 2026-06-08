@@ -1,3 +1,37 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE:
+ * ────────────────────────────────────────────
+ * Page Content (via usePage hook → pageService):
+ *   GET    /api/v1/pages/contact              — Get contact page content (public)
+ *
+ * Consultation Submission (via submitPublicConsultation → consultationService):
+ *   POST   /api/v1/consultations              — Submit a new public consultation
+ *   Request: { full_name: str, email: str, phone: str | None, company: str | None,
+ *             service_type_code: str, message: str, idempotency_key: str,
+ *             source_channel: str }
+ *   Response: { tracking_id: str, status: str, message: str }
+ *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "84729A")
+ *
+ * Shell Data (via usePublicShell hook → siteSettingsService):
+ *   GET    /api/v1/site-settings/brand        — Brand assets
+ *   GET    /api/v1/site-settings/footer        — Footer content
+ *   GET    /api/v1/site-settings/company_info  — Company info (emails, phones, whatsapp, address)
+ *
+ * SEO (via useResolvedPageSeo hook → siteSettingsService):
+ *   GET    /api/v1/site-settings/seo_defaults  — SEO default settings
+ *
+ * PostgreSQL Tables:
+ *   pages — id, slug, content (JSONB)
+ *   cases — id, tracking_code, customer_id, service_type_id, status
+ *   case_milestones — id, case_id, milestone_id, status, visible_to_client
+ *   site_settings — id, key, value (JSONB)
+ *
+ * See service files for full endpoint documentation:
+ *   src/exxonim/services/pageService.ts
+ *   src/exxonim/services/consultationService.ts
+ *   src/exxonim/services/siteSettingsService.ts
+ */
+
 import { useMutation } from "@tanstack/react-query";
 import { Home } from "lucide-react";
 import { useState, type FormEvent } from "react";
@@ -69,8 +103,8 @@ function getBusinessHoursStatus(): BusinessHoursStatus {
 
   const currentMinutes = eatHour * 60 + eatMinute;
 
-  let isOpen = false;
-  let detail = "";
+  let isOpen: boolean;
+  let detail: string;
 
   if (day === 0 || day === 6) {
     isOpen = false;

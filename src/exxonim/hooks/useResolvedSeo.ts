@@ -1,3 +1,13 @@
+/**
+ * FASTAPI ENDPOINT DEPENDENCY:
+ * ─────────────────────────────
+ * GET /api/v1/site-settings/seo_defaults — Get SEO default settings (public)
+ *
+ * Used to resolve canonical URLs, default meta descriptions, robots directives,
+ * and default share images for page and blog post SEO.
+ *
+ * See: src/exxonim/services/siteSettingsService.ts for full endpoint documentation.
+ */
 import { useEffect } from "react";
 import type { SiteSettingSeoDefaultsValue } from "@/exxonim/types/api";
 import { useSiteSetting } from "./useSiteSetting";

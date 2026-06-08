@@ -1,3 +1,27 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS:
+ * ──────────────────────────
+ * GET    /api/v1/pricing/plans                — List all pricing plans (public, active only)
+ * GET    /api/v1/pricing/plans/{id}           — Get single pricing plan (admin only)
+ * POST   /api/v1/pricing/plans                — Create pricing plan (admin only)
+ * PUT    /api/v1/pricing/plans/{id}           — Update pricing plan (admin only)
+ * DELETE /api/v1/pricing/plans/{id}           — Delete pricing plan (admin only)
+ *
+ * PostgreSQL Tables:
+ *   pricing_plans — id, name, badge, description, notes, recommended,
+ *                   sort_order, is_active, created_at, updated_at
+ *   pricing_plan_features — id, plan_id, label, included, sort_order
+ *
+ * Request Schema (POST/PUT):
+ *   { name: str, badge: str | None, description: str, notes: str,
+ *     recommended: bool, sort_order: int, is_active: bool,
+ *     features: [{ label: str, included: bool, sort_order: int }] }
+ *
+ * Response Schema:
+ *   { id: int, name: str, badge: str | None, description: str, notes: str,
+ *     recommended: bool, features: [{ label: str, included: bool }],
+ *     created_at: datetime, updated_at: datetime }
+ */
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
 import {

@@ -1,4 +1,37 @@
-"use client";
+/**
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS COMPONENT:
+ * ──────────────────────────────────────────────────
+ * Job Application Submission (currently simulated, TODO: wire to API):
+ *   POST   /api/v1/jobs/{id}/apply              — Submit job application (multipart/form-data)
+ *   Request: name (str, required), email (str, required), phone (str),
+ *            cover_note / message (str), resume (File, required),
+ *            academics (File), cover_letter (File)
+ *   Response: { id: int, status: str, message: str }
+ *
+ * Job Data (passed as prop from CareerPage):
+ *   GET    /api/v1/jobs                         — List published jobs (public)
+ *   GET    /api/v1/jobs/{slug}                  — Get single job by slug (public)
+ *
+ * PostgreSQL Tables:
+ *   jobs — id, slug, title, department, employment_type, location_mode,
+ *          city, country, summary, is_published, published_at
+ *   job_applications — id, job_id, name, email, phone, cover_note,
+ *                      resume_url, academics_url, cover_letter_url, status, created_at
+ *
+ * See: src/exxonim/services/jobsService.ts for full endpoint documentation.
+ *
+ * TODO: Replace simulated submit with actual fetch() call:
+ *   const formData = new FormData();
+ *   formData.append("name", fullName);
+ *   formData.append("email", email);
+ *   formData.append("phone", phone);
+ *   formData.append("cover_note", message);
+ *   formData.append("resume", fileInputRef.current?.files[0]);
+ *   const response = await fetch(`/api/v1/jobs/${job.id}/apply`, {
+ *     method: "POST",
+ *     body: formData,
+ *   });
+ */
 
 import { useCallback, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";

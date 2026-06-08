@@ -1,3 +1,13 @@
+/**
+ * FASTAPI ENDPOINT DEPENDENCY:
+ * ─────────────────────────────
+ * GET /api/v1/site-settings/{key} — Get single site setting by key (public)
+ *
+ * Known keys: brand, company_info, footer, seo_defaults, office_hours,
+ * social_links, policy_versions, contact_map
+ *
+ * See: src/exxonim/services/siteSettingsService.ts for full endpoint documentation.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { getCachedSiteSetting, getSiteSetting } from "@/exxonim/services/siteSettingsService";
 

@@ -1,3 +1,30 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS:
+ * ──────────────────────────
+ * GET    /api/v1/navigation                   — List navigation items (public, active only)
+ * GET    /api/v1/navigation/{id}              — Get single navigation item (admin only)
+ * POST   /api/v1/navigation                   — Create navigation item (admin only)
+ * PUT    /api/v1/navigation/{id}              — Update navigation item (admin only)
+ * DELETE /api/v1/navigation/{id}              — Delete navigation item (admin only)
+ *
+ * PostgreSQL Tables:
+ *   navigation_items — id, title, url, description, kind, sort_order,
+ *                      is_active, parent_id, created_at, updated_at
+ *
+ * NOTE: Navigation is currently loaded from static configuration
+ * (staticNavigation.ts). This service is deprecated but kept for
+ * future API-driven navigation needs.
+ *
+ * Request Schema (POST/PUT):
+ *   { title: str, url: str, description: str | None, kind: str,
+ *     sort_order: int, is_active: bool, parent_id: int | None }
+ *
+ * Response Schema:
+ *   { id: int, title: str, url: str, description: str | None, kind: str,
+ *     order: int, isActive: bool, parentId: int | None,
+ *     createdAt: datetime, updatedAt: datetime,
+ *     children: NavigationItem[] }
+ */
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
 import {

@@ -1,3 +1,56 @@
+/**
+ * FASTAPI ROUTER STRUCTURE:
+ * ────────────────────────
+ * This file defines all API route paths used by the frontend. When the FastAPI
+ * backend is live, these paths will map to the following router modules:
+ *
+ * ┌─────────────────────────────────────────────────────────────────────────┐
+ * │ PUBLIC ROUTER (api/v1/)                    → app/routers/public.py     │
+ * │   /track                 POST              → Track lookup              │
+ * │   /consultations         POST              → Submit consultation       │
+ * │   /blog/posts            GET               → List blog posts           │
+ * │   /blog/posts/{slug}     GET               → Get blog post             │
+ * │   /blog/categories       GET               → List categories           │
+ * │   /blog/authors          GET               → List authors              │
+ * │   /blog/authors/{slug}   GET               → Get author                │
+ * │   /pages                 GET               → List pages                │
+ * │   /pages/{slug}          GET               → Get page                  │
+ * │   /jobs                  GET               → List published jobs       │
+ * │   /jobs/{slug}           GET               → Get job                   │
+ * │   /jobs/{id}/apply       POST              → Submit application        │
+ * │   /navigation            GET               → List nav items            │
+ * │   /pricing/plans         GET               → List pricing plans        │
+ * │   /testimonials          GET               → List testimonials         │
+ * │   /site-settings/{key}   GET               → Get site setting          │
+ * │   /privacy/consent       GET|POST          → Get/update consent        │
+ * │   /faq                   GET               → List FAQ items            │
+ * ├─────────────────────────────────────────────────────────────────────────┤
+ * │ ADMIN ROUTER (admin/)                      → app/routers/admin.py      │
+ * │   /auth/*                POST|GET          → Auth (login/refresh/...)  │
+ * │   /blog/*                CRUD              → Blog management           │
+ * │   /media/*               CRUD|UPLOAD       → Media uploads             │
+ * │   /pages/*               CRUD              → Page management           │
+ * │   /navigation/*          CRUD              → Navigation management     │
+ * │   /pricing/*             CRUD              → Pricing management        │
+ * │   /testimonials/*        CRUD              → Testimonial management    │
+ * │   /jobs/*                CRUD              → Job management            │
+ * │   /consultations/*       GET               → Consultation management   │
+ * │   /service-requests/*    CRUD              → Service request mgmt      │
+ * │   /site-settings/*       GET|PUT           → Site setting mgmt         │
+ * │   /privacy-requests/*    CRUD              → Privacy request mgmt      │
+ * │   /users/*               CRUD              → User management           │
+ * │   /notifications/*       GET|PUT           → Notification mgmt         │
+ * │   /dashboard/*           GET               → Dashboard data            │
+ * │   /reports/*             GET               → Reports & analytics       │
+ * │   /documents/*           GET               → Document downloads        │
+ * │   /staff                 GET               → Staff directory           │
+ * └─────────────────────────────────────────────────────────────────────────┘
+ *
+ * PostgreSQL Database: exxonim_db
+ * All routes prefixed with /api/v1 in production (Caddy reverse proxy).
+ * Admin routes require JWT authentication (Bearer token).
+ * Public routes are rate-limited per IP.
+ */
 export const apiRoutes = {
   admin: {
     auth: {

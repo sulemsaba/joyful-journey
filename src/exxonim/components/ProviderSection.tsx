@@ -1,3 +1,26 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS COMPONENT:
+ * ──────────────────────────────────────────────────
+ * Client Logos / Navigation (via page content → ProviderSectionContent):
+ *   Logos are currently embedded in the page content (via the homepage page record),
+ *   not fetched from a dedicated API endpoint. Logo image URLs may reference:
+ *     - Static assets: /clients/*.webp (served from public/)
+ *     - CDN/Backend paths: /media/*, /storage/*, /uploads/* (resolved via API origin)
+ *
+ * Related endpoints that populate this data:
+ *   GET    /api/v1/pages/home                 — Homepage content including provider_section.logos
+ *   GET    /api/v1/navigation                 — Navigation items (currently static, future API)
+ *   GET    /api/v1/site-settings/brand        — Brand assets (logos, company name)
+ *
+ * PostgreSQL Tables:
+ *   pages — id, slug, content (JSONB containing provider_section.logos[])
+ *   navigation_items — id, title, url, kind, sort_order, is_active
+ *   site_settings — id, key, value (JSONB)
+ *
+ * Future: A dedicated /api/v1/client-logos endpoint could be added to manage
+ * partner/client logos independently from page content, with admin CRUD.
+ */
+
 import type { ProviderSectionContent } from '@/exxonim/types'
 import { resolveApiBaseUrl } from '@/exxonim/shared/api/baseUrl'
 

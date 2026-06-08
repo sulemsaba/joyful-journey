@@ -1,3 +1,10 @@
+/**
+ * FASTAPI ENDPOINT DEPENDENCY:
+ * ─────────────────────────────
+ * GET /api/v1/blog/posts/{slug} — Get single blog post by slug (public)
+ *
+ * See: src/exxonim/services/blogService.ts for full endpoint documentation.
+ */
 import { useQuery } from "@tanstack/react-query";
 import {
   getCachedPublicBlogPostBySlug,

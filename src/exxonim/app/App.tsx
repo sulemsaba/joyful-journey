@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
 import { PageLoader } from "@/exxonim/components/PageLoader";
@@ -7,15 +8,15 @@ import { ShellStatusNotice } from "@/exxonim/components/ShellStatusNotice";
 import { WhatsAppButton } from "@/exxonim/components/WhatsAppButton";
 import { ScrollToTopButton } from "@/exxonim/components/ScrollToTopButton";
 import { ErrorBoundary } from "@/exxonim/components/ErrorBoundary";
-import { usePublicRouter } from "@/exxonim/app/usePublicRouter";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useRevealOnScroll } from "@/exxonim/hooks/useRevealOnScroll";
 import { useTheme } from "@/exxonim/hooks/useTheme";
-import { getResourcePostSlug, routes } from "@/exxonim/routes";
 
 /* ── Code-split page components ────────────────────────
  * Each page is loaded on demand so the initial bundle only
  * contains the shell (nav + footer) and the active page.
+ *
+ * React Router handles lazy loading via its own lazy prop.
  */
 const HomePage = lazy(() =>
   import("@/exxonim/pages/HomePage").then((m) => ({ default: m.HomePage }))
@@ -46,14 +47,6 @@ const ResourcesPage = lazy(() =>
 const ServicesPage = lazy(() =>
   import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }))
 );
-const InfoPages = lazy(() =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({
-    default: function InfoPagesWrapper() {
-      // InfoPages exports multiple components; the route map handles which one to render
-      return null;
-    },
-  }))
-);
 const SupportPage = lazy(() =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }))
 );
@@ -72,50 +65,6 @@ const DataRightsPage = lazy(() =>
 const TrackConsultationPage = lazy(() =>
   import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }))
 );
-
-/* ── Config-driven route map ───────────────────────────
- * Replaces the 13-branch ternary chain with a simple lookup.
- * Dynamic routes (blog articles) are handled after the static lookup.
- */
-import type { ComponentType } from "react";
-
-interface RouteEntry {
-  pathname: string;
-  component: ComponentType;
-}
-
-const staticRoutes: RouteEntry[] = [
-  { pathname: "/", component: HomePage },
-  { pathname: "/about", component: AboutPage },
-  { pathname: "/faq", component: FaqPage },
-  { pathname: "/services", component: ServicesPage },
-  { pathname: "/resources", component: ResourcesPage },
-  { pathname: "/blog", component: ResourcesPage },  // Alias — same page
-  { pathname: "/career", component: CareerPage },
-  { pathname: "/contact", component: ContactPage },
-  { pathname: "/support", component: SupportPage },
-  { pathname: "/terms", component: TermsPage },
-  { pathname: "/privacy", component: PrivacyPage },
-  { pathname: "/cookies", component: CookiePage },
-  { pathname: "/data-rights", component: DataRightsPage },
-  { pathname: "/track-consultation", component: TrackConsultationPage },
-];
-
-function resolvePage(pathname: string) {
-  const match = staticRoutes.find(
-    (route) => route.pathname === pathname
-  );
-  if (match) {
-    return <match.component />;
-  }
-
-  const articleSlug = getResourcePostSlug(pathname);
-  if (articleSlug) {
-    return <ResourceArticlePage slug={articleSlug} />;
-  }
-
-  return <NotFoundPage pathname={pathname} />;
-}
 
 /* ── Page-level Suspense fallback ──────────────────────
  * Same visual language as the full-screen PageLoader
@@ -162,22 +111,39 @@ function PageSuspenseFallback() {
   );
 }
 
-/* ── App ─────────────────────────────────────────────── */
-interface AppProps {
-  initialPathname?: string;
+/* ── ScrollToTop on route change ──────────────────── */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 }
 
-export function App({ initialPathname }: AppProps) {
+/* ── Resource Article wrapper ───────────────────────
+ * Extracts the slug from the URL params for React Router.
+ *
+ * FASTAPI BACKEND:
+ *   GET /api/v1/blog/posts?slug={slug}
+ */
+function ResourceArticleRoute() {
+  const { slug } = useParams<{ slug: string }>();
+  return <ResourceArticlePage slug={slug!} />;
+}
+
+import { useParams } from "react-router-dom";
+
+/* ── App ─────────────────────────────────────────────── */
+export function App() {
   const { theme, toggleTheme } = useTheme();
-  const { pathname } = usePublicRouter({ initialPathname });
   const shell = usePublicShell();
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const location = useLocation();
 
   useRevealOnScroll();
 
   useEffect(() => {
     document.documentElement.classList.add("js");
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: dismiss page loader after first paint
     setIsPageLoading(false);
   }, []);
 
@@ -199,16 +165,35 @@ export function App({ initialPathname }: AppProps) {
           brand={shell.brand}
           company={shell.company}
           onToggleTheme={toggleTheme}
-          pathname={pathname}
+          pathname={location.pathname}
           theme={theme}
         />
 
         <ShellStatusNotice />
 
         <main id="top" className="relative isolate overflow-x-clip flex-1 pt-[68px]">
+          <ScrollToTop />
           <ErrorBoundary>
             <Suspense fallback={<PageSuspenseFallback />}>
-              {resolvePage(pathname)}
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/faq" element={<FaqPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/resources" element={<ResourcesPage />} />
+                <Route path="/blog" element={<ResourcesPage />} />
+                <Route path="/resources/:slug" element={<ResourceArticleRoute />} />
+                <Route path="/blog/:slug" element={<ResourceArticleRoute />} />
+                <Route path="/career" element={<CareerPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/support" element={<SupportPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/cookies" element={<CookiePage />} />
+                <Route path="/data-rights" element={<DataRightsPage />} />
+                <Route path="/track-consultation" element={<TrackConsultationPage />} />
+                <Route path="*" element={<NotFoundPage pathname={location.pathname} />} />
+              </Routes>
             </Suspense>
           </ErrorBoundary>
         </main>
@@ -219,7 +204,7 @@ export function App({ initialPathname }: AppProps) {
           footer={shell.footer}
         />
 
-        <PrivacyConsentBanner pathname={pathname} />
+        <PrivacyConsentBanner pathname={location.pathname} />
 
         {whatsappUrl && <WhatsAppButton phoneNumber={whatsappUrl} />}
         <ScrollToTopButton />

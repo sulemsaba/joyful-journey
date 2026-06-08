@@ -1,3 +1,50 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS:
+ * ──────────────────────────
+ * POST   /api/v1/consultations              — Submit a new public consultation (contact form)
+ * POST   /api/v1/track                      — Look up a case by tracking code
+ *
+ * PostgreSQL Tables:
+ *   cases — id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
+ *           status, created_at, updated_at
+ *   case_milestones — id, case_id, milestone_id, status, visible_to_client,
+ *                     completed_at, created_at
+ *   milestones — id, service_type_id, label, sort_order
+ *   service_types — id, code, name, description
+ *   customers — id, full_name, email, phone, company, created_at
+ *
+ * Request Schema — Submit Consultation (POST /api/v1/consultations):
+ *   { full_name: str, email: str, phone: str | None, company: str | None,
+ *     service_type_code: str, message: str, idempotency_key: str,
+ *     source_channel: str }
+ *
+ * Response Schema — Submit Consultation:
+ *   { tracking_id: str, status: str, message: str }
+ *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "84729A")
+ *
+ * Request Schema — Track Lookup (POST /api/v1/track):
+ *   { trackingNumber: str }
+ *   (6-char code: 5 digits + 1 uppercase letter)
+ *
+ * Response Schema — Track Lookup (200):
+ *   { status: str, trackingCode: str, serviceType: str, milestone: str,
+ *     lastUpdated: datetime, nextMilestone: str | None, message: str | None,
+ *     completedSteps: int, totalSteps: int,
+ *     visibleMilestones: [{ label: str, status: str, date: datetime | None }] }
+ *
+ * Response Schema — Track Lookup (404):
+ *   { status: "not_found", message: str }
+ *   (Same shape for invalid/expired/non-existent codes — no info leakage)
+ *
+ * RATE LIMITING (enforced by backend):
+ *   - Per IP: 20 failed lookups/min → IP blocked 5 min
+ *   - Per tracking code: 10 failed attempts total → code locked 24h
+ *
+ * SECURITY:
+ *   - Use POST (not GET) to keep codes out of URLs and server logs
+ *   - All communication over HTTPS
+ *   - Return same 404 shape for all failure cases
+ */
 import axios from "axios";
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
@@ -94,7 +141,7 @@ export async function lookupTrackingCode(
   } catch (error) {
     // Re-throw fetch errors (network failure, CORS, etc.)
     if (error instanceof TypeError) {
-      throw new Error("Network error. Please check your connection and try again.");
+      throw new Error("Network error. Please check your connection and try again.", { cause: error });
     }
     throw error;
   }

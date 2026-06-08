@@ -48,7 +48,6 @@ export function PageLoader({ isLoading = true }: PageLoaderProps) {
         if (removeRef.current) clearTimeout(removeRef.current);
       };
     } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: show loader when loading starts
       setShowLoader(true);
       setIsHidden(false);
       setTimedOut(false);

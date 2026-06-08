@@ -1,3 +1,30 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS:
+ * ──────────────────────────
+ * GET    /api/v1/pages                       — List all pages (public, published only)
+ * GET    /api/v1/pages/{slug}                — Get single page by slug (public, published only)
+ * POST   /api/v1/pages                       — Create page (admin only)
+ * PUT    /api/v1/pages/{id}                  — Update page (admin only)
+ * DELETE /api/v1/pages/{id}                  — Delete page (admin only)
+ * POST   /api/v1/pages/{id}/submit           — Submit for review (admin)
+ * POST   /api/v1/pages/{id}/approve          — Approve page (admin)
+ * POST   /api/v1/pages/{id}/reject           — Reject page (admin)
+ * POST   /api/v1/pages/{id}/publish          — Publish page (admin)
+ * POST   /api/v1/pages/{id}/archive          — Archive page (admin)
+ *
+ * PostgreSQL Tables:
+ *   pages — id, title, slug (UNIQUE), content (JSONB), meta_title, meta_description,
+ *           og_image_url, is_published, status, created_at, updated_at
+ *
+ * Request Schema (POST/PUT):
+ *   { title: str, slug: str, content: dict, meta_title: str | None,
+ *     meta_description: str | None, og_image_url: str | None }
+ *
+ * Response Schema:
+ *   { id: int, title: str, slug: str, content: dict, meta_title: str | None,
+ *     meta_description: str | None, og_image_url: str | None,
+ *     is_published: bool, status: str, created_at: datetime, updated_at: datetime }
+ */
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
 import {

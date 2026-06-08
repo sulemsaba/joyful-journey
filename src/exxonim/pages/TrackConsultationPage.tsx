@@ -2,6 +2,32 @@
  * Track Your Consultation page — Exxonim Client Case Tracking System
  *
  * ═══════════════════════════════════════════════════════════════════════════
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Tracking Lookup (via lookupTrackingCode → consultationService):
+ *   POST   /api/v1/track                      — Look up a case by tracking code
+ *   Request: { trackingNumber: "84729A" }
+ *   Response (200): { status, trackingCode, serviceType, milestone,
+ *                     lastUpdated, nextMilestone, message, completedSteps,
+ *                     totalSteps, visibleMilestones[] }
+ *   Response (404): { status: "not_found", message: "..." }
+ *
+ * Consultation Creation (from Contact page, referenced here):
+ *   POST   /api/v1/consultations              — Submit a new consultation
+ *
+ * PostgreSQL Tables:
+ *   cases — id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
+ *           status (active | completed | on_hold), created_at, updated_at
+ *   case_milestones — id, case_id, milestone_id, status (completed | current | pending),
+ *                     visible_to_client, completed_at
+ *   milestones — id, service_type_id, label, sort_order
+ *   service_types — id, code, name, description
+ *   customers — id, full_name, email, phone, company
+ *
+ * See: src/exxonim/services/consultationService.ts for full endpoint documentation.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
  * BACKEND TEAM (FastAPI + PostgreSQL) — INTEGRATION GUIDE
  * ═══════════════════════════════════════════════════════════════════════════
  *

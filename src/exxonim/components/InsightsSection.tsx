@@ -1,3 +1,26 @@
+/**
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS COMPONENT:
+ * ──────────────────────────────────────────────────
+ * Blog Posts (via parent page → blogService → useBlogPosts hook):
+ *   GET    /api/v1/blog/posts                 — List blog posts (public, published only)
+ *     Query params: page, limit, featured_on_home, sort
+ *   GET    /api/v1/blog/posts/{slug}          — Get single blog post by slug (public)
+ *
+ * Blog Categories:
+ *   GET    /api/v1/blog/categories            — List blog categories (public)
+ *
+ * PostgreSQL Tables:
+ *   blog_posts — id, slug, title, excerpt, published_at, featured_on_home,
+ *                category_id, author_id, cover_image_url, media_label
+ *   blog_categories — id, label, description, slug
+ *   blog_authors — id, name, slug, role, avatar_url
+ *
+ * This component displays featured blog posts filtered by featuredOnHome=true,
+ * sorted by publishedAt (newest first), limited to 4 posts.
+ *
+ * See: src/exxonim/services/blogService.ts for full endpoint documentation.
+ */
+
 import { useCallback, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { resourceArticlePath, routes } from "@/exxonim/routes";

@@ -1,4 +1,22 @@
-"use client";
+
+/**
+ * FASTAPI BACKEND ENDPOINTS USED BY THIS COMPONENT:
+ * ──────────────────────────────────────────────────
+ * Testimonials (via useTestimonials hook → testimonialService):
+ *   GET    /api/v1/testimonials              — List all active testimonials (public)
+ *
+ * Pricing Plans (via usePricingPlans hook → pricingService):
+ *   GET    /api/v1/pricing/plans             — List all pricing plans (public, active only)
+ *
+ * PostgreSQL Tables:
+ *   testimonials — id, name, role, quote, eyebrow, initials, avatar_url, sort_order, is_active
+ *   pricing_plans — id, name, badge, description, notes, recommended, sort_order
+ *   pricing_plan_features — id, plan_id, label, included
+ *
+ * See service files for full request/response schemas:
+ *   src/exxonim/services/testimonialService.ts
+ *   src/exxonim/services/pricingService.ts
+ */
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
