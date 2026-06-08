@@ -71,7 +71,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       id="site-footer"
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
-      <Container className="py-14 md:py-20">
+      <Container className="py-14 pb-10 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-10 pb-10 border-b border-footer-border">
 
           {/* Brand Panel */}
@@ -261,14 +261,12 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
           </section>
 
         </div>
-      </Container>
 
-      {/* Bottom — copyright (full-width, outside Container) */}
-      <div className="border-t border-footer-border pb-20 md:pb-8">
-        <p className="text-footer-text-muted text-sm text-center py-6 px-4">
+        {/* Copyright */}
+        <p className="text-footer-text-muted text-sm text-center mt-8">
           © {currentYear} Exxonim Company Limited
         </p>
-      </div>
+      </Container>
     </footer>
   )
 }
