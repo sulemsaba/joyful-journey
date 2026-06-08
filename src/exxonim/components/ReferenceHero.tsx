@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
-
-const heroBg = "/hero-bg.webp";
+import { HeroRibbon } from "@/exxonim/components/HeroRibbon";
 
 interface ReferenceHeroProps {
   content: HomeHeroContent;
@@ -53,7 +52,6 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
    *
    * Benefits:
    *   - Gradient overlays using var(--color-hero-bg) smoothly update
-   *   - Background image opacity transitions via .hero-bg-image class
    *   - Text colors use Tailwind tokens (text-text, text-accent, etc.)
    *   - No React re-render needed for theme change (CSS handles it)
    *   - Shrink animation is never clobbered by theme transition
@@ -66,9 +64,6 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
        * mobile address bar), transform-origin top center,
        * shrink on scroll > 15px: scale(0.96) + rounded bottom corners.
        * Gap reveals page background (theme-adaptive canvas).
-       *
-       * Animation: inline style.transform + CSS transition for
-       * smooth interpolation (NOT Tailwind class toggling).
        *
        * Background: bg-hero-bg uses var(--color-hero-bg) which
        * smoothly transitions via @property registration on :root.
@@ -87,38 +82,26 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
       >
         {/* ── Background assets ───────────────────────────── */}
 
-        {/* Background image — abstract wave illustration.
-            Opacity controlled by .hero-bg-image class:
-            light=0.25, dark=0.8, smooth transition during theme change. */}
-        <div
-          aria-hidden="true"
-          className="hero-bg-image pointer-events-none absolute inset-0 -z-10 bg-no-repeat bg-right bg-contain sm:bg-cover"
-          style={{
-            backgroundImage: `url(${heroBg})`,
-          }}
-        />
-        {/* Gradient overlays for depth — uses var(--color-hero-bg)
-            which smoothly transitions via @property on :root.
-            Gradients CAN'T be CSS-transitioned normally, but because
-            the custom property itself interpolates, the gradient
-            stops update smoothly on every frame. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(120%_80%_at_15%_20%,var(--color-accent-soft-strong),transparent_55%),radial-gradient(90%_70%_at_85%_90%,var(--color-accent-soft),transparent_60%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-1/2"
-          style={{
-            background: "linear-gradient(to top, var(--color-hero-bg), transparent)",
-          }}
-        />
-        {/* Left-side fade so text always has contrast */}
+        {/* Animated ribbon canvas — flowing 3D-style lines.
+            Theme-reactive via CSS custom properties (--color-accent).
+            Opacity controlled by .hero-ribbon-canvas class:
+            light=0.6, dark=1.0, smooth transition during theme change. */}
+        <HeroRibbon />
+
+        {/* Left-side fade so text always has contrast over the ribbon */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-[60%] lg:w-[55%]"
           style={{
             background: "linear-gradient(to right, var(--color-hero-bg), var(--color-hero-bg-fade), transparent)",
+          }}
+        />
+        {/* Bottom fade for smooth transition to next section */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-1/3"
+          style={{
+            background: "linear-gradient(to top, var(--color-hero-bg), transparent)",
           }}
         />
 
