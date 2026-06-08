@@ -29,8 +29,8 @@
 @property --color-border-soft { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.12); }
 @property --color-border-strong { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.22); }
 @property --color-overlay { syntax: '<color>'; inherits: true; initial-value: rgba(8, 24, 27, 0.54); }
-@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #e4f0f2; }
-@property --color-hero-bg-fade { syntax: '<color>'; inherits: true; initial-value: rgba(228, 240, 242, 0.8); }
+@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #edf0eb; }
+@property --color-hero-bg-fade { syntax: '<color>'; inherits: true; initial-value: rgba(237, 240, 235, 0.8); }
 @property --color-cinematic-card-border { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, 0.54); }
 @property --color-cinematic-card-hover-border { syntax: '<color>'; inherits: true; initial-value: rgba(15, 92, 99, 0.28); }
 @property --color-success { syntax: '<color>'; inherits: true; initial-value: #0f8a5f; }
@@ -138,8 +138,8 @@
   --color-border-soft: rgba(15, 92, 99, 0.12);
   --color-border-strong: rgba(15, 92, 99, 0.22);
   --color-overlay: rgba(8, 24, 27, 0.54);
-  --color-hero-bg: #e4f0f2;
-  --color-hero-bg-fade: rgba(228, 240, 242, 0.8);
+  --color-hero-bg: #edf0eb;
+  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
   --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
   --color-success: #0f8a5f;
@@ -403,8 +403,8 @@
   --color-border-soft: rgba(15, 92, 99, 0.12);
   --color-border-strong: rgba(15, 92, 99, 0.22);
   --color-overlay: rgba(8, 24, 27, 0.54);
-  --color-hero-bg: #e4f0f2;
-  --color-hero-bg-fade: rgba(228, 240, 242, 0.8);
+  --color-hero-bg: #edf0eb;
+  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
   --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);
