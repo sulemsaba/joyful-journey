@@ -27,6 +27,12 @@ const utecLogo = "/clients/utec.webp";
 const trcsLogo = "/clients/trcs.webp";
 const levoLogo = "/clients/levo.webp";
 const getLogo = "/clients/get.webp";
+const bpoLogo = "/clients/bpo.webp";
+const famaLogo = "/clients/fama.webp";
+const jotofaLogo = "/clients/jotofa.webp";
+const jkmLogo = "/clients/jkm.webp";
+const djemaLogo = "/clients/djema_consult.webp";
+const exxonimLogo = "/clients/exxonim-logo.webp";
 const lightLogo = "/branding/exxonimLogoLight.webp";
 const darkLogo = "/branding/logo-dark.png";
 
@@ -194,6 +200,12 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
         { alt: "TRCS", src: trcsLogo, opticalWeight: "solid" },
         { alt: "Levo", src: levoLogo, opticalWeight: "wordmark" },
         { alt: "GET", src: getLogo, opticalWeight: "wordmark" },
+        { alt: "BPO", src: bpoLogo, opticalWeight: "solid" },
+        { alt: "FAMA", src: famaLogo, opticalWeight: "solid" },
+        { alt: "Jotofa", src: jotofaLogo, opticalWeight: "wordmark" },
+        { alt: "JKM", src: jkmLogo, opticalWeight: "solid" },
+        { alt: "Djema Consult", src: djemaLogo, opticalWeight: "wordmark" },
+        { alt: "Exxonim", src: exxonimLogo, opticalWeight: "wordmark" },
       ],
     },
     stack_section: {

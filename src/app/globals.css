@@ -167,7 +167,7 @@
 
   --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
   --animate-phone-ring: phone-ring 2s ease-in-out infinite;
-  --animate-provider-marquee: provider-marquee 57s linear infinite;
+  --animate-provider-marquee: provider-marquee 90s linear infinite;
   --animate-code-pan: code-pan 12s linear infinite alternate;
   --animate-call-shimmer: call-shimmer 4.5s linear infinite;
   --animate-call-ping: call-ping 1.85s ease-out infinite;

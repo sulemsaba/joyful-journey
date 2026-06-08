@@ -41,10 +41,13 @@ export function ProviderSection({ content }: ProviderSectionProps) {
     return `${apiOrigin}/${trimmed}`;
   };
 
-  // Repeat logos 2× for seamless infinite scroll
-  // Animation translates -50% so when the first set scrolls off,
-  // the identical second set is in its place — no gap.
-  const repeatedLogos = Array.from({ length: 2 }, () => content.logos).flat();
+  // Repeat logos enough times for seamless infinite scroll.
+  // We need at least enough copies so one set is wider than the viewport.
+  // 10 logos × 4 = 40 items ensures coverage on all screen sizes.
+  // Animation translates -50% so when the first half scrolls off,
+  // the identical second half is in its place — no gap.
+  const repeatCount = 4;
+  const repeatedLogos = Array.from({ length: repeatCount }, () => content.logos).flat();
 
   return (
     <section
