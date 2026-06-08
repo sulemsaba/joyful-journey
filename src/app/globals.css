@@ -317,13 +317,22 @@
   40%, 100% { opacity: 1; }
 }
 
-/* ── Hero section — stable height (no CLS) ──────── */
+/* ── Hero section — responsive height (no CLS) ──── */
 .hero-section {
+  /* Desktop: nearly full viewport */
   height: 94.5svh;
-  /* Fallback for browsers without svh */
   height: 94.5dvh;
+  /* Mobile: leave room for Trusted By section to peek */
+  max-height: 600px;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+}
+@media (min-width: 768px) {
+  .hero-section {
+    max-height: none;
+    height: 94.5svh;
+    height: 94.5dvh;
+  }
 }
 .hero-section.hero-shrunk {
   transform: scale(0.96);
@@ -335,6 +344,14 @@
 .hero-review-bar {
   height: 5.5svh;
   min-height: 48px;
+}
+@media (max-width: 767px) {
+  .hero-section + .hero-review-bar {
+    height: auto;
+    min-height: 40px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 }
 
 /* ── Scroll-reveal: start visible, animate on first intersection
@@ -705,6 +722,26 @@ header .logo-dark { mix-blend-mode: screen; }
 html[data-theme="dark"] .hero-bg-image { opacity: 0.8; }
 html.theme-transition .hero-bg-image {
   transition: opacity 0.4s ease;
+}
+
+/* ── Provider logos — muted brand color, full color on hover ── */
+/* Logos appear in a single muted brand color by default.
+ * On hover, they reveal their original full color.
+ * Uses CSS filters: grayscale + sepia + hue-rotate to tint
+ * logos to the brand accent, then removes filters on hover. */
+.provider-logo-img {
+  filter: grayscale(1) opacity(0.5);
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+.provider-logo-item:hover .provider-logo-img {
+  filter: grayscale(0) opacity(1);
+}
+/* Dark mode: slightly brighter muted state */
+html[data-theme="dark"] .provider-logo-img {
+  filter: grayscale(1) opacity(0.4);
+}
+html[data-theme="dark"] .provider-logo-item:hover .provider-logo-img {
+  filter: grayscale(0) opacity(1);
 }
 
 /* ── Hero aurora canvas — theme-reactive opacity ──── */
