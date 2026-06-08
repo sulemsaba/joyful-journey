@@ -111,6 +111,7 @@ function TestimonialMarquee({
 
   const isPaused = useRef(false);
   const isDragging = useRef(false);
+  const isVisible = useRef(true);
   const startX = useRef(0);
   const scrollStart = useRef(0);
   const rafRef = useRef<number>(0);
@@ -137,6 +138,22 @@ function TestimonialMarquee({
     return () => clearTimeout(startDelay);
   }, []);
 
+  // ── Visibility observer — pause when off-screen ──────────────
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible.current = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(wrapper);
+
+    return () => observer.disconnect();
+  }, []);
+
   // ── RAF-based auto-scroll (endless loop) ────────────────────
   useEffect(() => {
     if (!isSliding) return;
@@ -145,30 +162,37 @@ function TestimonialMarquee({
     if (!el) return;
 
     const getSetWidth = () => el.scrollWidth / 3;
+    let lastFrame = 0;
+    const FRAME_INTERVAL = 33; // ~30fps throttle
 
-    const step = () => {
-      if (!isPaused.current && !isDragging.current) {
-        // Natural speed variation: gentle sine-wave oscillation
-        // so the marquee breathes — sometimes slower, sometimes faster.
-        tickRef.current += 1;
-        const speed = BASE_SPEED + SPEED_AMPLITUDE * Math.sin((2 * Math.PI * tickRef.current) / SPEED_PERIOD);
-        
-        // Accumulate fractional pixels; only apply integer part to
-        // scrollLeft because browsers round sub-pixel scroll values
-        // to zero, which would make tiny speeds invisible.
-        scrollDelta.current += speed;
-        const wholePixels = Math.floor(scrollDelta.current);
-        if (wholePixels >= 1) {
-          el.scrollLeft += wholePixels;
-          scrollDelta.current -= wholePixels;
-        }
+    const step = (timestamp: number) => {
+      // Skip frame if not enough time has passed or off-screen
+      if (isVisible.current && timestamp - lastFrame >= FRAME_INTERVAL) {
+        lastFrame = timestamp;
 
-        // Seamless loop: when we've scrolled past the first set,
-        // jump back by one set's width — content is identical so
-        // the user sees no gap or jump.
-        const setWidth = getSetWidth();
-        if (el.scrollLeft >= setWidth) {
-          el.scrollLeft -= setWidth;
+        if (!isPaused.current && !isDragging.current) {
+          // Natural speed variation: gentle sine-wave oscillation
+          // so the marquee breathes — sometimes slower, sometimes faster.
+          tickRef.current += 1;
+          const speed = BASE_SPEED + SPEED_AMPLITUDE * Math.sin((2 * Math.PI * tickRef.current) / SPEED_PERIOD);
+          
+          // Accumulate fractional pixels; only apply integer part to
+          // scrollLeft because browsers round sub-pixel scroll values
+          // to zero, which would make tiny speeds invisible.
+          scrollDelta.current += speed;
+          const wholePixels = Math.floor(scrollDelta.current);
+          if (wholePixels >= 1) {
+            el.scrollLeft += wholePixels;
+            scrollDelta.current -= wholePixels;
+          }
+
+          // Seamless loop: when we've scrolled past the first set,
+          // jump back by one set's width — content is identical so
+          // the user sees no gap or jump.
+          const setWidth = getSetWidth();
+          if (el.scrollLeft >= setWidth) {
+            el.scrollLeft -= setWidth;
+          }
         }
       }
       rafRef.current = requestAnimationFrame(step);

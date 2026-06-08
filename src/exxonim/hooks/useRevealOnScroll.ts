@@ -3,27 +3,16 @@ import { useEffect } from "react";
 /**
  * Scroll-reveal animation using CSS classes instead of Tailwind manipulation.
  *
- * ARCHITECTURE:
- * ─────────────
- * Elements with [data-reveal] start with opacity:0 + translateY(24px) via
- * the CSS rule in globals.css. When they scroll into view, the `.revealed`
- * class is added, which transitions them to opacity:1 + translateY(0).
- *
- * This approach is MUCH better for INP because:
- *   1. No MutationObserver scanning all DOM changes
- *   2. No Tailwind class manipulation (classList.add/remove of many classes)
- *   3. Single class toggle (`.revealed`) instead of 5+ class swaps
- *   4. CSS handles the transition — zero JS during animation frames
- *   5. Above-fold content is immediately revealed (no flash of invisible content)
- *
- * Accessibility: If JS fails, content stays hidden. This is acceptable because
- * the content is decorative animation only — all content is still in the DOM
- * and accessible to screen readers.
+ * PERFORMANCE OPTIMIZATIONS (v2):
+ *   - Debounced MutationObserver (100ms) to avoid layout thrashing on rapid DOM changes
+ *   - Batch reveals in a single rAF instead of one per element
+ *   - Auto-disconnects MutationObserver after 15s (all lazy pages will have loaded by then)
+ *   - Skips already-revealed elements during scans
  */
+
 export function useRevealOnScroll() {
   useEffect(() => {
     if (!("IntersectionObserver" in window)) {
-      // No IntersectionObserver support — show everything immediately
       document.querySelectorAll("[data-reveal]").forEach((el) => {
         el.classList.add("revealed");
       });
@@ -42,40 +31,39 @@ export function useRevealOnScroll() {
       { threshold: 0.15 }
     );
 
-    // Scan for elements already in the DOM
+    // Batch reveal elements that are already in viewport
     const scanAndObserve = () => {
-      document.querySelectorAll("[data-reveal]").forEach((el) => {
-        // If already visible in viewport, reveal immediately (no animation delay)
+      const revealElements = document.querySelectorAll("[data-reveal]:not(.revealed)");
+      const toReveal: Element[] = [];
+
+      revealElements.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const inViewport = rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
 
         if (inViewport) {
-          // Use requestAnimationFrame to avoid layout thrashing
-          requestAnimationFrame(() => {
-            el.classList.add("revealed");
-          });
+          toReveal.push(el);
         } else {
           observer.observe(el);
         }
       });
+
+      // Batch all immediate reveals in a single rAF
+      if (toReveal.length > 0) {
+        requestAnimationFrame(() => {
+          toReveal.forEach((el) => el.classList.add("revealed"));
+        });
+      }
     };
 
     scanAndObserve();
 
-    // Lightweight DOM mutation scan — only for new nodes (e.g., lazy-loaded pages)
-    // Much cheaper than the old MutationObserver that scanned all attribute changes
-    const mutationObserver = new MutationObserver((mutations) => {
-      let hasNewNodes = false;
-      for (const mutation of mutations) {
-        if (mutation.addedNodes.length > 0) {
-          hasNewNodes = true;
-          break;
-        }
-      }
-      if (hasNewNodes) {
-        // Defer scan to avoid synchronous layout during mutation
-        requestAnimationFrame(scanAndObserve);
-      }
+    // Debounced MutationObserver — coalesces rapid DOM mutations
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    let autoDisconnectTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const mutationObserver = new MutationObserver(() => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(scanAndObserve, 100);
     });
 
     mutationObserver.observe(document.body, {
@@ -83,9 +71,21 @@ export function useRevealOnScroll() {
       subtree: true,
     });
 
+    // Auto-disconnect MutationObserver after 15s — by then all lazy pages
+    // will have loaded, so there's no need to keep watching DOM changes
+    autoDisconnectTimer = setTimeout(() => {
+      mutationObserver.disconnect();
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+        debounceTimer = null;
+      }
+    }, 15000);
+
     return () => {
       mutationObserver.disconnect();
       observer.disconnect();
+      if (debounceTimer) clearTimeout(debounceTimer);
+      if (autoDisconnectTimer) clearTimeout(autoDisconnectTimer);
     };
   }, []);
 }
