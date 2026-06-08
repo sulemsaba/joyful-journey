@@ -94,3 +94,40 @@ Stage Summary:
 - Scroll-reveal animations on iPhone: FIXED
 - Both desktop and iPhone viewport verified working
 - Key files modified: globals.css, ProviderSection.tsx, ServicePlansSection.tsx, StackSection.tsx, InsightsSection.tsx, WhatsAppButton.tsx, useRevealOnScroll.ts
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Migrate Exxonim from Next.js to React Vite with FastAPI comments
+
+Work Log:
+- Killed Next.js dev server
+- Installed Vite, @vitejs/plugin-react, react-router-dom
+- Removed Next.js dependencies (next, next-auth, next-themes, next-intl, sharp, eslint-config-next)
+- Created vite.config.ts with @ path alias
+- Created index.html with blocking theme script, Geist fonts, favicons, meta tags
+- Created src/main.tsx as Vite entry point with BrowserRouter + QueryClientProvider
+- Rewrote App.tsx to use react-router-dom Routes/Route instead of custom usePublicRouter
+- Fixed PostCSS config (import tailwindcss as function, not string)
+- Updated apiClient.ts to use import.meta.env.VITE_API_URL instead of process.env.NEXT_PUBLIC_API_URL
+- Removed all "use client" directives (not needed in Vite)
+- Deleted src/exxonim/app/usePublicRouter.ts (replaced by React Router)
+- Deleted legacy src/components/exxonim/ directory (duplicate of src/exxonim/)
+- Deleted legacy src/lib/, src/hooks/ directories
+- Deleted unused screenshot files from repo root
+- Created .env with VITE_API_URL pointing to FastAPI backend
+- Updated ESLint config for Vite (removed Next.js plugins, added @eslint/js + typescript-eslint)
+- Fixed lint errors (removed invalid react-hooks/set-state-in-effect, fixed no-useless-assignment, preserved caught error cause)
+- Added FastAPI endpoint comments throughout all service files (blog, consultation, jobs, testimonials, pricing, privacy, site-settings, navigation, pages)
+- Each service file includes: HTTP methods, paths, PostgreSQL tables, request/response schemas
+- Updated package.json scripts (dev → vite, build → vite build, start → vite preview)
+- Updated tsconfig.json (removed Next.js plugins/includes, added vite-env.d.ts)
+- Verified on desktop (1920px) and iPhone 14 (390px): no horizontal overflow, 6/6 reveal animations working
+- Pushed to main, nextjs-wip branch preserved
+
+Stage Summary:
+- Full migration from Next.js to React Vite complete
+- React Router replaces custom SPA router
+- All FastAPI endpoint documentation in place
+- 173 files changed, 1057 insertions, 12704 deletions (big cleanup!)
+- Site verified working on desktop + mobile
