@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
+import { HeroAurora } from "@/exxonim/components/HeroAurora";
 
 interface ReferenceHeroProps {
   content: HomeHeroContent;
@@ -81,7 +82,12 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
       >
         {/* ── Background assets ───────────────────────────── */}
 
-        {/* Left-side fade so text always has contrast */}
+        {/* Animated aurora canvas — flowing curtain-like lines.
+            Theme-reactive: adapts colors and opacity for light/dark.
+            Opacity controlled by .hero-aurora-canvas CSS class. */}
+        <HeroAurora />
+
+        {/* Left-side fade so text always has contrast over the aurora */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-[60%] lg:w-[55%]"
