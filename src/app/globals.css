@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* ── Prevent horizontal scroll from full-bleed elements ── */
+html, body {
+  overflow-x: hidden; /* fallback for older browsers */
+  overflow-x: clip;   /* modern: clips without creating a stacking context */
+}
+
 /* ── CSS Custom Property Animation Registration ──────────
  * @property tells the browser these custom properties hold
  * animatable <color> values. This enables smooth transitions
@@ -360,10 +366,12 @@
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  will-change: opacity, transform;
 }
 [data-reveal].revealed {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 /* ── Runtime theme variables ───────────────────────── */

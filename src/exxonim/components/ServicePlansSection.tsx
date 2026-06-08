@@ -292,7 +292,7 @@ function TestimonialMarquee({
   return (
     <div
       ref={wrapperRef}
-      className="group relative overflow-hidden w-screen -ml-[50vw] left-1/2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+      className="group relative overflow-hidden w-screen -ml-[50vw] left-1/2 [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
       aria-label="Client testimonials"
     >
       {/* Scrollable track */}
