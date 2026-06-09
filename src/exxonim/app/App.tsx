@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
 import { PageLoader } from "@/exxonim/components/PageLoader";
@@ -12,64 +12,155 @@ import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useRevealOnScroll } from "@/exxonim/hooks/useRevealOnScroll";
 import { useTheme } from "@/exxonim/hooks/useTheme";
 
-/* ── Code-split page components ────────────────────────
- * Each page is loaded on demand so the initial bundle only
- * contains the shell (nav + footer) and the active page.
+/* ═══════════════════════════════════════════════════════════
+ * LAZY-LOADED PAGE COMPONENTS (CODE SPLITTING)
+ * ═══════════════════════════════════════════════════════════
  *
- * React Router handles lazy loading via its own lazy prop.
+ * WHY LAZY LOADING?
+ * -----------------
+ * Without this, Vite bundles ALL page components into the
+ * initial chunk — every import is resolved upfront even
+ * though only ONE page is visible at a time. This caused:
+ *
+ *   1. LARGE INITIAL BUNDLE → slow first paint & laggy
+ *      scrolling (unused page CSS/JS bloat the render tree)
+ *
+ *   2. SLOW FILE-TO-FILE NAVIGATION → every route change
+ *      forces React to reconcile ALL component trees,
+ *      even those not visible
+ *
+ *   3. NO CODE SPLITTING → no parallel chunk loading,
+ *      no caching of individual pages
+ *
+ * SOLUTION
+ * --------
+ * Each page is wrapped in React.lazy() which tells Vite to
+ * code-split them into separate chunks. A page chunk is only
+ * fetched when the user navigates to that route.
+ *
+ * To hide the chunk-load delay, we also preload pages during
+ * browser idle time (see requestIdleCallback below).
+ *
+ * ⚠️  RULE FOR FUTURE DEVELOPERS:
+ *     NEVER revert to static imports for page components.
+ *     If you add a new page:
+ *       1. Add its loader function here
+ *       2. Add its lazy() component below
+ *       3. Add its loader to publicPagePreloaders array
+ *       4. Add its <Route> in the Routes block
  */
-const HomePage = lazy(() =>
-  import("@/exxonim/pages/HomePage").then((m) => ({ default: m.HomePage }))
-);
-const AboutPage = lazy(() =>
-  import("@/exxonim/pages/AboutPage").then((m) => ({ default: m.AboutPage }))
-);
-const CareerPage = lazy(() =>
-  import("@/exxonim/pages/CareerPage").then((m) => ({ default: m.CareerPage }))
-);
-const ContactPage = lazy(() =>
-  import("@/exxonim/pages/ContactPage").then((m) => ({ default: m.ContactPage }))
-);
-const FaqPage = lazy(() =>
-  import("@/exxonim/pages/FaqPage").then((m) => ({ default: m.FaqPage }))
-);
-const NotFoundPage = lazy(() =>
-  import("@/exxonim/pages/NotFoundPage").then((m) => ({ default: m.NotFoundPage }))
-);
-const ResourceArticlePage = lazy(() =>
+
+// ── Lazy loader functions ──────────────────────────────
+// Defined as standalone functions (not inline arrow literals)
+// so we can reuse them for BOTH lazy() creation AND idle-time
+// preloading without duplicating import path strings.
+
+const loadHomePage = () =>
+  import("@/exxonim/pages/HomePage").then((m) => ({ default: m.HomePage }));
+const loadAboutPage = () =>
+  import("@/exxonim/pages/AboutPage").then((m) => ({ default: m.AboutPage }));
+const loadCareerPage = () =>
+  import("@/exxonim/pages/CareerPage").then((m) => ({ default: m.CareerPage }));
+const loadContactPage = () =>
+  import("@/exxonim/pages/ContactPage").then((m) => ({ default: m.ContactPage }));
+const loadFaqPage = () =>
+  import("@/exxonim/pages/FaqPage").then((m) => ({ default: m.FaqPage }));
+const loadNotFoundPage = () =>
+  import("@/exxonim/pages/NotFoundPage").then((m) => ({ default: m.NotFoundPage }));
+const loadResourceArticlePage = () =>
   import("@/exxonim/pages/ResourceArticlePage").then((m) => ({
     default: m.ResourceArticlePage,
-  }))
-);
-const ResourcesPage = lazy(() =>
-  import("@/exxonim/pages/ResourcesPage").then((m) => ({ default: m.ResourcesPage }))
-);
-const ServicesPage = lazy(() =>
-  import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }))
-);
-const SupportPage = lazy(() =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }))
-);
-const TermsPage = lazy(() =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.TermsPage }))
-);
-const PrivacyPage = lazy(() =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.PrivacyPage }))
-);
-const CookiePage = lazy(() =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.CookiePage }))
-);
-const DataRightsPage = lazy(() =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.DataRightsPage }))
-);
-const TrackConsultationPage = lazy(() =>
-  import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }))
-);
+  }));
+const loadResourcesPage = () =>
+  import("@/exxonim/pages/ResourcesPage").then((m) => ({ default: m.ResourcesPage }));
+const loadServicesPage = () =>
+  import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }));
+const loadSupportPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }));
+const loadTermsPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.TermsPage }));
+const loadPrivacyPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.PrivacyPage }));
+const loadCookiePage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.CookiePage }));
+const loadDataRightsPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.DataRightsPage }));
+const loadTrackConsultationPage = () =>
+  import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }));
+
+// ── Lazy components ────────────────────────────────────
+// React.lazy() expects a function returning Promise<{ default: Component }>.
+// Our loader functions above satisfy this exactly.
+
+const HomePage = lazy(loadHomePage);
+const AboutPage = lazy(loadAboutPage);
+const CareerPage = lazy(loadCareerPage);
+const ContactPage = lazy(loadContactPage);
+const FaqPage = lazy(loadFaqPage);
+const NotFoundPage = lazy(loadNotFoundPage);
+const ResourceArticlePage = lazy(loadResourceArticlePage);
+const ResourcesPage = lazy(loadResourcesPage);
+const ServicesPage = lazy(loadServicesPage);
+const SupportPage = lazy(loadSupportPage);
+const TermsPage = lazy(loadTermsPage);
+const PrivacyPage = lazy(loadPrivacyPage);
+const CookiePage = lazy(loadCookiePage);
+const DataRightsPage = lazy(loadDataRightsPage);
+const TrackConsultationPage = lazy(loadTrackConsultationPage);
+
+// ── Preloader registry ─────────────────────────────────
+// All lazy-loader functions collected in one array so we can
+// preload every page during browser idle time.
+//
+// ⚠️  WHEN ADDING A NEW PAGE:
+//     Add its loader function to this array too. Otherwise the
+//     first user to navigate there will experience a chunk-load
+//     delay because it wasn't preloaded during idle time.
+
+const publicPagePreloaders = [
+  loadHomePage,
+  loadAboutPage,
+  loadCareerPage,
+  loadContactPage,
+  loadFaqPage,
+  loadNotFoundPage,
+  loadResourceArticlePage,
+  loadResourcesPage,
+  loadServicesPage,
+  loadSupportPage,
+  loadTermsPage,
+  loadPrivacyPage,
+  loadCookiePage,
+  loadDataRightsPage,
+  loadTrackConsultationPage,
+];
+
+// ── Type helper for requestIdleCallback ────────────────
+// requestIdleCallback is not in TypeScript's default lib for
+// all tsconfig targets, so we extend the Window type to make
+// TS happy without forcing a lib update project-wide.
+
+type IdleWindow = typeof window & {
+  requestIdleCallback?: (
+    callback: IdleRequestCallback,
+    options?: IdleRequestOptions
+  ) => number;
+  cancelIdleCallback?: (handle: number) => void;
+};
 
 /* ── Page-level Suspense fallback ──────────────────────
- * Same visual language as the full-screen PageLoader
- * (favicon image + animated dots), but rendered inline
- * inside <main> so the shell (nav + footer) stays visible.
+ * Rendered inside <main> so the shell (nav + footer) stays
+ * visible while a lazy page chunk loads.
+ *
+ * ⚠️  Why not reuse <PageLoader /> here?
+ *     <PageLoader> is a full-screen overlay (position: fixed)
+ *     that blocks the ENTIRE viewport. During lazy navigation
+ *     we want the nav and footer to REMAIN VISIBLE so the user
+ *     doesn't think the app crashed. This inline fallback sits
+ *     inside <main> and just fills the content area.
+ *
+ *     Same visual language (favicon + animated dots) as the
+ *     full-screen loader so there's no jarring discontinuity.
  */
 function PageSuspenseFallback() {
   return (
@@ -111,7 +202,12 @@ function PageSuspenseFallback() {
   );
 }
 
-/* ── ScrollToTop on route change ──────────────────── */
+/* ── ScrollToTop on route change ───────────────────────
+ * React Router does NOT automatically scroll to top when
+ * the route changes. Without this, navigating from a long
+ * page (e.g. FAQ) to another page leaves the user scrolled
+ * halfway down — which feels broken.
+ */
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -120,7 +216,7 @@ function ScrollToTop() {
   return null;
 }
 
-/* ── Resource Article wrapper ───────────────────────
+/* ── Resource Article wrapper ──────────────────────────
  * Extracts the slug from the URL params for React Router.
  *
  * FASTAPI BACKEND:
@@ -131,9 +227,28 @@ function ResourceArticleRoute() {
   return <ResourceArticlePage slug={slug!} />;
 }
 
-import { useParams } from "react-router-dom";
-
-/* ── App ─────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+ * APP — ROOT COMPONENT
+ * ═══════════════════════════════════════════════════════════
+ *
+ * Renders the site shell (nav + footer) with React Router
+ * handling page routing. All page components are lazy-loaded.
+ *
+ * COLD-START NOTE (important for dev workflow):
+ * ---------------------------------------------
+ * On a fresh Vite dev server start (or after clearing the
+ * browser cache), the FIRST navigation to ANY lazy page will
+ * show the Suspense fallback briefly while Vite compiles that
+ * chunk. This is EXPECTED BEHAVIOR — it only happens once
+ * per page per session. Subsequent navigations are instant.
+ *
+ * In production (vite build), all chunks are pre-compiled so
+ * the fallback is never seen.
+ *
+ * Do NOT remove lazy loading thinking it's "slower" during
+ * dev — the alternative (eager loading) makes EVERY page
+ * slow all the time, which is FAR worse.
+ */
 export function App() {
   const { theme, toggleTheme } = useTheme();
   const shell = usePublicShell();
@@ -147,6 +262,40 @@ export function App() {
     setIsPageLoading(false);
   }, []);
 
+  /* ── Idle-time preloading ─────────────────────────────────
+   *
+   * WHY requestIdleCallback?
+   * -------------------------
+   * We preload ALL page chunks after the first render, but
+   * only during browser idle periods (when the browser isn't
+   * busy painting, handling user input, or running other
+   * critical tasks). This means:
+   *
+   *   - First page is FAST (only one chunk loaded on demand)
+   *   - Subsequent pages are INSTANT (chunk already cached)
+   *   - No network waterfalls during navigation
+   *   - No competition with initial paint or user interactions
+   *
+   * requestIdleCallback() schedules low-priority work that the
+   * browser can interrupt at any time. If the browser doesn't
+   * support it (older Safari, some embedded browsers), we fall
+   * back to setTimeout with a generous 1.2s delay.
+   */
+  useEffect(() => {
+    const preloadPages = () => {
+      void Promise.allSettled(publicPagePreloaders.map((preloadPage) => preloadPage()));
+    };
+    const idleWindow = window as IdleWindow;
+
+    if (idleWindow.requestIdleCallback) {
+      const handle = idleWindow.requestIdleCallback(preloadPages, { timeout: 2500 });
+      return () => idleWindow.cancelIdleCallback?.(handle);
+    }
+
+    const handle = window.setTimeout(preloadPages, 1200);
+    return () => window.clearTimeout(handle);
+  }, []);
+
   const whatsappUrl = shell.company.whatsapp;
 
   return (
@@ -154,6 +303,10 @@ export function App() {
       <div className="min-h-screen flex flex-col bg-page text-text">
         <PageLoader isLoading={isPageLoading} />
 
+        {/*
+          Skip-to-content link for keyboard / screen reader users.
+          Hidden by default, visible on focus (Tab key).
+        */}
         <a
           href="#top"
           className="pointer-events-none opacity-0 focus:pointer-events-auto focus:opacity-100 fixed left-4 top-2 z-[100] inline-flex h-12 items-center rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all focus:outline-2 focus:outline-accent"
@@ -171,6 +324,13 @@ export function App() {
 
         <ShellStatusNotice />
 
+        {/*
+          Page content with Suspense for lazy loading.
+          Suspense only wraps <main> so the nav + footer shell
+          stays mounted during chunk loading. If Suspense wrapped
+          the entire return, the shell would unmount on every
+          route change — causing a flash and losing nav state.
+        */}
         <main id="top" className="relative isolate overflow-x-clip flex-1 pt-[68px]">
           <ScrollToTop />
           <ErrorBoundary>
