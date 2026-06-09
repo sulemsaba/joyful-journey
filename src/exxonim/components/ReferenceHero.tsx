@@ -24,18 +24,27 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
     if (!section) return;
 
     let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          section.classList.toggle("hero-shrunk", window.scrollY > 15);
-          ticking = false;
-        });
-        ticking = true;
+    let isShrunk = window.scrollY > 15;
+
+    const applyShrinkState = () => {
+      const nextIsShrunk = window.scrollY > 15;
+      if (nextIsShrunk !== isShrunk) {
+        isShrunk = nextIsShrunk;
+        section.classList.toggle("hero-shrunk", nextIsShrunk);
       }
     };
 
+    const handleScroll = () => {
+      if (ticking) return;
+      requestAnimationFrame(() => {
+        applyShrinkState();
+        ticking = false;
+      });
+      ticking = true;
+    };
+
     // Set initial state
-    section.classList.toggle("hero-shrunk", window.scrollY > 15);
+    section.classList.toggle("hero-shrunk", isShrunk);
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);

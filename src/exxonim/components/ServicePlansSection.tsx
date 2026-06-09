@@ -129,13 +129,16 @@ function TestimonialMarquee({
 
   const isPaused = useRef(false);
   const isDragging = useRef(false);
-  const isVisible = useRef(true);
+  const isVisible = useRef(false);
+  const hasStarted = useRef(false);
   const startX = useRef(0);
   const scrollStart = useRef(0);
   const rafRef = useRef<number>(0);
+  const startTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tickRef = useRef(0);
   const scrollDelta = useRef(0); // fractional px accumulator
+  const scrollingUntilRef = useRef(0);
 
   // Duplicate items 3× for seamless infinite scroll.
   const items = [...testimonials, ...testimonials, ...testimonials];
@@ -147,15 +150,6 @@ function TestimonialMarquee({
   const SPEED_AMPLITUDE = 0.12; // ±0.12 px/frame around BASE_SPEED
   const SPEED_PERIOD = 480; // frames per full cycle ≈ 8 s at 60fps
 
-  // ── Start auto-scroll after 3 s ──────────────────────────────
-  useEffect(() => {
-    const startDelay = setTimeout(() => {
-      setIsSliding(true);
-    }, 3000);
-
-    return () => clearTimeout(startDelay);
-  }, []);
-
   // ── Visibility observer — pause when off-screen ──────────────
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -164,12 +158,39 @@ function TestimonialMarquee({
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisible.current = entry.isIntersecting;
+        if (entry.isIntersecting && !hasStarted.current && !startTimerRef.current) {
+          startTimerRef.current = setTimeout(() => {
+            hasStarted.current = true;
+            startTimerRef.current = null;
+            setIsSliding(true);
+          }, 1200);
+        }
+
+        if (!entry.isIntersecting && !hasStarted.current && startTimerRef.current) {
+          clearTimeout(startTimerRef.current);
+          startTimerRef.current = null;
+        }
       },
-      { threshold: 0 }
+      { threshold: 0.1 }
     );
     observer.observe(wrapper);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (startTimerRef.current) {
+        clearTimeout(startTimerRef.current);
+        startTimerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollingUntilRef.current = performance.now() + 180;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // ── RAF-based auto-scroll (endless loop) ────────────────────
@@ -185,7 +206,12 @@ function TestimonialMarquee({
 
     const step = (timestamp: number) => {
       // Skip frame if not enough time has passed or off-screen
-      if (isVisible.current && timestamp - lastFrame >= FRAME_INTERVAL) {
+      if (
+        isVisible.current &&
+        !document.hidden &&
+        timestamp - lastFrame >= FRAME_INTERVAL &&
+        timestamp >= scrollingUntilRef.current
+      ) {
         lastFrame = timestamp;
 
         if (!isPaused.current && !isDragging.current) {
@@ -305,6 +331,13 @@ function TestimonialMarquee({
         isPaused.current = false;
       }, 3000);
     }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (startTimerRef.current) clearTimeout(startTimerRef.current);
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    };
   }, []);
 
   return (

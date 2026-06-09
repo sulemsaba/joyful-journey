@@ -16,8 +16,8 @@ export function usePricingPlans() {
     queryKey: ["pricing", "plans"],
     queryFn: getPricingPlans,
     initialData: getCachedPricingPlans,
-    refetchOnMount: true,
-    refetchOnReconnect: "always",
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     staleTime: 1000 * 60 * 60,
   });
 }

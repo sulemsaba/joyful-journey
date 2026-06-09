@@ -120,12 +120,24 @@ export function Navigation({
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+    let frame = 0;
+    const updateScrolledState = () => {
+      frame = 0;
+      const nextScrolled = window.scrollY > 10;
+      setScrolled((previous) => (previous === nextScrolled ? previous : nextScrolled));
     };
-    handleScroll();
+
+    const handleScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(updateScrolledState);
+    };
+
+    updateScrolledState();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   /** True when the header should be transparent (over hero, at scroll top).

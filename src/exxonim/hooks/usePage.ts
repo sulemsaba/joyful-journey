@@ -13,8 +13,8 @@ export function usePage<TContent = Record<string, unknown>>(slug: string) {
     queryKey: ["pages", slug],
     queryFn: () => getPageBySlug<TContent>(slug),
     initialData: () => getCachedPageBySlug<TContent>(slug),
-    refetchOnMount: true,
-    refetchOnReconnect: "always",
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     staleTime: 1000 * 60 * 60,
   });
 }

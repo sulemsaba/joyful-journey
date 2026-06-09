@@ -14,8 +14,8 @@ export function useBlogPosts() {
     queryKey: ["blog", "posts"],
     queryFn: listPublicBlogPosts,
     initialData: getCachedPublicBlogPosts,
-    refetchOnMount: true,
-    refetchOnReconnect: "always",
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     staleTime: 1000 * 60 * 60,
   });
 }

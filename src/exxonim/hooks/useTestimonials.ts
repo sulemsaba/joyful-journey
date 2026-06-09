@@ -16,8 +16,8 @@ export function useTestimonials() {
     queryKey: ["testimonials"],
     queryFn: getTestimonials,
     initialData: getCachedTestimonials,
-    refetchOnMount: true,
-    refetchOnReconnect: "always",
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     staleTime: 1000 * 60 * 60 * 2,
   });
 }

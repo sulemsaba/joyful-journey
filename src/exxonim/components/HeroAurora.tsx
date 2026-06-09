@@ -37,10 +37,10 @@ interface AuroraConfig {
 }
 
 const DEFAULT_CONFIG: AuroraConfig = {
-  speed: 0.9,
+  speed: 0.7,
   spacing: 2.5,
   coverage: 75,
-  intensity: 52,
+  intensity: 46,
   showDepth: true,
 };
 
@@ -91,9 +91,10 @@ function draw(
 ) {
   const zoneH = h * (cfg.coverage / 100);
   const zoneTop = (h - zoneH) / 2;
+  const isSmallCanvas = w < 768;
   const rawCurtainCount = Math.max(2, Math.round(zoneH / (cfg.spacing * 3)));
-  const curtainCount = Math.max(2, Math.min(rawCurtainCount, 25));
-  const steps = w < 768 ? 80 : 160;
+  const curtainCount = Math.max(2, Math.min(rawCurtainCount, isSmallCanvas ? 12 : 16));
+  const steps = isSmallCanvas ? 56 : 112;
 
   for (let c = 0; c < curtainCount; c++) {
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
@@ -105,7 +106,7 @@ function draw(
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
 
-    const subLines = cfg.showDepth ? 4 : 2;
+    const subLines = cfg.showDepth ? (isSmallCanvas ? 2 : 3) : 2;
 
     for (let sub = 0; sub < subLines; sub++) {
       const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 1.5);
@@ -139,6 +140,9 @@ export function HeroAurora() {
   const timeRef = useRef(0);
   const lastFrameRef = useRef(0);
   const rafIdRef = useRef<number>(0);
+  const isVisibleRef = useRef(true);
+  const isDocumentVisibleRef = useRef(true);
+  const scrollingUntilRef = useRef(0);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
@@ -154,9 +158,10 @@ export function HeroAurora() {
 
     function resize() {
       // Cap DPR at 2 to prevent huge buffers on 3x Retina
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const cssW = canvas!.clientWidth;
       const cssH = canvas!.clientHeight;
+      if (cssW === 0 || cssH === 0) return;
       if (canvas!.width !== cssW * dpr || canvas!.height !== cssH * dpr) {
         canvas!.width = cssW * dpr;
         canvas!.height = cssH * dpr;
@@ -167,12 +172,51 @@ export function HeroAurora() {
     resize();
     window.addEventListener("resize", resize);
 
+    const visibilityObserver =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isVisibleRef.current = entry.isIntersecting;
+            },
+            { threshold: 0.01 }
+          )
+        : null;
+
+    visibilityObserver?.observe(canvas);
+
+    const handleVisibilityChange = () => {
+      isDocumentVisibleRef.current = document.visibilityState === "visible";
+      if (isDocumentVisibleRef.current) {
+        lastFrameRef.current = 0;
+      }
+    };
+
+    const handleScroll = () => {
+      scrollingUntilRef.current = performance.now() + 160;
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     // Cache accent color + theme — only re-read every 500ms, not every frame
     let cachedAccent = "#0f5c63";
     let cachedIsDark = false;
     let lastStyleRead = 0;
+    let lastDraw = 0;
+    const FRAME_INTERVAL = 33;
 
     function animate(ts: number) {
+      if (
+        !isVisibleRef.current ||
+        !isDocumentVisibleRef.current ||
+        ts - lastDraw < FRAME_INTERVAL ||
+        performance.now() < scrollingUntilRef.current
+      ) {
+        rafIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      lastDraw = ts;
       if (lastFrameRef.current === 0) lastFrameRef.current = ts;
       const delta = Math.min(ts - lastFrameRef.current, 50);
       lastFrameRef.current = ts;
@@ -200,6 +244,9 @@ export function HeroAurora() {
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      visibilityObserver?.disconnect();
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }
