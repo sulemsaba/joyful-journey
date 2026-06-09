@@ -102,7 +102,7 @@ function renderMedia(post: BlogPost, categoryLabel?: string) {
       <>
         {categoryLabel ? <Tag label={categoryLabel} /> : null}
         <img
-          className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+          className="img-placeholder h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
           src={post.coverImageSrc}
           alt={post.coverAlt ?? post.title}
           width={360}

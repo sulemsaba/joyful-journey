@@ -885,11 +885,11 @@ html[data-theme="dark"] select[class*="appearance-none"] {
 }
 
 /* ── Image placeholder background (zero CLS) ────────
- * Gives <img> elements a subtle tinted background
- * while the image loads, preventing a white/transparent
- * flash that causes CLS-like visual jumps.
+ * Only applies to images that explicitly opt in via the
+ * .img-placeholder class. Avoids tinting logos, icons,
+ * and decorative images that look bad with a bg color.
  */
-img {
+.img-placeholder {
   background-color: var(--color-accent-soft);
 }
 

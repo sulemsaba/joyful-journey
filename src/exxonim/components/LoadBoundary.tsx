@@ -65,11 +65,10 @@ function ContentSkeleton({ label, variant }: SkeletonProps) {
  *   1. Hero area    — 94.5svh with header offset, centered
  *                      favicon pulse loader + placeholder text
  *   2. Review bar   — 5.5svh Google review peek
- *   3. Trusted by   — Logo marquee placeholder
- *   4. Features     — Stacked card area placeholders
- *   5. Pricing      — 3 plan cards in a grid
- *   6. Blog posts   — Horizontal rail of article cards
- *   7. Newsletter   — CTA card with input placeholder
+ *   3. Features     — Stacked card area placeholders
+ *   4. Pricing      — 3 plan cards in a grid
+ *   5. Blog posts   — Horizontal rail of article cards
+ *   6. Newsletter   — CTA card with input placeholder
  *
  * Uses the same design tokens as the real page (bg-accent-soft,
  * rounded-full for text, rounded-3xl for cards) and the existing
@@ -154,26 +153,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 3. Trusted by logos bar ────────────────────────
-       * Matches ProviderSection: label + full-bleed logo marquee.
-       */}
-      <section aria-hidden="true" className="relative bg-page">
-        <p className="m-0 text-center text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft pt-5 pb-2">
-          Trusted by
-        </p>
-        <div className="full-bleed overflow-hidden relative pb-5 bg-page">
-          <div className="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 px-6">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="h-6 sm:h-8 md:h-10 w-16 sm:w-20 md:w-24 rounded-lg bg-accent-soft animate-pulse"
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. Feature cards (StackSection) ────────────────
+      {/* ── 3. Feature cards (StackSection) ────────────────
        * Simplified placeholder for the stacked card area.
        * The real StackSection is complex (sticky stacking), so we
        * show a representative card shape.
@@ -194,7 +174,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 5. Pricing plans ───────────────────────────────
+      {/* ── 4. Pricing plans ───────────────────────────────
        * Matches ServicePackagesSection: 3-column grid of PlanCards.
        * The middle card is "featured" (dark bg), matching the real layout.
        */}
@@ -279,7 +259,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 6. Blog posts rail ─────────────────────────────
+      {/* ── 5. Blog posts rail ─────────────────────────────
        * Matches InsightsSection: heading + horizontal card rail.
        */}
       <section aria-hidden="true" className="py-[clamp(80px,10vw,124px)]">
@@ -332,7 +312,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 7. Newsletter section ──────────────────────────
+      {/* ── 6. Newsletter section ──────────────────────────
        * Matches NewsletterSection: centered CTA card.
        */}
       <section aria-hidden="true" className="py-10 md:py-16">

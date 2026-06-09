@@ -3,7 +3,6 @@ import { InsightsSection } from "@/exxonim/components/InsightsSection";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { HomePageSkeleton } from "@/exxonim/components/LoadBoundary";
 import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
-import { ProviderSection } from "@/exxonim/components/ProviderSection";
 import { ReferenceHero } from "@/exxonim/components/ReferenceHero";
 import { ServicePackagesSection } from "@/exxonim/components/ServicePlansSection";
 import { StackSection } from "@/exxonim/components/StackSection";
@@ -113,9 +112,6 @@ export function HomePage() {
           heroDescription={homeContent.hero.description}
         />
         <ReferenceHero content={homeContent.hero} />
-        {homeContent.provider_section && (
-          <ProviderSection content={homeContent.provider_section} />
-        )}
         {homeContent.stack_section && (
           <StackSection
             items={homeContent.stack_section.items}
