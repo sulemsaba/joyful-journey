@@ -45,10 +45,6 @@ export function HomePage() {
 
   return (
     <>
-      {/* Service Catalog — always visible, self-contained, no page data dependency.
-          Placed OUTSIDE LoadBoundary so it renders even if page API fails. */}
-      <ServiceCatalogSection />
-
       <LoadBoundary
         error={pageError}
         errorDetail="The homepage content could not be loaded right now."
@@ -71,6 +67,10 @@ export function HomePage() {
           {homeContent.provider_section && (
             <ProviderSection content={homeContent.provider_section} />
           )}
+
+          {/* Service Catalog — segment-filtered cards, self-contained */}
+          <ServiceCatalogSection />
+
           {homeContent.stack_section && (
             <StackSection
               items={homeContent.stack_section.items}

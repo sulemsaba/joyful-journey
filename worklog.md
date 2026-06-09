@@ -23,3 +23,28 @@ Stage Summary:
 - All hardcoded colors replaced with theme tokens
 - Cards reduced from 15 visible to 3-6 per category tab
 - Professional, clean design matching Exxonim brand
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Redesign service packages section — remove prices, add 4 segment filter buttons, 3 plan cards per segment; fix homepage layout
+
+Work Log:
+- Read ServicePlansSection.tsx, ServicesPage.tsx, ServicesOverviewSection.tsx, HomePage.tsx
+- Identified issues: PLAN_PRICES with "From TZS XXX,XXX" hardcoded, no segment filtering, old 3-card static layout
+- Rewrote ServicePlansSection.tsx completely:
+  - Removed PLAN_PRICES and all price displays
+  - Added 4 segment filter buttons: Local Entrepreneurs, Foreign Investors, Enterprises, NGOs & Non-Profits (with Lucide icons)
+  - Added segmentPlans data with 3 tier cards per segment (Starter/Growth/Premium)
+  - Each segment has tailored features relevant to that customer type
+  - Featured card (Growth tier) uses accent border + subtle accent bg instead of dark inverted card
+  - All buttons use theme tokens, no hardcoded colors, no emojis
+  - TestimonialMarquee preserved unchanged
+- Fixed HomePage.tsx: moved ServiceCatalogSection AFTER hero (was BEFORE hero, causing catalog to appear above the fold instead of hero)
+- Build succeeded, VLM verification confirmed: 4 segment buttons visible, 3 plan cards (Starter/Growth/Premium), no prices, clean design
+- Homepage confirmed: hero section is now first thing visible
+
+Stage Summary:
+- Service packages completely redesigned: 4 segment buttons + 3 tier cards per segment + no prices
+- Homepage layout fixed: hero first, then provider logos, then service catalog, then packages
+- All theme tokens, no hardcoded colors, no emojis, professional Lucide icons
