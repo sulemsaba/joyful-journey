@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
 import { SegmentFilterBar } from './SegmentFilterBar';
@@ -7,49 +7,104 @@ import { ServiceCard, ServiceCardSkeleton } from './ServiceCard';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import type { SegmentFilter } from '@/exxonim/types/service-catalog';
 
+/** Category tab definition with icon */
+const categoryTabs = [
+  { key: 'all', label: 'All Services', icon: Briefcase },
+  { key: 'Business Setup', label: 'Business Setup', icon: Briefcase },
+  { key: 'Compliance Support', label: 'Compliance', icon: ShieldCheck },
+  { key: 'Work Permits & Foreign Investment', label: 'Work Permits', icon: Plane },
+  { key: 'NGOs & Non-Profits', label: 'NGOs & Non-Profits', icon: Heart },
+] as const;
+
+type CategoryKey = (typeof categoryTabs)[number]['key'];
+
 export function ServiceCatalogSection() {
   const [activeSegment, setActiveSegment] = useState<SegmentFilter>('all');
+  const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const { data, isLoading, isError, refetch } = useServiceCatalog(activeSegment);
 
-  // Flat list of services filtered by segment (no category grouping)
+  // Filter services by both segment and category
   const filteredServices = useMemo(() => {
     const services = data?.data?.services ?? [];
-    return services;
-  }, [data]);
+    if (activeCategory === 'all') return services;
+    return services.filter((s) => s.category === activeCategory);
+  }, [data, activeCategory]);
+
+  // Count services per category for the tab badges
+  const allServices = data?.data?.services ?? [];
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: allServices.length };
+    for (const s of allServices) {
+      counts[s.category] = (counts[s.category] || 0) + 1;
+    }
+    return counts;
+  }, [allServices]);
 
   return (
-    <section id="service-catalog" className={cn(
-      'py-10 md:py-16',
-      'bg-[#F8FAFE] dark:bg-page-strong'
-    )}>
+    <section id="service-catalog" className={cn('py-10 md:py-16')}>
       <Container>
-        {/* Page Header — matching the HTML blueprint */}
+        {/* Page Header */}
         <div className="mb-8 md:mb-10">
-          <h1 className={cn(
-            'text-[28px] md:text-[36px] font-bold tracking-[-0.3px] mb-2',
-            'text-[#0B3B5F] dark:text-accent'
-          )}>
-            Service catalog
+          <h1 className="text-2xl md:text-3xl font-bold text-text mb-2">
+            Our Services
           </h1>
-          <p className={cn(
-            'text-base max-w-[600px]',
-            'text-[#4A5A6E] dark:text-text-muted'
-          )}>
-            Intelligent business support – registration, compliance, work permits &amp; NGO advisory. Filter by who you are.
+          <p className="text-base max-w-xl text-text-muted">
+            Registration, compliance, work permits &amp; NGO advisory. Browse by category or filter by who you are.
           </p>
         </div>
 
         {/* Segment Filter Bar */}
-        <div className="mb-6 md:mb-8">
+        <div className="mb-6">
           <SegmentFilterBar
             activeSegment={activeSegment}
             onSegmentChange={setActiveSegment}
           />
         </div>
 
+        {/* Category Tabs */}
+        <div className="mb-8">
+          <div className="flex gap-1 overflow-x-auto scrollbar-none pb-1 border-b border-border-soft">
+            {categoryTabs.map((tab) => {
+              const isActive = activeCategory === tab.key;
+              const Icon = tab.icon;
+              const count = categoryCounts[tab.key] ?? 0;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveCategory(tab.key)}
+                  className={cn(
+                    'flex-shrink-0 inline-flex items-center gap-2 px-4 py-3 text-sm font-medium',
+                    'transition-all duration-200 ease-out whitespace-nowrap border-b-2 -mb-px',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                    isActive
+                      ? 'border-accent text-accent'
+                      : 'border-transparent text-text-soft hover:text-text hover:border-border-strong'
+                  )}
+                  aria-pressed={isActive}
+                  aria-label={`Show ${tab.label} services`}
+                >
+                  <Icon className="w-4 h-4" aria-hidden="true" />
+                  <span>{tab.label}</span>
+                  <span
+                    className={cn(
+                      'text-xs font-semibold px-1.5 py-0.5 rounded-full',
+                      isActive
+                        ? 'bg-accent text-accent-contrast'
+                        : 'bg-surface-soft text-text-soft'
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Loading State */}
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <ServiceCardSkeleton key={`skeleton-${i}`} />
             ))}
@@ -60,14 +115,14 @@ export function ServiceCatalogSection() {
         {!isLoading && isError && (
           <div className={cn(
             'flex flex-col items-center justify-center py-16 text-center',
-            'bg-white dark:bg-surface rounded-[32px]',
-            'border border-[#E2E8F0] dark:border-border-soft'
+            'bg-surface rounded-2xl',
+            'border border-border-soft'
           )}>
-            <AlertCircle className="w-12 h-12 text-[#E67E22] mb-4" aria-hidden="true" />
-            <p className="text-[#1E2A32] dark:text-text font-medium text-lg mb-2">
+            <AlertCircle className="w-10 h-10 text-error mb-4" aria-hidden="true" />
+            <p className="text-text font-medium text-lg mb-1">
               We&apos;re having trouble loading our services.
             </p>
-            <p className="text-[#64748B] dark:text-text-muted text-sm mb-6">
+            <p className="text-text-muted text-sm mb-6">
               Please refresh the page or contact support.
             </p>
             <button
@@ -76,9 +131,10 @@ export function ServiceCatalogSection() {
               className={cn(
                 'inline-flex items-center justify-center gap-2 rounded-full',
                 'min-h-[44px] px-6 py-2.5',
-                'bg-[#0B3B5F] dark:bg-accent text-white dark:text-accent-contrast text-sm font-semibold',
+                'bg-accent text-accent-contrast text-sm font-semibold',
                 'transition-all duration-200 ease-out',
-                'hover:bg-[#1E4A6F] dark:hover:bg-accent-hover'
+                'hover:bg-accent-hover',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
               )}
             >
               <RefreshCw className="w-4 h-4" aria-hidden="true" />
@@ -91,23 +147,22 @@ export function ServiceCatalogSection() {
         {!isLoading && !isError && filteredServices.length === 0 && (
           <div className={cn(
             'flex flex-col items-center justify-center py-16 text-center',
-            'bg-white dark:bg-surface rounded-[32px]',
-            'border border-[#E2E8F0] dark:border-border-soft mt-8'
+            'bg-surface rounded-2xl',
+            'border border-border-soft'
           )}>
-            <span className="text-3xl mb-2">🔍</span>
-            <p className="text-[#64748B] dark:text-text-muted text-base">
-              No services match <strong className="text-[#1E2A32] dark:text-text">{activeSegment.replace(/-/g, ' ')}</strong> segment.
+            <p className="text-text-muted text-base mb-4">
+              No services match the current filters.
             </p>
             <button
               type="button"
-              onClick={() => setActiveSegment('all')}
+              onClick={() => { setActiveSegment('all'); setActiveCategory('all'); }}
               className={cn(
                 'inline-flex items-center justify-center gap-2 rounded-full',
                 'min-h-[44px] px-5 py-2.5',
-                'bg-[#0B3B5F] dark:bg-accent text-white dark:text-accent-contrast text-sm font-medium',
+                'bg-accent text-accent-contrast text-sm font-medium',
                 'transition-all duration-200 ease-out',
-                'hover:bg-[#1E4A6F] dark:hover:bg-accent-hover',
-                'mt-4'
+                'hover:bg-accent-hover',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
               )}
             >
               Show all services
@@ -115,19 +170,19 @@ export function ServiceCatalogSection() {
           </div>
         )}
 
-        {/* Service Cards Grid — flat, no category grouping */}
+        {/* Service Cards Grid */}
         {!isLoading && !isError && filteredServices.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {filteredServices.map((service) => (
               <ServiceCard key={service.id} service={service} />
             ))}
           </div>
         )}
 
-        {/* Credits Footer — matching the HTML blueprint */}
-        <div className="mt-12 pt-8 border-t border-[#E2E8F0] dark:border-border-soft text-center">
-          <p className="text-xs text-[#94A3B8] dark:text-text-soft">
-            ✅ No hidden prices — tailored consultation &bull; Trusted by businesses across Tanzania
+        {/* Trust Footer */}
+        <div className="mt-10 pt-6 border-t border-border-soft text-center">
+          <p className="text-xs text-text-soft">
+            No hidden prices — tailored consultation &bull; Trusted by businesses across Tanzania
           </p>
         </div>
       </Container>
