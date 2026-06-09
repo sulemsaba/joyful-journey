@@ -52,3 +52,11 @@ prompt
 server.log
 # Skills directory
 /skills/
+# vite build output
+/dist/
+
+# package manager lock (not needed for this project)
+package-lock.json
+
+# copied from other workspace
+home/
