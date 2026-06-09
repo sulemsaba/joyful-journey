@@ -19,13 +19,25 @@ interface StackSectionProps {
   featureVisualContentMap?: Record<string, FeatureVisualContent>;
 }
 
-const stackPositionClasses = [
-  "[--stack-top:calc(var(--header-height,70px)+0px)] [--stack-z:6]",
-  "[--stack-top:calc(var(--header-height,70px)+40px)] [--stack-z:7]",
-  "[--stack-top:calc(var(--header-height,70px)+80px)] [--stack-z:8]",
-  "[--stack-top:calc(var(--header-height,70px)+120px)] [--stack-z:9]",
-  "[--stack-top:calc(var(--header-height,70px)+160px)] [--stack-z:10]",
+/* Desktop: larger offsets for the stacked peek effect */
+const stackPositionClassesLg = [
+  "[--stack-top-lg:calc(var(--header-height,70px)+0px)]",
+  "[--stack-top-lg:calc(var(--header-height,70px)+40px)]",
+  "[--stack-top-lg:calc(var(--header-height,70px)+80px)]",
+  "[--stack-top-lg:calc(var(--header-height,70px)+120px)]",
+  "[--stack-top-lg:calc(var(--header-height,70px)+160px)]",
 ];
+
+/* Mobile: tighter offsets — just enough to see the stack peek */
+const stackPositionClassesSm = [
+  "[--stack-top-sm:calc(var(--header-height,56px)+0px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+20px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+40px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+60px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+80px)]",
+];
+
+const Z_BASE = 6;
 
 export function StackSection({
   items,
@@ -47,18 +59,13 @@ export function StackSection({
   );
 
   /* ── Scroll-driven active card tracking ───────────────────────
-   * As the user scrolls through the section, we calculate which
-   * card is "on top" based on scroll progress. When a card is
-   * covered by the next one, it gets a sinking animation:
-   *   - scale(0.96) — shrinks slightly toward its top edge
+   * Works on ALL screen sizes. As the user scrolls, we calculate
+   * which card is "on top". Covered cards get a sinking animation:
+   *   - scale(0.96) — shrinks toward its top edge
    *   - translateY(16px) — slides down behind the emerging card
    *
-   * The animation is purely CSS-driven (transition on transform),
-   * so it's smooth and GPU-accelerated. We only toggle a class
-   * via JavaScript — the browser handles the interpolation.
-   *
-   * Cards are completely opaque (solid bg-page background) so
-   * no content from below ever bleeds through.                             */
+   * Cards are completely opaque (solid bg-page) so no content
+   * from below ever bleeds through.                               */
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || visibleItems.length === 0) return;
@@ -93,7 +100,7 @@ export function StackSection({
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    updateActiveCard(); // Set initial state
+    updateActiveCard();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [visibleItems.length]);
@@ -113,27 +120,36 @@ export function StackSection({
           <article
             key={`${item.title}-${index}`}
             className={cn(
-              "full-bleed relative overflow-x-hidden lg:sticky max-lg:mb-8",
-              "[top:var(--stack-top)] [z-index:var(--stack-z)]",
-              stackPositionClasses[index] ??
-                stackPositionClasses[stackPositionClasses.length - 1],
-              // Solid opaque background — no content from below bleeds through
+              "full-bleed relative overflow-x-hidden sticky",
+              // Desktop top offset (larger peek)
+              "lg:[top:var(--stack-top-lg)]",
+              // Mobile top offset (tighter peek)
+              "[top:var(--stack-top-sm)]",
+              // Z-index: each card is higher than the last
+              `[z-index:${Z_BASE + index}]`,
+              // Desktop position overrides
+              stackPositionClassesLg[index],
+              stackPositionClassesSm[index],
+              // Solid opaque background — zero bleed-through
               "bg-page"
             )}
           >
             {/* Inner wrapper carries the sinking transform so it
-                never conflicts with the article's sticky positioning.
-                transform-origin: top keeps the shrink anchored at the
-                top edge where the card is pinned.                         */}
+                never conflicts with sticky positioning.
+                transform-origin: top keeps shrink anchored at the
+                top edge where the card is pinned.                    */}
             <div
               className={cn(
-                "max-w-[1320px] mx-auto min-h-screen flex items-center justify-center",
-                "p-[6.5rem_2rem] max-lg:min-h-0 max-lg:p-6",
-                // Smooth sinking animation — desktop only
-                "lg:transition-transform lg:duration-700 lg:ease-[cubic-bezier(0.22,1,0.36,1)]",
-                "lg:origin-top",
-                // When covered: scale down + sink behind the emerging card
-                isCovered && "lg:scale-[0.96] lg:translate-y-4"
+                "mx-auto flex items-center justify-center",
+                // Desktop: full viewport height, generous padding
+                "lg:min-h-screen lg:max-w-[1320px] lg:p-[6.5rem_2rem]",
+                // Mobile: shorter height, compact padding
+                "min-h-[85svh] max-w-[1320px] p-8 sm:min-h-[90svh] sm:p-12",
+                // Sinking animation — all screen sizes
+                "transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                "origin-top",
+                // When covered: scale down + sink behind
+                isCovered && "scale-[0.96] translate-y-4"
               )}
             >
               {isFeatureCard ? (

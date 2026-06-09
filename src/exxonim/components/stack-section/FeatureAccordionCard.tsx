@@ -36,12 +36,14 @@ export function FeatureAccordionCard({
   const activeRow = rows[safeActiveFeatureIndex];
 
   return (
-    <div className="grid grid-cols-[minmax(0,620px)_1fr] items-center gap-12 h-full max-lg:grid-cols-1 max-lg:gap-8 max-lg:h-auto">
-      <div className="flex items-start justify-center max-lg:max-w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,620px)_1fr] items-center gap-8 lg:gap-12 h-auto w-full">
+      {/* Visual — on mobile: below accordion; on desktop: left side */}
+      <div className="flex items-start justify-center lg:order-1 max-w-full lg:max-w-none">
         {renderFeatureVisual(activeRow.visualKey, featureVisuals)}
       </div>
 
-      <div className="grid gap-5">
+      {/* Accordion — on mobile: first (content priority); on desktop: right side */}
+      <div className="grid gap-5 lg:order-2">
         <div className="grid">
           {rows.map((row, idx) => {
             const active = idx === safeActiveFeatureIndex;
@@ -88,11 +90,11 @@ export function FeatureAccordionCard({
                 </button>
 
                 <div
-                  className={active ? "h-[7.1rem] pb-[1.15rem] pl-[calc(38px+1rem)]" : "h-0 overflow-hidden"}
+                  className={active ? "h-auto pb-[1.15rem] pl-[calc(38px+1rem)]" : "h-0 overflow-hidden"}
                   id={panelId}
                   hidden={!active}
                 >
-                  <div className="max-w-[34rem] h-full">
+                  <div className="max-w-[34rem]">
                     <p className="m-0 text-[0.82rem] leading-relaxed text-text-soft">
                       {row.description}
                     </p>
@@ -110,7 +112,7 @@ export function FeatureAccordionCard({
             href={item.ctaHref || "#"}
           >
             {item.ctaLabel || "Explore Services"}
-            <span className="ml-2">{"\u2192"}</span>
+            <span className="ml-2">→</span>
           </Button>
         </div>
       </div>
