@@ -2,7 +2,7 @@ import { Home } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Container } from "@/exxonim/components/primitives/Container";
 import { ComplianceCalendarSection } from "@/exxonim/components/ComplianceCalendarSection";
-import { EngineSection } from "@/exxonim/components/EngineSection";
+import { ServiceCatalogSection } from "@/exxonim/components/service-catalog";
 import { ExxonimApartSection } from "@/exxonim/components/ExxonimApartSection";
 import { FinalCtaSection } from "@/exxonim/components/FinalCtaSection";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
@@ -65,8 +65,8 @@ export function ServicesPage() {
             <ProblemFramingSection items={page.content.problem_framing} />
           )}
 
-          {/* 3. Service Catalog — benefit-framed groups with pricing */}
-          <EngineSection content={page.content.catalog} />
+          {/* 3. Service Catalog — segment-filtered cards with deliverables */}
+          <ServiceCatalogSection />
 
           {/* 4. What Sets Us Apart — differentiators */}
           <ExxonimApartSection />

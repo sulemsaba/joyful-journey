@@ -473,3 +473,170 @@ Stage Summary:
 - HomePageSkeleton includes trusted-by skeleton placeholder for seamless loading
 - No background color issues on logos — `.img-placeholder` is opt-in only
 - Site rebuild confirmed working
+
+---
+Task ID: 4-5
+Agent: Service Catalog Agent
+Task: Create service catalog section component with segment filtering, category grouping, and fallback data
+
+Work Log:
+- Explored project structure: Vite + React + TypeScript + Tailwind CSS v4 with existing theme system (CSS custom properties, dark mode via data-theme attribute)
+- Analyzed existing patterns: cn() utility, Container/Section/Card primitives, useQuery hooks, LoadBoundary, existing EngineSection
+- Created type definitions at `/src/exxonim/types/service-catalog.ts`:
+  - ServiceCatalogItem (id, title, slug, category, primary_segment, badge, short_description, deliverables, deliverables_full, cta_text, cta_link, status, sort_order, timestamps)
+  - ServiceCategory, ServiceSegment, ServicesResponse, SegmentFilter
+- Created fallback data at `/src/exxonim/content/fallbackServiceCatalog.ts`:
+  - All 15 services from the blueprint with exact data (Company Registration, Business Name Registration, NGO Registration, Trademark Registration, TIN Application, Business License Applications, Annual Returns, Statutory Filings, Regulatory Renewals, Operational Advisory, Work Permit Applications, TIC/TISEZA Registration, Foreign Company Registration, NGO Registration Enhanced, Compliance for NGOs)
+  - 4 segments: Local Entrepreneurs, Foreign Investors, Enterprises, NGOs
+  - 4 categories: Business Setup, Compliance Support, Work Permits & Foreign Investment, NGOs & Non-Profits
+  - Only Company Registration has deliverables_full (4 expanded items)
+- Created API hook at `/src/exxonim/hooks/useServiceCatalog.ts`:
+  - useServiceCatalog(segment?) — fetches from `/api/services?XTransformPort=3031` via Caddy gateway
+  - Falls back to static fallback data on API error
+  - Filters by segment slug when provided
+  - 5-minute stale time
+  - useServiceSegments() — returns static segment data
+- Created SegmentFilterBar component at `/src/exxonim/components/service-catalog/SegmentFilterBar.tsx`:
+  - Horizontal scrollable chip buttons (All Services, Local Entrepreneurs, Foreign Investors, Enterprises, NGOs)
+  - Active state: bg-[#0B3B5F] text-white
+  - Inactive state: bg-white text-[#1E2A32] border-[#E2E8F0]
+  - Right-edge gradient fade for scroll indication
+  - 44px minimum touch targets
+  - 150ms transition on state change
+  - Dark mode support
+- Created ServiceCard component at `/src/exxonim/components/service-catalog/ServiceCard.tsx`:
+  - Card with badge (Most Popular = orange, others = #0B3B5F), title, divider, description, deliverables with check icons
+  - Expandable deliverables_full with CSS max-height transition (300ms ease-out)
+  - "See All Features" toggle with ChevronDown icon rotation
+  - CTA button: bg-[#0B3B5F] rounded-full min-h-[44px] with ArrowRight icon
+  - Hover effect: shadow + translateY(-2px), 200ms transition
+  - ServiceCardSkeleton with shimmer animations for loading state
+  - Dark mode support using project's theme tokens
+- Created ServiceCatalogSection component at `/src/exxonim/components/service-catalog/ServiceCatalogSection.tsx`:
+  - Section heading "Our Services" with subheading
+  - SegmentFilterBar with state management
+  - Category grouping with accent line headings
+  - Responsive grid: 1 col mobile, 2 col tablet, 3 col desktop
+  - Loading state: 3 skeleton cards
+  - Empty state: message + "View All Services" reset button
+  - Error state: message + "Retry" button
+  - Categories with no matching services are hidden
+- Created barrel export at `/src/exxonim/components/service-catalog/index.ts`
+- Did NOT modify any existing files (as specified)
+- Lint passes clean — zero errors
+- TypeScript compilation passes for all new files
+- Dev server running on port 3000
+
+Stage Summary:
+- 7 new files created (types, fallback data, hook, 3 components, barrel export)
+- All 15 services from blueprint implemented with exact data
+- Component works with fallback data (no API required)
+- Category grouping preserves order: Business Setup → Compliance Support → Work Permits & Foreign Investment → NGOs & Non-Profits
+- Segment filtering works across all categories
+- Full dark mode support using project's existing theme system
+- All interactive elements meet 44px minimum touch target
+- Zero lint issues, zero TypeScript errors in new files
+
+---
+Task ID: 2-3
+Agent: Services API Agent
+Task: Create services-api mini-service with Prisma schema, seed data, and Hono API endpoints
+
+Work Log:
+- Updated `/home/z/my-project/prisma/schema.prisma` with 4 new models after existing FaqItem:
+  - ServiceCategory (id, name, slug, sort_order, services relation, timestamps)
+  - ServiceSegment (id, name, slug, sortOrder, services relation, timestamps) — mapped to `service_segments` table
+  - Service (id, title, slug, categoryId, category relation, badge, shortDescription, deliverables JSON, deliverablesFull JSON, ctaText, ctaLink, status, sortOrder, segments relation, timestamps) — mapped to `services` table
+  - ServiceToSegment (serviceId, segmentId, service/segment relations) — composite PK, mapped to `service_to_segment` table
+- Fixed Prisma schema validation: added `services ServiceToSegment[]` relation field to ServiceSegment model (was missing opposite relation)
+- Ran `bun run db:push` successfully — all 4 new tables created in SQLite database
+- Created mini-service at `/home/z/my-project/mini-services/services-api/`:
+  - `package.json` with hono dependency and dev/start scripts
+  - `index.ts` with Hono framework on port 3031 implementing:
+    - GET /api/services — Returns all published services with category name, segment names, parsed deliverables. Supports ?segment= and ?category= query params
+    - GET /api/services/:slug — Returns single service by slug with full data
+    - GET /api/categories — Returns all categories with service counts
+    - GET /api/segments — Returns all segments with service counts
+    - POST /api/admin/services — Create a service (JSON body, includes segmentIds)
+    - PUT /api/admin/services/:id — Update a service (partial update, replaces segments if provided)
+    - DELETE /api/admin/services/:id — Soft-delete (sets status=archived)
+    - GET /api/health — Health check endpoint
+    - CORS enabled for all origins
+    - Uses PrismaClient from main project (`../../node_modules/@prisma/client`)
+  - `seed.ts` with all 15 services from the blueprint:
+    - 4 categories: Business Setup, Compliance Support, Work Permits & Foreign Investment, NGOs & Non-Profits
+    - 4 segments: Local Entrepreneurs, Foreign Investors, Enterprises, NGOs
+    - 15 services with correct data (titles, slugs, descriptions, deliverables, badges, segments, sort orders)
+    - Idempotent: clears existing data before seeding
+  - `keep-alive.sh` — Restart wrapper script for process resilience
+- Ran seed script successfully — 4 categories, 4 segments, 15 services created
+- Tested all API endpoints (within single Bash call):
+  - GET /api/services: Returns 15 services with correct format, total, and categories array
+  - GET /api/services/company-registration: Returns single service with all fields including deliverables_full
+  - GET /api/categories: Returns 4 categories with service counts (6+4+3+2=15)
+  - GET /api/segments: Returns 4 segments with service counts (8+7+9+4)
+  - Filter ?segment=foreign-investors: Returns 7 filtered services
+  - Filter ?category=compliance-support: Returns 4 filtered services
+  - 404 for nonexistent slug: Returns proper error response
+- All response formats match the specified API contract
+- Frontend should call `/api/services?XTransformPort=3031` through Caddy gateway
+
+Stage Summary:
+- Prisma schema: 4 new models (ServiceCategory, ServiceSegment, Service, ServiceToSegment)
+- Database: All tables created, 15 services seeded
+- API: 8 endpoints on port 3031 (Hono + Prisma + CORS)
+- Seed: Complete data for all 15 services from blueprint
+- All endpoints tested and working correctly
+
+---
+Task ID: 2-3
+Agent: full-stack-developer subagent
+Task: Define Prisma schema for services + Create mini API service
+
+Work Log:
+- Added 4 new models to prisma/schema.prisma: ServiceCategory, ServiceSegment, Service, ServiceToSegment
+- Ran bun run db:push to create all tables
+- Created mini-service at mini-services/services-api/ with Hono framework on port 3031
+- Implemented 8 API endpoints: GET /api/services (with segment/category filtering), GET /api/services/:slug, GET /api/categories, GET /api/segments, POST/PUT/DELETE /api/admin/services, GET /api/health
+- Created seed.ts with all 15 services, 4 categories, 4 segments from the blueprint
+- Successfully seeded database and verified all endpoints
+
+Stage Summary:
+- Prisma schema extended with 4 service-related models
+- API service running on port 3031 with full CRUD support
+- 15 services, 4 categories, 4 segments seeded in SQLite database
+- Frontend should call: /api/services?XTransformPort=3031
+
+---
+Task ID: 4-5
+Agent: full-stack-developer subagent
+Task: Build service catalog frontend components
+
+Work Log:
+- Created types/service-catalog.ts with ServiceCatalogItem, ServiceCategory, ServiceSegment, ServicesResponse, SegmentFilter types
+- Created content/fallbackServiceCatalog.ts with all 15 services from blueprint, 4 categories, 4 segments
+- Created hooks/useServiceCatalog.ts with useServiceCatalog (TanStack Query + API fetch with fallback) and useServiceSegments
+- Created components/service-catalog/SegmentFilterBar.tsx - horizontal scrollable filter chips
+- Created components/service-catalog/ServiceCard.tsx - card with badge, title, divider, description, deliverables, expand/collapse, CTA + ServiceCardSkeleton
+- Created components/service-catalog/ServiceCatalogSection.tsx - full section with heading, filter, category grouping, responsive grid, loading/empty/error states
+- Created components/service-catalog/index.ts barrel export
+
+Stage Summary:
+- 7 new files created for the service catalog
+- All 15 services from blueprint with exact data in fallback content
+- Category grouping with accent-line headings
+- Segment filtering hides categories with no matching services
+- Dark mode supported via existing theme tokens
+- 44px minimum touch targets on all interactive elements
+- Blueprint colors: #0B3B5F (primary), #E67E22 (badge), #27AE60 (checks)
+
+---
+Task ID: 6
+Agent: main
+Task: Integrate new catalog into ServicesPage
+
+Work Log:
+- Replaced EngineSection import with ServiceCatalogSection import in ServicesPage.tsx
+- Updated section comment to reflect new catalog functionality
+- Rebuilt production bundle - confirmed ServiceCatalogSection and all 15 services in output
+- Build successful with zero errors
