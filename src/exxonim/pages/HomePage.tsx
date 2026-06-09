@@ -6,7 +6,6 @@ import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
 import { ReferenceHero } from "@/exxonim/components/ReferenceHero";
 import { ServicePackagesSection } from "@/exxonim/components/ServicePlansSection";
 import { ProviderSection } from "@/exxonim/components/ProviderSection";
-import { ServiceCatalogSection } from "@/exxonim/components/service-catalog";
 import { StackSection } from "@/exxonim/components/StackSection";
 import { StructuredData } from "@/exxonim/components/StructuredData";
 import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
@@ -67,9 +66,6 @@ export function HomePage() {
           {homeContent.provider_section && (
             <ProviderSection content={homeContent.provider_section} />
           )}
-
-          {/* Service Catalog — segment-filtered cards, self-contained */}
-          <ServiceCatalogSection />
 
           {homeContent.stack_section && (
             <StackSection
