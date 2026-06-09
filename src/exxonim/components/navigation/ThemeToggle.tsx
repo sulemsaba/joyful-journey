@@ -17,7 +17,7 @@ export function ThemeToggle({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center w-8 h-8 rounded-full text-text-muted hover:text-accent hover:bg-accent/10 transition-all duration-200",
+        "inline-flex items-center justify-center w-12 h-12 rounded-full text-text-muted hover:text-accent hover:bg-accent/10 transition-all duration-200",
         className
       )}
       type="button"

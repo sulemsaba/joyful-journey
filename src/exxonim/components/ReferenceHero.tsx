@@ -1,5 +1,6 @@
 
 import { useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
 import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -132,15 +133,20 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                 {content.description}
               </p>
 
-              {/* CTAs — primary + optional secondary */}
+              {/* CTAs — Hick's Law: ONE dominant primary CTA, secondary demoted to text link */}
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Button size="standard" variant="primary" href={content.cta.href} className="px-8">
+                <Button size="hero" variant="primary" href={content.cta.href} className="px-8">
                   {content.cta.label}
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
                 {hasSecondaryCta ? (
-                  <Button size="standard" variant="secondary" href={content.secondary_cta.href} className="px-8">
+                  <a
+                    href={content.secondary_cta.href}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-accent transition-colors"
+                  >
                     {content.secondary_cta.label}
-                  </Button>
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </a>
                 ) : null}
               </div>
 

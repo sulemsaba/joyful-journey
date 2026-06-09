@@ -9,11 +9,12 @@ import { forwardRef, type ReactNode } from 'react'
  *
  * TIERS (static heights, responsive padding):
  *   hero     — h-12 (48px) — Reserved for top-level hero banners only
- *   standard — h-10 (40px) — Default for all page buttons: CTAs, form submits,
+ *   standard — h-12 (48px) — Default for all page buttons: CTAs, form submits,
  *                            cookie consent, error recovery, inline actions
  *   compact  — h-8  (32px) — Navigation components only (sidebar, mega menu,
- *                            bottom bars; invisible touch-target expansion on mobile)
- *   icon     — w-9 h-9 (36px) — Close, share, arrows, toggles
+ *                            bottom bars; invisible touch-target expansion via
+ *                            ::before pseudo-element makes effective tap area 48px)
+ *   icon     — w-12 h-12 (48px) — Close, share, arrows, toggles
  *
  * VARIANTS:
  *   primary   — bg-accent text-accent-contrast (the main action)
@@ -74,19 +75,20 @@ const sizeStyles: Record<ButtonSize, string> = {
     'text-sm font-extrabold tracking-wide',
   ),
   standard: cn(
-    'h-10 px-4 sm:px-5 rounded-full',
+    'h-12 px-4 sm:px-5 rounded-full',
     'text-sm font-bold',
   ),
   compact: cn(
     'h-8 px-3 sm:px-4 rounded-full',
     'text-xs font-bold',
-    /* Touch-target expansion: visually 32px but tappable ~48px on mobile.
+    /* Fat Finger Standard (48px minimum): visually 32px but tappable 48px.
      * The ::before pseudo-element extends the hit area by 8px above/below
+     * (32px visual + 8px top + 8px bottom = 48px effective tap target)
      * without affecting layout or visual appearance. */
     'relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0',
   ),
   icon: cn(
-    'w-9 h-9 rounded-full',
+    'w-12 h-12 rounded-full',
     /* No text sizing — icon only */
   ),
 }

@@ -302,7 +302,7 @@ export function Navigation({
                 Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
             <a
               href={callHref}
-              className="hidden md:inline-flex items-center gap-2 h-9 px-3.5 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors duration-200"
+              className="hidden md:inline-flex items-center gap-2 h-12 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors duration-200"
             >
               <Phone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span className="text-[13px] font-semibold">{primaryPhone || `Contact ${brandName}`}</span>

@@ -131,3 +131,93 @@ Stage Summary:
 - All FastAPI endpoint documentation in place
 - 173 files changed, 1057 insertions, 12704 deletions (big cleanup!)
 - Site verified working on desktop + mobile
+
+---
+Task ID: 2a
+Agent: Skeleton Rule Expert
+Task: Implement "Skeleton Rule" UX standard — inline skeleton in index.html (NOT full-screen blocker)
+
+Work Log:
+- Analyzed existing hero section CSS (.hero-section: 94.5svh, max-height 600px mobile, no max-height desktop)
+- Analyzed header dimensions: 60px mobile, 68px desktop (from Navigation.tsx)
+- Analyzed review bar: 5.5svh, min-height 48px (from globals.css)
+- Analyzed existing loader animations: loader-pulse (scale 1→1.12→1), loader-dot (opacity 0→1 staggered)
+- Analyzed CSS custom properties for both light and dark themes from globals.css
+- Added <style> block to <head> with skeleton-critical CSS:
+  - Duplicated theme tokens (:root light + html[data-theme="dark"]) so skeleton renders correctly before Vite CSS bundle loads
+  - Logo theme visibility rules (.sk-logo-light/.sk-logo-dark) matching existing .logo-light/.logo-dark pattern
+  - Keyframe animations: sk-pulse (2s infinite scale) and sk-dot (1.4s staggered opacity)
+  - Skeleton layout styles: .sk-header (fixed, 60px/68px), .sk-hero (94.5svh, max-height 600px mobile), .sk-review-bar (5.5svh)
+  - Skeleton placeholder shapes: .sk-pill (accent-soft bg), .sk-pill-strong (accent-soft-strong bg)
+- Added inline skeleton HTML inside <div id="root">:
+  - Header bar placeholder: fixed position, faded favicon logo (theme-aware) + text placeholder on left, faded pill shapes for nav on right
+  - Hero section placeholder: centered favicon pulse animation + "Loading..." with animated dots
+  - Review bar placeholder: faded pill shapes
+  - All elements have aria-hidden="true" (not meaningful to screen readers)
+  - Favicon images use .sk-logo-light/.sk-logo-dark classes for correct theme-based visibility
+- Skeleton auto-hides when React hydrates (React replaces #root content entirely)
+- NOT a full-screen fixed overlay — it's inline, part of page flow
+- Lint passes clean
+- No files modified outside of index.html
+
+Stage Summary:
+- index.html: Added <style> block in <head> (theme tokens, animations, skeleton styles) + skeleton HTML shell in #root
+- Skeleton shows structure of real page (header → hero → review bar) while JS loads
+- Favicon pulse loader placed INSIDE hero area (not blocking full screen)
+- Uses CSS custom properties (var(--color-hero-bg), var(--color-accent-soft), etc.) respecting theme
+- Skeleton disappears naturally when React hydrates and replaces #root content
+---
+Task ID: 2d
+Agent: UX Agent
+Task: Implement Hick's Law UX standard — single dominant primary CTA on homepage hero
+
+Work Log:
+- Read ReferenceHero.tsx — identified two equal-weight CTAs ("Get Started" + "Explore Services") both rendered as full Button components side by side
+- Applied Hick's Law: reduced decision complexity by creating clear visual hierarchy between primary and secondary CTAs
+- Changes to ReferenceHero.tsx:
+  - Added `import { ArrowRight } from "lucide-react"` at top of file
+  - Primary CTA: Changed `size="standard"` → `size="hero"` for dominant visual weight, added ArrowRight icon (ml-2, h-4 w-4) after label text to reinforce action direction
+  - Secondary CTA: Replaced `<Button size="standard" variant="secondary">` with a subtle `<a>` text link — uses `inline-flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-accent transition-colors` styling with small ArrowRight (h-3.5 w-3.5)
+  - Updated comment from "CTAs — primary + optional secondary" to "CTAs — Hick's Law: ONE dominant primary CTA, secondary demoted to text link"
+- Did NOT modify fallbackPublicContent.ts (content unchanged, only rendering changed)
+- Lint passes clean — no errors
+
+Stage Summary:
+- ReferenceHero.tsx: Hick's Law applied — primary CTA is now a large hero button with arrow, secondary CTA demoted to a subtle text link
+- Visual hierarchy now unambiguous: "Get Started" is the obvious choice
+- Zero lint issues
+
+---
+Task ID: 2b
+Agent: UX Agent
+Task: Implement Fat Finger Standard — 48×48px minimum touch targets for all clickable elements
+
+Work Log:
+- Audited all clickable elements across the site against Apple/Google accessibility requirement (48×48px minimum)
+- Button.tsx fixes:
+  - `standard`: h-10 (40px) → h-12 (48px) — now passes 48px minimum
+  - `icon`: w-9 h-9 (36px) → w-12 h-12 (48px) — now passes 48px minimum
+  - `compact`: Kept h-8 (32px) — verified ::before pseudo-element expands tap area by 8px top/bottom (32+8+8=48px effective). Updated comment to explicitly state Fat Finger Standard compliance
+  - `hero`: Already h-12 (48px) — no change needed
+  - Updated JSDoc header comment to reflect new sizes
+- Navigation.tsx fixes:
+  - "Call Now" CTA link: h-9 (36px) → h-12 (48px), px-3.5 → px-4 — now passes 48px minimum
+  - Hamburger menu button: uses size="icon" which is now 48×48 — passes after Button fix
+- ThemeToggle.tsx fixes:
+  - Toggle button: w-8 h-8 (32px) → w-12 h-12 (48px) — now passes 48px minimum
+- Footer.tsx fixes:
+  - Social icon links (4 instances): w-11 h-11 (44px) → w-12 h-12 (48px) — now passes 48px minimum
+  - Navigation text links: Added min-h-12 py-2 to ensure 48px touch target height
+  - Resource text links: Added min-h-12 py-2 to ensure 48px touch target height
+  - Email links (2): Added inline-flex min-h-12 py-1.5 to ensure 48px touch target height
+  - Phone links (2): Added inline-flex min-h-12 py-1.5 to ensure 48px touch target height
+- ScrollToTopButton.tsx fixes:
+  - Button: h-11 w-11 (44px) → h-12 w-12 (48px) — now passes 48px minimum
+- WhatsAppButton.tsx: Already h-14 w-14 (56px) — PASSES, no change needed
+- Lint passes clean — zero errors
+
+Stage Summary:
+- All interactive elements now meet the 48×48px Fat Finger Standard
+- Key files modified: Button.tsx, Navigation.tsx, ThemeToggle.tsx, Footer.tsx, ScrollToTopButton.tsx
+- WhatsAppButton.tsx already compliant (56px) — no changes needed
+- Zero lint issues
