@@ -140,11 +140,11 @@ export function StackSection({
                 top edge where the card is pinned.                    */}
             <div
               className={cn(
-                "mx-auto flex items-center justify-center",
+                "mx-auto flex items-center justify-center w-full max-w-[1320px]",
+                // Mobile: auto height, compact padding — content dictates size
+                "min-h-0 p-6 sm:p-10",
                 // Desktop: full viewport height, generous padding
-                "lg:min-h-screen lg:max-w-[1320px] lg:p-[6.5rem_2rem]",
-                // Mobile: shorter height, compact padding
-                "min-h-[85svh] max-w-[1320px] p-8 sm:min-h-[90svh] sm:p-12",
+                "lg:min-h-screen lg:p-[6.5rem_2rem]",
                 // Sinking animation — all screen sizes
                 "transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
                 "origin-top",

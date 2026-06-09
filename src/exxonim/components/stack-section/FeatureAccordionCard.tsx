@@ -36,14 +36,9 @@ export function FeatureAccordionCard({
   const activeRow = rows[safeActiveFeatureIndex];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,620px)_1fr] items-center gap-8 lg:gap-12 h-auto w-full">
-      {/* Visual — on mobile: below accordion; on desktop: left side */}
-      <div className="flex items-start justify-center lg:order-1 max-w-full lg:max-w-none">
-        {renderFeatureVisual(activeRow.visualKey, featureVisuals)}
-      </div>
-
-      {/* Accordion — on mobile: first (content priority); on desktop: right side */}
-      <div className="grid gap-5 lg:order-2">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,620px)_1fr] items-center gap-6 lg:gap-12 w-full">
+      {/* Accordion — always first for content priority; right side on desktop */}
+      <div className="grid gap-4 lg:order-2">
         <div className="grid">
           {rows.map((row, idx) => {
             const active = idx === safeActiveFeatureIndex;
@@ -58,13 +53,13 @@ export function FeatureAccordionCard({
               >
                 <button
                   type="button"
-                  className="w-full grid grid-cols-[38px_1fr_20px] gap-3 items-center min-h-12 py-3 text-left cursor-pointer bg-transparent border-0 hover:bg-accent/5 focus-visible:outline-2 focus-visible:outline-accent transition-colors"
+                  className="w-full grid grid-cols-[34px_1fr_18px] sm:grid-cols-[38px_1fr_20px] gap-2 sm:gap-3 items-center min-h-12 py-3 text-left cursor-pointer bg-transparent border-0 hover:bg-accent/5 focus-visible:outline-2 focus-visible:outline-accent transition-colors"
                   aria-expanded={active}
                   aria-controls={panelId}
                   onClick={() => setSelectedFeatureIndex(idx)}
                 >
                   <span
-                    className={`inline-flex items-center justify-center w-[36px] h-[36px] rounded-[0.6rem] text-sm font-bold transition-colors ${
+                    className={`inline-flex items-center justify-center w-[34px] h-[34px] sm:w-[36px] sm:h-[36px] rounded-[0.5rem] sm:rounded-[0.6rem] text-sm font-bold transition-colors ${
                       active
                         ? "bg-accent text-accent-contrast"
                         : "bg-accent/10 text-text"
@@ -75,7 +70,7 @@ export function FeatureAccordionCard({
                   </span>
 
                   <span className="min-w-0">
-                    <span className="block text-[0.92rem] font-bold leading-tight transition-colors text-text">
+                    <span className="block text-[0.85rem] sm:text-[0.92rem] font-bold leading-tight transition-colors text-text">
                       {row.title}
                     </span>
                   </span>
@@ -90,12 +85,12 @@ export function FeatureAccordionCard({
                 </button>
 
                 <div
-                  className={active ? "h-auto pb-[1.15rem] pl-[calc(38px+1rem)]" : "h-0 overflow-hidden"}
+                  className={active ? "h-auto pb-3 sm:pb-[1.15rem] pl-[calc(34px+0.75rem)] sm:pl-[calc(38px+1rem)]" : "h-0 overflow-hidden"}
                   id={panelId}
                   hidden={!active}
                 >
                   <div className="max-w-[34rem]">
-                    <p className="m-0 text-[0.82rem] leading-relaxed text-text-soft">
+                    <p className="m-0 text-[0.78rem] sm:text-[0.82rem] leading-relaxed text-text-soft">
                       {row.description}
                     </p>
                   </div>
@@ -115,6 +110,11 @@ export function FeatureAccordionCard({
             <span className="ml-2">→</span>
           </Button>
         </div>
+      </div>
+
+      {/* Visual — below accordion on mobile; left side on desktop */}
+      <div className="flex items-start justify-center lg:order-1 max-w-full lg:max-w-none">
+        {renderFeatureVisual(activeRow.visualKey, featureVisuals)}
       </div>
     </div>
   );

@@ -12,12 +12,12 @@ function CardLight({
   paragraph: string;
 }) {
   return (
-    <div className="w-[140px] sm:w-[160px] lg:w-[188px] min-h-[280px] sm:min-h-[340px] lg:min-h-[412px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface text-text">
-      <div className="w-[2.5rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
-      <div className="text-[0.68rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
-      <div className="mt-2 lg:mt-3 text-[0.64rem] lg:text-[0.72rem] leading-relaxed opacity-70">{small}</div>
-      <div className="mt-4 sm:mt-6 lg:mt-8 text-[0.9rem] lg:text-[1.08rem] leading-tight font-bold">{big}</div>
-      <div className="mt-3 lg:mt-4 text-[0.74rem] lg:text-[0.84rem] leading-relaxed opacity-80">{paragraph}</div>
+    <div className="w-[130px] sm:w-[155px] lg:w-[188px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface text-text">
+      <div className="w-[2.2rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
+      <div className="text-[0.62rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
+      <div className="mt-1.5 lg:mt-3 text-[0.58rem] lg:text-[0.72rem] leading-relaxed opacity-70">{small}</div>
+      <div className="mt-3 sm:mt-5 lg:mt-8 text-[0.8rem] lg:text-[1.08rem] leading-tight font-bold">{big}</div>
+      <div className="mt-2 lg:mt-4 text-[0.66rem] lg:text-[0.84rem] leading-relaxed opacity-80">{paragraph}</div>
     </div>
   );
 }
@@ -34,16 +34,16 @@ function CardDark({
   items: string[];
 }) {
   return (
-    <div className="w-[148px] sm:w-[170px] lg:w-[198px] min-h-[280px] sm:min-h-[340px] lg:min-h-[432px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface-elevated text-text">
-      <div className="w-[2.5rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
-      <div className="text-[0.68rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
-      <div className="w-full h-px bg-current opacity-[0.12] my-3 lg:my-4" />
-      <div className="text-[0.74rem] lg:text-[0.84rem] leading-relaxed opacity-80">{paragraph}</div>
-      <div className="w-full h-px bg-current opacity-[0.12] my-3 lg:my-4" />
-      <span className="inline-flex items-center justify-center min-h-[20px] lg:min-h-[22px] px-[0.4rem] lg:px-[0.45rem] rounded-[5px] lg:rounded-[6px] bg-accent-soft text-accent text-[0.56rem] lg:text-[0.62rem] font-bold uppercase">{tag}</span>
-      <div className="mt-2 lg:mt-3 grid gap-2 lg:gap-3">
+    <div className="w-[136px] sm:w-[162px] lg:w-[198px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface-elevated text-text">
+      <div className="w-[2.2rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
+      <div className="text-[0.62rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
+      <div className="w-full h-px bg-current opacity-[0.12] my-2.5 lg:my-4" />
+      <div className="text-[0.66rem] lg:text-[0.84rem] leading-relaxed opacity-80">{paragraph}</div>
+      <div className="w-full h-px bg-current opacity-[0.12] my-2.5 lg:my-4" />
+      <span className="inline-flex items-center justify-center min-h-[18px] lg:min-h-[22px] px-[0.35rem] lg:px-[0.45rem] rounded-[4px] lg:rounded-[6px] bg-accent-soft text-accent text-[0.5rem] lg:text-[0.62rem] font-bold uppercase">{tag}</span>
+      <div className="mt-1.5 lg:mt-3 grid gap-1.5 lg:gap-3">
         {items.map((item) => (
-          <div key={item} className="text-[0.6rem] lg:text-[0.68rem] leading-relaxed opacity-90">• {item}</div>
+          <div key={item} className="text-[0.54rem] lg:text-[0.68rem] leading-relaxed opacity-90">• {item}</div>
         ))}
       </div>
     </div>
@@ -60,17 +60,17 @@ function CardNarrow({
   copy: string;
 }) {
   return (
-    <div className="w-[90px] sm:w-[100px] lg:w-[116px] min-h-[280px] sm:min-h-[340px] lg:min-h-[430px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 lg:p-3.5 pb-3 lg:pb-4 bg-surface-elevated text-text">
-      <div className="w-[2.5rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
-      <div className="text-[0.68rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
-      <div className="mt-3 lg:mt-4 text-[0.78rem] lg:text-[0.9rem] leading-tight font-bold">{title}</div>
-      <div className="mt-2 lg:mt-2.5 text-[0.58rem] lg:text-[0.66rem] leading-relaxed opacity-80">{copy}</div>
+    <div className="hidden sm:block w-[90px] lg:w-[116px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-2.5 lg:p-3.5 pb-3 lg:pb-4 bg-surface-elevated text-text">
+      <div className="w-[2.2rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
+      <div className="text-[0.62rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
+      <div className="mt-2.5 lg:mt-4 text-[0.72rem] lg:text-[0.9rem] leading-tight font-bold">{title}</div>
+      <div className="mt-1.5 lg:mt-2.5 text-[0.52rem] lg:text-[0.66rem] leading-relaxed opacity-80">{copy}</div>
     </div>
   );
 }
 
 export function ReferenceVisual({ index }: { index: number }) {
-  const shellClasses = "w-full max-w-[560px] min-h-[300px] sm:min-h-[400px] lg:min-h-[520px] p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[34px] border border-border-soft transition-all max-lg:max-w-full";
+  const shellClasses = "w-full max-w-[560px] p-4 sm:p-5 lg:p-8 rounded-2xl sm:rounded-[28px] lg:rounded-[34px] border border-border-soft transition-all max-lg:max-w-full";
 
   if (index === 0) {
     return (
@@ -115,32 +115,32 @@ function ComposeVisual({
   messageBody: string;
 }) {
   return (
-    <div className="relative w-full max-w-[560px] min-h-[340px] sm:min-h-[400px] lg:min-h-[460px] p-4 sm:p-[1.1rem] lg:p-[1.3rem] rounded-2xl sm:rounded-[2.2rem] border border-border-soft bg-surface overflow-hidden max-lg:max-w-full">
+    <div className="relative w-full max-w-[560px] p-4 sm:p-[1.1rem] lg:p-[1.3rem] rounded-2xl sm:rounded-[2.2rem] border border-border-soft bg-surface overflow-hidden max-lg:max-w-full">
       <div className="absolute left-[1.5rem] sm:left-[2rem] lg:left-[2.4rem] top-0 bottom-0 w-[1px] bg-border-soft" aria-hidden="true" />
 
-      <div className="relative z-10 grid gap-[0.8rem] sm:gap-[1rem] lg:gap-[1.1rem] max-w-[85%] sm:max-w-[80%]">
-        <div className="text-[1rem] sm:text-[1.1rem] lg:text-[1.15rem] font-bold text-text">{title}</div>
+      <div className="relative z-10 grid gap-[0.7rem] sm:gap-[0.9rem] lg:gap-[1.1rem] max-w-[88%] sm:max-w-[80%]">
+        <div className="text-[0.9rem] sm:text-[1.05rem] lg:text-[1.15rem] font-bold text-text">{title}</div>
 
         <div>
-          <div className="text-[0.62rem] sm:text-[0.66rem] lg:text-[0.68rem] font-bold uppercase tracking-[0.12em] text-text-soft mb-1.5">{label}</div>
-          <div className="inline-flex items-center min-h-[1.6rem] sm:min-h-[1.8rem] px-[0.6rem] sm:px-[0.8rem] rounded-[0.5rem] sm:rounded-[0.6rem] bg-accent-soft text-accent text-[0.7rem] sm:text-[0.78rem] font-bold">{pill}</div>
+          <div className="text-[0.58rem] sm:text-[0.64rem] lg:text-[0.68rem] font-bold uppercase tracking-[0.12em] text-text-soft mb-1.5">{label}</div>
+          <div className="inline-flex items-center min-h-[1.5rem] sm:min-h-[1.8rem] px-[0.55rem] sm:px-[0.8rem] rounded-[0.45rem] sm:rounded-[0.6rem] bg-accent-soft text-accent text-[0.62rem] sm:text-[0.74rem] font-bold">{pill}</div>
         </div>
 
         {rows.map((row) => (
           <div key={row.label} className="grid grid-cols-[1fr_1.8fr] gap-2 sm:gap-3 items-center">
-            <span className="text-[0.64rem] sm:text-[0.68rem] lg:text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-soft">{row.label}</span>
-            <span className="text-[0.74rem] sm:text-[0.8rem] lg:text-[0.82rem] text-text-soft">{row.value}</span>
+            <span className="text-[0.58rem] sm:text-[0.66rem] lg:text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-soft">{row.label}</span>
+            <span className="text-[0.68rem] sm:text-[0.78rem] lg:text-[0.82rem] text-text-soft">{row.value}</span>
           </div>
         ))}
 
         <div className="grid grid-cols-[1fr_1.8fr] gap-2 sm:gap-3 items-start">
-          <span className="text-[0.64rem] sm:text-[0.68rem] lg:text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-soft">{subjectLabel}</span>
-          <span className="inline-flex items-center justify-center min-h-[1.8rem] sm:min-h-[2rem] px-2 sm:px-3 rounded-[0.4rem] sm:rounded-[0.5rem] border border-border-soft bg-surface-elevated text-text text-[0.7rem] sm:text-[0.8rem]">{subjectValue}</span>
+          <span className="text-[0.58rem] sm:text-[0.66rem] lg:text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-soft">{subjectLabel}</span>
+          <span className="inline-flex items-center justify-center min-h-[1.6rem] sm:min-h-[2rem] px-2 sm:px-3 rounded-[0.35rem] sm:rounded-[0.5rem] border border-border-soft bg-surface-elevated text-text text-[0.62rem] sm:text-[0.76rem]">{subjectValue}</span>
         </div>
 
         <div className="mt-1 sm:mt-2 grid gap-1 sm:gap-1.5">
-          <h4 className="m-0 text-[0.82rem] sm:text-[0.88rem] lg:text-[0.92rem] font-bold leading-tight text-text">{messageTitle}</h4>
-          <p className="m-0 text-[0.7rem] sm:text-[0.74rem] lg:text-[0.78rem] leading-relaxed text-text-soft">{messageBody}</p>
+          <h4 className="m-0 text-[0.76rem] sm:text-[0.86rem] lg:text-[0.92rem] font-bold leading-tight text-text">{messageTitle}</h4>
+          <p className="m-0 text-[0.64rem] sm:text-[0.72rem] lg:text-[0.78rem] leading-relaxed text-text-soft">{messageBody}</p>
         </div>
       </div>
     </div>
