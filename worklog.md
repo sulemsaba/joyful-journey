@@ -447,3 +447,29 @@ Stage Summary:
 - vite.config.ts: Fixed fs.allow, optimizeDeps, watch.ignored
 - Dev server running on port 3000, accessible through Caddy gateway (port 81)
 - Lint passes clean, site renders correctly
+
+---
+Task ID: 1
+Agent: main
+Task: Fix missing "Trusted by" ProviderSection on homepage + address previous UI complaints about background colors on images
+
+Work Log:
+- Investigated why "Trusted by" section was not visible on the homepage
+- Found that `ProviderSection` component existed in codebase but was never imported/rendered in `HomePage.tsx`
+- Verified `HomePageContent` type includes `provider_section: ProviderSectionContent`
+- Verified fallback content includes all 10 client logos with correct paths
+- Verified all logo image files exist in `/public/clients/` directory
+- Added `ProviderSection` import to `HomePage.tsx`
+- Added conditional render: `{homeContent.provider_section && <ProviderSection content={homeContent.provider_section} />}` between ReferenceHero and StackSection
+- Added "Trusted by" skeleton section to `HomePageSkeleton` in LoadBoundary.tsx (section 3) between review bar and feature cards
+- Updated section numbering comments (4→5, 5→6, 6→7) in skeleton
+- Verified `.img-placeholder` is only used on blog post images (opt-in), NOT on logos — no background color issue on provider logos
+- Confirmed no global `img { background-color }` rule exists — previous complaint was already addressed
+- Rebuilt Vite production bundle — confirmed `provider_section` data and `ProviderSection` component both present in JS bundle
+- Vite dev server running on port 3000 with no errors
+
+Stage Summary:
+- `ProviderSection` now renders on homepage between hero and features section
+- HomePageSkeleton includes trusted-by skeleton placeholder for seamless loading
+- No background color issues on logos — `.img-placeholder` is opt-in only
+- Site rebuild confirmed working

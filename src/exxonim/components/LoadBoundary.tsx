@@ -153,7 +153,24 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 3. Feature cards (StackSection) ────────────────
+      {/* ── 3. Trusted-by logos (ProviderSection) ──────────
+       * Matches ProviderSection: "Trusted by" label + marquee track.
+       */}
+      <section aria-hidden="true" className="relative bg-page">
+        <p className="m-0 text-center text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft pt-5 pb-2">
+          Trusted by
+        </p>
+        <div className="pb-5 flex items-center justify-center gap-8 px-8">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-8 sm:h-10 md:h-12 w-16 sm:w-24 md:w-32 rounded-lg bg-accent-soft animate-pulse"
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ── 4. Feature cards (StackSection) ────────────────
        * Simplified placeholder for the stacked card area.
        * The real StackSection is complex (sticky stacking), so we
        * show a representative card shape.
@@ -174,7 +191,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 4. Pricing plans ───────────────────────────────
+      {/* ── 5. Pricing plans ───────────────────────────────
        * Matches ServicePackagesSection: 3-column grid of PlanCards.
        * The middle card is "featured" (dark bg), matching the real layout.
        */}
@@ -259,7 +276,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 5. Blog posts rail ─────────────────────────────
+      {/* ── 6. Blog posts rail ─────────────────────────────
        * Matches InsightsSection: heading + horizontal card rail.
        */}
       <section aria-hidden="true" className="py-[clamp(80px,10vw,124px)]">
@@ -312,7 +329,7 @@ export function HomePageSkeleton() {
         </div>
       </section>
 
-      {/* ── 6. Newsletter section ──────────────────────────
+      {/* ── 7. Newsletter section ──────────────────────────
        * Matches NewsletterSection: centered CTA card.
        */}
       <section aria-hidden="true" className="py-10 md:py-16">
