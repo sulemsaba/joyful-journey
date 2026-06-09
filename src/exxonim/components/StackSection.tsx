@@ -31,10 +31,10 @@ const stackPositionClassesLg = [
 /* Mobile: tighter offsets — just enough to see the stack peek */
 const stackPositionClassesSm = [
   "[--stack-top-sm:calc(var(--header-height,56px)+0px)]",
-  "[--stack-top-sm:calc(var(--header-height,56px)+20px)]",
-  "[--stack-top-sm:calc(var(--header-height,56px)+40px)]",
-  "[--stack-top-sm:calc(var(--header-height,56px)+60px)]",
-  "[--stack-top-sm:calc(var(--header-height,56px)+80px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+24px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+48px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+72px)]",
+  "[--stack-top-sm:calc(var(--header-height,56px)+96px)]",
 ];
 
 const Z_BASE = 6;
@@ -59,10 +59,12 @@ export function StackSection({
   );
 
   /* ── Scroll-driven active card tracking ───────────────────────
-   * Works on ALL screen sizes. As the user scrolls, we calculate
-   * which card is "on top". Covered cards get a sinking animation:
-   *   - scale(0.96) — shrinks toward its top edge
-   *   - translateY(16px) — slides down behind the emerging card
+   * As the user scrolls through the section, we determine which
+   * card is "on top". Cards that are covered get a dramatic
+   * sinking animation:
+   *   - scale(0.90) — shrinks noticeably toward its top edge
+   *   - translateY(32px) — visibly slides down behind the next
+   *   - opacity(0.5) — dims to reinforce depth illusion
    *
    * Cards are completely opaque (solid bg-page) so no content
    * from below ever bleeds through.                               */
@@ -115,6 +117,7 @@ export function StackSection({
         const item = rawItem as ExtendedStackItem;
         const isFeatureCard = index === 1;
         const isCovered = index < activeIndex;
+        const isActive = index === activeIndex;
 
         return (
           <article
@@ -141,15 +144,17 @@ export function StackSection({
             <div
               className={cn(
                 "mx-auto flex items-center justify-center w-full max-w-[1320px]",
-                // Mobile: auto height, compact padding — content dictates size
-                "min-h-0 p-6 sm:p-10",
+                // Mobile: tall enough for stacking scroll distance, compact padding
+                "min-h-[80svh] p-6 sm:p-10",
                 // Desktop: full viewport height, generous padding
                 "lg:min-h-screen lg:p-[6.5rem_2rem]",
-                // Sinking animation — all screen sizes
-                "transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                // Dramatic sinking animation — all screen sizes
+                "transition-all duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
                 "origin-top",
-                // When covered: scale down + sink behind
-                isCovered && "scale-[0.96] translate-y-4"
+                // Active card: slight lift shadow for depth
+                isActive && "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)]",
+                // When covered: dramatic scale down + sink + dim
+                isCovered && "scale-[0.90] translate-y-8 opacity-50"
               )}
             >
               {isFeatureCard ? (
