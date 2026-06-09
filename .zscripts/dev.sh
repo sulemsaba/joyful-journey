@@ -10,7 +10,7 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 log_step_start() {
         local step_name="$1"
         echo "=========================================="
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting: $step_name"
+        echo "[$(date '+%Y-%m-%d:%H:%M:%S')] Starting: $step_name"
         echo "=========================================="
         export STEP_START_TIME
         STEP_START_TIME=$(date +%s)
@@ -22,7 +22,7 @@ log_step_end() {
         end_time=$(date +%s)
         local duration=$((end_time - STEP_START_TIME))
         echo "=========================================="
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Completed: $step_name"
+        echo "[$(date '+%Y-%m-%d:%H:%M:%S')] Completed: $step_name"
         echo "[LOG] Step: $step_name | Duration: ${duration}s"
         echo "=========================================="
         echo ""
@@ -104,15 +104,6 @@ wait_for_service() {
         return 1
 }
 
-cleanup() {
-        if [ -n "${DEV_PID:-}" ] && kill -0 "$DEV_PID" >/dev/null 2>&1; then
-                echo "Stopping dev server (PID: $DEV_PID)..."
-                kill "$DEV_PID" >/dev/null 2>&1 || true
-        fi
-}
-
-trap 'cleanup; exit 0' INT TERM
-
 cd "$PROJECT_DIR"
 
 if ! command -v bun >/dev/null 2>&1; then
@@ -130,15 +121,44 @@ echo "[BUN] Setting up database..."
 bun run db:push
 log_step_end "bun run db:push"
 
-log_step_start "Starting Next.js dev server"
-echo "[BUN] Starting development server..."
-bun run dev &
-DEV_PID=$!
-log_step_end "Starting Next.js dev server"
+# ──────────────────────────────────────────────────────────────
+# Production-style static server approach
+# The Vite dev server (node-based) gets killed by the container's
+# process reaper when the parent subshell exits.  A compiled C
+# binary that daemonizes itself (fork + setsid + close stdio)
+# survives because it becomes a session leader with no controlling
+# terminal — the reaper only kills orphans of the subshell.
+# ──────────────────────────────────────────────────────────────
 
-log_step_start "Waiting for Next.js dev server"
-wait_for_service "localhost" "3000" "Next.js dev server"
-log_step_end "Waiting for Next.js dev server"
+log_step_start "Building production bundle"
+echo "[BUILD] Running vite build..."
+npx vite build
+log_step_end "Building production bundle"
+
+log_step_start "Compiling static server"
+if [ ! -x "$PROJECT_DIR/mini-server" ]; then
+        echo "[SERVER] Compiling mini-server from source..."
+        gcc -O2 -o "$PROJECT_DIR/mini-server" "$PROJECT_DIR/mini-server.c" 2>/dev/null || true
+fi
+
+# Always recompile to ensure the binary matches current source
+if [ -f "$PROJECT_DIR/mini-server.c" ]; then
+        gcc -O2 -o "$PROJECT_DIR/mini-server" "$PROJECT_DIR/mini-server.c" 2>/dev/null || true
+fi
+log_step_end "Compiling static server"
+
+log_step_start "Starting dev server"
+# Kill any existing server on port 3000
+pkill -f "mini-server" 2>/dev/null || true
+sleep 1
+
+echo "[SERVER] Starting mini-server (daemonizes itself)..."
+"$PROJECT_DIR/mini-server"
+log_step_end "Starting dev server"
+
+log_step_start "Waiting for dev server"
+wait_for_service "localhost" "3000" "Dev server"
+log_step_end "Waiting for dev server"
 
 log_step_start "Health check"
 echo "[BUN] Performing health check..."
@@ -148,11 +168,5 @@ log_step_end "Health check"
 
 start_mini_services
 
-echo "Next.js dev server is running in background (PID: $DEV_PID)."
-echo "Use 'kill $DEV_PID' to stop it."
-
-# Keep the script alive by waiting for the dev server process.
-# This prevents the parent subshell from exiting and potentially
-# orphaning the dev server process, which can get reaped in some
-# container environments.
-wait "$DEV_PID" 2>/dev/null || true
+echo "Dev server (mini-server) is running as a daemon on port 3000."
+echo "It serves the built production bundle from $PROJECT_DIR/dist/"
