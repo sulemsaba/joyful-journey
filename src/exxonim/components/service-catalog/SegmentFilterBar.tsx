@@ -38,8 +38,16 @@ export function SegmentFilterBar({
                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B3B5F]',
                 'inline-flex items-center justify-center',
                 isActive
-                  ? 'bg-[#0B3B5F] text-white shadow-[0_2px_8px_rgba(11,59,95,0.2)] border border-[#0B3B5F]'
-                  : 'bg-white text-[#1E2A32] border border-[#E2E8F0] hover:bg-[#F1F5F9] hover:border-[#CBD5E1]'
+                  ? cn(
+                      'shadow-[0_2px_8px_rgba(11,59,95,0.2)]',
+                      'bg-[#0B3B5F] dark:bg-accent text-white dark:text-accent-contrast',
+                      'border border-[#0B3B5F] dark:border-accent'
+                    )
+                  : cn(
+                      'bg-white dark:bg-surface text-[#1E2A32] dark:text-text',
+                      'border border-[#E2E8F0] dark:border-border-soft',
+                      'hover:bg-[#F1F5F9] dark:hover:bg-surface-soft hover:border-[#CBD5E1] dark:hover:border-border-strong'
+                    )
               )}
               aria-pressed={isActive}
               aria-label={`Filter by ${seg.label}`}
@@ -51,7 +59,7 @@ export function SegmentFilterBar({
       </div>
       {/* Right-edge gradient fade to indicate more items */}
       <div
-        className="pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-[#F8FAFE] to-transparent"
+        className="pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-[#F8FAFE] dark:from-page-strong to-transparent"
         aria-hidden="true"
       />
     </div>

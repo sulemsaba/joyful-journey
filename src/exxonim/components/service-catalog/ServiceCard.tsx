@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
 
@@ -17,7 +17,7 @@ function getBadgeStyles(badge: string) {
   if (badge === 'Most Popular') {
     return 'bg-[#E67E22] text-white';
   }
-  return 'bg-[#FEF3E2] text-[#E67E22]';
+  return 'bg-[#FEF3E2] text-[#E67E22] dark:bg-[rgba(230,126,34,0.15)] dark:text-[#E67E22]';
 }
 
 export function ServiceCard({ service, className }: ServiceCardProps) {
@@ -30,10 +30,13 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
       className={cn(
         'group flex flex-col rounded-[20px]',
         'p-5 md:p-6',
-        'bg-white border border-[#EDF2F7]',
+        'bg-white dark:bg-surface',
+        'border border-[#EDF2F7] dark:border-border-soft',
         'shadow-[0_4px_12px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.05)]',
+        'dark:shadow-[0_4px_12px_rgba(0,0,0,0.15)]',
         'transition-[transform,box-shadow] duration-200 ease-out',
         'hover:-translate-y-0.5 hover:shadow-[0_20px_25px_-12px_rgba(0,0,0,0.08),0_8px_10px_-6px_rgba(0,0,0,0.02)]',
+        'dark:hover:shadow-[0_20px_25px_-12px_rgba(0,0,0,0.3)]',
         'h-full',
         className
       )}
@@ -52,12 +55,12 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
       )}
 
       {/* Title */}
-      <h3 className="text-[1.25rem] font-bold text-[#0B3B5F] leading-[1.3] mb-3">
+      <h3 className="text-[1.25rem] font-bold text-[#0B3B5F] dark:text-accent leading-[1.3] mb-3">
         {service.title}
       </h3>
 
       {/* Description */}
-      <p className="text-sm text-[#334155] leading-relaxed mb-5 flex-1">
+      <p className="text-sm text-[#334155] dark:text-text-muted leading-relaxed mb-5 flex-1">
         {service.short_description}
       </p>
 
@@ -66,10 +69,10 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         {service.deliverables.map((item) => (
           <li
             key={item}
-            className="flex items-center gap-2 text-[0.8125rem] text-[#1E2A32] py-1.5 border-b border-[#F1F5F9] last:border-b-0"
+            className="flex items-center gap-2 text-[0.8125rem] text-[#1E2A32] dark:text-text py-1.5 border-b border-[#F1F5F9] dark:border-border-soft last:border-b-0"
           >
             <Check
-              className="w-4 h-4 flex-shrink-0 text-[#27AE60]"
+              className="w-4 h-4 flex-shrink-0 text-[#27AE60] dark:text-success"
               aria-hidden="true"
             />
             <span>{item}</span>
@@ -88,15 +91,15 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
             )}
             aria-hidden={!expanded}
           >
-            <div className="mt-1 pl-2 border-l-2 border-[#E2E8F0] mb-2">
+            <div className="mt-1 pl-2 border-l-2 border-[#E2E8F0] dark:border-border-soft mb-2">
               <ul className="list-none m-0 p-0" role="list">
                 {service.deliverables_full!.map((item) => (
                   <li
                     key={item}
-                    className="flex items-center gap-2 text-[0.8125rem] text-[#1E2A32] py-1.5 border-b border-[#F1F5F9] last:border-b-0"
+                    className="flex items-center gap-2 text-[0.8125rem] text-[#1E2A32] dark:text-text py-1.5 border-b border-[#F1F5F9] dark:border-border-soft last:border-b-0"
                   >
                     <Check
-                      className="w-4 h-4 flex-shrink-0 text-[#27AE60]"
+                      className="w-4 h-4 flex-shrink-0 text-[#27AE60] dark:text-success"
                       aria-hidden="true"
                     />
                     <span>{item}</span>
@@ -111,7 +114,7 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
             onClick={() => setExpanded(!expanded)}
             className={cn(
               'inline-flex items-center justify-center gap-1.5 min-h-[44px]',
-              'text-xs font-medium text-[#0B3B5F]',
+              'text-xs font-medium text-[#0B3B5F] dark:text-accent',
               'bg-transparent border-none cursor-pointer',
               'mt-1 mb-3 p-0',
               'underline underline-offset-[3px]',
@@ -137,9 +140,9 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         className={cn(
           'block w-full text-center rounded-[40px]',
           'min-h-[44px] px-4 py-3',
-          'bg-[#0B3B5F] text-white text-sm font-semibold',
+          'bg-[#0B3B5F] dark:bg-accent text-white dark:text-accent-contrast text-sm font-semibold',
           'transition-all duration-200 ease-out',
-          'hover:bg-[#1E4A6F]',
+          'hover:bg-[#1E4A6F] dark:hover:bg-accent-hover',
           'active:scale-[0.98]',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B3B5F]',
           'mt-auto'
@@ -158,7 +161,8 @@ export function ServiceCardSkeleton() {
       className={cn(
         'flex flex-col rounded-[20px]',
         'p-5 md:p-6',
-        'bg-white border border-[#EDF2F7]',
+        'bg-white dark:bg-surface',
+        'border border-[#EDF2F7] dark:border-border-soft',
         'shadow-[0_4px_12px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.05)]'
       )}
       aria-hidden="true"
