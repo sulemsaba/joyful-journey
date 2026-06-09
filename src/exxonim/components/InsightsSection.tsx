@@ -105,6 +105,8 @@ function renderMedia(post: BlogPost, categoryLabel?: string) {
           className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
           src={post.coverImageSrc}
           alt={post.coverAlt ?? post.title}
+          width={360}
+          height={225}
           loading="lazy"
         />
         <MediaOverlay category={categoryLabel} label={post.mediaLabel || post.title} />
@@ -253,7 +255,7 @@ export function InsightsSection({
 
                       <a
                         href={resourceArticlePath(post.slug)}
-                        className="inline-flex items-center gap-2 whitespace-nowrap text-[0.88rem] font-bold text-accent transition-colors hover:text-accent-hover"
+                        className="inline-flex items-center gap-2 min-h-12 py-2 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 whitespace-nowrap text-[0.88rem] font-bold text-accent transition-colors hover:text-accent-hover"
                       >
                         Learn more
                         <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[3px]">
@@ -280,7 +282,7 @@ export function InsightsSection({
             <RailButton onClick={onNext} label="Next insight">
               <ArrowRight className="h-5 w-5" />
             </RailButton>
-            <Button size="standard" variant="primary" href={routes.resources}>
+            <Button size="standard" variant="outline" href={routes.resources}>
               See more
             </Button>
           </div>

@@ -482,12 +482,9 @@ function PlanCard({ plan, featured }: { plan: PricingPlan; featured: boolean }) 
 
       <Button
         size="standard"
-        variant="primary"
+        variant={featured ? "primary" : "outline"}
         href={routes.contact}
-        className={cn(
-          "mt-6",
-          !featured && "bg-cta-secondary text-surface hover:opacity-90"
-        )}
+        className="mt-6"
       >
         {featured ? 'Book a Free Consultation' : 'Get Started'}
       </Button>

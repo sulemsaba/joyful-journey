@@ -125,7 +125,7 @@ export function NewsletterSection() {
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="text-xs text-text-soft underline-offset-2 hover:underline hover:text-accent transition-colors"
+                    className="inline-flex items-center min-h-12 px-3 py-2 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 text-xs text-text-soft underline-offset-2 hover:underline hover:text-accent transition-colors"
                   >
                     Use a different email
                   </button>

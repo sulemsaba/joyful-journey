@@ -56,7 +56,7 @@ export function FeatureAccordionCard({
               >
                 <button
                   type="button"
-                  className="w-full grid grid-cols-[38px_1fr_20px] gap-3 items-center py-3.5 text-left cursor-pointer bg-transparent border-0 hover:bg-accent/5 focus-visible:outline-2 focus-visible:outline-accent transition-colors"
+                  className="w-full grid grid-cols-[38px_1fr_20px] gap-3 items-center min-h-12 py-3 text-left cursor-pointer bg-transparent border-0 hover:bg-accent/5 focus-visible:outline-2 focus-visible:outline-accent transition-colors"
                   aria-expanded={active}
                   aria-controls={panelId}
                   onClick={() => setSelectedFeatureIndex(idx)}
@@ -106,7 +106,7 @@ export function FeatureAccordionCard({
         <div className="flex items-center gap-3 flex-wrap">
           <Button
             size="standard"
-            variant="primary"
+            variant="secondary"
             href={item.ctaHref || "#"}
           >
             {item.ctaLabel || "Explore Services"}

@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { InsightsSection } from "@/exxonim/components/InsightsSection";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
+import { HomePageSkeleton } from "@/exxonim/components/LoadBoundary";
 import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
 import { ProviderSection } from "@/exxonim/components/ProviderSection";
 import { ReferenceHero } from "@/exxonim/components/ReferenceHero";
@@ -16,6 +17,14 @@ import type { HomePageContent } from '@/exxonim/types';
 
 /**
  * Homepage — the primary landing page for Exxonim.
+ *
+ * UX RULE 1 — SKELETON SCREENS:
+ * ─────────────────────────────
+ * While the page content is loading, a shape-aware `HomePageSkeleton`
+ * is shown instead of a generic spinner. It mirrors the real page
+ * layout (hero → review bar → trusted-by logos → features → pricing
+ * → blog rail → newsletter) so the transition to real content feels
+ * seamless and CLS is minimised.
  *
  * BACKEND / ADMIN INTEGRATION NOTES (Blog articles on homepage):
  * ─────────────────────────────────────────────────────────────
@@ -76,12 +85,20 @@ export function HomePage() {
     });
   }, []);
 
+  /* ── UX Rule 1: Shape-aware skeleton while page loads ──
+   * Show the HomePageSkeleton (which mirrors the real layout)
+   * instead of the generic ContentSkeleton. This eliminates
+   * layout shift when real content appears. */
+  if (pagePending && !page) {
+    return <HomePageSkeleton />;
+  }
+
   return (
     <LoadBoundary
       error={pageError}
       errorDetail="The homepage content could not be loaded right now."
       errorTitle="Unable to load the homepage."
-      isPending={pagePending}
+      isPending={false}
       isReady={Boolean(page)}
       loadingLabel="Loading homepage..."
     >

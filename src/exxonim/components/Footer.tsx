@@ -85,6 +85,8 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               <img
                 src={brand.darkLogoSrc}
                 alt={brand.name}
+                width={160}
+                height={44}
                 loading="lazy"
                 onError={(event) => {
                   const img = event.currentTarget;

@@ -32,7 +32,7 @@ export function StatementCard({
         <div className="flex items-center gap-3 flex-wrap mt-4">
           <Button
             size="standard"
-            variant="primary"
+            variant="secondary"
             href={item.ctaHref || "/contact/"}
           >
             {item.ctaLabel || "Contact Exxonim"}

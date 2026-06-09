@@ -884,6 +884,15 @@ html[data-theme="dark"] select[class*="appearance-none"] {
   display: none;
 }
 
+/* ── Image placeholder background (zero CLS) ────────
+ * Gives <img> elements a subtle tinted background
+ * while the image loads, preventing a white/transparent
+ * flash that causes CLS-like visual jumps.
+ */
+img {
+  background-color: var(--color-accent-soft);
+}
+
 /* ── Smooth selection color ───────────────────────── */
 ::selection {
   background: rgba(15, 92, 99, 0.2);
