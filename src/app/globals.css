@@ -308,14 +308,6 @@ html, body {
   from { transform: translateY(0); }
   to { transform: translateY(-18%); }
 }
-@keyframes page-loader-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-@keyframes page-loader-fade {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
 /* ── Favicon loader: smooth scale pulse in/out ──── */
 @keyframes loader-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }

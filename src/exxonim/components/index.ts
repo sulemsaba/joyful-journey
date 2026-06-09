@@ -8,7 +8,6 @@ export { InsightsSection } from "./InsightsSection";
 export { LoadBoundary } from "./LoadBoundary";
 export { LoadingSpinner } from "./LoadingSpinner";
 export { Navigation } from "./Navigation";
-export { PageLoader } from "./PageLoader";
 export { PrivacyConsentBanner } from "./PrivacyConsentBanner";
 export { ProviderSection } from "./ProviderSection";
 export { ReferenceHero } from "./ReferenceHero";
