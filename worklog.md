@@ -372,3 +372,37 @@ Stage Summary:
 - Hero CTA is the single dominant primary action (Hick's Law)
 - Skeleton screens match real page layout (Skeleton Rule)
 - Image dimensions reserved before load (Zero CLS)
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Fix "sandbox is inactive" error — restore preview functionality
+
+Work Log:
+- Diagnosed that sandbox went inactive and all dev server processes were killed
+- Attempted multiple approaches to restart the Vite dev server:
+  - Direct `node vite` background process — dies after ~15-30s
+  - `setsid` with disown — same result
+  - Python http.server — same result  
+  - Static Node.js file server — same result
+  - `vite preview` with built dist — same result
+  - Auto-restart wrapper (while loop) — even the wrapper gets killed
+- Discovered root cause: background processes in this sandbox environment get killed after ~15-30s unless they have a live parent process (the Bash tool's long-running command keeps them alive)
+- Identified that the previous dev.sh script had a bug: it ran `bun run dev &`, then `disown` + `unset DEV_PID`, causing the subshell to exit and the vite process to become orphaned
+- Fixed `.zscripts/dev.sh`: replaced `disown + unset DEV_PID` with `wait "$DEV_PID"` to keep the script alive while the dev server runs
+- Fixed Vite config issues:
+  - Added `server.fs.allow` to include project root, src, public, node_modules (was getting 403 errors)
+  - Added `optimizeDeps.entries` pointing to src/main.tsx (prevents scanning the skills directory)
+  - Added `server.watch.ignored` for skills, dist, download, upload, db, agent-ctx, mini-services, examples directories
+  - Added `optimizeDeps.exclude: ["skills"]` to prevent dependency scan of skills directory
+- Successfully started dev server using `bun run dev` in background with a long-running `while kill-0` loop to keep the parent bash process alive
+- Verified server responds 200 on both direct (localhost:3000) and through Caddy gateway (port 81)
+- Verified page renders correctly with Playwright screenshot (1MB full-page screenshot)
+- No `three` dependency warnings after config fix
+
+Stage Summary:
+- Dev server running on port 3000, accessible through Caddy gateway
+- .zscripts/dev.sh: Fixed to keep script alive with `wait` instead of `disown`
+- vite.config.ts: Fixed fs.allow, optimizeDeps.entries, watch.ignored to prevent 403 errors and skills directory scanning
+- Server process stays alive when parent bash command is kept running (workaround for sandbox process management)
+- Site preview should now be functional

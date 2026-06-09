@@ -13,6 +13,31 @@ export default defineConfig({
     port: 3000,
     host: true,
     allowedHosts: true,
+    watch: {
+      ignored: [
+        "**/skills/**",
+        "**/dist/**",
+        "**/download/**",
+        "**/upload/**",
+        "**/db/**",
+        "**/agent-ctx/**",
+        "**/.zscripts/**",
+        "**/mini-services/**",
+        "**/examples/**",
+      ],
+    },
+    fs: {
+      allow: [
+        path.resolve(__dirname),
+        path.resolve(__dirname, "./src"),
+        path.resolve(__dirname, "./public"),
+        path.resolve(__dirname, "./node_modules"),
+      ],
+    },
+  },
+  optimizeDeps: {
+    exclude: ["skills"],
+    entries: [path.resolve(__dirname, "./src/main.tsx")],
   },
   build: {
     outDir: "dist",
