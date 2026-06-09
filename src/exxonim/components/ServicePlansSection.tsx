@@ -19,7 +19,7 @@
  */
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
@@ -77,8 +77,10 @@ const TestimonialCard = memo(function TestimonialCard({
       aria-label={`Testimonial from ${testimonial.name}`}
     >
       {/* Star rating — always 5 stars */}
-      <p className="text-star text-sm tracking-wider mb-3" aria-label="5 out of 5 stars">
-        ★★★★★
+      <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
+        {[...Array(5)].map((_, i) => (
+          <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+        ))}
       </p>
       <p className="text-[0.9375rem] leading-relaxed text-text-muted flex-1">
         &ldquo;{testimonial.quote}&rdquo;

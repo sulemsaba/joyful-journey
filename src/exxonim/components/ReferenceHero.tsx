@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -181,8 +181,10 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
           <span className="text-[clamp(0.85rem,1.8vw,1rem)] font-medium text-text-muted">
             Google Rating
           </span>
-          <span className="text-[1.1rem] tracking-[2px] text-star">
-            ★★★★★
+          <span className="flex items-center gap-0.5 text-star">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+            ))}
           </span>
           <span className="text-[clamp(0.85rem,1.8vw,1rem)] font-medium text-text-muted">
             5.0

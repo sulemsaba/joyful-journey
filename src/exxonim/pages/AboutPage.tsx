@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, ArrowRight, CheckCircle, Clock, ShieldCheck, Target, Users, Eye } from 'lucide-react';
+import { Home, ArrowRight, CheckCircle, Clock, ShieldCheck, Target, Users, Eye, Star } from 'lucide-react';
 import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { routes } from '@/exxonim/routes';
@@ -137,8 +137,10 @@ export function AboutPage() {
                           {GOOGLE_REVIEW_RATING}
                         </span>
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-[1rem] tracking-[1.5px] text-star leading-none">
-                            ★★★★★
+                          <span className="flex items-center gap-0.5 text-star leading-none">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+                            ))}
                           </span>
                           {/* REVIEW_COUNT: This "+N" display is sourced from the hardcoded
                               REVIEW_COUNT constant above. When integrating with Google
