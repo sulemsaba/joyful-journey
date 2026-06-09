@@ -31,11 +31,11 @@ export function ServicesFaqSection({ items }: ServicesFaqSectionProps) {
   return (
     <section
       aria-labelledby="services-faq-title"
-      className="py-16 md:py-24"
+      className="py-10 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         {/* ─── Section Header ─── */}
-        <div className="grid gap-3 mb-10 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+        <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
             Frequently asked questions
           </p>

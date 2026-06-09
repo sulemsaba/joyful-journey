@@ -67,11 +67,11 @@ export function ExxonimApartSection() {
   return (
     <section
       aria-labelledby="exxonim-apart-title"
-      className="py-16 md:py-24"
+      className="py-10 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         {/* ─── Section Header ─── */}
-        <div className="grid gap-3 mb-10 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto">
+        <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto">
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
             Our edge
           </p>
@@ -84,14 +84,14 @@ export function ExxonimApartSection() {
         </div>
 
         {/* ─── Differentiator Cards Grid ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {differentiators.map((card) => (
             <article
               key={card.title}
-              className="rounded-[1.5rem] border border-border-soft bg-surface/88 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+              className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
             >
               {/* Icon */}
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-accent-soft text-accent mb-4">
+              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-3 md:mb-4">
                 {card.icon}
               </div>
 

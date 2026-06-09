@@ -41,14 +41,14 @@ export function ServiceCatalogSection() {
   }, [allServices]);
 
   return (
-    <section id="service-catalog" className={cn('py-10 md:py-16')}>
+    <section id="service-catalog" className={cn('py-6 md:py-16')}>
       <Container>
         {/* Page Header */}
-        <div className="mb-8 md:mb-10">
-          <h1 className="text-2xl md:text-3xl font-bold text-text mb-2">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-text mb-2">
             Our Services
           </h1>
-          <p className="text-base max-w-xl text-text-muted">
+          <p className="text-sm md:text-base max-w-xl text-text-muted">
             Registration, compliance, work permits &amp; NGO advisory. Browse by category or filter by who you are.
           </p>
         </div>

@@ -116,15 +116,15 @@ export function ServicesOverviewSection({
 
   return (
     <section
-      className="relative overflow-hidden pt-6 pb-16 md:pb-20"
+      className="relative overflow-hidden pt-4 pb-12 md:pt-6 md:pb-20"
       aria-labelledby="services-overview-title"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
         {/* Hero grid — left: headline + CTA, right: search + Google review */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4 md:gap-5 items-start">
           {/* ── Left column — benefit headline + single CTA ── */}
           <article
-            className="rounded-[2rem] p-6 md:p-8 border border-border-soft bg-surface/82"
+            className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
             data-reveal
           >
             <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
@@ -141,7 +141,7 @@ export function ServicesOverviewSection({
             </p>
 
             {/* Single primary CTA — "Book a Free Consultation" */}
-            <div className="mt-6">
+            <div className="mt-5 md:mt-6">
               <Button
                 size="standard"
                 variant="primary"
@@ -153,18 +153,18 @@ export function ServicesOverviewSection({
             </div>
 
             {/* "No office visits" trust signal under CTA */}
-            <div className="inline-flex items-center gap-2 mt-5 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
               No office visits required
             </div>
           </article>
 
           {/* ── Right column — service search + Google review panel ── */}
-          <div className="grid gap-5">
+          <div className="grid gap-4 md:gap-5">
             {/* Service search box */}
             <div
               ref={searchContainerRef}
-              className="relative rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
+              className="relative rounded-2xl md:rounded-[1.5rem] p-4 md:p-6 border border-border-soft bg-surface"
               data-reveal
             >
               <div className="relative">
@@ -231,7 +231,7 @@ export function ServicesOverviewSection({
 
             {/* Google review trust panel */}
             <aside
-              className="rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
+              className="rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface"
               data-reveal
             >
               {/* Google branding row */}

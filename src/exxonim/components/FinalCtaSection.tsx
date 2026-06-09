@@ -16,11 +16,11 @@ export function FinalCtaSection() {
   return (
     <section
       aria-labelledby="final-cta-title"
-      className="py-16 md:py-24"
+      className="py-10 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         <div
-          className="max-w-[42rem] mx-auto rounded-[2rem] border border-border-soft bg-surface-elevated p-8 md:p-12 text-center"
+          className="max-w-[42rem] mx-auto rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-12 text-center"
           style={{
             background:
               'radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), var(--color-surface-elevated)',

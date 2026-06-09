@@ -235,11 +235,11 @@ function ReminderBadge() {
 
 function CTACard() {
   return (
-    <div className="rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-8 grid gap-5 content-start">
+    <div className="rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-5 md:p-8 grid gap-4 md:gap-5 content-start">
       {/* Icon + heading */}
       <div className="flex items-start gap-3">
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent-soft text-accent flex-shrink-0">
-          <ShieldCheckIcon className="h-5 w-5" />
+        <span className="inline-flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-xl bg-accent-soft text-accent flex-shrink-0">
+          <ShieldCheckIcon className="h-4.5 w-4.5 md:h-5 md:w-5" />
         </span>
         <div>
           <h3 className="m-0 text-text text-lg font-semibold leading-tight tracking-tight">
@@ -297,11 +297,11 @@ export function ComplianceCalendarSection() {
   return (
     <section
       aria-labelledby="compliance-calendar-title"
-      className="py-16 md:py-24"
+      className="py-10 md:py-24"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         {/* ── Section header ── */}
-        <div className="grid gap-3 mb-10 md:mb-14">
+        <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
               Compliance calendar
@@ -321,13 +321,13 @@ export function ComplianceCalendarSection() {
         </div>
 
         {/* ── Two-column layout on desktop ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 lg:gap-10 items-start">
           {/* Left: Timeline */}
           <div className="relative">
             {QUARTER_GROUPS.map((group, qi) => (
-              <div key={group.label} className={qi > 0 ? 'mt-8' : ''}>
+              <div key={group.label} className={qi > 0 ? 'mt-6 md:mt-8' : ''}>
                 {/* Quarter heading */}
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-3 md:mb-4">
                   <QuarterLabel label={group.label} />
                   <span className="text-text-soft text-sm font-medium">
                     {qi === 0 && 'Jan – Mar'}
@@ -338,8 +338,8 @@ export function ComplianceCalendarSection() {
                 </div>
 
                 {/* Timeline items for this quarter */}
-                <div className="relative ml-1.5 pl-6 border-l-2 border-accent/30">
-                  <div className="grid gap-5">
+                <div className="relative ml-1.5 pl-5 md:pl-6 border-l-2 border-accent/30">
+                  <div className="grid gap-4 md:gap-5">
                     {group.deadlines.map((deadline) => (
                       <DeadlineItem key={deadline.title} deadline={deadline} />
                     ))}

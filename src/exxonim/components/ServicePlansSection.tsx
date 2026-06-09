@@ -233,7 +233,7 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-6 px-4 mx-1.5"
+      className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1.5"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
       <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
@@ -435,7 +435,7 @@ function TestimonialMarquee({
         style={{ WebkitOverflowScrolling: "touch", cursor: isDraggingState ? "grabbing" : "grab" }}
       >
         {items.map((testimonial, index) => (
-          <div key={`${testimonial.id}-${index}`} className="flex-none w-80">
+          <div key={`${testimonial.id}-${index}`} className="flex-none w-[280px] md:w-80">
             <TestimonialCard testimonial={testimonial} />
           </div>
         ))}
@@ -463,7 +463,7 @@ function SegmentPlanCard({ plan, featured }: { plan: SegmentPlan; featured: bool
   return (
     <article
       className={cn(
-        "flex h-full flex-col rounded-2xl border p-6 md:p-7 transition-all",
+        "flex h-full flex-col rounded-2xl border p-5 md:p-6 lg:p-7 transition-all",
         featured
           ? "border-accent/40 bg-accent/5"
           : "border-border-soft bg-surface"
@@ -559,13 +559,13 @@ export function ServicePackagesSection({
       <section
         id={variant === "page" ? "packages" : undefined}
         aria-label="Service packages and client testimonials"
-        className="py-16 md:py-24"
+        className="py-10 md:py-24"
       >
         <Container>
           {/* ─── Social Proof ─── */}
           {testimonials.length > 0 && (
-            <div className="mb-12 md:mb-16">
-              <div className="mb-8" data-reveal>
+            <div className="mb-8 md:mb-12">
+              <div className="mb-6 md:mb-8" data-reveal>
                 <h2 className="text-[clamp(1.25rem,2.5vw,1.75rem)] font-semibold leading-tight tracking-tight text-text">
                   What our clients say
                 </h2>
@@ -576,17 +576,17 @@ export function ServicePackagesSection({
 
           {/* ─── Package Plans ─── */}
           <div>
-            <div className="mb-6" data-reveal>
+            <div className="mb-5 md:mb-6" data-reveal>
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
                 Service packages
               </p>
-              <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-tight tracking-tight text-text">
+              <h2 className="text-[clamp(1.3rem,3vw,2rem)] font-semibold leading-tight tracking-tight text-text">
                 Choose the right level of support
               </h2>
             </div>
 
             {/* Segment filter buttons */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 mb-8">
+            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 mb-6 md:mb-8">
               {segments.map((seg) => {
                 const isActive = activeSegment === seg.key;
                 const Icon = seg.icon;
@@ -615,7 +615,7 @@ export function ServicePackagesSection({
             </div>
 
             {/* 3 plan cards */}
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
               {currentPlans.map((plan) => (
                 <SegmentPlanCard
                   key={`${activeSegment}-${plan.name}`}

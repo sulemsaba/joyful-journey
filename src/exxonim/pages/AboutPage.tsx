@@ -78,14 +78,14 @@ export function AboutPage() {
              *  Clean surface/82 cards with border-soft — matches services page.
              * ────────────────────────────────────────────────────────────── */}
             <section
-              className="relative overflow-hidden pt-6 pb-16 md:pb-20"
+              className="relative overflow-hidden pt-4 pb-12 md:pt-6 md:pb-20"
               aria-labelledby="about-hero-title"
             >
               <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4 md:gap-5 items-start">
                   {/* Left — benefit headline + CTA */}
                   <article
-                    className="rounded-[2rem] p-6 md:p-8 border border-border-soft bg-surface/82"
+                    className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
                     data-reveal
                   >
                     <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
@@ -102,7 +102,7 @@ export function AboutPage() {
                     </p>
 
                     {/* Single primary CTA */}
-                    <div className="mt-6">
+                    <div className="mt-5 md:mt-6">
                       <Button size="standard" variant="primary" href={routes.contact}>
                         Book a Free Consultation
                         <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
@@ -110,17 +110,17 @@ export function AboutPage() {
                     </div>
 
                     {/* "No office visits" trust signal under CTA */}
-                    <div className="inline-flex items-center gap-2 mt-5 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
+                    <div className="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
                       <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
                       No office visits required
                     </div>
                   </article>
 
                   {/* Right — Google review panel + key stats */}
-                  <div className="grid gap-5">
+                  <div className="grid gap-4 md:gap-5">
                     {/* Google review trust panel */}
                     <aside
-                      className="rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
+                      className="rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface"
                       data-reveal
                     >
                       {/* Google branding row */}
@@ -174,18 +174,18 @@ export function AboutPage() {
 
                     {/* Key company stats */}
                     <aside
-                      className="rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface/82"
+                      className="rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface"
                       data-reveal
                     >
-                      <p className="text-sm font-semibold text-text mb-4">
+                      <p className="text-sm font-semibold text-text mb-3 md:mb-4">
                         Why clients choose Exxonim
                       </p>
-                      <div className="grid gap-3">
-                        <div className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-accent-soft/40">
-                          <span className="inline-flex items-center justify-center min-h-[2.25rem] min-w-[2.25rem] px-2 rounded-full bg-accent text-accent-contrast font-extrabold text-xs">
+                      <div className="grid gap-2.5 md:gap-3">
+                        <div className="flex items-center gap-3 px-3 py-2.5 md:px-3.5 md:py-3 rounded-xl bg-accent-soft/40">
+                          <span className="inline-flex items-center justify-center h-9 w-9 md:h-9 md:w-9 px-1.5 rounded-full bg-accent text-accent-contrast font-extrabold text-xs flex-shrink-0">
                             120+
                           </span>
-                          <div>
+                          <div className="min-w-0">
                             <strong className="block text-sm leading-tight text-text">Companies registered</strong>
                             <span className="block mt-0.5 text-xs text-text-muted leading-relaxed">
                               Businesses trust Exxonim for registration and compliance
@@ -193,11 +193,11 @@ export function AboutPage() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-accent-soft/40">
-                          <span className="inline-flex items-center justify-center min-h-[2.25rem] min-w-[2.25rem] px-2 rounded-full bg-accent text-accent-contrast font-extrabold text-xs">
+                        <div className="flex items-center gap-3 px-3 py-2.5 md:px-3.5 md:py-3 rounded-xl bg-accent-soft/40">
+                          <span className="inline-flex items-center justify-center h-9 w-9 md:h-9 md:w-9 px-1.5 rounded-full bg-accent text-accent-contrast font-extrabold text-xs flex-shrink-0">
                             100%
                           </span>
-                          <div>
+                          <div className="min-w-0">
                             <strong className="block text-sm leading-tight text-text">Tracked</strong>
                             <span className="block mt-0.5 text-xs text-text-muted leading-relaxed">
                               Every consultation assigned a reference ID
@@ -215,14 +215,14 @@ export function AboutPage() {
              *  SECTION 2: Company Profile — who we are + working style
              * ────────────────────────────────────────────────────────────── */}
             <section
-              className="py-12 md:py-20"
+              className="py-10 md:py-20"
               aria-labelledby="about-profile-title"
             >
               <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-4 md:gap-5 items-start">
                   {/* Left — story */}
                   <article
-                    className="rounded-[2rem] p-6 md:p-8 border border-border-soft bg-surface/82"
+                    className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
                     data-reveal
                   >
                     <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
@@ -243,7 +243,7 @@ export function AboutPage() {
 
                   {/* Right — working style card */}
                   <article
-                    className="rounded-[2rem] p-6 md:p-8 border border-border-soft bg-surface/82"
+                    className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
                     data-reveal
                   >
                     {content.company_profile.working_style_label ? (
@@ -251,19 +251,19 @@ export function AboutPage() {
                         {content.company_profile.working_style_label}
                       </p>
                     ) : null}
-                    <p className="text-[clamp(1.4rem,2.5vw,1.8rem)] font-semibold leading-tight tracking-tight text-text">
+                    <p className="text-[clamp(1.3rem,2.5vw,1.8rem)] font-semibold leading-tight tracking-tight text-text">
                       {content.company_profile.working_style}
                     </p>
 
                     {/* Core principles */}
-                    <div className="grid gap-3 mt-6">
+                    <div className="grid gap-2.5 md:gap-3 mt-5 md:mt-6">
                       {[
                         { icon: <Target className="h-4 w-4" />, text: 'Every case tracked from intake to resolution' },
                         { icon: <Clock className="h-4 w-4" />, text: 'Proactive follow-up — no deadline surprises' },
                         { icon: <ShieldCheck className="h-4 w-4" />, text: 'No office visits — everything filed electronically' },
                         { icon: <Eye className="h-4 w-4" />, text: 'Transparent status updates at every milestone' },
                       ].map((item) => (
-                        <div key={item.text} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-accent-soft/40">
+                        <div key={item.text} className="flex items-center gap-3 px-3 py-2.5 md:px-4 md:py-3 rounded-xl bg-accent-soft/40">
                           <span className="text-accent flex-shrink-0">{item.icon}</span>
                           <span className="text-sm text-text font-medium">{item.text}</span>
                         </div>
@@ -279,18 +279,18 @@ export function AboutPage() {
              * ────────────────────────────────────────────────────────────── */}
             {content.support_profiles_section && (
               <section
-                className="py-12 md:py-20"
+                className="py-10 md:py-20"
                 aria-labelledby="about-support-title"
               >
                 <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
                   {/* Section header */}
-                  <div className="grid gap-3 mb-10 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+                  <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
                     <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
                       {content.support_profiles_section.title}
                     </p>
                     <h2
                       id="about-support-title"
-                      className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+                      className="text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
                     >
                       What we support
                     </h2>
@@ -300,15 +300,15 @@ export function AboutPage() {
                   </div>
 
                   {/* Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                     {content.support_profiles.map((profile) => (
                       <article
                         key={profile.title}
-                        className="rounded-[1.5rem] border border-border-soft bg-surface/88 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                        className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
                         data-reveal
                       >
                         {/* Icon */}
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-accent-soft text-accent mb-4">
+                        <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-3 md:mb-4">
                           {profileIcons[profile.title] ?? <ShieldCheck className="h-5 w-5" />}
                         </div>
                         <h3 className="text-lg font-semibold text-text leading-tight">
@@ -336,18 +336,18 @@ export function AboutPage() {
              * ────────────────────────────────────────────────────────────── */}
             {content.operating_model_section && (
               <section
-                className="py-12 md:py-20"
+                className="py-10 md:py-20"
                 aria-labelledby="about-process-title"
               >
                 <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
                   {/* Section header */}
-                  <div className="grid gap-3 mb-10 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+                  <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
                     <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
                       Our process
                     </p>
                     <h2
                       id="about-process-title"
-                      className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+                      className="text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
                     >
                       {content.operating_model_section.title}
                     </h2>
@@ -357,16 +357,16 @@ export function AboutPage() {
                   </div>
 
                   {/* Steps — horizontal on desktop, vertical on mobile */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
                     {content.operating_model.map((item, i) => (
                       <article
                         key={item.step}
-                        className="relative rounded-[1.5rem] border border-border-soft bg-surface/88 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                        className="relative rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
                         data-reveal
                       >
                         {/* Step number badge */}
-                        <div className="flex items-center gap-3 mb-4">
-                          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-accent text-accent-contrast font-extrabold text-sm">
+                        <div className="flex items-center gap-3 mb-3 md:mb-4">
+                          <span className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-accent text-accent-contrast font-extrabold text-sm">
                             {item.step}
                           </span>
                           {/* Connector line (desktop only) */}
@@ -392,18 +392,18 @@ export function AboutPage() {
              * ────────────────────────────────────────────────────────────── */}
             {content.service_scope_section && (
               <section
-                className="py-12 md:py-20"
+                className="py-10 md:py-20"
                 aria-labelledby="about-scope-title"
               >
                 <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
                   {/* Section header */}
-                  <div className="grid gap-3 mb-10 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+                  <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
                     <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
                       Service scope
                     </p>
                     <h2
                       id="about-scope-title"
-                      className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+                      className="text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
                     >
                       {content.service_scope_section.title}
                     </h2>
@@ -413,11 +413,11 @@ export function AboutPage() {
                   </div>
 
                   {/* Scope cards — 3 cols on desktop */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
                     {content.service_scope.map((service) => (
                       <article
                         key={service.title}
-                        className="rounded-[1.35rem] border border-border-soft bg-surface/88 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                        className="rounded-xl md:rounded-[1.35rem] border border-border-soft bg-surface p-4 md:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
                         data-reveal
                       >
                         <div className="flex items-center gap-2.5 mb-3">
@@ -441,11 +441,11 @@ export function AboutPage() {
              * ────────────────────────────────────────────────────────────── */}
             {content.client_expectations_section && (
               <section
-                className="py-12 md:py-20"
+                className="py-10 md:py-20"
                 aria-labelledby="about-expectations-title"
               >
                 <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
-                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5 items-start">
+                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-4 md:gap-5 items-start">
                     {/* Left — section header */}
                     <div data-reveal>
                       <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-3">
@@ -463,11 +463,11 @@ export function AboutPage() {
                     </div>
 
                     {/* Right — promise cards */}
-                    <div className="grid gap-3" data-reveal>
+                    <div className="grid gap-2.5 md:gap-3" data-reveal>
                       {content.client_expectations.map((item) => (
                         <div
                           key={item}
-                          className="flex items-start gap-3 px-4 py-3.5 rounded-xl bg-surface/88 border border-border-soft"
+                          className="flex items-start gap-3 px-3 py-3 md:px-4 md:py-3.5 rounded-xl bg-surface border border-border-soft"
                         >
                           <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <p className="text-sm text-text leading-relaxed font-medium">{item}</p>
@@ -483,12 +483,12 @@ export function AboutPage() {
              *  SECTION 7: Final CTA
              * ────────────────────────────────────────────────────────────── */}
             <section
-              className="py-12 md:py-20"
+              className="py-10 md:py-20"
               aria-labelledby="about-cta-title"
             >
               <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
                 <div
-                  className="max-w-[42rem] mx-auto rounded-[2rem] border border-border-soft bg-surface-elevated p-8 md:p-12 text-center"
+                  className="max-w-[42rem] mx-auto rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-12 text-center"
                   style={{
                     background:
                       'radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), var(--color-surface-elevated)',

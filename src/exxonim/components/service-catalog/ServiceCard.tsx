@@ -18,7 +18,7 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
     <article
       className={cn(
         'group flex flex-col rounded-2xl',
-        'p-5 md:p-6',
+        'p-4 md:p-5 lg:p-6',
         'bg-surface',
         'border border-border-soft',
         'transition-all duration-200 ease-out',
