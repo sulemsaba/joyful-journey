@@ -640,3 +640,27 @@ Work Log:
 - Updated section comment to reflect new catalog functionality
 - Rebuilt production bundle - confirmed ServiceCatalogSection and all 15 services in output
 - Build successful with zero errors
+---
+Task ID: 1
+Agent: main
+Task: Redesign service catalog to match user's HTML blueprint
+
+Work Log:
+- Read all existing service catalog components (ServiceCard, SegmentFilterBar, ServiceCatalogSection, useServiceCatalog hook, fallbackServiceCatalog data)
+- Rewrote fallbackServiceCatalog.ts: Added deliverables_full to 4 services (Company Registration, NGO Registration, Annual Returns, Work Permit Applications, NGO Registration Enhanced)
+- Rewrote SegmentFilterBar.tsx: Added emojis (🇹🇿, 🌍, 🏢, 🤝) to segment labels, updated styling to match HTML blueprint with rounded-[60px] chips and #0B3B5F active state
+- Rewrote ServiceCard.tsx: Changed border-radius to 20px, badge colors (#FEF3E2 bg / #E67E22 text for normal, #E67E22 bg / white for "Most Popular"), deliverables with border-bottom separators, expand toggle with ➕/➖ emojis, CTA button with arrow, hover: translateY(-2px) + shadow
+- Rewrote ServiceCatalogSection.tsx: Removed category grouping for flat grid layout, added "Service catalog" h1 header + description, added credits footer ("✅ No hidden prices"), #F8FAFE background, responsive 1/2/3 column grid
+- Updated useServiceCatalog.ts: Simplified for flat filtering (no category grouping in response)
+- Updated seed.ts: Added deliverables_full to services matching new fallback data
+- Seeded database with 15 services, 4 categories, 4 segments
+- Restarted services-api on port 3031 — verified API returns all data correctly
+- Verified clean Vite build (no errors)
+
+Stage Summary:
+- Service catalog fully redesigned to match user's HTML blueprint
+- 15 services across 4 categories with segment-based filtering
+- Flat card grid (no category grouping) with responsive 1/2/3 columns
+- All visual elements from HTML: emojis on filters, warm orange badges, deliverable separators, expand/collapse, CTA buttons
+- Database seeded, API running on port 3031
+- Vite dev server running on port 3000, no errors

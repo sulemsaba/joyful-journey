@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, ChevronDown, ArrowRight } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
 
@@ -8,9 +8,16 @@ interface ServiceCardProps {
   className?: string;
 }
 
-function getBadgeColor(badge: string) {
-  if (badge === 'Most Popular') return 'bg-[#E67E22] text-white';
-  return 'bg-[#0B3B5F] text-white';
+/**
+ * Badge color logic matching the HTML blueprint:
+ * - "Most Popular" → highlight style (orange bg, white text)
+ * - All others → warm style (#FEF3E2 bg, #E67E22 text)
+ */
+function getBadgeStyles(badge: string) {
+  if (badge === 'Most Popular') {
+    return 'bg-[#E67E22] text-white';
+  }
+  return 'bg-[#FEF3E2] text-[#E67E22]';
 }
 
 export function ServiceCard({ service, className }: ServiceCardProps) {
@@ -21,13 +28,13 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
   return (
     <article
       className={cn(
-        'group flex flex-col rounded-4xl sm:rounded-[20px] lg:rounded-[24px]',
-        'p-5 sm:p-6 lg:p-7',
-        'bg-white dark:bg-surface border border-[#E2E8F0] dark:border-border-soft',
-        'shadow-[0_2px_8px_rgba(0,0,0,0.04)]',
-        'transition-all duration-200 ease-out',
-        'hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] hover:-translate-y-0.5',
-        'active:bg-[rgba(0,0,0,0.02)]',
+        'group flex flex-col rounded-[20px]',
+        'p-5 md:p-6',
+        'bg-white border border-[#EDF2F7]',
+        'shadow-[0_4px_12px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.05)]',
+        'transition-[transform,box-shadow] duration-200 ease-out',
+        'hover:-translate-y-0.5 hover:shadow-[0_20px_25px_-12px_rgba(0,0,0,0.08),0_8px_10px_-6px_rgba(0,0,0,0.02)]',
+        'h-full',
         className
       )}
     >
@@ -35,8 +42,9 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
       {service.badge && (
         <span
           className={cn(
-            'inline-flex self-start items-center rounded-full px-3 py-1 text-xs font-semibold mb-3',
-            getBadgeColor(service.badge)
+            'inline-flex self-start items-center rounded-[40px] px-3 py-1 text-xs font-semibold mb-3',
+            'tracking-[0.3px]',
+            getBadgeStyles(service.badge)
           )}
         >
           {service.badge}
@@ -44,24 +52,24 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
       )}
 
       {/* Title */}
-      <h3 className="text-lg font-semibold text-[#1E2A32] dark:text-text leading-snug">
+      <h3 className="text-[1.25rem] font-bold text-[#0B3B5F] leading-[1.3] mb-3">
         {service.title}
       </h3>
 
-      {/* Divider */}
-      <div className="my-3 h-px bg-[#E2E8F0] dark:bg-border-soft" />
-
       {/* Description */}
-      <p className="text-sm text-[#6B7A8A] dark:text-text-muted leading-relaxed">
+      <p className="text-sm text-[#334155] leading-relaxed mb-5 flex-1">
         {service.short_description}
       </p>
 
-      {/* Deliverables */}
-      <ul className="mt-4 grid gap-2" role="list">
+      {/* Deliverables list with separator borders */}
+      <ul className="list-none m-0 p-0 mb-4" role="list">
         {service.deliverables.map((item) => (
-          <li key={item} className="flex items-start gap-2 text-sm text-[#1E2A32] dark:text-text">
+          <li
+            key={item}
+            className="flex items-center gap-2 text-[0.8125rem] text-[#1E2A32] py-1.5 border-b border-[#F1F5F9] last:border-b-0"
+          >
             <Check
-              className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#27AE60] dark:text-success"
+              className="w-4 h-4 flex-shrink-0 text-[#27AE60]"
               aria-hidden="true"
             />
             <span>{item}</span>
@@ -69,31 +77,10 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         ))}
       </ul>
 
-      {/* Expand toggle for full deliverables */}
+      {/* Extra deliverables (collapsible) */}
       {hasFullDeliverables && (
         <>
-          <button
-            type="button"
-            onClick={() => setExpanded(!expanded)}
-            className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-[#0B3B5F] dark:text-accent min-h-[44px] transition-colors duration-150 hover:text-[#1E4A6F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B3B5F]"
-            aria-expanded={expanded}
-            aria-label={
-              expanded
-                ? `Hide additional features for ${service.title}`
-                : `Show all features for ${service.title}`
-            }
-          >
-            <span>{expanded ? 'Hide Features' : 'See All Features'}</span>
-            <ChevronDown
-              className={cn(
-                'w-4 h-4 transition-transform duration-200',
-                expanded && 'rotate-180'
-              )}
-              aria-hidden="true"
-            />
-          </button>
-
-          {/* Expanded deliverables_full with CSS max-height transition */}
+          {/* Expandable area with left border accent */}
           <div
             className={cn(
               'overflow-hidden transition-all duration-300 ease-out',
@@ -101,42 +88,64 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
             )}
             aria-hidden={!expanded}
           >
-            <ul className="mt-2 grid gap-2" role="list">
-              {service.deliverables_full!.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-2 text-sm text-[#1E2A32] dark:text-text"
-                >
-                  <Check
-                    className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#27AE60] dark:text-success"
-                    aria-hidden="true"
-                  />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-1 pl-2 border-l-2 border-[#E2E8F0] mb-2">
+              <ul className="list-none m-0 p-0" role="list">
+                {service.deliverables_full!.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-center gap-2 text-[0.8125rem] text-[#1E2A32] py-1.5 border-b border-[#F1F5F9] last:border-b-0"
+                  >
+                    <Check
+                      className="w-4 h-4 flex-shrink-0 text-[#27AE60]"
+                      aria-hidden="true"
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            className={cn(
+              'inline-flex items-center justify-center gap-1.5 min-h-[44px]',
+              'text-xs font-medium text-[#0B3B5F]',
+              'bg-transparent border-none cursor-pointer',
+              'mt-1 mb-3 p-0',
+              'underline underline-offset-[3px]',
+              'transition-opacity duration-150',
+              'hover:opacity-80 active:opacity-70',
+              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B3B5F]'
+            )}
+            aria-expanded={expanded}
+            aria-label={
+              expanded
+                ? `Hide additional features for ${service.title}`
+                : `Show all features for ${service.title}`
+            }
+          >
+            <span>{expanded ? '➖ Show less' : '➕ See all features'}</span>
+          </button>
         </>
       )}
-
-      {/* Spacer to push CTA to bottom */}
-      <div className="flex-1 min-h-4" />
 
       {/* CTA Button */}
       <a
         href={service.cta_link}
         className={cn(
-          'mt-4 inline-flex items-center justify-center gap-2 rounded-full',
-          'min-h-[44px] px-6 py-2.5',
+          'block w-full text-center rounded-[40px]',
+          'min-h-[44px] px-4 py-3',
           'bg-[#0B3B5F] text-white text-sm font-semibold',
           'transition-all duration-200 ease-out',
-          'hover:bg-[#1E4A6F] hover:shadow-md',
+          'hover:bg-[#1E4A6F]',
+          'active:scale-[0.98]',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B3B5F]',
-          'dark:bg-accent dark:text-accent-contrast dark:hover:bg-accent-hover'
+          'mt-auto'
         )}
       >
-        <span>{service.cta_text}</span>
-        <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        {service.cta_text}
       </a>
     </article>
   );
@@ -147,32 +156,29 @@ export function ServiceCardSkeleton() {
   return (
     <div
       className={cn(
-        'flex flex-col rounded-4xl sm:rounded-[20px] lg:rounded-[24px]',
-        'p-5 sm:p-6 lg:p-7',
-        'bg-white dark:bg-surface border border-[#E2E8F0] dark:border-border-soft',
-        'shadow-[0_2px_8px_rgba(0,0,0,0.04)]'
+        'flex flex-col rounded-[20px]',
+        'p-5 md:p-6',
+        'bg-white border border-[#EDF2F7]',
+        'shadow-[0_4px_12px_rgba(0,0,0,0.03),0_1px_2px_rgba(0,0,0,0.05)]'
       )}
       aria-hidden="true"
     >
       {/* Badge skeleton */}
       <div className="h-6 w-24 rounded-full animate-shimmer mb-3" />
       {/* Title skeleton */}
-      <div className="h-6 w-3/4 rounded-md animate-shimmer" />
-      {/* Divider */}
-      <div className="my-3 h-px bg-[#E2E8F0] dark:bg-border-soft" />
+      <div className="h-6 w-3/4 rounded-md animate-shimmer mb-3" />
       {/* Description skeleton */}
       <div className="h-4 w-full rounded-md animate-shimmer mb-2" />
-      <div className="h-4 w-5/6 rounded-md animate-shimmer" />
+      <div className="h-4 w-5/6 rounded-md animate-shimmer mb-5" />
       {/* Deliverables skeleton */}
-      <div className="mt-4 grid gap-2">
+      <div className="space-y-2 mb-4">
         <div className="h-4 w-full rounded-md animate-shimmer" />
         <div className="h-4 w-11/12 rounded-md animate-shimmer" />
         <div className="h-4 w-4/5 rounded-md animate-shimmer" />
         <div className="h-4 w-10/12 rounded-md animate-shimmer" />
       </div>
       {/* CTA skeleton */}
-      <div className="flex-1 min-h-4" />
-      <div className="mt-4 h-11 w-full rounded-full animate-shimmer" />
+      <div className="mt-auto h-11 w-full rounded-full animate-shimmer" />
     </div>
   );
 }

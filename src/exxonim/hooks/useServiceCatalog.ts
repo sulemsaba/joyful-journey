@@ -16,7 +16,7 @@ export function useServiceCatalog(segment?: string) {
         if (!resp.ok) throw new Error('API error');
         return (await resp.json()) as ServicesResponse;
       } catch {
-        // Fallback to static data
+        // Fallback to static data — filter by segment locally
         const filtered =
           segment && segment !== 'all'
             ? fallbackServices.filter((s) =>

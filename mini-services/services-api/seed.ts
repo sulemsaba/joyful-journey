@@ -18,8 +18,7 @@ const segments = [
   { name: "NGOs", slug: "ngos", sortOrder: 4 },
 ];
 
-// Services (15 total)
-// Segment keys: A=Local Entrepreneurs, B=Foreign Investors, C=Enterprises, D=NGOs
+// Services (15 total) — with deliverablesFull for expandable features
 const services = [
   {
     title: "Company Registration",
@@ -39,10 +38,10 @@ const services = [
       "Company seal production",
       "Shareholder & director register setup",
       "Notarised document package",
-      "Opening a corporate bank account introduction",
+      "Bank account introduction support",
     ],
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=company-registration",
+    ctaLink: "/contact?service=company-registration",
     sortOrder: 10,
   },
   {
@@ -61,7 +60,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=business-name-registration",
+    ctaLink: "/contact?service=business-name-registration",
     sortOrder: 20,
   },
   {
@@ -73,14 +72,18 @@ const services = [
     shortDescription:
       "Complete non-profit entity setup, from constitution drafting to initial compliance guidance.",
     deliverables: [
-      "NGO entity registration with relevant authorities",
+      "NGO entity registration with authorities",
       "Constitution drafting assistance",
       "Initial governance compliance roadmap",
       "Donor-readiness pack",
     ],
-    deliverablesFull: null,
+    deliverablesFull: [
+      "Registration with Ministry of Community Development",
+      "Certificate of Registration expedited",
+      "Governance policy templates",
+    ],
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=ngo-registration",
+    ctaLink: "/contact?service=ngo-registration",
     sortOrder: 30,
   },
   {
@@ -99,7 +102,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=trademark-registration",
+    ctaLink: "/contact?service=trademark-registration",
     sortOrder: 40,
   },
   {
@@ -118,7 +121,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=tin-application",
+    ctaLink: "/contact?service=tin-application",
     sortOrder: 50,
   },
   {
@@ -137,7 +140,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=business-license-applications",
+    ctaLink: "/contact?service=business-license-applications",
     sortOrder: 60,
   },
   {
@@ -154,9 +157,12 @@ const services = [
       "Late filing prevention calendar",
       "Electronic filing confirmation",
     ],
-    deliverablesFull: null,
+    deliverablesFull: [
+      "30-day advance reminders",
+      "Document audit before submission",
+    ],
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=annual-returns",
+    ctaLink: "/contact?service=annual-returns",
     sortOrder: 70,
   },
   {
@@ -175,7 +181,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=statutory-filings",
+    ctaLink: "/contact?service=statutory-filings",
     sortOrder: 80,
   },
   {
@@ -194,7 +200,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=regulatory-renewals",
+    ctaLink: "/contact?service=regulatory-renewals",
     sortOrder: 90,
   },
   {
@@ -212,8 +218,8 @@ const services = [
       "Forward-looking compliance strategy",
     ],
     deliverablesFull: null,
-    ctaText: "Get Started →",
-    ctaLink: "/consultation?service=operational-advisory",
+    ctaText: "Discuss My Case →",
+    ctaLink: "/contact?service=operational-advisory",
     sortOrder: 100,
   },
   {
@@ -223,16 +229,19 @@ const services = [
     segmentSlugs: ["foreign-investors"],
     badge: "Foreign Investors",
     shortDescription:
-      "Hassle-free processing for Class A, Class B, and residence permits. We coordinate directly with the Ministry of Labour.",
+      "Hassle-free processing for Class A, Class B, and residence permits. Direct liaison with Ministry of Labour.",
     deliverables: [
       "Pre-application eligibility assessment",
       "Document preparation & legalisation",
-      "Direct filing with immigration authorities",
+      "Direct filing with immigration",
       "Real-time status tracking",
     ],
-    deliverablesFull: null,
+    deliverablesFull: [
+      "Work permit certificate delivery",
+      "Renewal coordination",
+    ],
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=work-permit-applications",
+    ctaLink: "/contact?service=work-permit-applications",
     sortOrder: 110,
   },
   {
@@ -251,7 +260,7 @@ const services = [
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=tic-tiseza-registration",
+    ctaLink: "/contact?service=tic-tiseza-registration",
     sortOrder: 120,
   },
   {
@@ -264,13 +273,13 @@ const services = [
       "Branch office or subsidiary setup for international businesses entering Tanzania.",
     deliverables: [
       "Certificate of Compliance with BRELA",
-      "Cross-border document legalisation support",
+      "Cross-border document legalisation",
       "Local directorship arrangement guidance",
       "Post-registration compliance roadmap",
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=foreign-company-registration",
+    ctaLink: "/contact?service=foreign-company-registration",
     sortOrder: 130,
   },
   {
@@ -284,12 +293,15 @@ const services = [
     deliverables: [
       "Registration with Ministry of Community Development",
       "Certificate of Registration",
-      "Constitution drafting aligned with NGO Act",
-      "Initial governance and reporting framework",
+      "Constitution aligned with NGO Act",
+      "Initial governance & reporting framework",
     ],
-    deliverablesFull: null,
+    deliverablesFull: [
+      "Tax exemption certificate guidance",
+      "Board minute templates",
+    ],
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=ngo-registration-enhanced",
+    ctaLink: "/contact?service=ngo-registration-enhanced",
     sortOrder: 140,
   },
   {
@@ -301,14 +313,14 @@ const services = [
     shortDescription:
       "Annual reporting, donor compliance, and governance documentation for established non-profits.",
     deliverables: [
-      "Annual activity and financial report preparation",
+      "Annual activity & financial report preparation",
       "Donor compliance attestation",
-      "Board meeting minutes and governance file maintenance",
+      "Board meeting minutes & governance file",
       "Tax exemption certificate renewal support",
     ],
     deliverablesFull: null,
     ctaText: "Get Started →",
-    ctaLink: "/consultation?service=compliance-for-ngos",
+    ctaLink: "/contact?service=compliance-for-ngos",
     sortOrder: 150,
   },
 ];
