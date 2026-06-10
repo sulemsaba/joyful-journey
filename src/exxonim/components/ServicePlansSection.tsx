@@ -42,11 +42,11 @@ type ServicePackagesSectionProps = {
 /* ── Segment definitions ────────────────────────────────────── */
 type SegmentKey = 'local-entrepreneurs' | 'foreign-investors' | 'enterprises' | 'ngos';
 
-const segments: { key: SegmentKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { key: 'local-entrepreneurs', label: 'Local Entrepreneurs', icon: Users },
-  { key: 'foreign-investors', label: 'Foreign Investors', icon: Globe },
-  { key: 'enterprises', label: 'Enterprises', icon: Building2 },
-  { key: 'ngos', label: 'NGOs & Non-Profits', icon: Heart },
+const segments: { key: SegmentKey; label: string; shortLabel: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { key: 'local-entrepreneurs', label: 'Local Entrepreneurs', shortLabel: 'Local', icon: Users },
+  { key: 'foreign-investors', label: 'Foreign Investors', shortLabel: 'Foreign', icon: Globe },
+  { key: 'enterprises', label: 'Enterprises', shortLabel: 'Enterprise', icon: Building2 },
+  { key: 'ngos', label: 'NGOs & Non-Profits', shortLabel: 'NGO', icon: Heart },
 ];
 
 /* ── Plan data per segment (static, no prices) ──────────────── */
@@ -641,37 +641,39 @@ export function ServicePackagesSection({
               </h2>
             </div>
 
-            {/* Segment filter buttons — centered on desktop, scrollable on mobile */}
-            <div className="relative mb-6 md:mb-8">
-              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 lg:justify-center">
-                {segments.map((seg) => {
-                  const isActive = activeSegment === seg.key;
-                  const Icon = seg.icon;
-                  return (
-                    <button
-                      key={seg.key}
-                      type="button"
-                      onClick={() => setActiveSegment(seg.key)}
-                      className={cn(
-                        'flex-shrink-0 rounded-full px-4 py-2 min-h-[40px] text-sm font-medium',
-                        'transition-all duration-200 ease-out whitespace-nowrap',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                        'inline-flex items-center justify-center gap-2',
-                        isActive
-                          ? 'bg-accent text-accent-contrast shadow-sm'
-                          : 'bg-surface text-text-muted border border-border-soft hover:bg-accent-soft hover:text-accent hover:border-accent/30'
-                      )}
-                      aria-pressed={isActive}
-                      aria-label={`Show packages for ${seg.label}`}
-                    >
-                      <Icon className="w-4 h-4" aria-hidden="true" />
-                      <span>{seg.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-              {/* Right-edge fade hint — signals more tabs on mobile */}
-              <div className="pointer-events-none absolute right-0 top-0 bottom-1 w-8 bg-gradient-to-l from-[var(--color-page)] to-transparent lg:hidden" aria-hidden="true" />
+            {/* Segment filter buttons — compact icon+short label on mobile, full label on desktop */}
+            <div className="flex gap-1.5 sm:gap-2 justify-center mb-6 md:mb-8">
+              {segments.map((seg) => {
+                const isActive = activeSegment === seg.key;
+                const Icon = seg.icon;
+                return (
+                  <button
+                    key={seg.key}
+                    type="button"
+                    onClick={() => setActiveSegment(seg.key)}
+                    className={cn(
+                      'flex-shrink-0 rounded-full min-h-[40px] font-medium',
+                      'transition-all duration-200 ease-out',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                      'flex flex-col items-center justify-center gap-0.5',
+                      'sm:flex-row sm:gap-2 sm:px-4 sm:py-2',
+                      'px-3 py-1.5',
+                      isActive
+                        ? 'bg-accent text-accent-contrast shadow-sm'
+                        : 'bg-surface text-text-muted border border-border-soft hover:bg-accent-soft hover:text-accent hover:border-accent/30'
+                    )}
+                    aria-pressed={isActive}
+                    aria-label={`Show packages for ${seg.label}`}
+                  >
+                    <Icon className="w-4 h-4" aria-hidden="true" />
+                    {/* Short label on mobile, full label on desktop */}
+                    <span className="text-[11px] leading-none sm:text-sm sm:leading-normal">
+                      <span className="sm:hidden">{seg.shortLabel}</span>
+                      <span className="hidden sm:inline">{seg.label}</span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* ─── MOBILE: Card deck carousel ─── */}
