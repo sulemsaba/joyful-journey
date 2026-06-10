@@ -12,7 +12,7 @@ function CardLight({
   paragraph: string;
 }) {
   return (
-    <div className="w-[130px] sm:w-[155px] lg:w-[188px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface text-text">
+    <div className="w-[130px] sm:w-[155px] lg:w-[188px] min-h-[140px] sm:min-h-[170px] lg:min-h-[220px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface text-text">
       <div className="w-[2.2rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
       <div className="text-[0.62rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
       <div className="mt-1.5 lg:mt-3 text-[0.58rem] lg:text-[0.72rem] leading-relaxed opacity-70">{small}</div>
@@ -34,7 +34,7 @@ function CardDark({
   items: string[];
 }) {
   return (
-    <div className="w-[136px] sm:w-[162px] lg:w-[198px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface-elevated text-text">
+    <div className="w-[136px] sm:w-[162px] lg:w-[198px] min-h-[140px] sm:min-h-[170px] lg:min-h-[220px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-3 sm:p-4 pb-4 lg:pb-5 bg-surface-elevated text-text">
       <div className="w-[2.2rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
       <div className="text-[0.62rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
       <div className="w-full h-px bg-current opacity-[0.12] my-2.5 lg:my-4" />
@@ -60,7 +60,7 @@ function CardNarrow({
   copy: string;
 }) {
   return (
-    <div className="hidden sm:block w-[90px] lg:w-[116px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-2.5 lg:p-3.5 pb-3 lg:pb-4 bg-surface-elevated text-text">
+    <div className="hidden sm:block w-[90px] lg:w-[116px] min-h-[140px] sm:min-h-[170px] lg:min-h-[220px] rounded-2xl lg:rounded-3xl overflow-hidden border border-border-soft p-2.5 lg:p-3.5 pb-3 lg:pb-4 bg-surface-elevated text-text">
       <div className="w-[2.2rem] lg:w-[3.6rem] h-[2px] rounded-full bg-current opacity-70 mb-3 lg:mb-4" />
       <div className="text-[0.62rem] lg:text-[0.78rem] font-bold tracking-[0.04em] uppercase opacity-90">{brand}</div>
       <div className="mt-2.5 lg:mt-4 text-[0.72rem] lg:text-[0.9rem] leading-tight font-bold">{title}</div>
@@ -95,74 +95,17 @@ export function ReferenceVisual({ index }: { index: number }) {
   );
 }
 
-function ComposeVisual({
-  title,
-  label,
-  pill,
-  rows,
-  subjectLabel,
-  subjectValue,
-  messageTitle,
-  messageBody,
-}: {
-  title: string;
-  label: string;
-  pill: string;
-  rows: Array<{ label: string; value: string }>;
-  subjectLabel: string;
-  subjectValue: string;
-  messageTitle: string;
-  messageBody: string;
-}) {
+function ComposeVisual() {
   return (
-    <div className="relative w-full max-w-[560px] p-4 sm:p-[1.1rem] lg:p-[1.3rem] rounded-2xl sm:rounded-[2.2rem] border border-border-soft bg-surface overflow-hidden max-lg:max-w-full">
+    <div className="relative w-full max-w-[560px] p-4 sm:p-[1.1rem] lg:p-[1.3rem] rounded-2xl sm:rounded-[2.2rem] border border-border-soft bg-surface overflow-hidden max-lg:max-w-full min-h-[140px] sm:min-h-[170px] lg:min-h-[220px]">
       <div className="absolute left-[1.5rem] sm:left-[2rem] lg:left-[2.4rem] top-0 bottom-0 w-[1px] bg-border-soft" aria-hidden="true" />
-
-      <div className="relative z-10 grid gap-[0.7rem] sm:gap-[0.9rem] lg:gap-[1.1rem] max-w-[88%] sm:max-w-[80%]">
-        <div className="text-[0.9rem] sm:text-[1.05rem] lg:text-[1.15rem] font-bold text-text">{title}</div>
-
-        <div>
-          <div className="text-[0.58rem] sm:text-[0.64rem] lg:text-[0.68rem] font-bold uppercase tracking-[0.12em] text-text-soft mb-1.5">{label}</div>
-          <div className="inline-flex items-center min-h-[1.5rem] sm:min-h-[1.8rem] px-[0.55rem] sm:px-[0.8rem] rounded-[0.45rem] sm:rounded-[0.6rem] bg-accent-soft text-accent text-[0.62rem] sm:text-[0.74rem] font-bold">{pill}</div>
-        </div>
-
-        {rows.map((row) => (
-          <div key={row.label} className="grid grid-cols-[1fr_1.8fr] gap-2 sm:gap-3 items-center">
-            <span className="text-[0.58rem] sm:text-[0.66rem] lg:text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-soft">{row.label}</span>
-            <span className="text-[0.68rem] sm:text-[0.78rem] lg:text-[0.82rem] text-text-soft">{row.value}</span>
-          </div>
-        ))}
-
-        <div className="grid grid-cols-[1fr_1.8fr] gap-2 sm:gap-3 items-start">
-          <span className="text-[0.58rem] sm:text-[0.66rem] lg:text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-soft">{subjectLabel}</span>
-          <span className="inline-flex items-center justify-center min-h-[1.6rem] sm:min-h-[2rem] px-2 sm:px-3 rounded-[0.35rem] sm:rounded-[0.5rem] border border-border-soft bg-surface-elevated text-text text-[0.62rem] sm:text-[0.76rem]">{subjectValue}</span>
-        </div>
-
-        <div className="mt-1 sm:mt-2 grid gap-1 sm:gap-1.5">
-          <h4 className="m-0 text-[0.76rem] sm:text-[0.86rem] lg:text-[0.92rem] font-bold leading-tight text-text">{messageTitle}</h4>
-          <p className="m-0 text-[0.64rem] sm:text-[0.72rem] lg:text-[0.78rem] leading-relaxed text-text-soft">{messageBody}</p>
-        </div>
-      </div>
     </div>
   );
 }
 
 export function renderFeatureVisual(
-  visualKey: FeatureVisualKey,
-  featureVisuals: Record<string, FeatureVisualContent>
+  _visualKey: FeatureVisualKey,
+  _featureVisuals: Record<string, FeatureVisualContent>
 ) {
-  const content = featureVisuals[visualKey] ?? featureVisuals.tax;
-
-  return (
-    <ComposeVisual
-      title="Service Coordination"
-      label="Current workstream"
-      pill={content.workstreamValue}
-      rows={[{ label: content.counterpartLabel, value: content.counterpartValue }]}
-      subjectLabel="Focus"
-      subjectValue={content.focusValue}
-      messageTitle={content.summaryTitle}
-      messageBody={content.summaryBody}
-    />
-  );
+  return <ComposeVisual />;
 }

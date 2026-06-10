@@ -83,87 +83,24 @@
       }
 
       /* ── Skeleton-specific styles ── */
-      .sk-header {
-        position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-        height: 60px;
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 0 1rem;
-        background: var(--color-hero-bg);
-      }
-      @media (min-width: 640px) {
-        .sk-header { height: 68px; padding: 0 1.5rem; }
-      }
-
       .sk-hero {
-        height: 94.5svh;
-        height: 94.5dvh;
-        max-height: 600px;
-        margin-top: 60px;
+        height: 100svh;
+        height: 100dvh;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
         background: var(--color-hero-bg);
-      }
-      @media (min-width: 640px) {
-        .sk-hero { max-height: none; margin-top: 68px; }
-      }
-
-      .sk-review-bar {
-        height: 5.5svh;
-        min-height: 48px;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        background: var(--color-page);
-      }
-
-      .sk-pill {
-        border-radius: 9999px;
-        background: var(--color-accent-soft);
-      }
-      .sk-pill-strong {
-        border-radius: 9999px;
-        background: var(--color-accent-soft-strong);
-      }
-      .sk-logo-area {
-        position: relative;
-        width: 140px; height: 32px;
-      }
-      @media (min-width: 640px) {
-        .sk-logo-area { width: 160px; height: 36px; }
       }
     </style>
   </head>
   <body class="antialiased bg-page text-text font-sans">
     <div id="root">
-      <!-- ═══ Skeleton Rule: inline skeleton shell ═══
-           Shows the SHAPE of what's coming while real content loads.
-           NOT a full-screen blocker — it's inline, part of page flow.
-           React replaces #root content on hydrate → skeleton auto-hides. -->
-
-      <!-- Header bar placeholder -->
-      <header class="sk-header" aria-hidden="true">
-        <!-- Faded logo area (left) -->
-        <div class="sk-logo-area sk-pill" style="display:flex;align-items:center;gap:8px;">
-          <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" style="width:28px;height:28px;object-fit:contain;" />
-          <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" style="width:28px;height:28px;object-fit:contain;" />
-          <div style="width:80px;height:14px;border-radius:4px;background:var(--color-accent-soft-strong);"></div>
-        </div>
-        <!-- Faded nav pills (right) -->
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="sk-pill" style="width:48px;height:8px;"></div>
-          <div class="sk-pill" style="width:56px;height:8px;"></div>
-          <div class="sk-pill" style="width:44px;height:8px;"></div>
-          <div class="sk-pill-strong" style="width:64px;height:28px;"></div>
-        </div>
-      </header>
-
-      <!-- Hero section placeholder -->
+      <!-- Favicon heartbeat loader — React replaces #root content on hydrate -->
       <div class="sk-hero" aria-hidden="true">
-        <!-- Favicon pulse loader -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
           <div style="animation:sk-pulse 2s ease-in-out infinite;">
             <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" style="width:48px;height:48px;object-fit:contain;" />
             <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" style="width:48px;height:48px;object-fit:contain;" />
           </div>
-          <!-- "Loading..." with animated dots -->
           <div style="display:flex;align-items:baseline;gap:2px;font-family:Geist,sans-serif;font-size:14px;color:var(--color-text-muted);letter-spacing:0.02em;">
             <span>Loading</span>
             <span style="animation:sk-dot 1.4s ease-in-out infinite;"><span style="opacity:0;">.</span></span>
@@ -171,14 +108,6 @@
             <span style="animation:sk-dot 1.4s ease-in-out 0.4s infinite;"><span style="opacity:0;">.</span></span>
           </div>
         </div>
-      </div>
-
-      <!-- Review bar placeholder -->
-      <div class="sk-review-bar" aria-hidden="true">
-        <div class="sk-pill" style="width:24px;height:8px;"></div>
-        <div class="sk-pill" style="width:40px;height:8px;"></div>
-        <div class="sk-pill" style="width:32px;height:8px;"></div>
-        <div class="sk-pill" style="width:60px;height:8px;"></div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>

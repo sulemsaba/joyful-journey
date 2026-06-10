@@ -224,17 +224,6 @@ export function App() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen flex flex-col bg-page text-text">
-        {/*
-          Skip-to-content link for keyboard / screen reader users.
-          Hidden by default, visible on focus (Tab key).
-        */}
-        <a
-          href="#top"
-          className="pointer-events-none opacity-0 focus:pointer-events-auto focus:opacity-100 fixed left-4 top-2 z-[100] inline-flex h-12 items-center rounded-full bg-accent px-6 text-sm font-extrabold text-accent-contrast transition-all focus:outline-2 focus:outline-accent"
-        >
-          Skip to content
-        </a>
-
         <Navigation
           brand={shell.brand}
           company={shell.company}
