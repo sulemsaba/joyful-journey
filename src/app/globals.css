@@ -308,14 +308,10 @@ html, body {
   from { transform: translateY(0); }
   to { transform: translateY(-18%); }
 }
-/* ── Favicon loader: heartbeat animation ──── */
+/* ── Favicon loader: smooth scale pulse in/out ──── */
 @keyframes loader-pulse {
-  0%   { transform: scale(1); }
-  14%  { transform: scale(1.18); }
-  28%  { transform: scale(1); }
-  42%  { transform: scale(1.12); }
-  56%  { transform: scale(1); }
-  100% { transform: scale(1); }
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.12); opacity: 0.8; }
 }
 @keyframes loader-fade {
   0%, 100% { opacity: 0.4; }

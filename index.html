@@ -77,13 +77,9 @@
       html[data-theme="dark"] .sk-logo-dark  { opacity: 1; }
 
       /* ── Keyframe animations ── */
-      @keyframes sk-heartbeat {
-        0%   { transform: scale(1); }
-        14%  { transform: scale(1.18); }
-        28%  { transform: scale(1); }
-        42%  { transform: scale(1.12); }
-        56%  { transform: scale(1); }
-        100% { transform: scale(1); }
+      @keyframes sk-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50%      { transform: scale(1.12); opacity: 0.8; }
       }
       @keyframes sk-dot {
         0%, 20%  { opacity: 0; }
@@ -105,15 +101,16 @@
       <!-- Favicon heartbeat loader — React replaces #root content on hydrate -->
       <div class="sk-hero" aria-hidden="true">
         <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
-          <div style="animation:sk-heartbeat 1.6s ease-in-out infinite;">
+          <div style="animation:sk-pulse 2s ease-in-out infinite;">
             <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" style="width:48px;height:48px;object-fit:contain;" />
             <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" style="width:48px;height:48px;object-fit:contain;" />
           </div>
           <div style="display:flex;align-items:baseline;gap:2px;font-family:Geist,sans-serif;font-size:14px;color:var(--color-text-muted);letter-spacing:0.02em;">
             <span>Loading</span>
-            <span style="animation:sk-dot 1.4s ease-in-out infinite;"><span style="opacity:0;">.</span></span>
-            <span style="animation:sk-dot 1.4s ease-in-out 0.2s infinite;"><span style="opacity:0;">.</span></span>
-            <span style="animation:sk-dot 1.4s ease-in-out 0.4s infinite;"><span style="opacity:0;">.</span></span>
+            <span style="animation:sk-dot 1.4s ease-in-out infinite;">.</span>
+            <span style="animation:sk-dot 1.4s ease-in-out 0.2s infinite;">.</span>
+            <span style="animation:sk-dot 1.4s ease-in-out 0.4s infinite;">.</span>
+            <span style="animation:sk-dot 1.4s ease-in-out 0.6s infinite;">.</span>
           </div>
         </div>
       </div>

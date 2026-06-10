@@ -245,7 +245,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className="logo-light block h-8 sm:h-11 w-auto aspect-[176/44]"
+              className="logo-light block h-8 sm:h-11 w-auto"
             />
             <img
               src={brand.darkLogoSrc}
@@ -259,7 +259,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className="logo-dark h-8 sm:h-11 w-auto aspect-[176/44]"
+              className="logo-dark h-8 sm:h-11 w-auto"
             />
           </a>
 
