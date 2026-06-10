@@ -111,7 +111,7 @@ export function StackSection({
     <section
       ref={sectionRef}
       aria-label="Service guidance overview"
-      className="relative bg-[linear-gradient(180deg,var(--color-page)_0%,var(--color-page)_52%,var(--color-page-strong)_100%)]"
+      className="relative"
     >
       {visibleItems.map((rawItem, index) => {
         const item = rawItem as ExtendedStackItem;
@@ -152,7 +152,7 @@ export function StackSection({
                 "transition-all duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
                 "origin-top",
                 // Active card: slight lift shadow for depth
-                isActive && "shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)]",
+
                 // When covered: dramatic scale down + sink + dim
                 isCovered && "scale-[0.90] translate-y-8 opacity-50"
               )}
