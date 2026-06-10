@@ -1,0 +1,17 @@
+"use client";
+
+import { cn } from "@/lib/cn";
+import type { ReactNode } from "react";
+
+interface ContainerProps {
+  children: ReactNode;
+  className?: string;
+}
+
+export function Container({ children, className }: ContainerProps) {
+  return (
+    <div className={cn("w-[min(1240px,calc(100%-1rem))] sm:w-[min(1240px,calc(100%-2rem))] mx-auto", className)}>
+      {children}
+    </div>
+  );
+}
