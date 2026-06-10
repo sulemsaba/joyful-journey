@@ -330,29 +330,23 @@ export function HomePageSkeleton() {
       </section>
 
       {/* ── 7. Newsletter section ──────────────────────────
-       * Matches NewsletterSection: centered CTA card.
+       * Matches UnifiedCtaSection: centered CTA card with gradient glow.
        */}
       <section aria-hidden="true" className="py-10 md:py-16">
         <div className="mx-auto w-[min(1240px,calc(100%-2rem))]">
-          <div className="relative overflow-hidden border border-border-soft sm:rounded-[2rem] rounded-2xl sm:p-8 md:p-12 p-5 bg-surface animate-pulse">
-            {/* Desktop layout */}
-            <div className="hidden sm:block text-center">
-              <div className="mx-auto inline-flex h-4 w-24 rounded-full bg-accent-soft" />
-              <div className="mx-auto mt-3 h-8 w-[min(18rem,50%)] rounded-full bg-accent-soft" />
-              <div className="mx-auto mt-3 h-3 w-[min(26rem,60%)] rounded-full bg-accent-soft" />
-              <div className="mx-auto mt-6 flex items-center justify-center gap-3">
-                <div className="h-12 flex-1 max-w-[260px] rounded-full bg-accent-soft" />
-                <div className="h-12 w-28 rounded-full bg-accent-soft" />
-              </div>
-            </div>
-            {/* Mobile layout */}
-            <div className="grid gap-4 sm:hidden">
-              <div className="grid gap-1">
-                <div className="h-3 w-20 rounded-full bg-accent-soft" />
-                <div className="h-4 w-40 rounded-full bg-accent-soft" />
-              </div>
-              <div className="h-11 w-full rounded-full bg-accent-soft" />
-              <div className="h-12 w-full rounded-xl bg-accent-soft" />
+          <div className="relative overflow-hidden border border-border-soft sm:rounded-[2rem] rounded-2xl sm:p-8 md:p-12 p-5 animate-pulse text-center"
+            style={{
+              background:
+                'radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), var(--color-surface-elevated)',
+            }}
+          >
+            {/* Unified CTA skeleton — always centered */}
+            <div className="mx-auto inline-flex h-4 w-24 rounded-full bg-accent-soft" />
+            <div className="mx-auto mt-3 h-8 w-[min(18rem,50%)] rounded-full bg-accent-soft" />
+            <div className="mx-auto mt-3 h-3 w-[min(26rem,60%)] rounded-full bg-accent-soft" />
+            <div className="mx-auto mt-6 flex items-center justify-center gap-3">
+              <div className="h-12 flex-1 max-w-[260px] rounded-full bg-accent-soft" />
+              <div className="h-12 w-28 rounded-full bg-accent-soft" />
             </div>
           </div>
         </div>

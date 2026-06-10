@@ -90,11 +90,12 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Home } from "lucide-react";
+import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { ErrorMessage } from "@/exxonim/components/ErrorMessage";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
-import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
+import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
+import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { ReadingProgressBar } from "@/exxonim/components/ReadingProgressBar";
 import { useBlogPost } from "@/exxonim/hooks/useBlogPost";
 import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
@@ -781,11 +782,13 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
               </div>
 
               {/* ═══ NEWSLETTER CARD (full-width) ═══ */}
-              <NewsletterSection
-                variant="card"
+              <UnifiedCtaSection
+                eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
                 heading="Stay updated on compliance changes"
                 description="Get practical guides and regulatory updates delivered to your inbox. No spam — just what matters for your business in Tanzania."
-              />
+              >
+                <NewsletterForm />
+              </UnifiedCtaSection>
 
               {/* ═══ CTA BANNER (compact) ═══ */}
               <BottomCTABanner />

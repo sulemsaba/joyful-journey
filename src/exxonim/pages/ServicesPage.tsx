@@ -1,10 +1,11 @@
-import { Home } from "lucide-react";
+import { Home, ArrowRight, Phone } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Container } from "@/exxonim/components/primitives/Container";
 import { ComplianceCalendarSection } from "@/exxonim/components/ComplianceCalendarSection";
 import { ServiceCatalogSection } from "@/exxonim/components/service-catalog";
 import { ExxonimApartSection } from "@/exxonim/components/ExxonimApartSection";
-import { FinalCtaSection } from "@/exxonim/components/FinalCtaSection";
+import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
+import { Button } from "@/exxonim/components/primitives/Button";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { ProblemFramingSection } from "@/exxonim/components/ProblemFramingSection";
 import { ServicePackagesSection } from "@/exxonim/components/ServicePlansSection";
@@ -83,7 +84,25 @@ export function ServicesPage() {
           )}
 
           {/* 8. Final CTA — one strong action */}
-          <FinalCtaSection />
+          <UnifiedCtaSection
+            heading="Ready to get started?"
+            description="Book a free consultation and receive a tracking code that keeps you informed at every step."
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button size="standard" variant="primary" href={routes.contact}>
+                Book a Free Consultation
+                <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Button>
+              <Button
+                size="standard"
+                variant="secondary"
+                href="tel:+255794689099"
+              >
+                <Phone className="mr-1.5 h-4 w-4" aria-hidden="true" />
+                Call +255 794 689 099
+              </Button>
+            </div>
+          </UnifiedCtaSection>
         </>
       );}}
     </LoadBoundary>

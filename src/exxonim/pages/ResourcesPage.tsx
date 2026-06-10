@@ -62,10 +62,11 @@
  */
 
 import { useMemo, useState } from "react";
-import { Home } from "lucide-react";
+import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
-import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
+import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
+import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { useBlogCategories } from "@/exxonim/hooks/useBlogCategories";
 import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
 import { usePage } from "@/exxonim/hooks/usePage";
@@ -730,7 +731,13 @@ export function ResourcesPage() {
             </section>
 
             {/* ── Newsletter subscription ── */}
-            <NewsletterSection />
+            <UnifiedCtaSection
+              eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
+              heading="Get the latest from Exxonim"
+              description="Business insights, regulatory updates, and practical compliance tips delivered to your inbox."
+            >
+              <NewsletterForm />
+            </UnifiedCtaSection>
 
             {/* ── CTA (compact) ── */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">

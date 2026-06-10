@@ -3,11 +3,12 @@ import { useState, useCallback, useMemo } from "react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
-import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
+import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
+import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
+import { Sparkles, Home, Search, Plus, X, MessageCircle } from "lucide-react";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
-import { Home, Search, Plus, X, MessageCircle } from "lucide-react";
 import type { FaqPageContent } from '@/exxonim/types';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 
@@ -361,14 +362,13 @@ export function FaqPage() {
             </section>
 
             {/* ─── Newsletter / Still have questions ─── */}
-            <section className="pb-16 md:pb-24">
-              <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8">
-                <NewsletterSection
-                  heading="Still have questions?"
-                  description="Get answers to new compliance questions delivered to your inbox as we publish them. No spam — just what matters for your business in Tanzania."
-                />
-              </div>
-            </section>
+            <UnifiedCtaSection
+              eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
+              heading="Still have questions?"
+              description="Get answers to new compliance questions delivered to your inbox as we publish them. No spam — just what matters for your business in Tanzania."
+            >
+              <NewsletterForm />
+            </UnifiedCtaSection>
           </>
         );
       }}

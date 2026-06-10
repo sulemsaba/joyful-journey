@@ -99,10 +99,11 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Home } from "lucide-react";
+import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
-import { NewsletterSection } from "@/exxonim/components/NewsletterSection";
+import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
+import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { routes } from "@/exxonim/routes";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
@@ -1292,12 +1293,13 @@ export function CareerPage() {
             </div>
 
             {/* ── Newsletter Card ── */}
-            <NewsletterSection
-              variant="card"
+            <UnifiedCtaSection
+              eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Job Alerts" }}
               heading="Never miss a new role"
               description="Subscribe to get notified when Exxonim publishes new career opportunities. No spam — just job alerts that matter."
-              label="Job alerts"
-            />
+            >
+              <NewsletterForm />
+            </UnifiedCtaSection>
 
             {/* ── CTA Banner ── */}
             <CareerCTABanner primary={content.status.primary} secondary={content.status.secondary} />
