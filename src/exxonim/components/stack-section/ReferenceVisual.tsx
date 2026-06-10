@@ -76,9 +76,9 @@ export function ReferenceVisual({ index }: { index: number }) {
     return (
       <div className={`${shellClasses} bg-[linear-gradient(180deg,var(--color-surface),var(--color-surface-soft))]`}>
         <div className="w-full flex items-end justify-center gap-2 sm:gap-3 lg:gap-5 overflow-hidden">
-          <CardLight brand="Reference" small="Registration Overview" big="Company, business name, NGO, and trademark setup support." paragraph="Structure first. Delays later become easier to prevent." />
-          <CardDark brand="Reference" paragraph="Clear documentation, coordinated follow-up, and fewer avoidable corrections during setup." tag="Launch ready" items={["Company registration support", "Business name registration", "NGO / organization registration", "Trademark filing support"]} />
-          <CardNarrow brand="File" title="Next-step visibility" copy="Better preparation before submission, review, and launch." />
+          <CardLight brand="" small="" big="" paragraph="" />
+          <CardDark brand="" paragraph="" tag="" items={[]} />
+          <CardNarrow brand="" title="" copy="" />
         </div>
       </div>
     );
@@ -87,9 +87,9 @@ export function ReferenceVisual({ index }: { index: number }) {
   return (
     <div className={`${shellClasses} bg-[linear-gradient(180deg,var(--color-surface-soft),var(--color-surface))]`}>
       <div className="w-full flex items-end justify-center gap-2 sm:gap-3 lg:gap-5 overflow-hidden">
-        <CardLight brand="Reference" small="Business Readiness Pack" big="Compliance, licensing, and institutional support you can act on." paragraph="Prepared documents move faster under review." />
-        <CardDark brand="Reference" paragraph="Submission-ready support across tax, licensing, registrations, and operating approvals." tag="Operational readiness" items={["TIN application support", "Annual statutory returns", "OSHA / NSSF / WCF support", "Business plan preparation"]} />
-        <CardNarrow brand="Review" title="Prepared for decision" copy="Lender, authority, and internal review readiness." />
+        <CardLight brand="" small="" big="" paragraph="" />
+        <CardDark brand="" paragraph="" tag="" items={[]} />
+        <CardNarrow brand="" title="" copy="" />
       </div>
     </div>
   );
