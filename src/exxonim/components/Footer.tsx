@@ -94,12 +94,12 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   img.dataset.fallbackApplied = "true";
                   img.src = fallbackBrand.darkLogoSrc;
                 }}
-                className="block max-w-[10rem] h-auto"
+                className="block h-8 sm:h-11 w-auto"
               />
             </a>
 
             <p
-              className="text-footer-text-muted text-[0.9375rem] leading-relaxed italic"
+              className="text-footer-text-muted text-sm leading-relaxed italic"
               style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}
             >
               Where Innovation Meets Efficiency

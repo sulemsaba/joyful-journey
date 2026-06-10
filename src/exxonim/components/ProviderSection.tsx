@@ -103,13 +103,13 @@ export function ProviderSection({ content }: ProviderSectionProps) {
        */}
 
       {/* Label — tiny, muted */}
-      <p className="m-0 text-center text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft pt-5 pb-2">
+      <p className="m-0 text-center text-xs font-extrabold uppercase tracking-[0.14em] text-accent pt-8 pb-3 md:pt-12 md:pb-4">
         Trusted by
       </p>
 
       {/* Logo marquee — full-bleed with 15% edge fades */}
       <div
-        className="full-bleed overflow-hidden relative pb-5 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+        className="full-bleed overflow-hidden relative pb-8 md:pb-12 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
         aria-label="Partner logos"
       >
         <div className="provider-marquee-track flex items-center w-max will-change-transform animate-provider-marquee hover:[animation-play-state:paused]">

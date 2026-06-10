@@ -247,7 +247,7 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1.5"
+      className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
       <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
@@ -255,11 +255,11 @@ const TestimonialCard = memo(function TestimonialCard({
           <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
         ))}
       </p>
-      <p className="text-[0.9375rem] leading-relaxed text-text-muted flex-1">
+      <p className="text-sm leading-relaxed text-text-muted flex-1">
         &ldquo;{testimonial.quote}&rdquo;
       </p>
       <div className="mt-auto flex items-center gap-2.5">
-        <div className="flex h-7 w-7 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
           {testimonial.initials}
         </div>
         <div>
@@ -530,7 +530,7 @@ function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featu
           <li
             key={feature.label}
             className={cn(
-              "flex items-start gap-2 text-[13px] leading-snug",
+              "flex items-start gap-2 text-xs leading-snug",
               !feature.included && "opacity-40"
             )}
           >
@@ -615,14 +615,14 @@ export function ServicePackagesSection({
       <section
         id={variant === "page" ? "packages" : undefined}
         aria-label="Service packages and client testimonials"
-        className="py-10 md:py-24"
+        className="py-16 md:py-24"
       >
         <Container>
           {/* ─── Social Proof ─── */}
           {testimonials.length > 0 && (
             <div className="mb-8 md:mb-12">
               <div className="mb-6 md:mb-8" data-reveal>
-                <h2 className="text-[clamp(1.25rem,2.5vw,1.75rem)] font-semibold leading-tight tracking-tight text-text">
+                <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text">
                   What our clients say
                 </h2>
               </div>
@@ -636,7 +636,7 @@ export function ServicePackagesSection({
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
                 Service packages
               </p>
-              <h2 className="text-[clamp(1.3rem,3vw,2rem)] font-semibold leading-tight tracking-tight text-text">
+              <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text">
                 Choose the right level of support
               </h2>
             </div>

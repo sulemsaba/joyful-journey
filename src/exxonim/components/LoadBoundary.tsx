@@ -157,10 +157,10 @@ export function HomePageSkeleton() {
        * Matches ProviderSection: "Trusted by" label + marquee track.
        */}
       <section aria-hidden="true" className="relative bg-page">
-        <p className="m-0 text-center text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft pt-5 pb-2">
+        <p className="m-0 text-center text-xs font-extrabold uppercase tracking-[0.14em] text-accent pt-8 pb-3 md:pt-12 md:pb-4">
           Trusted by
         </p>
-        <div className="pb-5 flex items-center justify-center gap-8 px-8">
+        <div className="pb-8 md:pb-12 flex items-center justify-center gap-8 px-8">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}

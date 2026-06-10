@@ -77,7 +77,7 @@ interface InsightsSectionProps {
 
 function Tag({ label }: { label: string }) {
   return (
-    <span className="absolute left-[18px] top-[18px] z-[2] inline-flex min-h-[32px] items-center rounded-full border border-accent-contrast/20 bg-accent-contrast/30 px-3.5 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-contrast/90">
+    <span className="absolute left-[14px] top-[14px] z-[2] inline-flex min-h-[28px] items-center rounded-full border border-accent-contrast/20 bg-accent-contrast/30 px-3 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-contrast/90">
       {label}
     </span>
   );
@@ -85,13 +85,13 @@ function Tag({ label }: { label: string }) {
 
 function MediaOverlay({ category, label }: { category?: string; label: string }) {
   return (
-    <div className="absolute inset-x-[18px] bottom-[18px] z-[2] grid gap-2 text-accent-contrast/90">
+    <div className="absolute inset-x-[14px] bottom-[14px] z-[2] grid gap-1.5 text-accent-contrast/90">
       {category ? (
-        <span className="text-[0.76rem] font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
+        <span className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
           {category}
         </span>
       ) : null}
-      <strong className="text-base font-bold leading-snug">{label}</strong>
+      <strong className="text-sm font-bold leading-snug">{label}</strong>
     </div>
   );
 }
@@ -117,28 +117,28 @@ function renderMedia(post: BlogPost, categoryLabel?: string) {
   return (
     <>
       {categoryLabel ? <Tag label={categoryLabel} /> : null}
-      <div className="relative flex h-full w-full items-end p-6 bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
+      <div className="relative flex h-full w-full items-end p-5 bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
         <span
           aria-hidden="true"
-          className="absolute right-[22px] top-[22px] inline-flex h-14 w-14 items-center justify-center rounded-[18px] border border-accent-contrast/20 bg-accent-contrast/30 text-2xl font-bold tracking-tight text-accent-contrast/90"
+          className="absolute right-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-contrast/20 bg-accent-contrast/30 text-xl font-bold tracking-tight text-accent-contrast/90"
         >
           E
         </span>
         <span
           aria-hidden="true"
-          className="absolute left-6 top-[72px] h-[18px] w-[132px] rounded-full bg-accent-contrast/15"
+          className="absolute left-5 top-16 h-4 w-28 rounded-full bg-accent-contrast/15"
         />
         <span
           aria-hidden="true"
-          className="absolute left-6 top-[104px] h-[18px] w-[86px] rounded-full bg-accent-contrast/15"
+          className="absolute left-5 top-[88px] h-4 w-20 rounded-full bg-accent-contrast/15"
         />
-        <div className="relative z-[1] grid max-w-[70%] gap-2.5 text-accent-contrast/90">
+        <div className="relative z-[1] grid max-w-[70%] gap-2 text-accent-contrast/90">
           {categoryLabel ? (
-            <span className="text-[0.76rem] font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
+            <span className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
               {categoryLabel}
             </span>
           ) : null}
-          <strong className="text-base font-bold leading-snug">
+          <strong className="text-sm font-bold leading-snug">
             {post.mediaLabel || post.title}
           </strong>
         </div>
@@ -180,16 +180,16 @@ export function InsightsSection({
     <section
       id="resources"
       aria-label="Latest insights and articles"
-      className="relative overflow-clip py-[clamp(80px,10vw,124px)]"
+      className="relative overflow-clip py-16 md:py-24"
     >
       <span id="blogs" aria-hidden="true" className="block h-0" />
       <Container className="grid gap-7">
         {/* ── Section header ── */}
         <div className="grid gap-3.5" data-reveal>
-          <h2 className="m-0 text-[clamp(1.9rem,4vw,3rem)] font-medium leading-none tracking-tight text-text">
+          <h2 className="m-0 text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text">
             {content.title}
           </h2>
-          <p className="m-0 max-w-[34rem] text-[0.98rem] leading-relaxed text-text-muted">
+          <p className="m-0 max-w-[34rem] text-sm leading-relaxed text-text-muted">
             {content.intro}
           </p>
         </div>
@@ -201,7 +201,7 @@ export function InsightsSection({
         <div className="full-bleed overflow-x-clip" data-reveal>
           <div
             ref={railRef}
-            className="flex gap-6 overflow-x-auto px-[clamp(20px,4vw,44px)] py-2 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [overscroll-behavior-x:contain] [&::-webkit-scrollbar]:hidden xl:justify-center"
+            className="flex gap-5 overflow-x-auto px-[clamp(24px,5vw,48px)] py-2 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [overscroll-behavior-x:contain] [&::-webkit-scrollbar]:hidden xl:justify-center"
           >
             {posts.map((post) => {
               const categoryLabel = post.category?.label;
@@ -212,7 +212,7 @@ export function InsightsSection({
               return (
                 <article
                   key={post.slug}
-                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-[30px] border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(84vw,360px)] max-sm:rounded-[24px]"
+                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(78vw,320px)]"
                 >
                   <div
                     className="relative isolate aspect-[16/10] overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-30% after:to-overlay/50 bg-[radial-gradient(circle_at_top_right,var(--color-accent-soft-strong),transparent_48%),linear-gradient(160deg,var(--color-page-strong),var(--color-accent-soft-strong))]"
@@ -220,32 +220,32 @@ export function InsightsSection({
                     {renderMedia(post, categoryLabel)}
                   </div>
 
-                  <div className="flex flex-1 flex-col bg-surface p-6 pb-[22px] max-md:p-5">
-                    <span className="mb-3.5 text-[0.76rem] font-bold uppercase tracking-[0.09em] text-text-soft">
+                  <div className="flex flex-1 flex-col bg-surface p-5 pb-4 max-md:p-4">
+                    <span className="mb-3 text-xs font-bold uppercase tracking-[0.09em] text-text-soft">
                       {metaParts.join(" | ")}
                     </span>
-                    <h3 className="m-0 mb-3 text-[clamp(1.15rem,1.6vw,1.45rem)] font-medium leading-tight tracking-tight text-text">
+                    <h3 className="m-0 mb-2 text-[clamp(1.05rem,1.4vw,1.3rem)] font-semibold leading-tight tracking-tight text-text">
                       {post.title}
                     </h3>
-                    <p className="m-0 text-[0.92rem] leading-relaxed text-text-muted line-clamp-2">
+                    <p className="m-0 text-sm leading-relaxed text-text-muted line-clamp-2">
                       {post.excerpt}
                     </p>
 
-                    <div className="mt-auto flex items-center justify-between gap-4 pt-5 max-md:flex-col max-md:items-start max-md:gap-3">
+                    <div className="mt-auto flex items-center justify-between gap-3 pt-4 max-md:flex-col max-md:items-start max-md:gap-2">
                       {post.author ? (
                         <div className="inline-flex min-w-0 items-center gap-2.5">
                           <span
                             aria-hidden="true"
-                            className="inline-flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-[0.78rem] font-bold tracking-wide text-text"
+                            className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-xs font-bold tracking-wide text-text"
                           >
                             {getAuthorInitials(post.author.name)}
                           </span>
                           <span className="grid min-w-0 gap-[2px]">
-                            <span className="truncate text-[0.85rem] font-bold text-text">
+                            <span className="truncate text-xs font-bold text-text">
                               {post.author.name}
                             </span>
                             {post.author.role ? (
-                              <span className="truncate text-[0.74rem] text-text-soft">
+                              <span className="truncate text-[11px] text-text-soft">
                                 {post.author.role}
                               </span>
                             ) : null}
@@ -255,7 +255,7 @@ export function InsightsSection({
 
                       <a
                         href={resourceArticlePath(post.slug)}
-                        className="inline-flex items-center gap-2 min-h-12 py-2 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 whitespace-nowrap text-[0.88rem] font-bold text-accent transition-colors hover:text-accent-hover"
+                        className="inline-flex items-center gap-2 min-h-10 py-1.5 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 whitespace-nowrap text-sm font-bold text-accent transition-colors hover:text-accent-hover"
                       >
                         Learn more
                         <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[3px]">
@@ -272,7 +272,7 @@ export function InsightsSection({
 
         {/* ── Section footer ── */}
         <div className="flex flex-wrap items-center justify-between gap-4 max-sm:flex-col max-sm:items-start" data-reveal>
-          <p className="m-0 text-[0.95rem] leading-relaxed text-text-soft">
+          <p className="m-0 text-sm leading-relaxed text-text-soft">
             {content.footer_copy}
           </p>
           <div className="inline-flex items-center gap-3">

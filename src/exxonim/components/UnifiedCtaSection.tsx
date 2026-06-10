@@ -38,10 +38,10 @@ export function UnifiedCtaSection({
   className,
 }: UnifiedCtaSectionProps) {
   return (
-    <section aria-label={ariaLabel} className={`py-10 md:py-16 ${className ?? ''}`}>
+    <section aria-label={ariaLabel} className={`py-12 md:py-16 ${className ?? ''}`}>
       <Container>
         <div
-          className="relative overflow-hidden border border-border-soft rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 md:p-12 text-center"
+          className="relative overflow-hidden border border-border-soft rounded-2xl p-5 sm:p-8 md:p-12 text-center"
           style={{
             background:
               'radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), var(--color-surface-elevated)',
@@ -58,7 +58,7 @@ export function UnifiedCtaSection({
 
           {/* Heading */}
           <h2
-            className={`${eyebrow ? 'mt-3' : ''} text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-tight tracking-tight text-text`}
+            className={`${eyebrow ? 'mt-3' : ''} text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text`}
           >
             {heading}
           </h2>
