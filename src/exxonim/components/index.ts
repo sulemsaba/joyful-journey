@@ -23,6 +23,7 @@ export { ScrollToTopButton } from "./ScrollToTopButton";
 export { Breadcrumb } from "./Breadcrumb";
 export { UnifiedCtaSection } from "./UnifiedCtaSection";
 export { NewsletterForm } from "./NewsletterForm";
+export { CardDeckCarousel } from "./CardDeckCarousel";
 export { ProblemFramingSection } from "./ProblemFramingSection";
 export { ServicesFaqSection } from "./ServicesFaqSection";
 export { Button, Card, Container, Section } from "./primitives";

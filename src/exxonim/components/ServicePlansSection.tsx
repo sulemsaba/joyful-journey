@@ -2,19 +2,33 @@
 /**
  * ServicePackagesSection — Segment-filtered plan tiers.
  *
- * Redesigned to show 3 plan cards per customer segment:
+ * Redesigned with a card-deck carousel on mobile:
  *   - 4 segment filter buttons at top (Local Entrepreneurs, Foreign Investors, Enterprises, NGOs)
  *   - 3 tier cards per segment (Starter, Growth, Premium)
  *   - NO prices — CTA drives to consultation instead
+ *   - Mobile (< lg): Card deck carousel with peek/triangle-fan effect
+ *   - Desktop (≥ lg): 3-column grid layout
+ *
+ * DESIGN CONSTRAINTS (for admin-managed content):
+ * ─────────────────────────────────────────────
+ * - Card width is fixed at 280px in the carousel (portrait rectangle).
+ * - Max 8 features recommended per card for visual balance.
+ * - Description recommended max ~120 chars for clean card layout.
+ * - Badge text recommended max ~15 chars to fit the pill.
+ * - CTA text recommended max ~20 chars to fit the button.
+ * - When data comes from the admin API, these limits should be
+ *   enforced server-side AND gracefully handled in the UI (text
+ *   truncation with ellipsis for overflow).
  *
  * Also includes the testimonial marquee (unchanged).
  */
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Star, X, Users, Globe, Building2, Heart } from "lucide-react";
 import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
+import { CardDeckCarousel } from "./CardDeckCarousel";
 import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
 import { useTestimonials } from "@/exxonim/hooks/useTestimonials";
 import { routes } from "@/exxonim/routes";
@@ -457,26 +471,35 @@ function TestimonialMarquee({
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * SegmentPlanCard — 3-tier plan card (no prices)
+ * SegmentPlanCard — Portrait pricing card
+ *
+ * DESIGN NOTES (for admin-managed content):
+ * - Card is designed as a vertical rectangle (portrait orientation).
+ * - In the mobile carousel, width is 280px; in desktop grid, auto.
+ * - Features list uses flex-1 to push CTA button to the bottom.
+ * - Max 8 features recommended. More features = taller card.
+ * - Description max ~120 chars recommended for clean layout.
  * ═══════════════════════════════════════════════════════════════ */
-function SegmentPlanCard({ plan, featured }: { plan: SegmentPlan; featured: boolean }) {
+function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featured: boolean; compact?: boolean }) {
   return (
     <article
       className={cn(
-        "flex h-full flex-col rounded-2xl border p-5 md:p-6 lg:p-7 transition-all",
+        "flex h-full w-full flex-col rounded-2xl border transition-all",
+        compact ? "p-5" : "p-5 md:p-6 lg:p-7",
         featured
           ? "border-accent/40 bg-accent/5"
           : "border-border-soft bg-surface"
       )}
       aria-label={`${plan.name} service package`}
     >
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <h3 className={cn("text-lg font-bold", featured ? "text-accent" : "text-text")}>
+      {/* Badge row */}
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <h3 className={cn("font-bold", compact ? "text-base" : "text-lg", featured ? "text-accent" : "text-text")}>
           {plan.name}
         </h3>
         {plan.badge ? (
           <span className={cn(
-            "rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider",
+            "rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider whitespace-nowrap",
             featured ? "bg-accent text-accent-contrast" : "bg-accent-soft text-accent"
           )}>
             {plan.badge}
@@ -484,41 +507,45 @@ function SegmentPlanCard({ plan, featured }: { plan: SegmentPlan; featured: bool
         ) : null}
       </div>
 
-      <p className={cn("text-sm leading-relaxed mb-4", featured ? "text-text" : "text-text-muted")}>
+      {/* Description — clamp to 2 lines for admin content safety */}
+      <p className={cn(
+        "text-sm leading-relaxed mb-3 line-clamp-2",
+        featured ? "text-text" : "text-text-muted"
+      )}>
         {plan.description}
       </p>
 
-      <div className={cn("h-px mb-4", featured ? "bg-accent/20" : "bg-border-soft")} />
+      <div className={cn("h-px mb-3", featured ? "bg-accent/20" : "bg-border-soft")} />
 
-      <ul className="flex flex-1 flex-col gap-2.5">
+      {/* Features list — flex-1 pushes CTA to bottom */}
+      <ul className="flex flex-1 flex-col gap-2">
         {plan.features.map((feature) => (
           <li
             key={feature.label}
             className={cn(
-              "flex items-start gap-2 text-sm",
+              "flex items-start gap-2 text-[13px] leading-snug",
               !feature.included && "opacity-40"
             )}
           >
             <span className={cn(
-              "mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full",
+              "mt-0.5 flex h-4.5 w-4.5 flex-none items-center justify-center rounded-full",
               feature.included
                 ? (featured ? "bg-accent text-accent-contrast" : "bg-accent-soft text-accent")
                 : (featured ? "bg-accent/10 text-accent/40" : "bg-border-soft text-text-muted")
             )}>
-              {feature.included ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+              {feature.included ? <Check className="h-2.5 w-2.5" /> : <X className="h-2.5 w-2.5" />}
             </span>
-            <span className={featured ? "text-text" : "text-text"}>
-              {feature.label}
-            </span>
+            <span className="text-text">{feature.label}</span>
           </li>
         ))}
       </ul>
 
+      {/* CTA button */}
       <Button
         size="standard"
         variant={featured ? "primary" : "outline"}
         href={routes.contact}
-        className="mt-6 w-full"
+        className="mt-4 w-full"
       >
         {plan.cta}
       </Button>
@@ -545,6 +572,28 @@ export function ServicePackagesSection({
   } = usePricingPlans();
 
   const currentPlans = segmentPlans[activeSegment];
+
+  /* ── Card deck data (for mobile carousel) ── */
+  const carouselCards = useMemo(
+    () =>
+      currentPlans.map((plan, index) => ({
+        key: `${activeSegment}-${plan.name}`,
+        content: (
+          <SegmentPlanCard
+            plan={plan}
+            featured={plan.badge !== null}
+            compact
+          />
+        ),
+      })),
+    [currentPlans, activeSegment]
+  );
+
+  /* ── Default to middle card (Growth / "Most Popular") ── */
+  const defaultCarouselIndex = useMemo(() => {
+    const idx = currentPlans.findIndex((p) => p.badge !== null);
+    return idx >= 0 ? idx : Math.floor(currentPlans.length / 2);
+  }, [currentPlans]);
 
   return (
     <LoadBoundary
@@ -614,8 +663,14 @@ export function ServicePackagesSection({
               })}
             </div>
 
-            {/* 3 plan cards */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
+            {/* ─── MOBILE: Card deck carousel ─── */}
+            <CardDeckCarousel
+              cards={carouselCards}
+              defaultIndex={defaultCarouselIndex}
+            />
+
+            {/* ─── DESKTOP: 3-column grid ─── */}
+            <div className="hidden lg:grid gap-5 lg:grid-cols-3">
               {currentPlans.map((plan) => (
                 <SegmentPlanCard
                   key={`${activeSegment}-${plan.name}`}
