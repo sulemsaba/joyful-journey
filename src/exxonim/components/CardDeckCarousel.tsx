@@ -10,13 +10,12 @@ import {
 import { cn } from '@/exxonim/utils/cn';
 
 /**
- * CardDeckCarousel — Playing-card-style swipe carousel for mobile.
+ * CardDeckCarousel — Swipeable card deck carousel for mobile.
  *
  * BEHAVIOUR:
  * - Shows one card centered, with the previous/next cards peeking
  *   from behind (left and right edges visible).
- * - Peeking cards are shifted UP to create an isosceles-triangle
- *   "card fan" effect at the top — like holding playing cards.
+ * - Peeking cards are scaled down and slightly transparent.
  * - Swipe left/right or tap a peeking card to bring it to center.
  * - Desktop (≥ lg): hidden — parent should use a grid layout instead.
  *
@@ -150,7 +149,7 @@ export function CardDeckCarousel({
                   : isLeft
                     ? 'translateX(-62%) scale(0.92)'
                     : 'translateX(62%) scale(0.92)',
-                opacity: isCenter ? 1 : 0.55,
+                opacity: isCenter ? 1 : 0.85,
                 width: '280px',
               }}
               onClick={() => {

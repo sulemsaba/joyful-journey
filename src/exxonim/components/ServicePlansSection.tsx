@@ -475,37 +475,44 @@ function TestimonialMarquee({
  *
  * DESIGN NOTES (for admin-managed content):
  * - Card is designed as a vertical rectangle (portrait orientation).
- * - In the mobile carousel, width is 280px; in desktop grid, auto.
+ * - In the mobile carousel, width is 280px; in desktop grid, max 360px.
+ * - Featured card has a full-width accent banner at top for the badge.
  * - Features list uses flex-1 to push CTA button to the bottom.
  * - Max 8 features recommended. More features = taller card.
  * - Description max ~120 chars recommended for clean layout.
+ * - Badge text max ~20 chars recommended to fit the banner.
  * ═══════════════════════════════════════════════════════════════ */
 function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featured: boolean; compact?: boolean }) {
   return (
     <article
       className={cn(
-        "flex h-full w-full flex-col rounded-2xl border transition-all",
+        "flex h-full w-full flex-col rounded-2xl border transition-all overflow-hidden",
         compact ? "p-5" : "p-5 md:p-6 lg:p-7",
         featured
-          ? "border-accent/40 bg-accent/5"
+          ? "border-accent/40 bg-surface"
           : "border-border-soft bg-surface"
       )}
       aria-label={`${plan.name} service package`}
     >
-      {/* Badge row */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className={cn("font-bold", compact ? "text-base" : "text-lg", featured ? "text-accent" : "text-text")}>
-          {plan.name}
-        </h3>
-        {plan.badge ? (
-          <span className={cn(
-            "rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider whitespace-nowrap",
-            featured ? "bg-accent text-accent-contrast" : "bg-accent-soft text-accent"
-          )}>
+      {/* ── Featured badge banner (full-width strip at top) ── */}
+      {plan.badge ? (
+        <div className={cn(
+          "-mx-5 -mt-5 mb-3 px-5 py-2 text-center",
+          compact ? "-mx-5 -mt-5" : "md:-mx-6 md:-mt-6 lg:-mx-7 lg:-mt-7",
+          featured
+            ? "bg-accent text-accent-contrast"
+            : "bg-accent-soft text-accent"
+        )}>
+          <span className="text-xs font-extrabold uppercase tracking-wider">
             {plan.badge}
           </span>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
+
+      {/* Plan name */}
+      <h3 className={cn("font-bold mb-2", compact ? "text-base" : "text-lg", featured ? "text-accent" : "text-text")}>
+        {plan.name}
+      </h3>
 
       {/* Description — clamp to 2 lines for admin content safety */}
       <p className={cn(
@@ -634,33 +641,37 @@ export function ServicePackagesSection({
               </h2>
             </div>
 
-            {/* Segment filter buttons */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 mb-6 md:mb-8">
-              {segments.map((seg) => {
-                const isActive = activeSegment === seg.key;
-                const Icon = seg.icon;
-                return (
-                  <button
-                    key={seg.key}
-                    type="button"
-                    onClick={() => setActiveSegment(seg.key)}
-                    className={cn(
-                      'flex-shrink-0 rounded-full px-4 py-2 min-h-[40px] text-sm font-medium',
-                      'transition-all duration-200 ease-out whitespace-nowrap',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                      'inline-flex items-center justify-center gap-2',
-                      isActive
-                        ? 'bg-accent text-accent-contrast shadow-sm'
-                        : 'bg-surface text-text-muted border border-border-soft hover:bg-accent-soft hover:text-accent hover:border-accent/30'
-                    )}
-                    aria-pressed={isActive}
-                    aria-label={`Show packages for ${seg.label}`}
-                  >
-                    <Icon className="w-4 h-4" aria-hidden="true" />
-                    <span>{seg.label}</span>
-                  </button>
-                );
-              })}
+            {/* Segment filter buttons — centered on desktop, scrollable on mobile */}
+            <div className="relative mb-6 md:mb-8">
+              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 lg:justify-center">
+                {segments.map((seg) => {
+                  const isActive = activeSegment === seg.key;
+                  const Icon = seg.icon;
+                  return (
+                    <button
+                      key={seg.key}
+                      type="button"
+                      onClick={() => setActiveSegment(seg.key)}
+                      className={cn(
+                        'flex-shrink-0 rounded-full px-4 py-2 min-h-[40px] text-sm font-medium',
+                        'transition-all duration-200 ease-out whitespace-nowrap',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                        'inline-flex items-center justify-center gap-2',
+                        isActive
+                          ? 'bg-accent text-accent-contrast shadow-sm'
+                          : 'bg-surface text-text-muted border border-border-soft hover:bg-accent-soft hover:text-accent hover:border-accent/30'
+                      )}
+                      aria-pressed={isActive}
+                      aria-label={`Show packages for ${seg.label}`}
+                    >
+                      <Icon className="w-4 h-4" aria-hidden="true" />
+                      <span>{seg.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {/* Right-edge fade hint — signals more tabs on mobile */}
+              <div className="pointer-events-none absolute right-0 top-0 bottom-1 w-8 bg-gradient-to-l from-[var(--color-page)] to-transparent lg:hidden" aria-hidden="true" />
             </div>
 
             {/* ─── MOBILE: Card deck carousel ─── */}
@@ -669,14 +680,17 @@ export function ServicePackagesSection({
               defaultIndex={defaultCarouselIndex}
             />
 
-            {/* ─── DESKTOP: 3-column grid ─── */}
-            <div className="hidden lg:grid gap-5 lg:grid-cols-3">
+            {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
+            <div className="hidden lg:grid gap-5 lg:grid-cols-3 lg:max-w-[1160px] lg:mx-auto">
               {currentPlans.map((plan) => (
-                <SegmentPlanCard
-                  key={`${activeSegment}-${plan.name}`}
-                  plan={plan}
-                  featured={plan.badge !== null}
-                />
+                <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
+                  <div className="w-full max-w-[360px]">
+                    <SegmentPlanCard
+                      plan={plan}
+                      featured={plan.badge !== null}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
           </div>
