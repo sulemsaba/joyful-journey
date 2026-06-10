@@ -77,9 +77,13 @@
       html[data-theme="dark"] .sk-logo-dark  { opacity: 1; }
 
       /* ── Keyframe animations ── */
-      @keyframes sk-pulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50%      { transform: scale(1.12); opacity: 0.8; }
+      @keyframes sk-heartbeat {
+        0%   { transform: scale(1); }
+        14%  { transform: scale(1.18); }
+        28%  { transform: scale(1); }
+        42%  { transform: scale(1.12); }
+        56%  { transform: scale(1); }
+        100% { transform: scale(1); }
       }
       @keyframes sk-dot {
         0%, 20%  { opacity: 0; }
@@ -101,7 +105,7 @@
       <!-- Favicon heartbeat loader — React replaces #root content on hydrate -->
       <div class="sk-hero" aria-hidden="true">
         <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
-          <div style="animation:sk-pulse 2s ease-in-out infinite;">
+          <div style="animation:sk-heartbeat 1.6s ease-in-out infinite;">
             <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" style="width:48px;height:48px;object-fit:contain;" />
             <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" style="width:48px;height:48px;object-fit:contain;" />
           </div>
