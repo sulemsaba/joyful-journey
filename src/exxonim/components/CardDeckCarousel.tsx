@@ -115,10 +115,10 @@ export function CardDeckCarousel({
       aria-label="Plan cards carousel"
       aria-roledescription="carousel"
     >
-      {/* ── Card fan area ── */}
+      {/* ── Card deck area ── */}
       <div
         className="relative flex items-center justify-center"
-        style={{ height: '460px', perspective: '1200px' }}
+        style={{ height: '460px' }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -144,12 +144,12 @@ export function CardDeckCarousel({
                 isRight && 'z-20 cursor-pointer',
               )}
               style={{
-                // Card fan positioning
+                // Card deck positioning — side cards peek from behind
                 transform: isCenter
-                  ? 'translateX(0) translateY(0) scale(1)'
+                  ? 'translateX(0) scale(1)'
                   : isLeft
-                    ? 'translateX(-62%) translateY(-12px) scale(0.92) rotateY(4deg)'
-                    : 'translateX(62%) translateY(-12px) scale(0.92) rotateY(-4deg)',
+                    ? 'translateX(-62%) scale(0.92)'
+                    : 'translateX(62%) scale(0.92)',
                 opacity: isCenter ? 1 : 0.55,
                 width: '280px',
               }}
