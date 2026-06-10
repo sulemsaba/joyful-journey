@@ -70,7 +70,7 @@ function CardNarrow({
 }
 
 export function ReferenceVisual({ index }: { index: number }) {
-  const shellClasses = "w-full max-w-[560px] p-4 sm:p-5 lg:p-8 rounded-2xl sm:rounded-[28px] lg:rounded-[34px] border border-border-soft transition-all max-lg:max-w-full";
+  const shellClasses = "w-full max-w-[560px] p-4 sm:p-5 lg:p-8 transition-all max-lg:max-w-full";
 
   if (index === 0) {
     return (
@@ -97,7 +97,7 @@ export function ReferenceVisual({ index }: { index: number }) {
 
 function ComposeVisual() {
   return (
-    <div className="relative w-full max-w-[560px] p-4 sm:p-[1.1rem] lg:p-[1.3rem] rounded-2xl sm:rounded-[2.2rem] border border-border-soft bg-surface overflow-hidden max-lg:max-w-full min-h-[140px] sm:min-h-[170px] lg:min-h-[220px]">
+    <div className="relative w-full max-w-[560px] p-4 sm:p-[1.1rem] lg:p-[1.3rem] bg-surface overflow-hidden max-lg:max-w-full min-h-[140px] sm:min-h-[170px] lg:min-h-[220px]">
       <div className="absolute left-[1.5rem] sm:left-[2rem] lg:left-[2.4rem] top-0 bottom-0 w-[1px] bg-border-soft" aria-hidden="true" />
     </div>
   );
