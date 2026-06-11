@@ -56,7 +56,7 @@ const resourceLinks = [
   { label: "Terms of Service", href: routes.terms },
 ];
 
-/* ── Social circle link (used on all screens) ── */
+/* ── Social circle link ── */
 function SocialCircleLink({ platform, url }: { platform: string; url: string }) {
   return (
     <a
@@ -65,9 +65,9 @@ function SocialCircleLink({ platform, url }: { platform: string; url: string }) 
       rel="noreferrer noopener"
       aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
       title={platform.charAt(0).toUpperCase() + platform.slice(1)}
-      className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
+      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
     >
-      <span className="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+      <span className="w-4 h-4 flex items-center justify-center">
         {renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}
       </span>
     </a>
@@ -79,7 +79,7 @@ function FooterLink({ label, href }: { label: string; href: string }) {
   return (
     <a
       href={href}
-      className="inline-flex items-center py-1.5 text-footer-text text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
+      className="inline-flex items-center py-1 text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
     >
       <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-all duration-200" />
       {label}
@@ -97,7 +97,6 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
     )
     .filter((link): link is SiteSettingSocialLinkValue => Boolean(link));
 
-  /* Fallback social data when API returns empty */
   const fallbackSocials = [
     { platform: "x", url: "https://x.com/exxonim" },
     { platform: "linkedin", url: "https://linkedin.com/company/exxonim" },
@@ -112,12 +111,12 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       id="site-footer"
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
-      <Container className="py-8 pb-16 md:py-14 md:pb-10">
-        {/* ── 4-column responsive grid ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-8 mb-8 sm:mb-10 pb-8 sm:pb-10 border-b border-footer-border">
+      <Container className="py-8 pb-20 md:py-14 md:pb-12">
+        {/* ── 2-col on mobile, 2-col on tablet, 4-col on desktop ── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 lg:gap-8 mb-8 pb-8 border-b border-footer-border">
 
-          {/* Brand Panel */}
-          <section className="grid gap-4 sm:gap-5 content-start">
+          {/* Brand Panel — full width on 2-col to give breathing room */}
+          <section className="col-span-2 lg:col-span-1 grid gap-3 content-start">
             <a
               href={routes.home}
               aria-label={`${brand.name} home`}
@@ -135,37 +134,32 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   img.dataset.fallbackApplied = "true";
                   img.src = fallbackBrand.darkLogoSrc;
                 }}
-                className="block h-7 sm:h-8 lg:h-11 w-auto"
+                className="block h-8 sm:h-11 w-auto"
               />
             </a>
 
             <p
-              className="text-footer-text-muted text-sm leading-relaxed italic"
+              className="text-footer-text-muted text-xs sm:text-sm leading-relaxed italic max-w-xs"
               style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}
             >
               Where Innovation Meets Efficiency
             </p>
 
             {/* Follow Us */}
-            <div className="grid gap-2 sm:gap-2.5">
-              <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading">
-                Follow Us
-              </h4>
-              <div className="flex items-center gap-2 sm:gap-3">
-                {activeSocials.map((s) => (
-                  <SocialCircleLink key={s.platform} platform={s.platform} url={s.url} />
-                ))}
-              </div>
+            <div className="flex items-center gap-3">
+              {activeSocials.map((s) => (
+                <SocialCircleLink key={s.platform} platform={s.platform} url={s.url} />
+              ))}
             </div>
           </section>
 
           {/* Navigation */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-3 sm:mb-4">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Navigation
             </h4>
             <nav aria-label="Footer navigation">
-              <ul className="grid gap-1">
+              <ul className="grid gap-0">
                 {navigationLinks.map((link) => (
                   <li key={link.label}>
                     <FooterLink label={link.label} href={link.href} />
@@ -177,10 +171,10 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Resources & Legal */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-3 sm:mb-4">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Resources &amp; Legal
             </h4>
-            <ul className="grid gap-1">
+            <ul className="grid gap-0">
               {resourceLinks.map((link) => (
                 <li key={link.label}>
                   <FooterLink label={link.label} href={link.href} />
@@ -189,47 +183,47 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </ul>
           </section>
 
-          {/* Contact Us */}
-          <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-4 sm:mb-5">
+          {/* Contact Us — full width on mobile to fit address */}
+          <section className="col-span-2 lg:col-span-1">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-3">
               Contact Us
             </h4>
-            <ul className="grid gap-3">
+            <ul className="grid gap-2.5 sm:gap-3">
               {/* Location */}
-              <li className="flex items-start gap-3">
-                <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <li className="flex items-start gap-2.5">
+                <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                <span className="text-footer-text text-[0.875rem] leading-relaxed">
+                <span className="text-footer-text text-[0.8rem] sm:text-[0.875rem] leading-relaxed">
                   Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
                 </span>
               </li>
               {/* Emails */}
-              <li className="flex items-start gap-3">
-                <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <li className="flex items-start gap-2.5">
+                <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
                 <div className="grid gap-0.5">
-                  <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     info@exxonim.tz
                   </a>
-                  <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     md@exxonim.tz
                   </a>
                 </div>
               </li>
               {/* Phone numbers */}
-              <li className="flex items-start gap-3">
-                <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <li className="flex items-start gap-2.5">
+                <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
                 <div className="grid gap-0.5">
-                  <a href="tel:+255794689099" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="tel:+255794689099" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     +255 794 689 099
                   </a>
-                  <a href="tel:+255685525224" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="tel:+255685525224" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     +255 685 525 224
                   </a>
                 </div>
@@ -240,10 +234,10 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
         {/* Copyright & Credit */}
         <div className="text-center grid gap-1">
-          <p className="text-footer-text-muted text-sm">
+          <p className="text-footer-text-muted text-xs sm:text-sm">
             © {currentYear} Exxonim Company Limited
           </p>
-          <p className="text-footer-text-muted text-xs">
+          <p className="text-footer-text-muted text-[0.65rem] sm:text-xs">
             Designed &amp; Built by{' '}
             <a
               href="https://exxonim.tz"

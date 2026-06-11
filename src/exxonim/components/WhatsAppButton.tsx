@@ -8,6 +8,7 @@ interface WhatsAppButtonProps {
 /**
  * Floating WhatsApp button with pulse animation.
  * Fixed bottom-right, links to the configured WhatsApp number.
+ * Sits side-by-side with the Back-to-Top button.
  */
 export function WhatsAppButton({ phoneNumber, className }: WhatsAppButtonProps) {
   return (
@@ -17,12 +18,8 @@ export function WhatsAppButton({ phoneNumber, className }: WhatsAppButtonProps) 
       rel="noreferrer"
       aria-label="Chat on WhatsApp"
       className={cn(
-        // WhatsApp button target classes
-        // Layout
-        "fixed bottom-6 right-6 z-[30] inline-flex h-14 w-14 items-center justify-center overflow-hidden",
-        // Appearance
+        "fixed bottom-5 right-5 z-[30] inline-flex h-11 w-11 items-center justify-center overflow-hidden",
         "rounded-full border border-border-soft bg-accent text-accent-contrast",
-        // Effects
         "transition-transform duration-150 ease-out hover:scale-110 hover:bg-accent-hover",
         className,
       )}
@@ -35,7 +32,7 @@ export function WhatsAppButton({ phoneNumber, className }: WhatsAppButtonProps) 
 
       {/* WhatsApp icon */}
       <svg
-        className="relative z-10 w-[1.9rem] h-[1.9rem]"
+        className="relative z-10 w-5 h-5"
         viewBox="0 0 24 24"
         fill="currentColor"
         aria-hidden="true"
