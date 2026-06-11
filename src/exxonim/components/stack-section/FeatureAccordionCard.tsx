@@ -1,7 +1,6 @@
 import { useId, useState } from "react";
-import { renderFeatureVisual } from "./ReferenceVisual";
 import { Button } from "../primitives/Button";
-import type { ExtendedStackItem, FeatureRow, FeatureVisualContent } from "./types";
+import type { ExtendedStackItem, FeatureRow } from "./types";
 
 function FeatureChevronIcon() {
   return (
@@ -20,11 +19,10 @@ function FeatureChevronIcon() {
 export function FeatureAccordionCard({
   item,
   fallbackFeatureRows,
-  featureVisuals,
 }: {
   item: ExtendedStackItem;
   fallbackFeatureRows: FeatureRow[];
-  featureVisuals: Record<string, FeatureVisualContent>;
+  featureVisuals?: Record<string, import("./types").FeatureVisualContent>;
 }) {
   const rows =
     item.featureRows && item.featureRows.length > 0
@@ -36,9 +34,9 @@ export function FeatureAccordionCard({
   const activeRow = rows[safeActiveFeatureIndex];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,620px)_1fr] items-center gap-6 lg:gap-12 w-full">
-      {/* Accordion — always first for content priority; right side on desktop */}
-      <div className="grid gap-4 lg:order-2">
+    <div className="flex items-center w-full">
+      {/* Accordion — full width, visual placeholder reserved for future design */}
+      <div className="grid gap-4 w-full">
         <div className="grid">
           {rows.map((row, idx) => {
             const active = idx === safeActiveFeatureIndex;
@@ -112,10 +110,7 @@ export function FeatureAccordionCard({
         </div>
       </div>
 
-      {/* Visual — below accordion on mobile; left side on desktop */}
-      <div className="flex items-start justify-center lg:order-1 max-w-full lg:max-w-none">
-        {renderFeatureVisual(activeRow.visualKey, featureVisuals)}
-      </div>
+      {/* Visual placeholder — will be replaced with new design later */}
     </div>
   );
 }

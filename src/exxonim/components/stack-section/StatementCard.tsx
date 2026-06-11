@@ -1,18 +1,16 @@
 import type { ExtendedStackItem } from "./types";
-import { ReferenceVisual } from "./ReferenceVisual";
 import { Button } from "../primitives/Button";
 
 export function StatementCard({
   item,
-  index,
 }: {
   item: ExtendedStackItem;
   index: number;
 }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_minmax(0,560px)] items-center gap-6 lg:gap-16 w-full">
-      {/* Text content — always first, always full width on mobile */}
-      <div className="grid gap-3 sm:gap-5 justify-items-start">
+    <div className="flex items-center w-full">
+      {/* Text content — full width, visual placeholder reserved for future design */}
+      <div className="grid gap-3 sm:gap-5 justify-items-start w-full">
         <h2 className="m-0 text-[clamp(1.6rem,5vw,3rem)] leading-[1.08] font-semibold text-text">
           {item.title}
         </h2>
@@ -42,8 +40,7 @@ export function StatementCard({
         </div>
       </div>
 
-      {/* Visual — below text on mobile, beside text on desktop */}
-      <ReferenceVisual index={index} />
+      {/* Visual placeholder — will be replaced with new design later */}
     </div>
   );
 }
