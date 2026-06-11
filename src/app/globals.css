@@ -60,7 +60,7 @@ html, body {
 @property --color-accent-hover { syntax: '<color>'; inherits: true; initial-value: #0b4b51; }
 @property --color-accent-secondary { syntax: '<color>'; inherits: true; initial-value: #7fbcc1; }
 @property --color-accent-contrast { syntax: '<color>'; inherits: true; initial-value: #f7fbfb; }
-@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #F5F5EE; }
+@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #edf0eb; }
 @property --color-success { syntax: '<color>'; inherits: true; initial-value: #0f8a5f; }
 @property --color-error { syntax: '<color>'; inherits: true; initial-value: #c4372f; }
 @property --color-warning { syntax: '<color>'; inherits: true; initial-value: #b45309; }
@@ -161,8 +161,8 @@ html, body {
   --color-border-soft: rgba(15, 92, 99, 0.12);
   --color-border-strong: rgba(15, 92, 99, 0.22);
   --color-overlay: rgba(8, 24, 27, 0.54);
-  --color-hero-bg: #F5F5EE;
-  --color-hero-bg-fade: rgba(245, 245, 238, 0.8);
+  --color-hero-bg: #edf0eb;
+  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
   --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
   --color-success: #0f8a5f;
@@ -455,8 +455,8 @@ html, body {
   --color-border-soft: rgba(15, 92, 99, 0.12);
   --color-border-strong: rgba(15, 92, 99, 0.22);
   --color-overlay: rgba(8, 24, 27, 0.54);
-  --color-hero-bg: #F5F5EE;
-  --color-hero-bg-fade: rgba(245, 245, 238, 0.8);
+  --color-hero-bg: #edf0eb;
+  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
   --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);
@@ -553,8 +553,8 @@ html[data-theme="dark"] {
   --color-border-soft: rgba(127, 188, 193, 0.20);
   --color-border-strong: rgba(127, 188, 193, 0.34);
   --color-overlay: rgba(8, 18, 22, 0.68);
-  --color-hero-bg: #111d20;
-  --color-hero-bg-fade: rgba(17, 29, 32, 0.8);
+  --color-hero-bg: #131f23;
+  --color-hero-bg-fade: rgba(19, 31, 35, 0.8);
   --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);
