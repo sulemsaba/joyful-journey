@@ -7,7 +7,7 @@
  *
  * Tracking Lookup (via lookupTrackingCode → consultationService):
  *   POST   /api/v1/track                      — Look up a case by tracking code
- *   Request: { trackingNumber: "84729A" }
+ *   Request: { trackingNumber: "1111A" }
  *   Response (200): { status, trackingCode, serviceType, milestone,
  *                     lastUpdated, nextMilestone, message, completedSteps,
  *                     totalSteps, visibleMilestones[] }
@@ -17,7 +17,7 @@
  *   POST   /api/v1/consultations              — Submit a new consultation
  *
  * PostgreSQL Tables:
- *   cases — id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
+ *   cases — id, tracking_code (CHAR(5) UNIQUE), customer_id, service_type_id,
  *           status (active | completed | on_hold), created_at, updated_at
  *   case_milestones — id, case_id, milestone_id, status (completed | current | pending),
  *                     visible_to_client, completed_at
@@ -35,17 +35,17 @@
  * "Exxonim Client Case Tracking System — Technical Design Report v1.0"
  *
  * ── TRACKING CODE FORMAT ──
- *   6 characters: 5 digits + 1 uppercase letter
- *   Display format: "84 72 9A" (three groups of 2, space-separated)
- *   Storage format: "84729A" (no spaces, uppercase, CHAR(6) UNIQUE)
+ *   5 characters: 4 digits + 1 uppercase letter
+ *   Display format: "11 11A" (two groups: 2 digits + 3 chars, space-separated)
+ *   Storage format: "1111A" (no spaces, uppercase, CHAR(5) UNIQUE)
  *   Generation: cryptographically secure random (secrets.choice)
- *   Keyspace: 2.6 million (10^5 × 26), or 2.4M if I,O excluded
+ *   Keyspace: 240,000 (10^4 × 24, with I,O excluded)
  *
  * ── API CONTRACT ──
  *   Endpoint: POST /api/track
  *   (Next.js mock uses POST /api/v1/track — update when FastAPI is live)
  *
- *   Request:  { "trackingNumber": "84729A" }
+ *   Request:  { "trackingNumber": "1111A" }
  *   Response (200): { status, trackingCode, serviceType, milestone,
  *                     lastUpdated, nextMilestone, message, completedSteps,
  *                     totalSteps, visibleMilestones[] }
@@ -55,10 +55,11 @@
  *   or non-existent codes to prevent information leakage.
  *
  * ── DEMO TRACKING CODES (mock API) ──
- *   84729A — Active case (Company Registration, 3/6 milestones done)
- *   53107B — Completed case (TIN Application, all 4 milestones done)
- *   46283C — On hold case (Business Licensing, awaiting client documents)
- *   Any other code matching /\d{5}[A-Z]/ → "not found"
+ *   1111A — Active case (Company Registration, 3/6 milestones done)
+ *   2222A — Completed case (TIN Application, all 4 milestones done)
+ *   3333A — On hold case (Business Licensing, awaiting client documents)
+ *   4444A — Active case (Work Permit Application, 4/7 milestones done)
+ *   Any other code matching /\d{4}[A-Z]/ → "not found"
  *
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -97,12 +98,12 @@ function normalizeTrackingCode(raw: string): string {
 }
 
 function isValidTrackingCode(code: string): boolean {
-  return /^[0-9]{5}[A-Z]$/.test(code);
+  return /^[0-9]{4}[A-Z]$/.test(code);
 }
 
 function formatTrackingCode(code: string): string {
-  if (code.length !== 6) return code;
-  return `${code.slice(0, 2)} ${code.slice(2, 4)} ${code.slice(4)}`;
+  if (code.length !== 5) return code;
+  return `${code.slice(0, 2)} ${code.slice(2)}`;
 }
 
 /**
@@ -194,10 +195,10 @@ function getStatusDisplay(
  * ───────────────────────────────────────────────────────── */
 const SHOW_DEMO_HINT =
   typeof window !== "undefined" &&
-  typeof process !== "undefined" &&
-  process.env?.NEXT_PUBLIC_SHOW_DEMO_HINT === "true";
+  ((typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SHOW_DEMO_HINT === "true") ||
+   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SHOW_DEMO_HINT === "true"));
 
-const DEMO_CODES = ["84729A", "53107B", "46283C"] as const;
+const DEMO_CODES = ["1111A", "2222A", "3333A", "4444A"] as const;
 
 /* ─────────────────────────────────────────────────────────
  * HOW IT WORKS STEPS — uses Lucide icons
@@ -213,7 +214,7 @@ const HOW_IT_WORKS_STEPS = [
     icon: <Search className="w-8 h-8" />,
     title: "Check your status",
     detail:
-      "Enter your 6-character code on this page. No login, no password, no phone number needed.",
+      "Enter your 5-character code on this page. No login, no password, no phone number needed.",
   },
   {
     icon: <Bell className="w-8 h-8" />,
@@ -587,11 +588,11 @@ function TrackingSkeleton() {
  *   User types "84" → displays "84"
  *   User types "847" → displays "84 7" (auto-space after 2nd char)
  *   User types "8472" → displays "84 72" (auto-space after 4th char)
- *   User types "84729A" → displays "84 72 9A"
- *   User pastes "84 72 9A" → normalizes to "84729A", displays "84 72 9A"
+ *   User types "1111A" → displays "11 11A"
+ *   User pastes "11 11A" → normalizes to "1111A", displays "11 11A"
  *
  * SECURITY: No format validation messages are shown.
- * The button enables only when input length = 6 after stripping spaces.
+ * The button enables only when input length = 5 after stripping spaces.
  * ───────────────────────────────────────────────────────── */
 function TrackingCodeInput({
   value,
@@ -607,15 +608,14 @@ function TrackingCodeInput({
   const displayValue = (() => {
     const raw = normalizeTrackingCode(value);
     if (raw.length <= 2) return raw;
-    if (raw.length <= 4) return `${raw.slice(0, 2)} ${raw.slice(2)}`;
-    return `${raw.slice(0, 2)} ${raw.slice(2, 4)} ${raw.slice(4)}`;
+    return `${raw.slice(0, 2)} ${raw.slice(2)}`;
   })();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const cleaned = input.replace(/[^A-Za-z0-9\s]/g, "");
     const raw = normalizeTrackingCode(cleaned);
-    const capped = raw.slice(0, 6);
+    const capped = raw.slice(0, 5);
     onChange(capped);
   };
 
@@ -626,11 +626,11 @@ function TrackingCodeInput({
       type="text"
       value={displayValue}
       onChange={handleChange}
-      placeholder="84 72 9A"
+      placeholder="11 11A"
       disabled={disabled}
       autoComplete="off"
       className="w-full h-14 px-5 rounded-xl border border-border-soft bg-surface text-text text-lg font-mono tracking-[0.2em] placeholder:text-text-soft/40 placeholder:tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent text-center disabled:opacity-50 disabled:cursor-not-allowed"
-      aria-label="Enter your 6-character tracking code"
+      aria-label="Enter your 5-character tracking code"
     />
   );
 }
@@ -724,7 +724,7 @@ export function TrackConsultationPage() {
     setSearchError(null);
   }, []);
 
-  const canSearch = rawCode.length === 6;
+  const canSearch = rawCode.length === 5;
 
   /** Fill the input with a demo code */
   const handleDemoFill = useCallback(
@@ -786,7 +786,7 @@ export function TrackConsultationPage() {
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
               Automated updates at every milestone — delivered to your WhatsApp.
-              Enter your 6-character tracking code for an instant status check.
+              Enter your 5-character tracking code for an instant status check.
               No login, no password, no phone number required.
             </p>
             <div className="flex flex-wrap gap-3 pt-2 show-on-lg">
@@ -982,14 +982,14 @@ export function TrackConsultationPage() {
             </h2>
             <p className="m-0 text-text-muted max-w-[36rem]">
               No account, no password, no phone number to look up your case.
-              Your tracking code is the only key — and with over 2.6
-              million possible combinations, it&rsquo;s secure by design.
+              Your tracking code is the only key — and with 240,000
+              possible combinations, it&rsquo;s secure by design.
             </p>
             <div className="grid gap-4">
               <SecurityPoint
                 icon={<ShieldCheck className="w-5 h-5" />}
-                title="2.6 million possible codes"
-                description="Enough combinations to prevent random guessing while staying easy to read and share."
+                title="240,000 possible codes"
+                description="Enough combinations to prevent random guessing while staying short and easy to share."
               />
               <SecurityPoint
                 icon={<ShieldCheck className="w-5 h-5" />}

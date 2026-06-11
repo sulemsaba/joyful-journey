@@ -374,6 +374,156 @@ app.get("/api/health", (c) => {
   return c.json({ success: true, status: "ok" });
 });
 
+/* ── Tracking Code Lookup: POST /api/v1/track ──
+ * Mock endpoint for the Track Your Consultation page.
+ * Format: 4 digits + 1 uppercase letter (e.g., "1111A")
+ * Display format: "11 11A" (two groups: 2 digits + 3 chars)
+ */
+const MOCK_CASES: Record<string, {
+  status: "active" | "completed" | "on_hold";
+  serviceType: string;
+  milestone: string;
+  lastUpdated: string;
+  nextMilestone: string | null;
+  message?: string;
+  completedSteps: number;
+  totalSteps: number;
+  visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
+}> = {
+  "1111A": {
+    status: "active",
+    serviceType: "Company Registration",
+    milestone: "Document Verification",
+    lastUpdated: "2026-06-04T09:42:00Z",
+    nextMilestone: "Submission to BRELA",
+    completedSteps: 3,
+    totalSteps: 6,
+    visibleMilestones: [
+      { label: "Case Received", status: "completed", date: "2026-05-20" },
+      { label: "Name Clearance Filed", status: "completed", date: "2026-05-22" },
+      { label: "Name Approved", status: "completed", date: "2026-05-28" },
+      { label: "Document Verification", status: "current", date: null },
+      { label: "Submission to BRELA", status: "upcoming", date: null },
+      { label: "Certificate Issued", status: "upcoming", date: null },
+    ],
+  },
+  "2222A": {
+    status: "completed",
+    serviceType: "TIN Application",
+    milestone: "All processes completed",
+    lastUpdated: "2026-05-30T14:30:00Z",
+    nextMilestone: null,
+    message: "Your TIN application is complete. Contact us if you have any questions.",
+    completedSteps: 4,
+    totalSteps: 4,
+    visibleMilestones: [
+      { label: "Case Received", status: "completed", date: "2026-05-10" },
+      { label: "Document Preparation", status: "completed", date: "2026-05-15" },
+      { label: "TRA Submission", status: "completed", date: "2026-05-22" },
+      { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
+    ],
+  },
+  "3333A": {
+    status: "on_hold",
+    serviceType: "Business Licensing",
+    milestone: "Awaiting Client Documents",
+    lastUpdated: "2026-06-01T11:00:00Z",
+    nextMilestone: "Document Verification",
+    message: "Your case is on hold pending additional documents. Please check your WhatsApp for details.",
+    completedSteps: 1,
+    totalSteps: 5,
+    visibleMilestones: [
+      { label: "Case Received", status: "completed", date: "2026-05-25" },
+      { label: "Awaiting Client Documents", status: "current", date: null },
+      { label: "Document Verification", status: "upcoming", date: null },
+      { label: "Licence Application", status: "upcoming", date: null },
+      { label: "Licence Issued", status: "upcoming", date: null },
+    ],
+  },
+  "4444A": {
+    status: "active",
+    serviceType: "Work Permit Application",
+    milestone: "Labour Committee Review",
+    lastUpdated: "2026-06-03T16:15:00Z",
+    nextMilestone: "Immigration Submission",
+    completedSteps: 4,
+    totalSteps: 7,
+    visibleMilestones: [
+      { label: "Case Received", status: "completed", date: "2026-05-12" },
+      { label: "Document Collection", status: "completed", date: "2026-05-14" },
+      { label: "Employer Verification", status: "completed", date: "2026-05-20" },
+      { label: "Labour Committee Review", status: "current", date: null },
+      { label: "Immigration Submission", status: "upcoming", date: null },
+      { label: "Permit Approval", status: "upcoming", date: null },
+      { label: "Permit Issued", status: "upcoming", date: null },
+    ],
+  },
+};
+
+app.post("/api/v1/track", async (c) => {
+  let body: { trackingNumber?: string };
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json(
+      { status: "not_found", message: "No matching consultation found. Please check your tracking number." },
+      404
+    );
+  }
+
+  const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
+  const isValid = /^[0-9]{4}[A-Z]$/.test(raw);
+
+  if (!isValid) {
+    return c.json(
+      { status: "not_found", message: "No matching consultation found. Please check your tracking number." },
+      404
+    );
+  }
+
+  const mockCase = MOCK_CASES[raw];
+  if (!mockCase) {
+    return c.json(
+      { status: "not_found", message: "No matching consultation found. Please check your tracking number." },
+      404
+    );
+  }
+
+  return c.json({
+    status: mockCase.status,
+    trackingCode: raw,
+    serviceType: mockCase.serviceType,
+    milestone: mockCase.milestone,
+    lastUpdated: mockCase.lastUpdated,
+    nextMilestone: mockCase.nextMilestone,
+    message: mockCase.message ?? null,
+    completedSteps: mockCase.completedSteps,
+    totalSteps: mockCase.totalSteps,
+    visibleMilestones: mockCase.visibleMilestones,
+  });
+});
+
+/* ── Consultation Submission: POST /api/v1/consultations ── */
+const TRACKING_DIGITS = "0123456789";
+const TRACKING_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+
+app.post("/api/v1/consultations", async (c) => {
+  const digits = Array.from({ length: 4 }, () =>
+    TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)]
+  ).join("");
+  const letter = TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];
+  const trackingCode = digits + letter;
+
+  return c.json({
+    consultation_id: Math.floor(Math.random() * 9000 + 1000),
+    service_request_id: `sr-${Date.now()}`,
+    tracking_id: trackingCode,
+    status: "pending",
+    message: "Your consultation request has been received. We will follow up shortly.",
+    received_at: new Date().toISOString(),
+  });
+});
+
 const port = 3031;
 
 console.log(`Services API running on port ${port}`);

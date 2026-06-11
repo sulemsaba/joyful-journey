@@ -20,11 +20,11 @@
  *
  * Response Schema — Submit Consultation:
  *   { tracking_id: str, status: str, message: str }
- *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "84729A")
+ *   (tracking_id is a 5-char code: 4 digits + 1 uppercase letter, e.g. "1111A")
  *
  * Request Schema — Track Lookup (POST /api/v1/track):
  *   { trackingNumber: str }
- *   (6-char code: 5 digits + 1 uppercase letter)
+ *   (5-char code: 4 digits + 1 uppercase letter)
  *
  * Response Schema — Track Lookup (200):
  *   { status: str, trackingCode: str, serviceType: str, milestone: str,

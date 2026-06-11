@@ -10,7 +10,7 @@
  *             service_type_code: str, message: str, idempotency_key: str,
  *             source_channel: str }
  *   Response: { tracking_id: str, status: str, message: str }
- *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "84729A")
+ *   (tracking_id is a 5-char code: 4 digits + 1 uppercase letter, e.g. "1111A")
  *
  * Shell Data (via usePublicShell hook → siteSettingsService):
  *   GET    /api/v1/site-settings/brand        — Brand assets
@@ -346,14 +346,14 @@ export function ContactPage() {
                       Your tracking code is:
                     </p>
                     {/*
-                      BACKEND TEAM: The tracking_id is now a 6-character code (5 digits + 1 letter).
-                      Format: "84729A" in storage, displayed as "84 72 9A" (three groups of 2).
+                      BACKEND TEAM: The tracking_id is now a 5-character code (4 digits + 1 letter).
+                      Format: "1111A" in storage, displayed as "11 11A" (two groups: 2 digits + 3 chars).
                       This code is also sent to the client via WhatsApp:
-                        "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
+                        "Your tracking number is 11 11A. Check your file status anytime at exxonim.tz/track."
                     */}
                     <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
-                      {submissionResult.tracking_id.length === 6
-                        ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
+                      {submissionResult.tracking_id.length === 5
+                        ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2)}`
                         : submissionResult.tracking_id}
                     </code>
                     <p className="text-text-muted text-sm mt-3">

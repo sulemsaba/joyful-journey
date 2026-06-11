@@ -42,19 +42,18 @@ const FALLBACK_TIMESTAMP = "2026-01-01T00:00:00Z";
  *           if code not in active_codes:
  *               return code
  *
- * Format: 5 digits + 1 uppercase letter = 6 characters total
- * Display format: "84 72 9A" (three groups of 2, space-separated)
- * Storage format: "84729A" (no spaces, uppercase, CHAR(6) UNIQUE)
+ * Format: 4 digits + 1 uppercase letter = 5 characters total
+ * Display format: "11 11A" (two groups: 2 digits + 3 chars, space-separated)
+ * Storage format: "1111A" (no spaces, uppercase, CHAR(5) UNIQUE)
  *
- * Keyspace: 10^5 × 26 = 2,600,000 (2.6 million combinations)
- * If ambiguous letters (I, O) excluded: 10^5 × 24 = 2,400,000
+ * Keyspace: 10^4 × 24 = 240,000 (with ambiguous letters I, O excluded)
  * ═══════════════════════════════════════════════════════════════════════════ */
 const TRACKING_DIGITS = "0123456789";
 const TRACKING_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // 24 chars, no I/O
 function generateMockTrackingCode(): string {
-  // Generate 5 random digits + 1 random letter
+  // Generate 4 random digits + 1 random letter
   let code = "";
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 4; i++) {
     code += TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)];
   }
   code += TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];
@@ -328,8 +327,8 @@ export async function POST(
     }
 
     const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
-    // Format: 5 digits followed by 1 uppercase letter (e.g., "84729A")
-    const isValid = /^[0-9]{5}[A-Z]$/.test(raw);
+    // Format: 4 digits followed by 1 uppercase letter (e.g., "1111A")
+    const isValid = /^[0-9]{4}[A-Z]$/.test(raw);
 
     if (!isValid) {
       return NextResponse.json(
@@ -366,9 +365,9 @@ export async function POST(
       totalSteps: number;
       visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
     }> = {
-      // Demo codes — format: 5 digits + 1 letter (e.g., "84729A")
-      // Display format: "84 72 9A" (three groups of 2, space-separated)
-      "84729A": {
+      // Demo codes — format: 4 digits + 1 letter (e.g., "1111A")
+      // Display format: "11 11A" (two groups: 2 digits + 3 chars, space-separated)
+      "1111A": {
         status: "active",
         serviceType: "Company Registration",
         milestone: "Document Verification",
@@ -377,7 +376,7 @@ export async function POST(
         completedSteps: 3,
         totalSteps: 6,
         visibleMilestones: [
-          { label: "Consultation Received", status: "completed", date: "2026-05-20" },
+          { label: "Case Received", status: "completed", date: "2026-05-20" },
           { label: "Name Clearance Filed", status: "completed", date: "2026-05-22" },
           { label: "Name Approved", status: "completed", date: "2026-05-28" },
           { label: "Document Verification", status: "current", date: null },
@@ -385,23 +384,23 @@ export async function POST(
           { label: "Certificate Issued", status: "upcoming", date: null },
         ],
       },
-      "53107B": {
+      "2222A": {
         status: "completed",
         serviceType: "TIN Application",
         milestone: "All processes completed",
         lastUpdated: "2026-05-30T14:30:00Z",
         nextMilestone: null,
-        message: "Your consultation is complete. Contact us if you have any questions.",
+        message: "Your TIN application is complete. Contact us if you have any questions.",
         completedSteps: 4,
         totalSteps: 4,
         visibleMilestones: [
-          { label: "Consultation Received", status: "completed", date: "2026-05-10" },
+          { label: "Case Received", status: "completed", date: "2026-05-10" },
           { label: "Document Preparation", status: "completed", date: "2026-05-15" },
           { label: "TRA Submission", status: "completed", date: "2026-05-22" },
           { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
         ],
       },
-      "46283C": {
+      "3333A": {
         status: "on_hold",
         serviceType: "Business Licensing",
         milestone: "Awaiting Client Documents",
@@ -411,11 +410,29 @@ export async function POST(
         completedSteps: 1,
         totalSteps: 5,
         visibleMilestones: [
-          { label: "Consultation Received", status: "completed", date: "2026-05-25" },
+          { label: "Case Received", status: "completed", date: "2026-05-25" },
           { label: "Awaiting Client Documents", status: "current", date: null },
           { label: "Document Verification", status: "upcoming", date: null },
           { label: "Licence Application", status: "upcoming", date: null },
           { label: "Licence Issued", status: "upcoming", date: null },
+        ],
+      },
+      "4444A": {
+        status: "active",
+        serviceType: "Work Permit Application",
+        milestone: "Labour Committee Review",
+        lastUpdated: "2026-06-03T16:15:00Z",
+        nextMilestone: "Immigration Submission",
+        completedSteps: 4,
+        totalSteps: 7,
+        visibleMilestones: [
+          { label: "Case Received", status: "completed", date: "2026-05-12" },
+          { label: "Document Collection", status: "completed", date: "2026-05-14" },
+          { label: "Employer Verification", status: "completed", date: "2026-05-20" },
+          { label: "Labour Committee Review", status: "current", date: null },
+          { label: "Immigration Submission", status: "upcoming", date: null },
+          { label: "Permit Approval", status: "upcoming", date: null },
+          { label: "Permit Issued", status: "upcoming", date: null },
         ],
       },
     };

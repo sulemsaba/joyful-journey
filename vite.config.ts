@@ -13,6 +13,11 @@ export default defineConfig({
     port: 3000,
     host: true,
     allowedHosts: true,
+    proxy: {
+      "/api/v1/track": "http://127.0.0.1:3031",
+      "/api/v1/consultations": "http://127.0.0.1:3031",
+      "/api/v1/privacy/consent": "http://127.0.0.1:3031",
+    },
     watch: {
       ignored: [
         "**/skills/**",
