@@ -65,9 +65,9 @@ function SocialCircleLink({ platform, url }: { platform: string; url: string }) 
       rel="noreferrer noopener"
       aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
       title={platform.charAt(0).toUpperCase() + platform.slice(1)}
-      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
+      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
     >
-      <span className="w-4 h-4 flex items-center justify-center">
+      <span className="w-3.5 h-3.5 flex items-center justify-center">
         {renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}
       </span>
     </a>
@@ -111,12 +111,16 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       id="site-footer"
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
-      <Container className="py-8 pb-20 md:py-14 md:pb-12">
-        {/* ── 2-col on mobile, 2-col on tablet, 4-col on desktop ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 lg:gap-8 mb-8 pb-8 border-b border-footer-border">
+      <Container className="py-8 pb-[4.5rem] md:py-12 md:pb-10">
+        {/* ── True 2×2 grid on mobile → 4-col on desktop ──
+         *  Row 1: Brand        | Navigation
+         *  Row 2: Resources    | Contact
+         *  No section spans full width — every column equal
+         */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6 lg:gap-8 mb-6 pb-6 border-b border-footer-border">
 
-          {/* Brand Panel — full width on 2-col to give breathing room */}
-          <section className="col-span-2 lg:col-span-1 grid gap-3 content-start">
+          {/* Brand Panel */}
+          <section className="grid gap-2.5 content-start">
             <a
               href={routes.home}
               aria-label={`${brand.name} home`}
@@ -139,14 +143,13 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </a>
 
             <p
-              className="text-footer-text-muted text-xs sm:text-sm leading-relaxed italic max-w-xs"
+              className="text-footer-text-muted text-xs sm:text-sm leading-relaxed italic"
               style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}
             >
               Where Innovation Meets Efficiency
             </p>
 
-            {/* Follow Us */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {activeSocials.map((s) => (
                 <SocialCircleLink key={s.platform} platform={s.platform} url={s.url} />
               ))}
@@ -155,7 +158,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Navigation */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2">
               Navigation
             </h4>
             <nav aria-label="Footer navigation">
@@ -171,7 +174,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Resources & Legal */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2">
               Resources &amp; Legal
             </h4>
             <ul className="grid gap-0">
@@ -183,47 +186,47 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </ul>
           </section>
 
-          {/* Contact Us — full width on mobile to fit address */}
-          <section className="col-span-2 lg:col-span-1">
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-3">
+          {/* Contact Us — same column treatment as Nav & Resources */}
+          <section>
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2">
               Contact Us
             </h4>
-            <ul className="grid gap-2.5 sm:gap-3">
+            <ul className="grid gap-2">
               {/* Location */}
-              <li className="flex items-start gap-2.5">
-                <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <li className="flex items-start gap-2">
+                <svg className="w-3.5 h-3.5 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                <span className="text-footer-text text-[0.8rem] sm:text-[0.875rem] leading-relaxed">
-                  Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
+                <span className="text-footer-text text-[0.75rem] sm:text-[0.875rem] leading-relaxed">
+                  Mbezi Beach B, Dar es Salaam
                 </span>
               </li>
               {/* Emails */}
-              <li className="flex items-start gap-2.5">
-                <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <li className="flex items-start gap-2">
+                <svg className="w-3.5 h-3.5 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
                 <div className="grid gap-0.5">
-                  <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     info@exxonim.tz
                   </a>
-                  <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     md@exxonim.tz
                   </a>
                 </div>
               </li>
               {/* Phone numbers */}
-              <li className="flex items-start gap-2.5">
-                <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <li className="flex items-start gap-2">
+                <svg className="w-3.5 h-3.5 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
                 <div className="grid gap-0.5">
-                  <a href="tel:+255794689099" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="tel:+255794689099" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     +255 794 689 099
                   </a>
-                  <a href="tel:+255685525224" className="text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                  <a href="tel:+255685525224" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
                     +255 685 525 224
                   </a>
                 </div>
@@ -232,8 +235,8 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
           </section>
         </div>
 
-        {/* Copyright & Credit */}
-        <div className="text-center grid gap-1">
+        {/* Copyright & Credit — left-aligned + right-pad on mobile to avoid floating-button overlap */}
+        <div className="text-left pr-16 md:pr-0 md:text-center grid gap-0.5">
           <p className="text-footer-text-muted text-xs sm:text-sm">
             © {currentYear} Exxonim Company Limited
           </p>
