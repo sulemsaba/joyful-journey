@@ -27,7 +27,7 @@ function renderSocialIcon(platform: SiteSettingSocialLinkValue["platform"]) {
     case "x":
       return (
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M18.9 4H21l-4.59 5.24L21.8 20h-4.78l-3.74-4.89L9 20H6.88l4.91-5.61L6.6 4h4.9l3.38 4.47L18.9 4Zm-.75 14.7h1.33L10.79 5.2H9.36l8.79 13.5Z" />
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
       );
     default:
@@ -56,6 +56,37 @@ const resourceLinks = [
   { label: "Terms of Service", href: routes.terms },
 ];
 
+/* ── Tiny social icon link (mobile) ── */
+function SocialIconLink({ platform, url }: { platform: string; url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
+      className="inline-flex items-center justify-center w-8 h-8 rounded-full text-footer-text-muted hover:text-footer-heading transition-colors duration-200"
+    >
+      <span className="w-4 h-4 flex items-center justify-center">{renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}</span>
+    </a>
+  );
+}
+
+/* ── Large social circle link (desktop) ── */
+function SocialCircleLink({ platform, url }: { platform: string; url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
+      title={platform.charAt(0).toUpperCase() + platform.slice(1)}
+      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
+    >
+      <span className="w-5 h-5 flex items-center justify-center">{renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}</span>
+    </a>
+  );
+}
+
 export function Footer({ brand, company: _company, footer: _footer }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const socialLinks = footerSocialPlatforms
@@ -66,13 +97,113 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
     )
     .filter((link): link is SiteSettingSocialLinkValue => Boolean(link));
 
+  /* Fallback social data when API returns empty */
+  const fallbackSocials = [
+    { platform: "x", url: "https://x.com/exxonim" },
+    { platform: "linkedin", url: "https://linkedin.com/company/exxonim" },
+    { platform: "instagram", url: "https://instagram.com/exxonim" },
+  ];
+  const activeSocials = socialLinks.length > 0
+    ? socialLinks.map((l) => ({ platform: l.platform, url: l.url }))
+    : fallbackSocials;
+
   return (
     <footer
       id="site-footer"
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
-      <Container className="py-10 pb-8 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-10 pb-10 border-b border-footer-border">
+      <Container className="py-8 pb-6 md:py-14">
+        {/* ═══════════════════════════════════════════════════════
+         * MOBILE: Compact Mobbin-style layout
+         * - Brand row (logo + tagline + tiny social icons)
+         * - 2-column link grid (Navigation | Resources)
+         * - Compact contact (no icons, inline)
+         * - Inline bottom bar
+         * ═══════════════════════════════════════════════════════ */}
+        <div className="md:hidden grid gap-6">
+          {/* Row 1: Brand + socials */}
+          <div className="flex items-center gap-3">
+            <a
+              href={routes.home}
+              aria-label={`${brand.name} home`}
+              className="inline-flex items-center shrink-0"
+            >
+              <img
+                src={brand.darkLogoSrc}
+                alt={brand.name}
+                width={160}
+                height={44}
+                loading="lazy"
+                onError={(event) => {
+                  const img = event.currentTarget;
+                  if (img.dataset.fallbackApplied) return;
+                  img.dataset.fallbackApplied = "true";
+                  img.src = fallbackBrand.darkLogoSrc;
+                }}
+                className="block h-7 w-auto"
+              />
+            </a>
+            <span className="text-footer-text-muted text-xs leading-tight italic opacity-70" style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}>
+              Where Innovation Meets Efficiency
+            </span>
+          </div>
+
+          {/* Row 2: 2-column link grid */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-0.5 text-sm">
+            <div className="flex flex-col gap-0.5">
+              {navigationLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="py-1 text-footer-text hover:text-footer-heading transition-colors duration-200"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+            <div className="flex flex-col gap-0.5">
+              {resourceLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="py-1 text-footer-text hover:text-footer-heading transition-colors duration-200"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 3: Compact contact */}
+          <div className="grid gap-1.5 text-xs text-footer-text-muted">
+            <span>Mbezi Beach B, Dar es Salaam</span>
+            <div className="flex items-center gap-3">
+              <a href="mailto:info@exxonim.tz" className="text-footer-text hover:text-footer-heading transition-colors duration-200">info@exxonim.tz</a>
+              <a href="tel:+255794689099" className="text-footer-text hover:text-footer-heading transition-colors duration-200">+255 794 689 099</a>
+            </div>
+          </div>
+
+          {/* Row 4: Bottom bar — copyright + social + legal inline */}
+          <div className="flex items-center justify-between pt-4 border-t border-footer-border">
+            <p className="text-footer-text-muted text-xs">
+              © {currentYear} Exxonim
+            </p>
+            <div className="flex items-center gap-2">
+              {activeSocials.map((s) => (
+                <SocialIconLink key={s.platform} platform={s.platform} url={s.url} />
+              ))}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-footer-text-muted">
+              <a href={routes.privacy} className="hover:text-footer-heading transition-colors duration-200">Privacy</a>
+              <a href={routes.terms} className="hover:text-footer-heading transition-colors duration-200">Terms</a>
+            </div>
+          </div>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════
+         * DESKTOP: Full 4-column layout (unchanged)
+         * ═══════════════════════════════════════════════════════ */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-10 pb-10 border-b border-footer-border">
 
           {/* Brand Panel */}
           <section className="grid gap-5 content-start">
@@ -81,7 +212,6 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               aria-label={`${brand.name} home`}
               className="inline-flex items-center"
             >
-              {/* Dark logo — used in both modes since both footer backgrounds are dark */}
               <img
                 src={brand.darkLogoSrc}
                 alt={brand.name}
@@ -111,64 +241,10 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                 Follow Us
               </h4>
               <div className="flex items-center gap-3">
-                {socialLinks.length ? (
-                  socialLinks.map((link, index) => (
-                    <a
-                      key={`${link.platform}-${link.url}-${index}`}
-                      href={link.url}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label={`Follow us on ${link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}`}
-                      title={link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}
-                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
-                    >
-                      <span className="w-5 h-5 flex items-center justify-center">{renderSocialIcon(link.platform)}</span>
-                    </a>
-                  ))
-                ) : (
-                  <>
-                    {/* X */}
-                    <a
-                      href="https://x.com/exxonim"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label="Follow us on X"
-                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
-                    >
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                      </svg>
-                    </a>
-                    {/* LinkedIn */}
-                    <a
-                      href="https://linkedin.com/company/exxonim"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label="Follow us on LinkedIn"
-                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
-                    >
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                      </svg>
-                    </a>
-                    {/* Instagram */}
-                    <a
-                      href="https://instagram.com/exxonim"
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      aria-label="Follow us on Instagram"
-                      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
-                    >
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm8.37 1.73H7.88A4.15 4.15 0 0 0 3.73 7.88v8.24a4.15 4.15 0 0 0 4.15 4.15h8.24a4.15 4.15 0 0 0 4.15-4.15V7.88a4.15 4.15 0 0 0-4.15-4.15Zm-4.12 3.54A4.73 4.73 0 1 1 7.27 12 4.73 4.73 0 0 1 12 7.27Zm0 1.73A3 3 0 1 0 15 12a3 3 0 0 0-3-3Zm5.02-2.62a1.13 1.13 0 1 1-1.13 1.13 1.13 1.13 0 0 1 1.13-1.13Z" />
-                      </svg>
-                    </a>
-                  </>
-                )}
+                {activeSocials.map((s) => (
+                  <SocialCircleLink key={s.platform} platform={s.platform} url={s.url} />
+                ))}
               </div>
-              <p className="text-footer-text-muted text-sm leading-relaxed">
-                Stay connected with Exxonim Consult for the latest updates on business consulting, compliance tips, and career opportunities in Tanzania.
-              </p>
             </div>
           </section>
 
@@ -261,16 +337,15 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               </li>
             </ul>
           </section>
-
         </div>
 
-        {/* Copyright & Credit */}
-        <div className="text-center mt-8 grid gap-1">
+        {/* Copyright & Credit — desktop only (mobile has its own inline bar) */}
+        <div className="hidden md:block text-center mt-8 grid gap-1">
           <p className="text-footer-text-muted text-sm">
             © {currentYear} Exxonim Company Limited
           </p>
           <p className="text-footer-text-muted text-xs">
-            Designed & Built by{' '}
+            Designed &amp; Built by{' '}
             <a
               href="https://exxonim.tz"
               target="_blank"
