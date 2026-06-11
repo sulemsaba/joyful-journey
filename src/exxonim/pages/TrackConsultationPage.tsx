@@ -70,7 +70,6 @@ import {
   ShieldCheck,
   Bell,
   Clock,
-  UserRoundX,
   MessageCircle,
   X,
   RotateCcw,
@@ -208,21 +207,21 @@ const DEMO_CODES = ["A11111", "22A222", "333A33", "4444A4"] as const;
 const HOW_IT_WORKS_STEPS = [
   {
     icon: <Clock className="w-8 h-8" />,
-    title: "Get your tracking code",
+    title: "Receive your code",
     detail:
-      "Assigned automatically when you start a consultation. Sent via WhatsApp or email.",
+      "Sent to your WhatsApp when you start a consultation.",
   },
   {
     icon: <Search className="w-8 h-8" />,
-    title: "Check your status",
+    title: "Check instantly",
     detail:
-      "Enter your 6-character code. No login needed.",
+      "Enter your code here — no login, no account needed.",
   },
   {
     icon: <Bell className="w-8 h-8" />,
-    title: "Get notified automatically",
+    title: "Stay updated",
     detail:
-      "Every milestone update is sent to you via WhatsApp. You don't have to keep checking.",
+      "WhatsApp updates at every milestone. No need to keep checking.",
   },
 ];
 
@@ -259,12 +258,18 @@ function TrackingResultCard({
         )}
 
         <div className="p-6 md:p-8 grid gap-5">
-          {/* Row 1: Tracking code + Status badge */}
+          {/* Row 1: Tracking code + Status badge + Instant badge */}
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="grid gap-1">
-              <span className="text-[0.68rem] font-extrabold tracking-[0.18em] uppercase text-text-muted">
-                Tracking Code
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[0.68rem] font-extrabold tracking-[0.18em] uppercase text-text-muted">
+                  Tracking Code
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/10 text-[0.58rem] font-bold text-accent tracking-wide uppercase">
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  Instant
+                </span>
+              </div>
               <span className="text-2xl md:text-3xl font-mono font-bold text-text tracking-[0.15em]">
                 {result.trackingCode
                   ? formatTrackingCode(result.trackingCode)
@@ -389,7 +394,7 @@ function TrackingResultCard({
       )}
 
       {/* ── Look up another code ── */}
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center justify-center gap-4">
         <button
           type="button"
           onClick={onReset}
@@ -398,6 +403,12 @@ function TrackingResultCard({
           <RotateCcw className="w-4 h-4" />
           Look up another code
         </button>
+        <a
+          href={routes.contact}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-accent transition-colors"
+        >
+          Forgot your tracking number?
+        </a>
       </div>
     </div>
   );
@@ -525,26 +536,42 @@ function MilestoneItem({
  * SECURITY: Generic message — no format hints or pattern leakage.
  * ───────────────────────────────────────────────────────── */
 function TrackingNotFound({
-  code,
   onReset,
 }: {
   code: string;
   onReset: () => void;
 }) {
   return (
-    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 text-center grid gap-4">
-      <div className="w-14 h-14 rounded-full bg-surface-soft mx-auto flex items-center justify-center">
-        <Search className="w-7 h-7 text-text-muted" />
+    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 grid gap-6">
+      <div className="text-center grid gap-3">
+        <div className="w-14 h-14 rounded-full bg-surface-soft mx-auto flex items-center justify-center">
+          <Search className="w-7 h-7 text-text-muted" />
+        </div>
+        <div className="grid gap-2">
+          <h3 className="m-0 text-lg font-semibold text-text">
+            No consultation found
+          </h3>
+          <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
+            Double-check your code and try again. Your code is 6 characters — 5 digits and 1 letter.
+          </p>
+        </div>
       </div>
-      <div className="grid gap-2">
-        <h3 className="m-0 text-lg font-semibold text-text">
-          No consultation found
-        </h3>
-        <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
-          No matching consultation found. Please check your tracking code and try again.
-        </p>
+      <div className="rounded-xl border border-border-soft bg-surface-soft/50 p-4 grid gap-3">
+        <span className="text-[0.68rem] font-extrabold tracking-[0.14em] uppercase text-accent">
+          Can&rsquo;t find your code?
+        </span>
+        <div className="grid gap-2 text-sm text-text-muted">
+          <div className="flex items-start gap-2">
+            <MessageCircle className="w-4 h-4 text-[#25D366] mt-0.5 flex-shrink-0" />
+            <span>Check your WhatsApp — we send your code when your consultation starts.</span>
+          </div>
+          <div className="flex items-start gap-2">
+            <ShieldCheck className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+            <span>Only you can see your code. We never share it.</span>
+          </div>
+        </div>
       </div>
-      <div className="flex flex-wrap gap-3 justify-center pt-1">
+      <div className="flex flex-wrap gap-3 justify-center">
         <Button
           size="standard"
           variant="primary"
@@ -554,10 +581,10 @@ function TrackingNotFound({
         </Button>
         <Button
           size="standard"
-          variant="secondary"
+          variant="outline"
           href={routes.contact}
         >
-          Forgot Your Code?
+          Contact Us
         </Button>
       </div>
     </div>
@@ -799,8 +826,7 @@ export function TrackConsultationPage() {
               Track Your Consultation
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
-              Enter your 6-character code to see your status instantly.
-              Updates are sent to your WhatsApp automatically.
+              One code. Instant status. WhatsApp updates at every step.
             </p>
 
           </div>
@@ -856,24 +882,24 @@ export function TrackConsultationPage() {
                 </div>
               )}
 
-              {/* Quick stats — meaningful, icon-led */}
+              {/* Quick stats — only unique value props */}
               <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-soft">
-                <div className="grid gap-1 items-center text-center">
-                  <UserRoundX className="w-5 h-5 text-accent mx-auto" />
-                  <span className="text-xs text-text-muted font-semibold">
-                    No Account Needed
-                  </span>
-                </div>
                 <div className="grid gap-1 items-center text-center">
                   <Clock className="w-5 h-5 text-accent mx-auto" />
                   <span className="text-xs text-text-muted font-semibold">
-                    Instant Results
+                    Instant Lookup
                   </span>
                 </div>
                 <div className="grid gap-1 items-center text-center">
                   <MessageCircle className="w-5 h-5 text-accent mx-auto" />
                   <span className="text-xs text-text-muted font-semibold">
                     WhatsApp Updates
+                  </span>
+                </div>
+                <div className="grid gap-1 items-center text-center">
+                  <ShieldCheck className="w-5 h-5 text-accent mx-auto" />
+                  <span className="text-xs text-text-muted font-semibold">
+                    No Account Needed
                   </span>
                 </div>
               </div>
@@ -968,35 +994,26 @@ export function TrackConsultationPage() {
         </div>
       </section>
 
-      {/* ── Privacy ── */}
+      {/* ── Privacy + Lost code — combined to reduce redundancy ── */}
       <section className="py-16 md:py-20">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[42rem]">
-          <div className="flex items-start gap-4 p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
-            <span className="text-accent mt-0.5 flex-shrink-0"><ShieldCheck className="w-6 h-6" /></span>
-            <div className="grid gap-1">
-              <strong className="text-text text-base">Your code. That&rsquo;s it.</strong>
-              <p className="m-0 text-text-muted text-sm leading-relaxed">
-                No account, no password, no phone number. Your 6-character code is private — only you can look up your consultation.
+        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[42rem] grid gap-4">
+          <div className="flex items-start gap-4 p-5 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
+            <span className="text-accent mt-0.5 flex-shrink-0"><ShieldCheck className="w-5 h-5" /></span>
+            <div className="grid gap-0.5">
+              <strong className="text-text text-sm">Your code is all you need</strong>
+              <p className="m-0 text-text-muted text-xs leading-relaxed">
+                No account, no password, no phone number. Only you can look up your consultation.
               </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Lost your code? ── */}
-      <section className="py-12 md:py-16">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
-          <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 max-w-[42rem] mx-auto text-center grid gap-3">
-            <h3 className="m-0 text-base font-semibold text-text">
-              Lost your code?
-            </h3>
-            <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
-              Check your WhatsApp — we send your code when your consultation is created.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button size="standard" variant="primary" href={routes.contact}>
-                Contact Us
-              </Button>
+          <div className="flex items-start gap-4 p-5 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
+            <span className="text-accent mt-0.5 flex-shrink-0"><MessageCircle className="w-5 h-5" /></span>
+            <div className="grid gap-0.5">
+              <strong className="text-text text-sm">Lost your code?</strong>
+              <p className="m-0 text-text-muted text-xs leading-relaxed">
+                Check your WhatsApp — we send it when your consultation starts. Or{" "}
+                <a href={routes.contact} className="text-accent hover:text-accent-hover font-semibold transition-colors">contact us</a> and we&rsquo;ll look it up.
+              </p>
             </div>
           </div>
         </div>
