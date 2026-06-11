@@ -759,7 +759,7 @@ export function TrackConsultationPage() {
           className="absolute inset-0 -z-10 opacity-70"
           style={{
             background:
-              "radial-gradient(60% 50% at 80% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), radial-gradient(40% 40% at 10% 20%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 70%)",
+              "radial-gradient(60% 50% at 80% 0%, var(--color-accent-gradient-subtle), transparent 70%), radial-gradient(40% 40% at 10% 20%, var(--color-accent-gradient-weak), transparent 70%)",
           }}
         />
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
@@ -1059,7 +1059,7 @@ export function TrackConsultationPage() {
             className="relative overflow-hidden rounded-[2rem] p-10 md:p-14 grid gap-6 text-center border border-border-soft"
             style={{
               background:
-                "radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 70%), var(--color-surface)",
+                "radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-medium), transparent 70%), var(--color-surface)",
             }}
           >
             <h2 className="m-0 text-[clamp(1.6rem,3vw,2.4rem)] font-semibold tracking-tight text-text max-w-[36rem] mx-auto">

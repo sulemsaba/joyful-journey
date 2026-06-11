@@ -44,7 +44,7 @@ export function UnifiedCtaSection({
           className="relative overflow-hidden border border-border-soft rounded-2xl p-5 sm:p-8 md:p-12 text-center"
           style={{
             background:
-              'radial-gradient(80% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%), var(--color-surface-elevated)',
+              'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
           }}
           data-reveal
         >
