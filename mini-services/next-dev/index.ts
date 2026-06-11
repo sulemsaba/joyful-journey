@@ -1,8 +1,7 @@
-// Next.js dev server wrapper as a mini-service
-// This ensures the server persists independently
+// Vite dev server wrapper as a mini-service
 import { spawn } from 'child_process';
 
-const child = spawn('npx', ['next', 'dev', '-p', '3000'], {
+const child = spawn('npx', ['vite', '--port', '3000', '--host'], {
   cwd: '/home/z/my-project',
   stdio: 'inherit',
   shell: true,
@@ -11,7 +10,7 @@ const child = spawn('npx', ['next', 'dev', '-p', '3000'], {
 
 child.unref();
 
-console.log(`Next.js dev server started with PID ${child.pid}`);
+console.log(`Vite dev server started with PID ${child.pid}`);
 
 // Keep the process alive
 process.on('SIGTERM', () => {
