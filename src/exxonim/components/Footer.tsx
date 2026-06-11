@@ -183,19 +183,21 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </ul>
           </section>
 
-          {/* Contact Us — address full width, emails & phones side by side */}
+          {/* Contact Us — mobile: address + emails/phones side by side | desktop: original stacked layout */}
           <section className="col-span-2 lg:col-span-1">
             <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Contact Us
             </h4>
-            <div className="grid gap-2 sm:gap-3">
+
+            {/* ── Mobile only (below lg): compact layout ── */}
+            <div className="grid gap-2 lg:hidden">
               {/* Address — full width */}
               <div className="flex items-start gap-2.5">
                 <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                <span className="text-footer-text text-[0.8rem] sm:text-[0.875rem] leading-relaxed">
+                <span className="text-footer-text text-[0.8rem] leading-relaxed">
                   Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
                 </span>
               </div>
@@ -208,10 +210,10 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                   </svg>
                   <div className="grid gap-0.5">
-                    <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.75rem] hover:text-footer-heading transition-colors duration-200">
                       info@exxonim.tz
                     </a>
-                    <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.75rem] hover:text-footer-heading transition-colors duration-200">
                       md@exxonim.tz
                     </a>
                   </div>
@@ -222,16 +224,59 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                   <div className="grid gap-0.5">
-                    <a href="tel:+255794689099" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    <a href="tel:+255794689099" className="text-footer-text text-[0.75rem] hover:text-footer-heading transition-colors duration-200">
                       +255 794 689 099
                     </a>
-                    <a href="tel:+255685525224" className="text-footer-text text-[0.75rem] sm:text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    <a href="tel:+255685525224" className="text-footer-text text-[0.75rem] hover:text-footer-heading transition-colors duration-200">
                       +255 685 525 224
                     </a>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* ── Desktop only (lg+): original stacked layout ── */}
+            <ul className="hidden lg:grid gap-3">
+              {/* Location */}
+              <li className="flex items-start gap-3">
+                <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <span className="text-footer-text text-[0.875rem] leading-relaxed">
+                  Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
+                </span>
+              </li>
+              {/* Emails */}
+              <li className="flex items-start gap-3">
+                <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+                <div className="grid gap-0.5">
+                  <a href="mailto:info@exxonim.tz" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    info@exxonim.tz
+                  </a>
+                  <a href="mailto:md@exxonim.tz" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    md@exxonim.tz
+                  </a>
+                </div>
+              </li>
+              {/* Phone numbers */}
+              <li className="flex items-start gap-3">
+                <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                <div className="grid gap-0.5">
+                  <a href="tel:+255794689099" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    +255 794 689 099
+                  </a>
+                  <a href="tel:+255685525224" className="text-footer-text text-[0.875rem] hover:text-footer-heading transition-colors duration-200">
+                    +255 685 525 224
+                  </a>
+                </div>
+              </li>
+            </ul>
           </section>
         </div>
 
