@@ -48,3 +48,38 @@ Stage Summary:
 - Service packages completely redesigned: 4 segment buttons + 3 tier cards per segment + no prices
 - Homepage layout fixed: hero first, then provider logos, then service catalog, then packages
 - All theme tokens, no hardcoded colors, no emojis, professional Lucide icons
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Redesign StackSection — visual-halves design with 3 alternating items (text+video surface), no portrait on mobile
+
+Work Log:
+- Read STACKSECTION_DESIGN_REFERENCE.md — Mobbin-style two-column layout with text half and video placeholder surface
+- Read current StackSection.tsx (sticky stacking cards), StatementCard.tsx, FeatureAccordionCard.tsx, ReferenceVisual.tsx
+- Completely rewrote StackSection.tsx with new visual-halves design:
+  - Two-column grid (stacked on mobile, side-by-side on md+)
+  - 3 items with alternating layout: item 0 = text left/visual right, item 1 = visual left/text right (reversed), item 2 = text left/visual right
+  - Uses CSS `direction:rtl` trick on the grid container for reversed items
+  - Badge pill using accent-soft theme tokens
+  - Heading (h2), subtitle, description, and CTA button in text half
+  - Video surface half: gray rounded surface with floating placeholder inside
+  - Placeholder has aspect-ratio 0.462 (tall phone screen) and floats centered in landscape surface
+  - CSS custom properties (--video-width, --video-y-offset) for responsive positioning
+  - Framer Motion animations: text slides from left, visual slides from right
+  - **No portrait on mobile** — surface uses `aspect-[1.22]` (landscape) at ALL breakpoints, never portrait
+  - 3 distinct placeholder graphics for items without video (stacked cards, checklist, progress tracker)
+  - Video support built-in: when videoSrc is provided, renders actual <video> element
+  - All theme tokens (accent, surface, text, border-soft), no hardcoded gray colors
+- Verified with VLM + browser screenshots:
+  - Desktop: 3 items visible, item 2 reversed (confirmed via getBoundingClientRect)
+  - Mobile: stacked layout, surfaces landscape (not portrait)
+  - Clean professional design matching Exxonim brand
+
+Stage Summary:
+- StackSection completely redesigned from sticky-stacking-cards to visual-halves layout
+- 3 alternating items with text/video surface layout
+- No portrait surfaces on mobile (landscape at all breakpoints)
+- Framer Motion entry animations (slide from left/right)
+- Video-ready: renders <video> when source available, placeholder when not
+- All theme tokens, responsive, accessible
