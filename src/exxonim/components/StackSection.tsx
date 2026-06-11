@@ -25,7 +25,7 @@ export function StackSection({ items }: StackSectionProps) {
   return (
     <section
       aria-label="Service guidance overview"
-      className="px-6 py-16 md:py-24 bg-surface-soft/40"
+      className="px-6 py-16 md:py-24 bg-page"
     >
       <div className="mx-auto max-w-[1280px] space-y-20 md:space-y-28">
         {visibleItems.map((item, index) => {
@@ -63,10 +63,10 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         isReversed && "md:[direction:rtl]"
       )}
     >
-      {/* ── Text Half ── */}
+      {/* ── Text Half ── Slides up from below */}
       <motion.div
-        initial={{ opacity: 0, x: -32 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 48 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={VIEWPORT_ONCE}
         transition={{ duration: DURATION, ease: EASE }}
         className={cn(
@@ -111,12 +111,12 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         </div>
       </motion.div>
 
-      {/* ── Video Surface Half ── */}
+      {/* ── Video Surface Half ── Fades in like going beneath the text card */}
       <motion.div
-        initial={{ opacity: 0, x: 32 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, scale: 0.94, y: 12 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={VIEWPORT_ONCE}
-        transition={{ duration: DURATION, ease: EASE }}
+        transition={{ duration: DURATION + 0.15, ease: EASE }}
         className={cn(
           "relative w-full",
           /* CSS custom properties for responsive video positioning */
@@ -130,7 +130,7 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         <div
           className={cn(
             "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
-            "bg-surface-soft/80",
+            "bg-page",
             /* NO portrait on mobile — landscape always */
             "aspect-[1.22]",
             "md:aspect-[1.22]",
@@ -140,37 +140,62 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           <div className="relative size-full">
             {hasVideo ? (
               /* ── Actual video ── */
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                disablePictureInPicture
-                disableRemotePlayback
-                aria-hidden="true"
-                className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
-                style={{
-                  top: "var(--video-y-offset)",
-                  left: "calc((100% - var(--video-width)) / 2)",
-                  width: "var(--video-width)",
-                  aspectRatio: "0.462",
-                }}
-              >
-                <source src={item.videoSrc} type="video/mp4" />
-              </video>
+              <>
+                {/* Mobile: landscape, fills container */}
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
+                >
+                  <source src={item.videoSrc} type="video/mp4" />
+                </video>
+                {/* Desktop: phone-in-frame portrait style */}
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  aria-hidden="true"
+                  className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
+                  style={{
+                    top: "var(--video-y-offset)",
+                    left: "calc((100% - var(--video-width)) / 2)",
+                    width: "var(--video-width)",
+                    aspectRatio: "0.462",
+                  }}
+                >
+                  <source src={item.videoSrc} type="video/mp4" />
+                </video>
+              </>
             ) : (
               /* ── Placeholder surface — no video ── */
-              <div
-                className="pointer-events-none absolute rounded-[20px] border border-border-soft bg-surface shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
-                style={{
-                  top: "var(--video-y-offset)",
-                  left: "calc((100% - var(--video-width)) / 2)",
-                  width: "var(--video-width)",
-                  aspectRatio: "0.462",
-                }}
-              >
-                <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
-              </div>
+              <>
+                {/* Mobile: landscape, fills container */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden md:hidden"
+                >
+                  <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
+                </div>
+                {/* Desktop: phone-in-frame portrait style */}
+                <div
+                  className="pointer-events-none absolute hidden md:block rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
+                  style={{
+                    top: "var(--video-y-offset)",
+                    left: "calc((100% - var(--video-width)) / 2)",
+                    width: "var(--video-width)",
+                    aspectRatio: "0.462",
+                  }}
+                >
+                  <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -246,7 +271,7 @@ function PlaceholderGraphic({ index, label }: { index: number; label: string }) 
   ];
 
   return (
-    <div className="w-full h-full bg-surface relative">
+    <div className="w-full h-full bg-page relative">
       {/* Subtle grid overlay */}
       <div
         className="absolute inset-0 opacity-[0.03]"
