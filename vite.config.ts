@@ -14,9 +14,18 @@ export default defineConfig({
     host: true,
     allowedHosts: true,
     proxy: {
-      "/api/v1/track": "http://127.0.0.1:3031",
-      "/api/v1/consultations": "http://127.0.0.1:3031",
-      "/api/v1/privacy/consent": "http://127.0.0.1:3031",
+      "/api/v1/track": {
+        target: "http://127.0.0.1:3031",
+        changeOrigin: true,
+      },
+      "/api/v1/consultations": {
+        target: "http://127.0.0.1:3031",
+        changeOrigin: true,
+      },
+      "/api/v1/privacy/consent": {
+        target: "http://127.0.0.1:3031",
+        changeOrigin: true,
+      },
     },
     watch: {
       ignored: [

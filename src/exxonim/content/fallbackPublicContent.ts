@@ -361,7 +361,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       {
         title: "Consultation tracking",
         description:
-          "Every engagement gets a 5-character tracking code. Check your status anytime — no login required. Automatic updates via WhatsApp, email, or SMS.",
+          "Every engagement gets a 6-character tracking code. Check your status anytime — no login required. Automatic updates via WhatsApp, email, or SMS.",
       },
     ],
     service_scope_section: {
@@ -664,7 +664,7 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
       },
       {
         question: "Can I track my consultation status?",
-        answer: "Yes — every engagement gets a 5-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.",
+        answer: "Yes — every engagement gets a 6-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.",
         cta: { label: "Track your consultation", href: routes.trackConsultation },
       },
       {

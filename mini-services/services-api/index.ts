@@ -376,8 +376,8 @@ app.get("/api/health", (c) => {
 
 /* ── Tracking Code Lookup: POST /api/v1/track ──
  * Mock endpoint for the Track Your Consultation page.
- * Format: 4 digits + 1 uppercase letter (e.g., "1111A")
- * Display format: "11 11A" (two groups: 2 digits + 3 chars)
+ * Format: 5 digits + 1 uppercase letter (e.g., "11111A")
+ * Display format: "11 11 1A" (three groups of 2, space-separated)
  */
 const MOCK_CASES: Record<string, {
   status: "active" | "completed" | "on_hold";
@@ -390,7 +390,7 @@ const MOCK_CASES: Record<string, {
   totalSteps: number;
   visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
 }> = {
-  "1111A": {
+  "11111A": {
     status: "active",
     serviceType: "Company Registration",
     milestone: "Document Verification",
@@ -399,7 +399,7 @@ const MOCK_CASES: Record<string, {
     completedSteps: 3,
     totalSteps: 6,
     visibleMilestones: [
-      { label: "Case Received", status: "completed", date: "2026-05-20" },
+      { label: "Consultation Received", status: "completed", date: "2026-05-20" },
       { label: "Name Clearance Filed", status: "completed", date: "2026-05-22" },
       { label: "Name Approved", status: "completed", date: "2026-05-28" },
       { label: "Document Verification", status: "current", date: null },
@@ -407,7 +407,7 @@ const MOCK_CASES: Record<string, {
       { label: "Certificate Issued", status: "upcoming", date: null },
     ],
   },
-  "2222A": {
+  "22222A": {
     status: "completed",
     serviceType: "TIN Application",
     milestone: "All processes completed",
@@ -417,30 +417,30 @@ const MOCK_CASES: Record<string, {
     completedSteps: 4,
     totalSteps: 4,
     visibleMilestones: [
-      { label: "Case Received", status: "completed", date: "2026-05-10" },
+      { label: "Consultation Received", status: "completed", date: "2026-05-10" },
       { label: "Document Preparation", status: "completed", date: "2026-05-15" },
       { label: "TRA Submission", status: "completed", date: "2026-05-22" },
       { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
     ],
   },
-  "3333A": {
+  "33333A": {
     status: "on_hold",
     serviceType: "Business Licensing",
     milestone: "Awaiting Client Documents",
     lastUpdated: "2026-06-01T11:00:00Z",
     nextMilestone: "Document Verification",
-    message: "Your case is on hold pending additional documents. Please check your WhatsApp for details.",
+    message: "Your consultation is on hold pending additional documents. Please check your WhatsApp for details.",
     completedSteps: 1,
     totalSteps: 5,
     visibleMilestones: [
-      { label: "Case Received", status: "completed", date: "2026-05-25" },
+      { label: "Consultation Received", status: "completed", date: "2026-05-25" },
       { label: "Awaiting Client Documents", status: "current", date: null },
       { label: "Document Verification", status: "upcoming", date: null },
       { label: "Licence Application", status: "upcoming", date: null },
       { label: "Licence Issued", status: "upcoming", date: null },
     ],
   },
-  "4444A": {
+  "44444A": {
     status: "active",
     serviceType: "Work Permit Application",
     milestone: "Labour Committee Review",
@@ -449,7 +449,7 @@ const MOCK_CASES: Record<string, {
     completedSteps: 4,
     totalSteps: 7,
     visibleMilestones: [
-      { label: "Case Received", status: "completed", date: "2026-05-12" },
+      { label: "Consultation Received", status: "completed", date: "2026-05-12" },
       { label: "Document Collection", status: "completed", date: "2026-05-14" },
       { label: "Employer Verification", status: "completed", date: "2026-05-20" },
       { label: "Labour Committee Review", status: "current", date: null },
@@ -472,7 +472,7 @@ app.post("/api/v1/track", async (c) => {
   }
 
   const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
-  const isValid = /^[0-9]{4}[A-Z]$/.test(raw);
+  const isValid = /^[0-9]{5}[A-Z]$/.test(raw);
 
   if (!isValid) {
     return c.json(
@@ -508,7 +508,7 @@ const TRACKING_DIGITS = "0123456789";
 const TRACKING_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 
 app.post("/api/v1/consultations", async (c) => {
-  const digits = Array.from({ length: 4 }, () =>
+  const digits = Array.from({ length: 5 }, () =>
     TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)]
   ).join("");
   const letter = TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];

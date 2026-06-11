@@ -20,11 +20,11 @@
  *
  * Response Schema — Submit Consultation:
  *   { tracking_id: str, status: str, message: str }
- *   (tracking_id is a 5-char code: 4 digits + 1 uppercase letter, e.g. "1111A")
+ *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "11111A")
  *
  * Request Schema — Track Lookup (POST /api/v1/track):
  *   { trackingNumber: str }
- *   (5-char code: 4 digits + 1 uppercase letter)
+ *   (6-char code: 5 digits + 1 uppercase letter)
  *
  * Response Schema — Track Lookup (200):
  *   { status: str, trackingCode: str, serviceType: str, milestone: str,
@@ -64,7 +64,7 @@ import type {
  *   2. Create a new case record with the tracking code
  *   3. Create case_milestones records for the service type's milestones
  *   4. Send WhatsApp notification to the client with their tracking code:
- *      "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
+ *      "Your tracking number is 11 11 1A. Check your file status anytime at exxonim.tz/track."
  *   5. Optionally send an email with the same info
  */
 export async function submitPublicConsultation(
@@ -84,7 +84,7 @@ export async function submitPublicConsultation(
  * BACKEND TEAM (FastAPI): This is the core public endpoint.
  *
  * Endpoint: POST /api/track
- * Request:  { trackingNumber: "84729A" }
+ * Request:  { trackingNumber: "11111A" }
  *
  * The frontend sends the raw 6-char code (spaces stripped, uppercased).
  * Format: 5 digits + 1 uppercase letter.
