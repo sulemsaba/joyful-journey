@@ -38,9 +38,9 @@ export function ScrollToTopButton() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
       title="Back to top"
-      className="fixed bottom-24 right-6 z-[30] inline-flex h-12 w-12 items-center justify-center rounded-full border border-border-soft bg-surface-soft text-text-muted transition-all duration-200 hover:bg-accent-soft hover:text-accent hover:scale-110"
+      className="fixed bottom-20 right-4 z-[30] inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-soft bg-surface-soft text-text-muted shadow-sm transition-all duration-200 hover:bg-accent-soft hover:text-accent hover:scale-110"
     >
-      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="m18 15-6-6-6 6" />
       </svg>
     </button>

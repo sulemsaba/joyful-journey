@@ -56,22 +56,7 @@ const resourceLinks = [
   { label: "Terms of Service", href: routes.terms },
 ];
 
-/* ── Tiny social icon link (mobile) ── */
-function SocialIconLink({ platform, url }: { platform: string; url: string }) {
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer noopener"
-      aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
-      className="inline-flex items-center justify-center text-footer-text-muted hover:text-footer-heading transition-colors duration-200"
-    >
-      <span className="w-[1.125rem] h-[1.125rem] flex items-center justify-center">{renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}</span>
-    </a>
-  );
-}
-
-/* ── Large social circle link (desktop) ── */
+/* ── Social circle link (used on all screens) ── */
 function SocialCircleLink({ platform, url }: { platform: string; url: string }) {
   return (
     <a
@@ -80,9 +65,24 @@ function SocialCircleLink({ platform, url }: { platform: string; url: string }) 
       rel="noreferrer noopener"
       aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
       title={platform.charAt(0).toUpperCase() + platform.slice(1)}
-      className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
+      className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
     >
-      <span className="w-5 h-5 flex items-center justify-center">{renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}</span>
+      <span className="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+        {renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}
+      </span>
+    </a>
+  );
+}
+
+/* ── Link item with hover dot animation ── */
+function FooterLink({ label, href }: { label: string; href: string }) {
+  return (
+    <a
+      href={href}
+      className="inline-flex items-center py-1.5 text-footer-text text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
+    >
+      <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-all duration-200" />
+      {label}
     </a>
   );
 }
@@ -113,119 +113,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
       <Container className="py-8 pb-16 md:py-14 md:pb-10">
-        {/* ═══════════════════════════════════════════════════════
-         * MOBILE: Compact Mobbin-style layout
-         * - Logo → tagline below → social icons below
-         * - 2-column link grid (Navigation | Resources)
-         * - Compact contact
-         * - Bottom bar: copyright + legal + designed-by
-         *
-         * pb-16 on mobile gives clearance for the floating
-         * WhatsApp button (fixed bottom-6, 56px tall)
-         * ═══════════════════════════════════════════════════════ */}
-        <div className="md:hidden grid gap-5">
-          {/* Row 1: Brand — logo, then tagline below, then social icons below */}
-          <section className="grid gap-2.5">
-            <a
-              href={routes.home}
-              aria-label={`${brand.name} home`}
-              className="inline-flex items-center"
-            >
-              <img
-                src={brand.darkLogoSrc}
-                alt={brand.name}
-                width={160}
-                height={44}
-                loading="lazy"
-                onError={(event) => {
-                  const img = event.currentTarget;
-                  if (img.dataset.fallbackApplied) return;
-                  img.dataset.fallbackApplied = "true";
-                  img.src = fallbackBrand.darkLogoSrc;
-                }}
-                className="block h-7 w-auto"
-              />
-            </a>
-            <p
-              className="text-footer-text-muted text-xs leading-relaxed italic"
-              style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}
-            >
-              Where Innovation Meets Efficiency
-            </p>
-            <div className="flex items-center gap-3">
-              {activeSocials.map((s) => (
-                <SocialIconLink key={s.platform} platform={s.platform} url={s.url} />
-              ))}
-            </div>
-          </section>
-
-          {/* Row 2: 2-column link grid */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-0.5 text-sm">
-            <div className="flex flex-col gap-0.5">
-              {navigationLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="py-1 text-footer-text hover:text-footer-heading transition-colors duration-200"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-            <div className="flex flex-col gap-0.5">
-              {resourceLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="py-1 text-footer-text hover:text-footer-heading transition-colors duration-200"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Row 3: Compact contact */}
-          <div className="grid gap-1.5 text-xs text-footer-text-muted">
-            <span>Mbezi Beach B, Dar es Salaam</span>
-            <div className="flex items-center gap-3">
-              <a href="mailto:info@exxonim.tz" className="text-footer-text hover:text-footer-heading transition-colors duration-200">info@exxonim.tz</a>
-              <a href="tel:+255794689099" className="text-footer-text hover:text-footer-heading transition-colors duration-200">+255 794 689 099</a>
-            </div>
-          </div>
-
-          {/* Row 4: Bottom bar */}
-          <div className="pt-4 border-t border-footer-border grid gap-2">
-            <div className="flex items-center justify-between">
-              <p className="text-footer-text-muted text-xs">
-                © {currentYear} Exxonim
-              </p>
-              <div className="flex items-center gap-2 text-xs text-footer-text-muted">
-                <a href={routes.privacy} className="hover:text-footer-heading transition-colors duration-200">Privacy</a>
-                <a href={routes.terms} className="hover:text-footer-heading transition-colors duration-200">Terms</a>
-              </div>
-            </div>
-            <p className="text-footer-text-muted text-[0.65rem]">
-              Designed &amp; Built by{' '}
-              <a
-                href="https://exxonim.tz"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-footer-text hover:text-footer-heading transition-colors duration-200"
-              >
-                exxonim.tz
-              </a>
-            </p>
-          </div>
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════
-         * DESKTOP: Full 4-column layout (unchanged)
-         * ═══════════════════════════════════════════════════════ */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 mb-10 pb-10 border-b border-footer-border">
+        {/* ── 4-column responsive grid ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-8 mb-8 sm:mb-10 pb-8 sm:pb-10 border-b border-footer-border">
 
           {/* Brand Panel */}
-          <section className="grid gap-5 content-start">
+          <section className="grid gap-4 sm:gap-5 content-start">
             <a
               href={routes.home}
               aria-label={`${brand.name} home`}
@@ -243,7 +135,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   img.dataset.fallbackApplied = "true";
                   img.src = fallbackBrand.darkLogoSrc;
                 }}
-                className="block h-8 sm:h-11 w-auto"
+                className="block h-7 sm:h-8 lg:h-11 w-auto"
               />
             </a>
 
@@ -255,11 +147,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </p>
 
             {/* Follow Us */}
-            <div className="grid gap-2.5">
+            <div className="grid gap-2 sm:gap-2.5">
               <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading">
                 Follow Us
               </h4>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 {activeSocials.map((s) => (
                   <SocialCircleLink key={s.platform} platform={s.platform} url={s.url} />
                 ))}
@@ -269,20 +161,14 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Navigation */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-4">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-3 sm:mb-4">
               Navigation
             </h4>
             <nav aria-label="Footer navigation">
               <ul className="grid gap-1">
                 {navigationLinks.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="inline-flex items-center py-1.5 text-footer-text text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
-                    >
-                      <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-all duration-200" />
-                      {link.label}
-                    </a>
+                    <FooterLink label={link.label} href={link.href} />
                   </li>
                 ))}
               </ul>
@@ -291,19 +177,13 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Resources & Legal */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-4">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-3 sm:mb-4">
               Resources &amp; Legal
             </h4>
             <ul className="grid gap-1">
               {resourceLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="inline-flex items-center py-1.5 text-footer-text text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
-                  >
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-all duration-200" />
-                    {link.label}
-                  </a>
+                  <FooterLink label={link.label} href={link.href} />
                 </li>
               ))}
             </ul>
@@ -311,7 +191,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Contact Us */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-5">
+            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-4 sm:mb-5">
               Contact Us
             </h4>
             <ul className="grid gap-3">
@@ -358,8 +238,8 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
           </section>
         </div>
 
-        {/* Copyright & Credit — desktop only (mobile has its own inline bar) */}
-        <div className="hidden md:block text-center mt-8 grid gap-1">
+        {/* Copyright & Credit */}
+        <div className="text-center grid gap-1">
           <p className="text-footer-text-muted text-sm">
             © {currentYear} Exxonim Company Limited
           </p>
