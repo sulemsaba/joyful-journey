@@ -20,11 +20,11 @@
  *
  * Response Schema — Submit Consultation:
  *   { tracking_id: str, status: str, message: str }
- *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "11111A")
+ *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter in any position, e.g. "A1111" or "1111A")
  *
  * Request Schema — Track Lookup (POST /api/v1/track):
  *   { trackingNumber: str }
- *   (6-char code: 5 digits + 1 uppercase letter)
+ *   (6-char code: 5 digits + 1 uppercase letter, letter in any position)
  *
  * Response Schema — Track Lookup (200):
  *   { status: str, trackingCode: str, serviceType: str, milestone: str,
@@ -60,11 +60,11 @@ import type {
  *
  * BACKEND TEAM (FastAPI): This creates a new case in the database.
  * The backend should:
- *   1. Generate a tracking code (5 digits + 1 letter) using secrets.choice
+ *   1. Generate a tracking code (5 digits + 1 letter, letter in any position) using secrets.choice
  *   2. Create a new case record with the tracking code
  *   3. Create case_milestones records for the service type's milestones
  *   4. Send WhatsApp notification to the client with their tracking code:
- *      "Your tracking number is 11 11 1A. Check your file status anytime at exxonim.tz/track."
+ *      "Your tracking number is A1 11 11. Check your file status anytime at exxonim.tz/track."
  *   5. Optionally send an email with the same info
  */
 export async function submitPublicConsultation(
@@ -84,12 +84,12 @@ export async function submitPublicConsultation(
  * BACKEND TEAM (FastAPI): This is the core public endpoint.
  *
  * Endpoint: POST /api/track
- * Request:  { trackingNumber: "11111A" }
+ * Request:  { trackingNumber: "A11111" }
  *
  * The frontend sends the raw 6-char code (spaces stripped, uppercased).
- * Format: 5 digits + 1 uppercase letter.
+ * Format: 5 digits + 1 uppercase letter (letter in any position).
  * The backend should:
- *   1. Validate the code format (5 digits + 1 letter)
+ *   1. Validate the code format (5 digits + 1 letter, letter can be in any position)
  *   2. Query the cases table: SELECT * FROM cases WHERE tracking_code = $1
  *   3. If not found: return 404 { status: "not_found", message: "..." }
  *      (same response for invalid/expired/closed — no info leakage)

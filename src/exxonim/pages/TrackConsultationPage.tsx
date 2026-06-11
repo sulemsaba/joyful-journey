@@ -35,11 +35,10 @@
  * "Exxonim Client Case Tracking System — Technical Design Report v1.0"
  *
  * ── TRACKING CODE FORMAT ──
- *   6 characters: 5 digits + 1 uppercase letter
- *   Display format: "11 11 1A" (three groups of 2, space-separated)
- *   Storage format: "11111A" (no spaces, uppercase, CHAR(6) UNIQUE)
+ *   6 characters: 5 digits + 1 uppercase letter (letter can be in any position)
+ *   Display format: "11 11 1A" or "A1 11 11" (three groups of 2, space-separated)
+ *   Storage format: "11111A" or "A11111" (no spaces, uppercase, CHAR(6) UNIQUE)
  *   Generation: cryptographically secure random (secrets.choice)
- *   Keyspace: 2.6 million (10^5 × 26), or 2.4M if I,O excluded
  *
  * ── API CONTRACT ──
  *   Endpoint: POST /api/track
@@ -55,11 +54,11 @@
  *   or non-existent codes to prevent information leakage.
  *
  * ── DEMO TRACKING CODES (mock API) ──
- *   11111A — Active consultation (Company Registration, 3/6 milestones done)
- *   22222A — Completed consultation (TIN Application, all 4 milestones done)
- *   33333A — On hold consultation (Business Licensing, awaiting client documents)
- *   44444A — Active consultation (Work Permit Application, 4/7 milestones done)
- *   Any other code matching /\d{5}[A-Z]/ → "not found"
+ *   A11111 — Active consultation (Company Registration, 3/6 milestones done)
+ *   22A222 — Completed consultation (TIN Application, all 4 milestones done)
+ *   333A33 — On hold consultation (Business Licensing, awaiting client documents)
+ *   4444A4 — Active consultation (Work Permit Application, 4/7 milestones done)
+ *   Any other code matching 5 digits + 1 letter (any position) → "not found"
  *
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -98,7 +97,10 @@ function normalizeTrackingCode(raw: string): string {
 }
 
 function isValidTrackingCode(code: string): boolean {
-  return /^[0-9]{5}[A-Z]$/.test(code);
+  if (code.length !== 6) return false;
+  const digits = (code.match(/[0-9]/g) || []).length;
+  const letters = (code.match(/[A-Z]/g) || []).length;
+  return digits === 5 && letters === 1;
 }
 
 function formatTrackingCode(code: string): string {
@@ -198,7 +200,7 @@ const SHOW_DEMO_HINT =
   ((typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SHOW_DEMO_HINT === "true") ||
    (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SHOW_DEMO_HINT === "true"));
 
-const DEMO_CODES = ["11111A", "22222A", "33333A", "44444A"] as const;
+const DEMO_CODES = ["A11111", "22A222", "333A33", "4444A4"] as const;
 
 /* ─────────────────────────────────────────────────────────
  * HOW IT WORKS STEPS — uses Lucide icons
@@ -214,7 +216,7 @@ const HOW_IT_WORKS_STEPS = [
     icon: <Search className="w-8 h-8" />,
     title: "Check your status",
     detail:
-      "Enter your 6-character code on this page. No login, no password, no phone number needed.",
+      "Enter your 6-character code. No login needed.",
   },
   {
     icon: <Bell className="w-8 h-8" />,
@@ -333,6 +335,17 @@ function TrackingResultCard({
               <p className="m-0 text-text text-sm leading-relaxed">
                 {result.message}
               </p>
+              {result.status === "on_hold" && (
+                <a
+                  href="https://wa.me/255794689099"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1ebe57] transition-colors w-fit"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Message us on WhatsApp
+                </a>
+              )}
             </div>
           )}
 
@@ -783,29 +796,13 @@ export function TrackConsultationPage() {
               Consultation Tracking
             </p>
             <h1 className="m-0 text-[clamp(2.4rem,5vw,4.4rem)] font-semibold leading-[1.05] tracking-tight text-text">
-              Never ask &ldquo;What&rsquo;s happening?&rdquo; again
+              Track Your Consultation
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
-              Automated updates at every milestone — delivered to your WhatsApp.
-              Enter your 6-character tracking code for an instant status check.
-              No login, no password, no phone number required.
+              Enter your 6-character code to see your status instantly.
+              Updates are sent to your WhatsApp automatically.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2 show-on-lg">
-              <Button
-                size="standard"
-                variant="primary"
-                href={routes.contact}
-              >
-                Request a Consultation
-              </Button>
-              <Button
-                size="standard"
-                variant="secondary"
-                href={routes.services}
-              >
-                View All Services
-              </Button>
-            </div>
+
           </div>
 
           {/* Right: Tracking lookup card — on mobile renders FIRST */}
@@ -948,7 +945,7 @@ export function TrackConsultationPage() {
               How it works
             </span>
             <h2 className="m-0 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold tracking-tight text-text">
-              Proactive updates — not a dashboard
+              Your timeline is your dashboard
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -971,60 +968,16 @@ export function TrackConsultationPage() {
         </div>
       </section>
 
-      {/* ── Security & privacy ── */}
+      {/* ── Privacy ── */}
       <section className="py-16 md:py-20">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <div className="grid gap-6">
-            <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
-              Security &amp; privacy
-            </span>
-            <h2 className="m-0 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold tracking-tight text-text">
-              Your code is all you need
-            </h2>
-            <p className="m-0 text-text-muted max-w-[36rem]">
-              No account, no password, no phone number needed.
-              Your 6-character tracking code is private and secure —
-              only you can look up your consultation.
-            </p>
-            <div className="grid gap-3">
-              <SecurityPoint
-                icon={<ShieldCheck className="w-5 h-5" />}
-                title="No account or password needed"
-                description="Your tracking code is the only key. Over 2.4 million possible combinations — secure by design."
-              />
-              <SecurityPoint
-                icon={<ShieldCheck className="w-5 h-5" />}
-                title="Private and rate-limited"
-                description="Lookups are rate-limited to prevent guessing. Invalid and non-existent codes all return the same response."
-              />
-            </div>
-          </div>
-
-          {/* Visual — hidden on mobile, shown on lg+ */}
-          <div className="relative w-full max-w-[28rem] mx-auto aspect-[4/3] items-center justify-center hidden lg:flex">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[70%] h-[70%] rounded-full border border-accent/10" />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[45%] h-[45%] rounded-full border border-accent/20" />
-            </div>
-            <div className="relative flex items-center justify-center">
-              <span className="absolute w-16 h-16 rounded-full bg-accent/10 animate-ping" />
-              <span className="relative w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5 text-accent-contrast" />
-              </span>
-            </div>
-            <div className="absolute top-[18%] right-[22%]">
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-elevated/80 border border-accent/20 text-[0.65rem] font-bold text-accent backdrop-blur">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                Secure Lookup
-              </span>
-            </div>
-            <div className="absolute bottom-[22%] left-[12%]">
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-elevated/80 border border-border-soft text-[0.65rem] font-bold text-text-muted backdrop-blur">
-                <span className="w-1.5 h-1.5 rounded-full bg-border-soft" />
-                Rate Limited
-              </span>
+        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[42rem]">
+          <div className="flex items-start gap-4 p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
+            <span className="text-accent mt-0.5 flex-shrink-0"><ShieldCheck className="w-6 h-6" /></span>
+            <div className="grid gap-1">
+              <strong className="text-text text-base">Your code. That&rsquo;s it.</strong>
+              <p className="m-0 text-text-muted text-sm leading-relaxed">
+                No account, no password, no phone number. Your 6-character code is private — only you can look up your consultation.
+              </p>
             </div>
           </div>
         </div>
@@ -1033,21 +986,16 @@ export function TrackConsultationPage() {
       {/* ── Lost your code? ── */}
       <section className="py-12 md:py-16">
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
-          <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 max-w-[42rem] mx-auto text-center grid gap-4">
-            <h3 className="m-0 text-lg font-semibold text-text">
-              Lost your tracking code?
+          <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 max-w-[42rem] mx-auto text-center grid gap-3">
+            <h3 className="m-0 text-base font-semibold text-text">
+              Lost your code?
             </h3>
             <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
-              Check your WhatsApp messages — we send your code when your
-              consultation is created. You can also contact us and we&apos;ll
-              look it up for you.
+              Check your WhatsApp — we send your code when your consultation is created.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <Button size="standard" variant="primary" href={routes.contact}>
                 Contact Us
-              </Button>
-              <Button size="standard" variant="outline" href={routes.support}>
-                Support Centre
               </Button>
             </div>
           </div>
@@ -1057,24 +1005,3 @@ export function TrackConsultationPage() {
   );
 }
 
-function SecurityPoint({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="flex gap-3 items-start">
-      <span className="text-accent mt-0.5">{icon}</span>
-      <div className="grid gap-0.5">
-        <strong className="text-text text-sm">{title}</strong>
-        <p className="m-0 text-text-muted text-xs leading-relaxed">
-          {description}
-        </p>
-      </div>
-    </div>
-  );
-}

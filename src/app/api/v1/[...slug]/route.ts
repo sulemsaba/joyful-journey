@@ -38,26 +38,27 @@ const FALLBACK_TIMESTAMP = "2026-01-01T00:00:00Z";
  *       while True:
  *           digits_part = ''.join(secrets.choice(DIGITS) for _ in range(5))
  *           letter_part = secrets.choice(LETTERS)
- *           code = digits_part + letter_part
+ *           pos = secrets.randbelow(6)  # letter can go in any position
+ *           code = digits_part[:pos] + letter_part + digits_part[pos:]
  *           if code not in active_codes:
  *               return code
  *
- * Format: 5 digits + 1 uppercase letter = 6 characters total
- * Display format: "11 11 1A" (three groups of 2, space-separated)
- * Storage format: "11111A" (no spaces, uppercase, CHAR(6) UNIQUE)
- *
- * Keyspace: 10^5 × 24 = 2,400,000 (with ambiguous letters I, O excluded)
+ * Format: 5 digits + 1 uppercase letter = 6 characters total (letter can be in any position)
+ * Display format: "A1 11 11" or "11 11 1A" (three groups of 2, space-separated)
+ * Storage format: "A11111" or "11111A" (no spaces, uppercase, CHAR(6) UNIQUE)
  * ═══════════════════════════════════════════════════════════════════════════ */
 const TRACKING_DIGITS = "0123456789";
 const TRACKING_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // 24 chars, no I/O
 function generateMockTrackingCode(): string {
-  // Generate 4 random digits + 1 random letter
-  let code = "";
+  // Generate 5 random digits + 1 random letter in a random position
+  let digits = "";
   for (let i = 0; i < 5; i++) {
-    code += TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)];
+    digits += TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)];
   }
-  code += TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];
-  return code;
+  const letter = TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];
+  // Insert letter at a random position (0-5)
+  const pos = Math.floor(Math.random() * 6);
+  return digits.slice(0, pos) + letter + digits.slice(pos);
 }
 
 /* ── Site settings ────────────────────────────────────── */
@@ -327,8 +328,10 @@ export async function POST(
     }
 
     const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
-    // Format: 5 digits followed by 1 uppercase letter (e.g., "11111A")
-    const isValid = /^[0-9]{5}[A-Z]$/.test(raw);
+    // Format: 6 chars = 5 digits + 1 uppercase letter (letter can be in any position)
+    const isValid = raw.length === 6 &&
+      (raw.match(/[0-9]/g) || []).length === 5 &&
+      (raw.match(/[A-Z]/g) || []).length === 1;
 
     if (!isValid) {
       return NextResponse.json(
@@ -365,9 +368,8 @@ export async function POST(
       totalSteps: number;
       visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
     }> = {
-      // Demo codes — format: 5 digits + 1 letter (e.g., "11111A")
-      // Display format: "11 11 1A" (three groups of 2, space-separated)
-      "11111A": {
+      // Demo codes — format: 5 digits + 1 letter (letter can be in any position)
+      "A11111": {
         status: "active",
         serviceType: "Company Registration",
         milestone: "Document Verification",
@@ -384,7 +386,7 @@ export async function POST(
           { label: "Certificate Issued", status: "upcoming", date: null },
         ],
       },
-      "22222A": {
+      "22A222": {
         status: "completed",
         serviceType: "TIN Application",
         milestone: "All processes completed",
@@ -400,13 +402,13 @@ export async function POST(
           { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
         ],
       },
-      "33333A": {
+      "333A33": {
         status: "on_hold",
         serviceType: "Business Licensing",
         milestone: "Awaiting Client Documents",
         lastUpdated: "2026-06-01T11:00:00Z",
         nextMilestone: "Document Verification",
-        message: "Your consultation is on hold pending additional documents. Please check your WhatsApp for details.",
+        message: "Your consultation is on hold pending additional documents. Check your WhatsApp for details, or message us directly.",
         completedSteps: 1,
         totalSteps: 5,
         visibleMilestones: [
@@ -417,7 +419,7 @@ export async function POST(
           { label: "Licence Issued", status: "upcoming", date: null },
         ],
       },
-      "44444A": {
+      "4444A4": {
         status: "active",
         serviceType: "Work Permit Application",
         milestone: "Labour Committee Review",
@@ -476,9 +478,9 @@ export async function POST(
       service_request_id: `sr-${Date.now()}`,
       tracking_id: trackingCode,
       /**
-       * BACKEND: The tracking_id field is now a 6-character code (5 digits + 1 letter).
-       * Format: CHAR(6), uppercase, no spaces in storage. Example: "84729A"
-       * Display format: "84 72 9A" (three groups of 2, space-separated).
+           * BACKEND: The tracking_id field is a 6-character code (5 digits + 1 letter, letter in any position).
+       * Format: CHAR(6), uppercase, no spaces in storage. Example: "8472A9" or "A84729"
+       * Display format: "84 72 A9" or "A8 47 29" (three groups of 2, space-separated).
        * The frontend formats this for display automatically.
        */
       status: "pending",

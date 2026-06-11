@@ -376,8 +376,8 @@ app.get("/api/health", (c) => {
 
 /* ── Tracking Code Lookup: POST /api/v1/track ──
  * Mock endpoint for the Track Your Consultation page.
- * Format: 5 digits + 1 uppercase letter (e.g., "11111A")
- * Display format: "11 11 1A" (three groups of 2, space-separated)
+ * Format: 5 digits + 1 uppercase letter in any position (e.g., "A11111" or "11111A")
+ * Display format: "A1 11 11" or "11 11 1A" (three groups of 2, space-separated)
  */
 const MOCK_CASES: Record<string, {
   status: "active" | "completed" | "on_hold";
@@ -390,7 +390,7 @@ const MOCK_CASES: Record<string, {
   totalSteps: number;
   visibleMilestones: Array<{ label: string; status: "completed" | "current" | "upcoming"; date: string | null }>;
 }> = {
-  "11111A": {
+  "A11111": {
     status: "active",
     serviceType: "Company Registration",
     milestone: "Document Verification",
@@ -407,7 +407,7 @@ const MOCK_CASES: Record<string, {
       { label: "Certificate Issued", status: "upcoming", date: null },
     ],
   },
-  "22222A": {
+  "22A222": {
     status: "completed",
     serviceType: "TIN Application",
     milestone: "All processes completed",
@@ -423,13 +423,13 @@ const MOCK_CASES: Record<string, {
       { label: "TIN Certificate Issued", status: "completed", date: "2026-05-30" },
     ],
   },
-  "33333A": {
+  "333A33": {
     status: "on_hold",
     serviceType: "Business Licensing",
     milestone: "Awaiting Client Documents",
     lastUpdated: "2026-06-01T11:00:00Z",
     nextMilestone: "Document Verification",
-    message: "Your consultation is on hold pending additional documents. Please check your WhatsApp for details.",
+    message: "Your consultation is on hold pending additional documents. Check your WhatsApp for details, or message us directly.",
     completedSteps: 1,
     totalSteps: 5,
     visibleMilestones: [
@@ -440,7 +440,7 @@ const MOCK_CASES: Record<string, {
       { label: "Licence Issued", status: "upcoming", date: null },
     ],
   },
-  "44444A": {
+  "4444A4": {
     status: "active",
     serviceType: "Work Permit Application",
     milestone: "Labour Committee Review",
@@ -472,7 +472,10 @@ app.post("/api/v1/track", async (c) => {
   }
 
   const raw = (body.trackingNumber ?? "").replace(/\s/g, "").toUpperCase();
-  const isValid = /^[0-9]{5}[A-Z]$/.test(raw);
+  // Format: 6 chars = 5 digits + 1 uppercase letter (letter can be in any position)
+  const isValid = raw.length === 6 &&
+    (raw.match(/[0-9]/g) || []).length === 5 &&
+    (raw.match(/[A-Z]/g) || []).length === 1;
 
   if (!isValid) {
     return c.json(
@@ -512,7 +515,9 @@ app.post("/api/v1/consultations", async (c) => {
     TRACKING_DIGITS[Math.floor(Math.random() * TRACKING_DIGITS.length)]
   ).join("");
   const letter = TRACKING_LETTERS[Math.floor(Math.random() * TRACKING_LETTERS.length)];
-  const trackingCode = digits + letter;
+  // Insert letter at a random position (0-5)
+  const pos = Math.floor(Math.random() * 6);
+  const trackingCode = digits.slice(0, pos) + letter + digits.slice(pos);
 
   return c.json({
     consultation_id: Math.floor(Math.random() * 9000 + 1000),

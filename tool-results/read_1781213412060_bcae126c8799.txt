@@ -1,0 +1,1081 @@
+     1→/**
+     2→ * Track Your Consultation page — Exxonim Client Case Tracking System
+     3→ *
+     4→ * ═══════════════════════════════════════════════════════════════════════════
+     5→ * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE
+     6→ * ═══════════════════════════════════════════════════════════════════════════
+     7→ *
+     8→ * Tracking Lookup (via lookupTrackingCode → consultationService):
+     9→ *   POST   /api/v1/track                      — Look up a case by tracking code
+    10→ *   Request: { trackingNumber: "11111A" }
+    11→ *   Response (200): { status, trackingCode, serviceType, milestone,
+    12→ *                     lastUpdated, nextMilestone, message, completedSteps,
+    13→ *                     totalSteps, visibleMilestones[] }
+    14→ *   Response (404): { status: "not_found", message: "..." }
+    15→ *
+    16→ * Consultation Creation (from Contact page, referenced here):
+    17→ *   POST   /api/v1/consultations              — Submit a new consultation
+    18→ *
+    19→ * PostgreSQL Tables:
+    20→ *   cases — id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
+    21→ *           status (active | completed | on_hold), created_at, updated_at
+    22→ *   case_milestones — id, case_id, milestone_id, status (completed | current | pending),
+    23→ *                     visible_to_client, completed_at
+    24→ *   milestones — id, service_type_id, label, sort_order
+    25→ *   service_types — id, code, name, description
+    26→ *   customers — id, full_name, email, phone, company
+    27→ *
+    28→ * See: src/exxonim/services/consultationService.ts for full endpoint documentation.
+    29→ *
+    30→ * ═══════════════════════════════════════════════════════════════════════════
+    31→ * BACKEND TEAM (FastAPI + PostgreSQL) — INTEGRATION GUIDE
+    32→ * ═══════════════════════════════════════════════════════════════════════════
+    33→ *
+    34→ * This page implements the public-facing tracking lookup per the
+    35→ * "Exxonim Client Case Tracking System — Technical Design Report v1.0"
+    36→ *
+    37→ * ── TRACKING CODE FORMAT ──
+    38→ *   6 characters: 5 digits + 1 uppercase letter
+    39→ *   Display format: "11 11 1A" (three groups of 2, space-separated)
+    40→ *   Storage format: "11111A" (no spaces, uppercase, CHAR(6) UNIQUE)
+    41→ *   Generation: cryptographically secure random (secrets.choice)
+    42→ *   Keyspace: 2.6 million (10^5 × 26), or 2.4M if I,O excluded
+    43→ *
+    44→ * ── API CONTRACT ──
+    45→ *   Endpoint: POST /api/track
+    46→ *   (Next.js mock uses POST /api/v1/track — update when FastAPI is live)
+    47→ *
+    48→ *   Request:  { "trackingNumber": "11111A" }
+    49→ *   Response (200): { status, trackingCode, serviceType, milestone,
+    50→ *                     lastUpdated, nextMilestone, message, completedSteps,
+    51→ *                     totalSteps, visibleMilestones[] }
+    52→ *   Response (404): { status: "not_found", message: "..." }
+    53→ *
+    54→ *   SECURITY: Always return the SAME 404 shape for invalid, expired,
+    55→ *   or non-existent codes to prevent information leakage.
+    56→ *
+    57→ * ── DEMO TRACKING CODES (mock API) ──
+    58→ *   11111A — Active consultation (Company Registration, 3/6 milestones done)
+    59→ *   22222A — Completed consultation (TIN Application, all 4 milestones done)
+    60→ *   33333A — On hold consultation (Business Licensing, awaiting client documents)
+    61→ *   44444A — Active consultation (Work Permit Application, 4/7 milestones done)
+    62→ *   Any other code matching /\d{5}[A-Z]/ → "not found"
+    63→ *
+    64→ * ═══════════════════════════════════════════════════════════════════════════
+    65→ */
+    66→
+    67→import { useEffect, useState, useCallback, useRef } from "react";
+    68→import {
+    69→  Home,
+    70→  Search,
+    71→  ShieldCheck,
+    72→  Bell,
+    73→  Clock,
+    74→  UserRoundX,
+    75→  MessageCircle,
+    76→  X,
+    77→  RotateCcw,
+    78→} from "lucide-react";
+    79→import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
+    80→import { routes } from "@/exxonim/routes";
+    81→import { applyResolvedSeo, createFallbackSeo } from "@/exxonim/seo";
+    82→import { Button } from "@/exxonim/components/primitives/Button";
+    83→import { lookupTrackingCode } from "@/exxonim/services/consultationService";
+    84→import { StructuredData } from "@/exxonim/components/StructuredData";
+    85→import type {
+    86→  ApiTrackingLookupResponse,
+    87→  ApiTrackingNotFoundResponse,
+    88→  ApiTrackingMilestone,
+    89→  ApiTrackingCaseStatus,
+    90→} from "@/exxonim/types/api";
+    91→
+    92→/* ─────────────────────────────────────────────────────────
+    93→ * TRACKING CODE HELPERS
+    94→ * ───────────────────────────────────────────────────────── */
+    95→
+    96→function normalizeTrackingCode(raw: string): string {
+    97→  return raw.replace(/\s/g, "").toUpperCase();
+    98→}
+    99→
+   100→function isValidTrackingCode(code: string): boolean {
+   101→  return /^[0-9]{5}[A-Z]$/.test(code);
+   102→}
+   103→
+   104→function formatTrackingCode(code: string): string {
+   105→  if (code.length !== 6) return code;
+   106→  return `${code.slice(0, 2)} ${code.slice(2, 4)} ${code.slice(4)}`;
+   107→}
+   108→
+   109→/**
+   110→ * Formats an ISO 8601 timestamp into a human-readable date string.
+   111→ * Shows relative time for dates within the last 7 days, absolute otherwise.
+   112→ */
+   113→function formatDate(isoString: string): string {
+   114→  try {
+   115→    const d = new Date(isoString);
+   116→    const now = new Date();
+   117→    const diffMs = now.getTime() - d.getTime();
+   118→    const diffMins = Math.floor(diffMs / 60000);
+   119→    const diffHours = Math.floor(diffMs / 3600000);
+   120→    const diffDays = Math.floor(diffMs / 86400000);
+   121→
+   122→    if (diffMins < 1) return "Just now";
+   123→    if (diffMins < 60) return `${diffMins}m ago`;
+   124→    if (diffHours < 24) return `${diffHours}h ago`;
+   125→    if (diffDays < 7) return `${diffDays}d ago`;
+   126→
+   127→    return d.toLocaleDateString("en-GB", {
+   128→      day: "numeric",
+   129→      month: "short",
+   130→      year: "numeric",
+   131→    });
+   132→  } catch {
+   133→    return isoString;
+   134→  }
+   135→}
+   136→
+   137→/**
+   138→ * Returns absolute date string for tooltip display.
+   139→ */
+   140→function formatAbsoluteDate(isoString: string): string {
+   141→  try {
+   142→    const d = new Date(isoString);
+   143→    return d.toLocaleDateString("en-GB", {
+   144→      day: "numeric",
+   145→      month: "short",
+   146→      year: "numeric",
+   147→      hour: "2-digit",
+   148→      minute: "2-digit",
+   149→    });
+   150→  } catch {
+   151→    return isoString;
+   152→  }
+   153→}
+   154→
+   155→/** Returns progress bar color class based on case status. */
+   156→function getProgressBarClass(status: ApiTrackingCaseStatus): string {
+   157→  switch (status) {
+   158→    case "completed":
+   159→      return "bg-success";
+   160→    case "on_hold":
+   161→      return "bg-warning";
+   162→    case "active":
+   163→    default:
+   164→      return "bg-accent";
+   165→  }
+   166→}
+   167→
+   168→function getStatusDisplay(
+   169→  status: ApiTrackingCaseStatus
+   170→): { label: string; colorClass: string; dotClass: string } {
+   171→  switch (status) {
+   172→    case "active":
+   173→      return {
+   174→        label: "In Progress",
+   175→        colorClass: "bg-accent-soft text-accent",
+   176→        dotClass: "bg-accent",
+   177→      };
+   178→    case "completed":
+   179→      return {
+   180→        label: "Completed",
+   181→        colorClass: "bg-success-soft text-success",
+   182→        dotClass: "bg-success",
+   183→      };
+   184→    case "on_hold":
+   185→      return {
+   186→        label: "On Hold",
+   187→        colorClass: "bg-warning-soft text-warning",
+   188→        dotClass: "bg-warning",
+   189→      };
+   190→  }
+   191→}
+   192→
+   193→/* ─────────────────────────────────────────────────────────
+   194→ * DEMO CODES — env-gated
+   195→ * ───────────────────────────────────────────────────────── */
+   196→const SHOW_DEMO_HINT =
+   197→  typeof window !== "undefined" &&
+   198→  ((typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SHOW_DEMO_HINT === "true") ||
+   199→   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SHOW_DEMO_HINT === "true"));
+   200→
+   201→const DEMO_CODES = ["11111A", "22222A", "33333A", "44444A"] as const;
+   202→
+   203→/* ─────────────────────────────────────────────────────────
+   204→ * HOW IT WORKS STEPS — uses Lucide icons
+   205→ * ───────────────────────────────────────────────────────── */
+   206→const HOW_IT_WORKS_STEPS = [
+   207→  {
+   208→    icon: <Clock className="w-8 h-8" />,
+   209→    title: "Get your tracking code",
+   210→    detail:
+   211→      "Assigned automatically when you start a consultation. Sent via WhatsApp or email.",
+   212→  },
+   213→  {
+   214→    icon: <Search className="w-8 h-8" />,
+   215→    title: "Check your status",
+   216→    detail:
+   217→      "Enter your 6-character code on this page. No login, no password, no phone number needed.",
+   218→  },
+   219→  {
+   220→    icon: <Bell className="w-8 h-8" />,
+   221→    title: "Get notified automatically",
+   222→    detail:
+   223→      "Every milestone update is sent to you via WhatsApp. You don't have to keep checking.",
+   224→  },
+   225→];
+   226→
+   227→/* ─────────────────────────────────────────────────────────
+   228→ * TRACKING RESULT COMPONENT
+   229→ * ───────────────────────────────────────────────────────── */
+   230→function TrackingResultCard({
+   231→  result,
+   232→  onReset,
+   233→}: {
+   234→  result: ApiTrackingLookupResponse;
+   235→  onReset: () => void;
+   236→}) {
+   237→  const statusDisplay = getStatusDisplay(result.status);
+   238→  const hasMilestones =
+   239→    result.visibleMilestones && result.visibleMilestones.length > 0;
+   240→  const completedCount = result.completedSteps ?? 0;
+   241→  const totalCount = result.totalSteps ?? 0;
+   242→  const progressPercent =
+   243→    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+   244→
+   245→  return (
+   246→    <div className="grid gap-6">
+   247→      {/* ── Status header card ── */}
+   248→      <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
+   249→        {/* Progress bar — color matches status */}
+   250→        {totalCount > 0 && (
+   251→          <div className="h-1.5 bg-surface-soft">
+   252→            <div
+   253→              className={`h-full ${getProgressBarClass(result.status)} transition-all duration-700 ease-out rounded-r-full`}
+   254→              style={{ width: `${progressPercent}%` }}
+   255→            />
+   256→          </div>
+   257→        )}
+   258→
+   259→        <div className="p-6 md:p-8 grid gap-5">
+   260→          {/* Row 1: Tracking code + Status badge */}
+   261→          <div className="flex flex-wrap items-start justify-between gap-3">
+   262→            <div className="grid gap-1">
+   263→              <span className="text-[0.68rem] font-extrabold tracking-[0.18em] uppercase text-text-muted">
+   264→                Tracking Code
+   265→              </span>
+   266→              <span className="text-2xl md:text-3xl font-mono font-bold text-text tracking-[0.15em]">
+   267→                {result.trackingCode
+   268→                  ? formatTrackingCode(result.trackingCode)
+   269→                  : "—— —— ——"}
+   270→              </span>
+   271→            </div>
+   272→            <span
+   273→              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-extrabold ${statusDisplay.colorClass}`}
+   274→            >
+   275→              {result.status === "active" && (
+   276→                <span className="relative flex h-2 w-2">
+   277→                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+   278→                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+   279→                </span>
+   280→              )}
+   281→              {result.status !== "active" && (
+   282→                <span
+   283→                  className={`w-2 h-2 rounded-full ${statusDisplay.dotClass}`}
+   284→                />
+   285→              )}
+   286→              {statusDisplay.label}
+   287→            </span>
+   288→          </div>
+   289→
+   290→          {/* Row 2: Key details — responsive grid */}
+   291→          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y border-border-soft">
+   292→            {result.serviceType && (
+   293→              <DetailItem label="Service" value={result.serviceType} />
+   294→            )}
+   295→            <DetailItem label="Current Stage" value={result.milestone} />
+   296→            <DetailItem
+   297→              label="Last Updated"
+   298→              value={formatDate(result.lastUpdated)}
+   299→              tooltip={formatAbsoluteDate(result.lastUpdated)}
+   300→            />
+   301→            <DetailItem
+   302→              label="Next Step"
+   303→              value={result.nextMilestone ?? "—"}
+   304→            />
+   305→          </div>
+   306→
+   307→          {/* Row 3: Message (on_hold or completed) */}
+   308→          {result.message && (
+   309→            <div
+   310→              className={`grid gap-2 p-4 rounded-xl border ${
+   311→                result.status === "on_hold"
+   312→                  ? "bg-warning-soft/30 border-warning/10"
+   313→                  : result.status === "completed"
+   314→                    ? "bg-success-soft/30 border-success/10"
+   315→                    : "bg-accent-soft/40 border-accent/10"
+   316→              }`}
+   317→            >
+   318→              <span
+   319→                className={`text-[0.68rem] font-extrabold tracking-[0.16em] uppercase ${
+   320→                  result.status === "on_hold"
+   321→                    ? "text-warning"
+   322→                    : result.status === "completed"
+   323→                      ? "text-success"
+   324→                      : "text-accent"
+   325→                }`}
+   326→              >
+   327→                {result.status === "on_hold"
+   328→                  ? "Action Needed"
+   329→                  : result.status === "completed"
+   330→                    ? "Completed"
+   331→                    : "Update"}
+   332→              </span>
+   333→              <p className="m-0 text-text text-sm leading-relaxed">
+   334→                {result.message}
+   335→              </p>
+   336→            </div>
+   337→          )}
+   338→
+   339→          {/* Row 4: Progress summary */}
+   340→          {totalCount > 0 && (
+   341→            <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-text-muted">
+   342→              <span>
+   343→                {completedCount} of {totalCount} steps completed
+   344→              </span>
+   345→              <span>{progressPercent}% done</span>
+   346→            </div>
+   347→          )}
+   348→        </div>
+   349→      </div>
+   350→
+   351→      {/* ── Milestone timeline ── */}
+   352→      {hasMilestones && (
+   353→        <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8">
+   354→          <div className="flex items-center justify-between mb-6">
+   355→            <h3 className="m-0 text-lg font-semibold text-text">Timeline</h3>
+   356→            <span className="text-xs text-text-muted font-mono">
+   357→              {completedCount}/{totalCount}
+   358→            </span>
+   359→          </div>
+   360→          <div className="grid gap-0">
+   361→            {result.visibleMilestones!.map((milestone, index) => (
+   362→              <MilestoneItem
+   363→                key={milestone.label}
+   364→                milestone={milestone}
+   365→                isLast={index === result.visibleMilestones!.length - 1}
+   366→                /** Track whether the previous milestone was completed for connector style */
+   367→                prevCompleted={
+   368→                  index > 0
+   369→                    ? result.visibleMilestones![index - 1].status === "completed"
+   370→                    : false
+   371→                }
+   372→              />
+   373→            ))}
+   374→          </div>
+   375→        </div>
+   376→      )}
+   377→
+   378→      {/* ── Look up another code ── */}
+   379→      <div className="flex justify-center">
+   380→        <button
+   381→          type="button"
+   382→          onClick={onReset}
+   383→          className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors"
+   384→        >
+   385→          <RotateCcw className="w-4 h-4" />
+   386→          Look up another code
+   387→        </button>
+   388→      </div>
+   389→    </div>
+   390→  );
+   391→}
+   392→
+   393→function DetailItem({
+   394→  label,
+   395→  value,
+   396→  tooltip,
+   397→}: {
+   398→  label: string;
+   399→  value: string;
+   400→  tooltip?: string;
+   401→}) {
+   402→  return (
+   403→    <div className="grid gap-0.5">
+   404→      <span className="text-[0.68rem] font-extrabold tracking-[0.14em] uppercase text-text-muted">
+   405→        {label}
+   406→      </span>
+   407→      <span
+   408→        className="text-sm font-semibold text-text"
+   409→        title={tooltip}
+   410→      >
+   411→        {value}
+   412→      </span>
+   413→    </div>
+   414→  );
+   415→}
+   416→
+   417→function MilestoneItem({
+   418→  milestone,
+   419→  isLast,
+   420→  prevCompleted,
+   421→}: {
+   422→  milestone: ApiTrackingMilestone;
+   423→  isLast: boolean;
+   424→  prevCompleted: boolean;
+   425→}) {
+   426→  const isCompleted = milestone.status === "completed";
+   427→  const isCurrent = milestone.status === "current";
+   428→
+   429→  /** Connector between previous and current: intermediate style for "in progress" */
+   430→  function getConnectorClass(): string {
+   431→    if (isCompleted) return "bg-accent/40";
+   432→    // Connector from the last completed node to the current node
+   433→    if (isCurrent && prevCompleted) return "bg-accent/20 border-l border-dashed border-accent/30";
+   434→    return "bg-border-soft";
+   435→  }
+   436→
+   437→  return (
+   438→    <div className="flex gap-4">
+   439→      {/* Timeline column */}
+   440→      <div className="flex flex-col items-center">
+   441→        <div
+   442→          className={`w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center border-2 transition-all ${
+   443→            isCompleted
+   444→              ? "bg-accent border-accent"
+   445→              : isCurrent
+   446→                ? "bg-accent/20 border-accent"
+   447→                : "bg-surface-soft border-border-soft"
+   448→          }`}
+   449→        >
+   450→          {isCompleted && (
+   451→            <svg
+   452→              className="w-2.5 h-2.5 text-accent-contrast"
+   453→              fill="none"
+   454→              viewBox="0 0 24 24"
+   455→              stroke="currentColor"
+   456→              strokeWidth={3}
+   457→            >
+   458→              <path
+   459→                strokeLinecap="round"
+   460→                strokeLinejoin="round"
+   461→                d="M5 13l4 4L19 7"
+   462→              />
+   463→            </svg>
+   464→          )}
+   465→          {isCurrent && (
+   466→            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+   467→          )}
+   468→        </div>
+   469→        {!isLast && (
+   470→          <div
+   471→            className={`w-0.5 flex-1 min-h-[2rem] ${getConnectorClass()}`}
+   472→          />
+   473→        )}
+   474→      </div>
+   475→
+   476→      {/* Content */}
+   477→      <div className={`pb-6 ${isLast ? "pb-0" : ""}`}>
+   478→        <div className="flex flex-wrap items-center gap-2">
+   479→          <span
+   480→            className={`text-sm font-semibold ${
+   481→              isCompleted
+   482→                ? "text-text"
+   483→                : isCurrent
+   484→                  ? "text-accent"
+   485→                  : "text-text-muted"
+   486→            }`}
+   487→          >
+   488→            {milestone.label}
+   489→          </span>
+   490→          {isCurrent && (
+   491→            <span className="text-[0.62rem] font-extrabold tracking-[0.12em] uppercase px-2 py-0.5 rounded-full bg-accent-soft text-accent">
+   492→              Current
+   493→            </span>
+   494→          )}
+   495→        </div>
+   496→        {milestone.date && (
+   497→          <span
+   498→            className="text-xs mt-0.5 inline-block font-mono text-text-muted"
+   499→            title={formatAbsoluteDate(milestone.date)}
+   500→          >
+   501→            {formatDate(milestone.date)}
+   502→          </span>
+   503→        )}
+   504→      </div>
+   505→    </div>
+   506→  );
+   507→}
+   508→
+   509→/* ─────────────────────────────────────────────────────────
+   510→ * NOT FOUND COMPONENT
+   511→ *
+   512→ * SECURITY: Generic message — no format hints or pattern leakage.
+   513→ * ───────────────────────────────────────────────────────── */
+   514→function TrackingNotFound({
+   515→  code,
+   516→  onReset,
+   517→}: {
+   518→  code: string;
+   519→  onReset: () => void;
+   520→}) {
+   521→  return (
+   522→    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 text-center grid gap-4">
+   523→      <div className="w-14 h-14 rounded-full bg-surface-soft mx-auto flex items-center justify-center">
+   524→        <Search className="w-7 h-7 text-text-muted" />
+   525→      </div>
+   526→      <div className="grid gap-2">
+   527→        <h3 className="m-0 text-lg font-semibold text-text">
+   528→          No consultation found
+   529→        </h3>
+   530→        <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
+   531→          No matching consultation found. Please check your tracking code and try again.
+   532→        </p>
+   533→      </div>
+   534→      <div className="flex flex-wrap gap-3 justify-center pt-1">
+   535→        <Button
+   536→          size="standard"
+   537→          variant="primary"
+   538→          onClick={onReset}
+   539→        >
+   540→          Try Again
+   541→        </Button>
+   542→        <Button
+   543→          size="standard"
+   544→          variant="secondary"
+   545→          href={routes.contact}
+   546→        >
+   547→          Forgot Your Code?
+   548→        </Button>
+   549→      </div>
+   550→    </div>
+   551→  );
+   552→}
+   553→
+   554→/* ─────────────────────────────────────────────────────────
+   555→ * SKELETON LOADING CARD
+   556→ * ───────────────────────────────────────────────────────── */
+   557→function TrackingSkeleton() {
+   558→  return (
+   559→    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
+   560→      <div className="h-1.5 bg-surface-soft">
+   561→        <div className="h-full w-1/2 bg-accent/20 animate-shimmer rounded-r-full" />
+   562→      </div>
+   563→      <div className="p-6 md:p-8 grid gap-5">
+   564→        <div className="flex items-center justify-between gap-3">
+   565→          <div className="grid gap-2">
+   566→            <div className="h-3 w-24 rounded bg-surface-soft animate-shimmer" />
+   567→            <div className="h-8 w-40 rounded bg-surface-soft animate-shimmer" />
+   568→          </div>
+   569→          <div className="h-8 w-28 rounded-full bg-surface-soft animate-shimmer" />
+   570→        </div>
+   571→        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-border-soft">
+   572→          {Array.from({ length: 4 }).map((_, i) => (
+   573→            <div key={i} className="grid gap-2">
+   574→              <div className="h-3 w-16 rounded bg-surface-soft animate-shimmer" />
+   575→              <div className="h-4 w-24 rounded bg-surface-soft animate-shimmer" />
+   576→            </div>
+   577→          ))}
+   578→        </div>
+   579→      </div>
+   580→    </div>
+   581→  );
+   582→}
+   583→
+   584→/* ─────────────────────────────────────────────────────────
+   585→ * TRACKING CODE INPUT — auto-formatting, paste support
+   586→ *
+   587→ * UX BEHAVIOUR:
+   588→ *   User types "84" → displays "84"
+   589→ *   User types "847" → displays "84 7" (auto-space after 2nd char)
+   590→ *   User types "8472" → displays "84 72" (auto-space after 4th char)
+   591→ *   User types "11111A" → displays "11 11 1A"
+   592→ *   User pastes "11 11 1A" → normalizes to "11111A", displays "11 11 1A"
+   593→ *
+   594→ * SECURITY: No format validation messages are shown.
+   595→ * The button enables only when input length = 6 after stripping spaces.
+   596→ * ───────────────────────────────────────────────────────── */
+   597→function TrackingCodeInput({
+   598→  value,
+   599→  onChange,
+   600→  disabled,
+   601→  inputRef,
+   602→}: {
+   603→  value: string;
+   604→  onChange: (raw: string) => void;
+   605→  disabled: boolean;
+   606→  inputRef: React.RefObject<HTMLInputElement | null>;
+   607→}) {
+   608→  const displayValue = (() => {
+   609→    const raw = normalizeTrackingCode(value);
+   610→    if (raw.length <= 2) return raw;
+   611→    if (raw.length <= 4) return `${raw.slice(0, 2)} ${raw.slice(2)}`;
+   612→    return `${raw.slice(0, 2)} ${raw.slice(2, 4)} ${raw.slice(4)}`;
+   613→  })();
+   614→
+   615→  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   616→    const input = e.target.value;
+   617→    const cleaned = input.replace(/[^A-Za-z0-9\s]/g, "");
+   618→    const raw = normalizeTrackingCode(cleaned);
+   619→    const capped = raw.slice(0, 6);
+   620→    onChange(capped);
+   621→  };
+   622→
+   623→  return (
+   624→    <input
+   625→      ref={inputRef}
+   626→      id="tracking-code"
+   627→      type="text"
+   628→      value={displayValue}
+   629→      onChange={handleChange}
+   630→      placeholder="11 11 1A"
+   631→      disabled={disabled}
+   632→      autoComplete="off"
+   633→      className="w-full h-14 px-5 rounded-xl border border-border-soft bg-surface text-text text-lg font-mono tracking-[0.2em] placeholder:text-text-soft/40 placeholder:tracking-[0.15em] focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent text-center disabled:opacity-50 disabled:cursor-not-allowed"
+   634→      aria-label="Enter your 6-character tracking code"
+   635→    />
+   636→  );
+   637→}
+   638→
+   639→/* ─────────────────────────────────────────────────────────
+   640→ * MAIN PAGE COMPONENT
+   641→ * ───────────────────────────────────────────────────────── */
+   642→export function TrackConsultationPage() {
+   643→  const [rawCode, setRawCode] = useState("");
+   644→  const [lookupResult, setLookupResult] =
+   645→    useState<ApiTrackingLookupResponse | null>(null);
+   646→  const [notFound, setNotFound] = useState(false);
+   647→  const [isSearching, setIsSearching] = useState(false);
+   648→  const [searchError, setSearchError] = useState<string | null>(null);
+   649→  const resultRef = useRef<HTMLDivElement>(null);
+   650→  const inputRef = useRef<HTMLInputElement>(null);
+   651→
+   652→  // SEO
+   653→  useEffect(() => {
+   654→    applyResolvedSeo(
+   655→      createFallbackSeo(routes.trackConsultation, {
+   656→        title: "Track Your Consultation | Exxonim Consult",
+   657→        description:
+   658→          "Look up your Exxonim Consult consultation status anytime using your tracking code. No login required.",
+   659→        robots: "index,follow",
+   660→      })
+   661→    );
+   662→  }, []);
+   663→
+   664→  const scrollToResult = useCallback(() => {
+   665→    // Small delay to allow React to render the result
+   666→    requestAnimationFrame(() => {
+   667→      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+   668→    });
+   669→  }, []);
+   670→
+   671→  const handleLookup = useCallback(
+   672→    async (e: React.FormEvent) => {
+   673→      e.preventDefault();
+   674→      const normalized = normalizeTrackingCode(rawCode);
+   675→      if (!normalized) return;
+   676→
+   677→      setIsSearching(true);
+   678→      setNotFound(false);
+   679→      setLookupResult(null);
+   680→      setSearchError(null);
+   681→
+   682→      try {
+   683→        const result = await lookupTrackingCode({
+   684→          trackingNumber: normalized,
+   685→        });
+   686→
+   687→        if ("status" in result && result.status === "not_found") {
+   688→          setNotFound(true);
+   689→        } else {
+   690→          setLookupResult(result as ApiTrackingLookupResponse);
+   691→        }
+   692→        scrollToResult();
+   693→      } catch {
+   694→        setSearchError(
+   695→          "We couldn't check your tracking code right now. Please try again in a moment."
+   696→        );
+   697→      } finally {
+   698→        setIsSearching(false);
+   699→      }
+   700→    },
+   701→    [rawCode, scrollToResult]
+   702→  );
+   703→
+   704→  const handleCodeChange = useCallback((newCode: string) => {
+   705→    setRawCode(newCode);
+   706→    setLookupResult(null);
+   707→    setNotFound(false);
+   708→    setSearchError(null);
+   709→  }, []);
+   710→
+   711→  const handleReset = useCallback(() => {
+   712→    setRawCode("");
+   713→    setLookupResult(null);
+   714→    setNotFound(false);
+   715→    setSearchError(null);
+   716→    // Focus the input after state clears
+   717→    requestAnimationFrame(() => {
+   718→      inputRef.current?.focus();
+   719→    });
+   720→    // Scroll back to the input card
+   721→    inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+   722→  }, []);
+   723→
+   724→  const handleDismissError = useCallback(() => {
+   725→    setSearchError(null);
+   726→  }, []);
+   727→
+   728→  const canSearch = rawCode.length === 6;
+   729→
+   730→  /** Fill the input with a demo code */
+   731→  const handleDemoFill = useCallback(
+   732→    (code: string) => {
+   733→      setRawCode(code);
+   734→      setLookupResult(null);
+   735→      setNotFound(false);
+   736→      setSearchError(null);
+   737→      // Auto-focus after fill
+   738→      requestAnimationFrame(() => {
+   739→        inputRef.current?.focus();
+   740→      });
+   741→    },
+   742→    []
+   743→  );
+   744→
+   745→  return (
+   746→    <main>
+   747→      <StructuredData heroTitle="Track Your Consultation" heroDescription="Check the status of your consultation with Exxonim using your tracking code." breadcrumbs={[{ name: 'Track Consultation', path: routes.trackConsultation }]} />
+   748→      {/* ── Hero with tracking input (breadcrumb inside for smooth fade) ── */}
+   749→      <section className="relative overflow-hidden pb-16 md:pb-24">
+   750→        {/* Gradient background */}
+   751→        <div
+   752→          className="absolute inset-0 -z-10 opacity-70"
+   753→          style={{
+   754→            background:
+   755→              "radial-gradient(60% 50% at 80% 0%, var(--color-accent-gradient-subtle), transparent 70%), radial-gradient(40% 40% at 10% 20%, var(--color-accent-gradient-weak), transparent 70%)",
+   756→          }}
+   757→        />
+   758→        {/* Top fade: page bg → hero gradient — soft transition instead of hard line */}
+   759→        <div
+   760→          className="absolute top-0 left-0 right-0 h-24 -z-[5] pointer-events-none"
+   761→          style={{
+   762→            background:
+   763→              "linear-gradient(to bottom, var(--color-page) 0%, var(--color-page) 10%, transparent 100%)",
+   764→          }}
+   765→        />
+   766→        {/* Breadcrumb — now inside hero for seamless fade */}
+   767→        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+   768→          <Breadcrumb
+   769→            items={[
+   770→              { label: "Home", href: routes.home, icon: Home },
+   771→              { label: "Track Consultation" },
+   772→            ]}
+   773→          />
+   774→        </div>
+   775→        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+   776→          {/* Left: Text — on mobile renders AFTER the tracking card */}
+   777→          <div className="grid gap-6" style={{ order: 2 }}>
+   778→            <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
+   779→              <span className="relative flex h-2 w-2">
+   780→                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+   781→                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+   782→              </span>
+   783→              Consultation Tracking
+   784→            </p>
+   785→            <h1 className="m-0 text-[clamp(2.4rem,5vw,4.4rem)] font-semibold leading-[1.05] tracking-tight text-text">
+   786→              Never ask &ldquo;What&rsquo;s happening?&rdquo; again
+   787→            </h1>
+   788→            <p className="m-0 text-text-muted text-lg max-w-[36rem]">
+   789→              Automated updates at every milestone — delivered to your WhatsApp.
+   790→              Enter your 6-character tracking code for an instant status check.
+   791→              No login, no password, no phone number required.
+   792→            </p>
+   793→            <div className="flex flex-wrap gap-3 pt-2 show-on-lg">
+   794→              <Button
+   795→                size="standard"
+   796→                variant="primary"
+   797→                href={routes.contact}
+   798→              >
+   799→                Request a Consultation
+   800→              </Button>
+   801→              <Button
+   802→                size="standard"
+   803→                variant="secondary"
+   804→                href={routes.services}
+   805→              >
+   806→                View All Services
+   807→              </Button>
+   808→            </div>
+   809→          </div>
+   810→
+   811→          {/* Right: Tracking lookup card — on mobile renders FIRST */}
+   812→          <div className="relative" style={{ order: 1 }}>
+   813→            <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8 grid gap-5">
+   814→              <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
+   815→                Look up your consultation
+   816→              </span>
+   817→              <form onSubmit={handleLookup} className="grid gap-3">
+   818→                <label htmlFor="tracking-code" className="sr-only">
+   819→                  Tracking code
+   820→                </label>
+   821→                <TrackingCodeInput
+   822→                  value={rawCode}
+   823→                  onChange={handleCodeChange}
+   824→                  disabled={isSearching}
+   825→                  inputRef={inputRef}
+   826→                />
+   827→                {canSearch && !isSearching && (
+   828→                  <p className="text-[0.65rem] text-text-soft text-center">
+   829→                    Press Enter to check
+   830→                  </p>
+   831→                )}
+   832→                <Button
+   833→                  size="standard"
+   834→                  variant="primary"
+   835→                  type="submit"
+   836→                  className="rounded-xl w-full"
+   837→                  disabled={isSearching || !canSearch}
+   838→                  isLoading={isSearching}
+   839→                >
+   840→                  Check Status
+   841→                </Button>
+   842→              </form>
+   843→
+   844→              {/* Error state — dismissible */}
+   845→              {searchError && (
+   846→                <div
+   847→                  className="p-3 rounded-xl bg-error-soft/30 border border-error/10 text-error text-sm flex items-start justify-between gap-2"
+   848→                  role="alert"
+   849→                >
+   850→                  <span>{searchError}</span>
+   851→                  <button
+   852→                    type="button"
+   853→                    onClick={handleDismissError}
+   854→                    className="text-error/60 hover:text-error transition-colors flex-shrink-0 mt-0.5"
+   855→                    aria-label="Dismiss error"
+   856→                  >
+   857→                    <X className="w-4 h-4" />
+   858→                  </button>
+   859→                </div>
+   860→              )}
+   861→
+   862→              {/* Quick stats — meaningful, icon-led */}
+   863→              <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-soft">
+   864→                <div className="grid gap-1 items-center text-center">
+   865→                  <UserRoundX className="w-5 h-5 text-accent mx-auto" />
+   866→                  <span className="text-xs text-text-muted font-semibold">
+   867→                    No Account Needed
+   868→                  </span>
+   869→                </div>
+   870→                <div className="grid gap-1 items-center text-center">
+   871→                  <Clock className="w-5 h-5 text-accent mx-auto" />
+   872→                  <span className="text-xs text-text-muted font-semibold">
+   873→                    Instant Results
+   874→                  </span>
+   875→                </div>
+   876→                <div className="grid gap-1 items-center text-center">
+   877→                  <MessageCircle className="w-5 h-5 text-accent mx-auto" />
+   878→                  <span className="text-xs text-text-muted font-semibold">
+   879→                    WhatsApp Updates
+   880→                  </span>
+   881→                </div>
+   882→              </div>
+   883→
+   884→              {/* Demo hint — env-gated, clickable chips, no pattern text */}
+   885→              {SHOW_DEMO_HINT && (
+   886→                <div className="flex flex-wrap items-center justify-center gap-2">
+   887→                  <span className="text-[0.65rem] text-text-soft/60">Demo:</span>
+   888→                  {DEMO_CODES.map((code) => (
+   889→                    <button
+   890→                      key={code}
+   891→                      type="button"
+   892→                      onClick={() => handleDemoFill(code)}
+   893→                      className="text-[0.65rem] font-mono text-accent hover:bg-accent-soft px-1.5 py-0.5 rounded transition-colors"
+   894→                    >
+   895→                      {formatTrackingCode(code)}
+   896→                    </button>
+   897→                  ))}
+   898→                </div>
+   899→              )}
+   900→            </div>
+   901→          </div>
+   902→        </div>
+   903→        {/* Bottom fade: hero gradient → page bg — soft transition to content below */}
+   904→        <div
+   905→          className="absolute bottom-0 left-0 right-0 h-20 -z-[5] pointer-events-none"
+   906→          style={{
+   907→            background:
+   908→              "linear-gradient(to top, var(--color-page) 0%, var(--color-page) 10%, transparent 100%)",
+   909→          }}
+   910→        />
+   911→      </section>
+   912→
+   913→      {/* ── Tracking result ── */}
+   914→      <div ref={resultRef}>
+   915→        {isSearching && (
+   916→          <section className="pb-16 md:pb-20">
+   917→            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+   918→              <TrackingSkeleton />
+   919→            </div>
+   920→          </section>
+   921→        )}
+   922→
+   923→        {!isSearching && (lookupResult || notFound) && (
+   924→          <section className="pb-16 md:pb-20">
+   925→            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+   926→              {lookupResult && (
+   927→                <TrackingResultCard
+   928→                  result={lookupResult}
+   929→                  onReset={handleReset}
+   930→                />
+   931→              )}
+   932→              {notFound && (
+   933→                <TrackingNotFound
+   934→                  code={rawCode}
+   935→                  onReset={handleReset}
+   936→                />
+   937→              )}
+   938→            </div>
+   939→          </section>
+   940→        )}
+   941→      </div>
+   942→
+   943→      {/* ── How it works ── */}
+   944→      <section className="py-16 md:py-20">
+   945→        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid gap-10">
+   946→          <div className="grid gap-3 max-w-[42rem]">
+   947→            <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
+   948→              How it works
+   949→            </span>
+   950→            <h2 className="m-0 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold tracking-tight text-text">
+   951→              Proactive updates — not a dashboard
+   952→            </h2>
+   953→          </div>
+   954→          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+   955→            {HOW_IT_WORKS_STEPS.map((step, i) => (
+   956→              <article
+   957→                key={i}
+   958→                className="group relative p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated transition-all hover:-translate-y-1 hover:border-accent/40 grid gap-3"
+   959→              >
+   960→                <span className="inline-flex items-center gap-2.5">
+   961→                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold">{i + 1}</span>
+   962→                  <span className="text-accent">{step.icon}</span>
+   963→                </span>
+   964→                <strong className="text-text text-base">{step.title}</strong>
+   965→                <p className="m-0 text-text-muted text-sm leading-relaxed">
+   966→                  {step.detail}
+   967→                </p>
+   968→              </article>
+   969→            ))}
+   970→          </div>
+   971→        </div>
+   972→      </section>
+   973→
+   974→      {/* ── Security & privacy ── */}
+   975→      <section className="py-16 md:py-20">
+   976→        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid lg:grid-cols-2 gap-12 items-center">
+   977→          <div className="grid gap-6">
+   978→            <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
+   979→              Security &amp; privacy
+   980→            </span>
+   981→            <h2 className="m-0 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold tracking-tight text-text">
+   982→              Your code is all you need
+   983→            </h2>
+   984→            <p className="m-0 text-text-muted max-w-[36rem]">
+   985→              No account, no password, no phone number needed.
+   986→              Your 6-character tracking code is private and secure —
+   987→              only you can look up your consultation.
+   988→            </p>
+   989→            <div className="grid gap-3">
+   990→              <SecurityPoint
+   991→                icon={<ShieldCheck className="w-5 h-5" />}
+   992→                title="No account or password needed"
+   993→                description="Your tracking code is the only key. Over 2.4 million possible combinations — secure by design."
+   994→              />
+   995→              <SecurityPoint
+   996→                icon={<ShieldCheck className="w-5 h-5" />}
+   997→                title="Private and rate-limited"
+   998→                description="Lookups are rate-limited to prevent guessing. Invalid and non-existent codes all return the same response."
+   999→              />
+  1000→            </div>
+  1001→          </div>
+  1002→
+  1003→          {/* Visual — hidden on mobile, shown on lg+ */}
+  1004→          <div className="relative w-full max-w-[28rem] mx-auto aspect-[4/3] items-center justify-center hidden lg:flex">
+  1005→            <div className="absolute inset-0 flex items-center justify-center">
+  1006→              <div className="w-[70%] h-[70%] rounded-full border border-accent/10" />
+  1007→            </div>
+  1008→            <div className="absolute inset-0 flex items-center justify-center">
+  1009→              <div className="w-[45%] h-[45%] rounded-full border border-accent/20" />
+  1010→            </div>
+  1011→            <div className="relative flex items-center justify-center">
+  1012→              <span className="absolute w-16 h-16 rounded-full bg-accent/10 animate-ping" />
+  1013→              <span className="relative w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+  1014→                <ShieldCheck className="w-5 h-5 text-accent-contrast" />
+  1015→              </span>
+  1016→            </div>
+  1017→            <div className="absolute top-[18%] right-[22%]">
+  1018→              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-elevated/80 border border-accent/20 text-[0.65rem] font-bold text-accent backdrop-blur">
+  1019→                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+  1020→                Secure Lookup
+  1021→              </span>
+  1022→            </div>
+  1023→            <div className="absolute bottom-[22%] left-[12%]">
+  1024→              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-elevated/80 border border-border-soft text-[0.65rem] font-bold text-text-muted backdrop-blur">
+  1025→                <span className="w-1.5 h-1.5 rounded-full bg-border-soft" />
+  1026→                Rate Limited
+  1027→              </span>
+  1028→            </div>
+  1029→          </div>
+  1030→        </div>
+  1031→      </section>
+  1032→
+  1033→      {/* ── Lost your code? ── */}
+  1034→      <section className="py-12 md:py-16">
+  1035→        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+  1036→          <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 max-w-[42rem] mx-auto text-center grid gap-4">
+  1037→            <h3 className="m-0 text-lg font-semibold text-text">
+  1038→              Lost your tracking code?
+  1039→            </h3>
+  1040→            <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
+  1041→              Check your WhatsApp messages — we send your code when your
+  1042→              consultation is created. You can also contact us and we&apos;ll
+  1043→              look it up for you.
+  1044→            </p>
+  1045→            <div className="flex flex-wrap gap-3 justify-center">
+  1046→              <Button size="standard" variant="primary" href={routes.contact}>
+  1047→                Contact Us
+  1048→              </Button>
+  1049→              <Button size="standard" variant="outline" href={routes.support}>
+  1050→                Support Centre
+  1051→              </Button>
+  1052→            </div>
+  1053→          </div>
+  1054→        </div>
+  1055→      </section>
+  1056→    </main>
+  1057→  );
+  1058→}
+  1059→
+  1060→function SecurityPoint({
+  1061→  icon,
+  1062→  title,
+  1063→  description,
+  1064→}: {
+  1065→  icon: React.ReactNode;
+  1066→  title: string;
+  1067→  description: string;
+  1068→}) {
+  1069→  return (
+  1070→    <div className="flex gap-3 items-start">
+  1071→      <span className="text-accent mt-0.5">{icon}</span>
+  1072→      <div className="grid gap-0.5">
+  1073→        <strong className="text-text text-sm">{title}</strong>
+  1074→        <p className="m-0 text-text-muted text-xs leading-relaxed">
+  1075→          {description}
+  1076→        </p>
+  1077→      </div>
+  1078→    </div>
+  1079→  );
+  1080→}
+  1081→
