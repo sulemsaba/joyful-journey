@@ -64,9 +64,9 @@ function SocialIconLink({ platform, url }: { platform: string; url: string }) {
       target="_blank"
       rel="noreferrer noopener"
       aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
-      className="inline-flex items-center justify-center w-8 h-8 rounded-full text-footer-text-muted hover:text-footer-heading transition-colors duration-200"
+      className="inline-flex items-center justify-center text-footer-text-muted hover:text-footer-heading transition-colors duration-200"
     >
-      <span className="w-4 h-4 flex items-center justify-center">{renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}</span>
+      <span className="w-[1.125rem] h-[1.125rem] flex items-center justify-center">{renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}</span>
     </a>
   );
 }
@@ -112,21 +112,24 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       id="site-footer"
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
-      <Container className="py-8 pb-6 md:py-14">
+      <Container className="py-8 pb-16 md:py-14 md:pb-10">
         {/* ═══════════════════════════════════════════════════════
          * MOBILE: Compact Mobbin-style layout
-         * - Brand row (logo + tagline + tiny social icons)
+         * - Logo → tagline below → social icons below
          * - 2-column link grid (Navigation | Resources)
-         * - Compact contact (no icons, inline)
-         * - Inline bottom bar
+         * - Compact contact
+         * - Bottom bar: copyright + legal + designed-by
+         *
+         * pb-16 on mobile gives clearance for the floating
+         * WhatsApp button (fixed bottom-6, 56px tall)
          * ═══════════════════════════════════════════════════════ */}
-        <div className="md:hidden grid gap-6">
-          {/* Row 1: Brand + socials */}
-          <div className="flex items-center gap-3">
+        <div className="md:hidden grid gap-5">
+          {/* Row 1: Brand — logo, then tagline below, then social icons below */}
+          <section className="grid gap-2.5">
             <a
               href={routes.home}
               aria-label={`${brand.name} home`}
-              className="inline-flex items-center shrink-0"
+              className="inline-flex items-center"
             >
               <img
                 src={brand.darkLogoSrc}
@@ -143,10 +146,18 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                 className="block h-7 w-auto"
               />
             </a>
-            <span className="text-footer-text-muted text-xs leading-tight italic opacity-70" style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}>
+            <p
+              className="text-footer-text-muted text-xs leading-relaxed italic"
+              style={{ fontFamily: "'Georgia', 'Times New Roman', 'Palatino', serif" }}
+            >
               Where Innovation Meets Efficiency
-            </span>
-          </div>
+            </p>
+            <div className="flex items-center gap-3">
+              {activeSocials.map((s) => (
+                <SocialIconLink key={s.platform} platform={s.platform} url={s.url} />
+              ))}
+            </div>
+          </section>
 
           {/* Row 2: 2-column link grid */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-0.5 text-sm">
@@ -183,20 +194,28 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </div>
           </div>
 
-          {/* Row 4: Bottom bar — copyright + social + legal inline */}
-          <div className="flex items-center justify-between pt-4 border-t border-footer-border">
-            <p className="text-footer-text-muted text-xs">
-              © {currentYear} Exxonim
+          {/* Row 4: Bottom bar */}
+          <div className="pt-4 border-t border-footer-border grid gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-footer-text-muted text-xs">
+                © {currentYear} Exxonim
+              </p>
+              <div className="flex items-center gap-2 text-xs text-footer-text-muted">
+                <a href={routes.privacy} className="hover:text-footer-heading transition-colors duration-200">Privacy</a>
+                <a href={routes.terms} className="hover:text-footer-heading transition-colors duration-200">Terms</a>
+              </div>
+            </div>
+            <p className="text-footer-text-muted text-[0.65rem]">
+              Designed &amp; Built by{' '}
+              <a
+                href="https://exxonim.tz"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-footer-text hover:text-footer-heading transition-colors duration-200"
+              >
+                exxonim.tz
+              </a>
             </p>
-            <div className="flex items-center gap-2">
-              {activeSocials.map((s) => (
-                <SocialIconLink key={s.platform} platform={s.platform} url={s.url} />
-              ))}
-            </div>
-            <div className="flex items-center gap-2 text-xs text-footer-text-muted">
-              <a href={routes.privacy} className="hover:text-footer-heading transition-colors duration-200">Privacy</a>
-              <a href={routes.terms} className="hover:text-footer-heading transition-colors duration-200">Terms</a>
-            </div>
           </div>
         </div>
 
