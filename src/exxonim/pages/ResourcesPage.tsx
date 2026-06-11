@@ -214,7 +214,6 @@ function renderGridCard(post: BlogPost) {
   const articleLink = resourceArticlePath(post.slug);
   const metaParts = [formatBlogDate(post.publishedAt)];
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
-  if (categoryLabel) metaParts.push(categoryLabel);
 
   return (
     <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[24px] border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong">

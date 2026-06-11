@@ -185,7 +185,6 @@ export function InsightsSection({
               const categoryLabel = post.category?.label;
               const metaParts = [formatBlogDate(post.publishedAt)];
               if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
-              if (categoryLabel) metaParts.push(categoryLabel);
 
               return (
                 <article
