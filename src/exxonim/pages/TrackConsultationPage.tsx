@@ -744,18 +744,9 @@ export function TrackConsultationPage() {
   return (
     <main>
       <StructuredData heroTitle="Track Your Consultation" heroDescription="Check the status of your consultation with Exxonim using your tracking code." breadcrumbs={[{ name: 'Track Consultation', path: routes.trackConsultation }]} />
-      {/* ── Breadcrumb ── */}
-      <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Breadcrumb
-          items={[
-            { label: "Home", href: routes.home, icon: Home },
-            { label: "Track Consultation" },
-          ]}
-        />
-      </div>
-
-      {/* ── Hero with tracking input ── */}
+      {/* ── Hero with tracking input (breadcrumb inside for smooth fade) ── */}
       <section className="relative overflow-hidden pb-16 md:pb-24">
+        {/* Gradient background */}
         <div
           className="absolute inset-0 -z-10 opacity-70"
           style={{
@@ -763,6 +754,23 @@ export function TrackConsultationPage() {
               "radial-gradient(60% 50% at 80% 0%, var(--color-accent-gradient-subtle), transparent 70%), radial-gradient(40% 40% at 10% 20%, var(--color-accent-gradient-weak), transparent 70%)",
           }}
         />
+        {/* Top fade: page bg → hero gradient — soft transition instead of hard line */}
+        <div
+          className="absolute top-0 left-0 right-0 h-24 -z-[5] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to bottom, var(--color-page) 0%, var(--color-page) 10%, transparent 100%)",
+          }}
+        />
+        {/* Breadcrumb — now inside hero for seamless fade */}
+        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: routes.home, icon: Home },
+              { label: "Track Consultation" },
+            ]}
+          />
+        </div>
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           {/* Left: Text — on mobile renders AFTER the tracking card */}
           <div className="grid gap-6" style={{ order: 2 }}>
@@ -891,6 +899,14 @@ export function TrackConsultationPage() {
             </div>
           </div>
         </div>
+        {/* Bottom fade: hero gradient → page bg — soft transition to content below */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-20 -z-[5] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, var(--color-page) 0%, var(--color-page) 10%, transparent 100%)",
+          }}
+        />
       </section>
 
       {/* ── Tracking result ── */}
