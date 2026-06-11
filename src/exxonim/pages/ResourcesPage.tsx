@@ -150,18 +150,7 @@ function Tag({ label }: { label: string }) {
   );
 }
 
-function MediaOverlay({ category, label }: { category?: string; label: string }) {
-  return (
-    <div className="absolute inset-x-4 bottom-4 z-[2] grid gap-1.5 text-accent-contrast/90">
-      {category ? (
-        <span className="text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
-          {category}
-        </span>
-      ) : null}
-      <strong className="text-sm font-bold leading-snug">{label}</strong>
-    </div>
-  );
-}
+
 
 function renderCardMedia(post: BlogPost, categoryLabel?: string) {
   if (post.coverImageSrc) {
@@ -174,7 +163,6 @@ function renderCardMedia(post: BlogPost, categoryLabel?: string) {
           alt={post.coverAlt ?? post.title}
           loading="lazy"
         />
-        <MediaOverlay category={categoryLabel} label={post.mediaLabel || post.title} />
       </>
     );
   }
@@ -182,7 +170,7 @@ function renderCardMedia(post: BlogPost, categoryLabel?: string) {
   return (
     <>
       {categoryLabel ? <Tag label={categoryLabel} /> : null}
-      <div className="relative flex h-full w-full items-end p-5 bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
+      <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
         <span
           aria-hidden="true"
           className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-accent-contrast/20 bg-accent-contrast/30 text-lg font-bold tracking-tight text-accent-contrast/90"
@@ -191,16 +179,6 @@ function renderCardMedia(post: BlogPost, categoryLabel?: string) {
         </span>
         <span aria-hidden="true" className="absolute left-5 top-16 h-3.5 w-24 rounded-full bg-accent-contrast/15" />
         <span aria-hidden="true" className="absolute left-5 top-[84px] h-3.5 w-16 rounded-full bg-accent-contrast/15" />
-        <div className="relative z-[1] grid max-w-[70%] gap-2 text-accent-contrast/90">
-          {categoryLabel ? (
-            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
-              {categoryLabel}
-            </span>
-          ) : null}
-          <strong className="text-sm font-bold leading-snug">
-            {post.mediaLabel || post.title}
-          </strong>
-        </div>
       </div>
     </>
   );

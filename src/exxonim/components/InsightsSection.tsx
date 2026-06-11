@@ -83,18 +83,7 @@ function Tag({ label }: { label: string }) {
   );
 }
 
-function MediaOverlay({ category, label }: { category?: string; label: string }) {
-  return (
-    <div className="absolute inset-x-[14px] bottom-[14px] z-[2] grid gap-1.5 text-accent-contrast/90">
-      {category ? (
-        <span className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
-          {category}
-        </span>
-      ) : null}
-      <strong className="text-sm font-bold leading-snug">{label}</strong>
-    </div>
-  );
-}
+
 
 function renderMedia(post: BlogPost, categoryLabel?: string) {
   if (post.coverImageSrc) {
@@ -109,7 +98,6 @@ function renderMedia(post: BlogPost, categoryLabel?: string) {
           height={225}
           loading="lazy"
         />
-        <MediaOverlay category={categoryLabel} label={post.mediaLabel || post.title} />
       </>
     );
   }
@@ -117,7 +105,7 @@ function renderMedia(post: BlogPost, categoryLabel?: string) {
   return (
     <>
       {categoryLabel ? <Tag label={categoryLabel} /> : null}
-      <div className="relative flex h-full w-full items-end p-5 bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
+      <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
         <span
           aria-hidden="true"
           className="absolute right-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-contrast/20 bg-accent-contrast/30 text-xl font-bold tracking-tight text-accent-contrast/90"
@@ -132,16 +120,6 @@ function renderMedia(post: BlogPost, categoryLabel?: string) {
           aria-hidden="true"
           className="absolute left-5 top-[88px] h-4 w-20 rounded-full bg-accent-contrast/15"
         />
-        <div className="relative z-[1] grid max-w-[70%] gap-2 text-accent-contrast/90">
-          {categoryLabel ? (
-            <span className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-contrast/75">
-              {categoryLabel}
-            </span>
-          ) : null}
-          <strong className="text-sm font-bold leading-snug">
-            {post.mediaLabel || post.title}
-          </strong>
-        </div>
       </div>
     </>
   );
@@ -201,7 +179,7 @@ export function InsightsSection({
         <div className="full-bleed overflow-x-clip" data-reveal>
           <div
             ref={railRef}
-            className="flex gap-5 overflow-x-auto px-[clamp(24px,5vw,48px)] py-2 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [overscroll-behavior-x:contain] [&::-webkit-scrollbar]:hidden xl:justify-center"
+            className="flex gap-5 overflow-x-auto pl-[clamp(24px,5vw,48px)] pr-[clamp(24px,5vw,48px)] py-2 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [scroll-padding-left:clamp(24px,5vw,48px)] [overscroll-behavior-x:contain] [&::-webkit-scrollbar]:hidden xl:justify-center xl:px-0"
           >
             {posts.map((post) => {
               const categoryLabel = post.category?.label;
@@ -271,8 +249,8 @@ export function InsightsSection({
         </div>
 
         {/* ── Section footer ── */}
-        <div className="flex flex-wrap items-center justify-between gap-4 max-sm:flex-col max-sm:items-start" data-reveal>
-          <p className="m-0 text-sm leading-relaxed text-text-soft">
+        <div className="flex items-center justify-between gap-3" data-reveal>
+          <p className="m-0 text-sm leading-relaxed text-text-soft max-sm:hidden">
             {content.footer_copy}
           </p>
           <div className="inline-flex items-center gap-3">

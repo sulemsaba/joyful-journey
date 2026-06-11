@@ -101,3 +101,24 @@ Stage Summary:
 - CoverAlt text "Business professional reviewing company registration documents at a modern desk" removed from blog card
 - Tag badge redesigned with solid bg-accent (#0f5c63 teal) background + text-accent-contrast text + shadow-sm — visible on all card images
 - Both InsightsSection and ResourcesPage Tag components updated consistently
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Fix blog cards mobile UX - compact footer, fix left margin, remove redundant image overlay text
+
+Work Log:
+- InsightsSection.tsx: Removed MediaOverlay component and all its usages - category + mediaLabel text no longer overlays on card images (was redundant since same info shows below image)
+- InsightsSection.tsx: Removed text overlay from no-image placeholder card (simplified to center-aligned decorative pattern)
+- InsightsSection.tsx: Compacted section footer on mobile - footer_copy paragraph now hidden with `max-sm:hidden`, only arrows + "See more" button on mobile
+- InsightsSection.tsx: Fixed first card glued to left edge - added `scroll-padding-left` to rail so scroll-snap respects left padding, changed `px-[clamp()]` to separate `pl-` and `pr-` with `xl:px-0` for desktop centering
+- ResourcesPage.tsx: Same MediaOverlay removal and no-image placeholder cleanup for consistency
+- Verified mobile (390px): first card has visible margin from edge, footer is compact single row, images clean with only tag badge
+- Verified desktop (1440px): footer text visible, images clean with only tag badge
+- Lint passes clean
+
+Stage Summary:
+- Blog card images are now clean - only the tag badge (e.g. "BUSINESS SETUP") in top-left, no text overlay
+- Mobile footer is compact - just arrows + "See more" (paragraph hidden on small screens)
+- First card no longer glued to left edge - scroll-padding-left ensures visible margin
+- Both homepage InsightsSection and ResourcesPage updated consistently
