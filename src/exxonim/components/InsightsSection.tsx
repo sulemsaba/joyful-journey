@@ -77,7 +77,7 @@ interface InsightsSectionProps {
 
 function Tag({ label }: { label: string }) {
   return (
-    <span className="absolute left-[14px] top-[14px] z-[2] inline-flex min-h-[28px] items-center rounded-full border border-accent-contrast/20 bg-accent-contrast/30 px-3 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-contrast/90">
+    <span className="absolute left-[14px] top-[14px] z-[2] inline-flex min-h-[28px] items-center rounded-full bg-accent px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-contrast shadow-sm">
       {label}
     </span>
   );

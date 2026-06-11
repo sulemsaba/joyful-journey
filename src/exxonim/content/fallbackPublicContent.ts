@@ -1004,7 +1004,7 @@ export const fallbackBlogPosts: BlogPost[] = [
       bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
     },
     coverImageSrc: blogCoverRegistration,
-    coverAlt: "Business professional reviewing company registration documents at a modern desk",
+    coverAlt: undefined,
     mediaLabel: "Company registration basics",
     featuredSlot: "hero",
     featuredOnHome: true,

@@ -83,3 +83,21 @@ Stage Summary:
 - Framer Motion entry animations (slide from left/right)
 - Video-ready: renders <video> when source available, placeholder when not
 - All theme tokens, responsive, accessible
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Remove coverAlt text from blog card and make tag badge visible on all bg colors
+
+Work Log:
+- Read InsightsSection.tsx and ResourcesPage.tsx Tag components
+- Removed `coverAlt: "Business professional reviewing company registration documents at a modern desk"` from fallbackPublicContent.ts, set to `undefined` so alt falls back to post title
+- Updated Tag component in InsightsSection.tsx: changed from `border border-accent-contrast/20 bg-accent-contrast/30 text-accent-contrast/90` to solid `bg-accent text-accent-contrast shadow-sm` for high visibility on any background
+- Updated Tag component in ResourcesPage.tsx: same change from semi-transparent to solid accent background
+- Verified with VLM: tags are clearly visible and readable in both light and dark modes
+- Lint passes clean
+
+Stage Summary:
+- CoverAlt text "Business professional reviewing company registration documents at a modern desk" removed from blog card
+- Tag badge redesigned with solid bg-accent (#0f5c63 teal) background + text-accent-contrast text + shadow-sm — visible on all card images
+- Both InsightsSection and ResourcesPage Tag components updated consistently

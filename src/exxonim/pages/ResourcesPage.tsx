@@ -144,7 +144,7 @@ const RESOURCE_CARDS = [
 
 function Tag({ label }: { label: string }) {
   return (
-    <span className="absolute left-4 top-4 z-[2] inline-flex min-h-[28px] items-center rounded-full border border-accent-contrast/20 bg-accent-contrast/40 px-3 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-contrast/90">
+    <span className="absolute left-4 top-4 z-[2] inline-flex min-h-[28px] items-center rounded-full bg-accent px-3.5 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-contrast shadow-sm">
       {label}
     </span>
   );
