@@ -194,7 +194,8 @@ function getStatusDisplay(
  * ───────────────────────────────────────────────────────── */
 const SHOW_DEMO_HINT =
   typeof window !== "undefined" &&
-  process.env.NEXT_PUBLIC_SHOW_DEMO_HINT === "true";
+  typeof process !== "undefined" &&
+  process.env?.NEXT_PUBLIC_SHOW_DEMO_HINT === "true";
 
 const DEMO_CODES = ["84729A", "53107B", "46283C"] as const;
 
@@ -763,8 +764,8 @@ export function TrackConsultationPage() {
           }}
         />
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
-          {/* Left: Text */}
-          <div className="grid gap-6">
+          {/* Left: Text — on mobile renders AFTER the tracking card */}
+          <div className="grid gap-6" style={{ order: 2 }}>
             <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
@@ -780,7 +781,7 @@ export function TrackConsultationPage() {
               Enter your 6-character tracking code for an instant status check.
               No login, no password, no phone number required.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 pt-2 show-on-lg">
               <Button
                 size="standard"
                 variant="primary"
@@ -798,9 +799,9 @@ export function TrackConsultationPage() {
             </div>
           </div>
 
-          {/* Right: Tracking lookup card */}
-          <div className="relative">
-            <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-8 grid gap-5">
+          {/* Right: Tracking lookup card — on mobile renders FIRST */}
+          <div className="relative" style={{ order: 1 }}>
+            <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8 grid gap-5">
               <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
                 Look up your consultation
               </span>
@@ -920,24 +921,10 @@ export function TrackConsultationPage() {
             </div>
           </section>
         )}
-
-        {/* ── Empty state placeholder ── */}
-        {!isSearching && !lookupResult && !notFound && (
-          <section className="pb-16 md:pb-20">
-            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
-              <div className="rounded-[1.35rem] border border-dashed border-border-soft bg-surface-elevated/40 p-8 text-center">
-                <Search className="w-8 h-8 text-text-soft/30 mx-auto mb-3" />
-                <p className="m-0 text-text-soft text-sm">
-                  Your tracking result will appear here
-                </p>
-              </div>
-            </div>
-          </section>
-        )}
       </div>
 
       {/* ── How it works ── */}
-      <section className="py-16 md:py-20 bg-surface-soft/40">
+      <section className="py-16 md:py-20">
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid gap-10">
           <div className="grid gap-3 max-w-[42rem]">
             <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
@@ -953,7 +940,10 @@ export function TrackConsultationPage() {
                 key={i}
                 className="group relative p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated transition-all hover:-translate-y-1 hover:border-accent/40 grid gap-3"
               >
-                <span className="text-accent">{step.icon}</span>
+                <span className="inline-flex items-center gap-2.5">
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold">{i + 1}</span>
+                  <span className="text-accent">{step.icon}</span>
+                </span>
                 <strong className="text-text text-base">{step.title}</strong>
                 <p className="m-0 text-text-muted text-sm leading-relaxed">
                   {step.detail}
@@ -998,8 +988,8 @@ export function TrackConsultationPage() {
             </div>
           </div>
 
-          {/* Visual */}
-          <div className="relative w-full max-w-[28rem] mx-auto aspect-[4/3] flex items-center justify-center">
+          {/* Visual — hidden on mobile, shown on lg+ */}
+          <div className="relative w-full max-w-[28rem] mx-auto aspect-[4/3] items-center justify-center hidden lg:flex">
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-[70%] h-[70%] rounded-full border border-accent/10" />
             </div>
@@ -1028,9 +1018,9 @@ export function TrackConsultationPage() {
         </div>
       </section>
 
-      {/* ── Lost your code? ── */}
-      <section className="py-12 md:py-16 bg-surface-soft/40">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+      {/* ── Lost your code? + CTA combined ── */}
+      <section className="py-12 md:py-16">
+        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid gap-6">
           <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 max-w-[42rem] mx-auto text-center grid gap-4">
             <h3 className="m-0 text-lg font-semibold text-text">
               Lost your tracking code?
@@ -1049,27 +1039,22 @@ export function TrackConsultationPage() {
               </Button>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="pb-20">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+          {/* CTA — compact, no duplicate buttons from hero */}
           <div
-            className="relative overflow-hidden rounded-[2rem] p-10 md:p-14 grid gap-6 text-center border border-border-soft"
+            className="relative overflow-hidden rounded-[2rem] p-8 md:p-12 grid gap-5 text-center border border-border-soft max-w-[52rem] mx-auto"
             style={{
               background:
                 "radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-medium), transparent 70%), var(--color-surface)",
             }}
           >
-            <h2 className="m-0 text-[clamp(1.6rem,3vw,2.4rem)] font-semibold tracking-tight text-text max-w-[36rem] mx-auto">
+            <h2 className="m-0 text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-tight text-text max-w-[36rem] mx-auto">
               Ready to experience proactive consulting?
             </h2>
-            <p className="m-0 text-text-muted max-w-[34rem] mx-auto">
+            <p className="m-0 text-text-muted text-sm max-w-[34rem] mx-auto">
               Contact Exxonim and receive a tracking code that keeps you
               informed at every step.
             </p>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center hide-on-lg">
               <Button
                 size="standard"
                 variant="primary"
@@ -1082,7 +1067,7 @@ export function TrackConsultationPage() {
                 variant="secondary"
                 href={routes.services}
               >
-                Explore All Services
+                View All Services
               </Button>
             </div>
           </div>

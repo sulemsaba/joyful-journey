@@ -905,3 +905,21 @@ html[data-theme="dark"] select[class*="appearance-none"] {
 html[data-theme="dark"] ::selection {
   background: rgba(127, 188, 193, 0.25);
 }
+
+/* ── Responsive visibility utilities ── */
+.show-on-lg {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .show-on-lg {
+    display: flex;
+  }
+}
+.hide-on-lg {
+  display: flex;
+}
+@media (min-width: 1024px) {
+  .hide-on-lg {
+    display: none;
+  }
+}
