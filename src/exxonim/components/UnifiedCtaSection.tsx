@@ -38,10 +38,10 @@ export function UnifiedCtaSection({
   className,
 }: UnifiedCtaSectionProps) {
   return (
-    <section aria-label={ariaLabel} className={`py-12 md:py-16 ${className ?? ''}`}>
+    <section aria-label={ariaLabel} className={`py-8 sm:py-12 md:py-16 ${className ?? ''}`}>
       <Container>
         <div
-          className="relative overflow-hidden border border-border-soft rounded-2xl p-5 sm:p-8 md:p-12 text-center"
+          className="relative overflow-hidden border border-border-soft rounded-2xl p-5 sm:p-8 md:p-10 text-center max-w-[42rem] mx-auto"
           style={{
             background:
               'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
@@ -58,20 +58,20 @@ export function UnifiedCtaSection({
 
           {/* Heading */}
           <h2
-            className={`${eyebrow ? 'mt-3' : ''} text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text`}
+            className={`${eyebrow ? 'mt-2 sm:mt-3' : ''} text-[clamp(1.25rem,4vw,2rem)] font-semibold leading-tight tracking-tight text-text`}
           >
             {heading}
           </h2>
 
           {/* Description */}
           {description && (
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-text-muted">
+            <p className="mx-auto mt-2 sm:mt-3 max-w-md text-xs sm:text-sm leading-relaxed text-text-muted">
               {description}
             </p>
           )}
 
           {/* Action area */}
-          <div className="mt-6">{children}</div>
+          <div className="mt-4 sm:mt-6">{children}</div>
         </div>
       </Container>
     </section>
