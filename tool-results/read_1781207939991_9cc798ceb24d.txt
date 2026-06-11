@@ -1,0 +1,502 @@
+     1→     1→/**
+     2→     2→ * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE:
+     3→     3→ * ────────────────────────────────────────────
+     4→     4→ * Page Content (via usePage hook → pageService):
+     5→     5→ *   GET    /api/v1/pages/contact              — Get contact page content (public)
+     6→     6→ *
+     7→     7→ * Consultation Submission (via submitPublicConsultation → consultationService):
+     8→     8→ *   POST   /api/v1/consultations              — Submit a new public consultation
+     9→     9→ *   Request: { full_name: str, email: str, phone: str | None, company: str | None,
+    10→    10→ *             service_type_code: str, message: str, idempotency_key: str,
+    11→    11→ *             source_channel: str }
+    12→    12→ *   Response: { tracking_id: str, status: str, message: str }
+    13→    13→ *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "84729A")
+    14→    14→ *
+    15→    15→ * Shell Data (via usePublicShell hook → siteSettingsService):
+    16→    16→ *   GET    /api/v1/site-settings/brand        — Brand assets
+    17→    17→ *   GET    /api/v1/site-settings/footer        — Footer content
+    18→    18→ *   GET    /api/v1/site-settings/company_info  — Company info (emails, phones, whatsapp, address)
+    19→    19→ *
+    20→    20→ * SEO (via useResolvedPageSeo hook → siteSettingsService):
+    21→    21→ *   GET    /api/v1/site-settings/seo_defaults  — SEO default settings
+    22→    22→ *
+    23→    23→ * PostgreSQL Tables:
+    24→    24→ *   pages — id, slug, content (JSONB)
+    25→    25→ *   cases — id, tracking_code, customer_id, service_type_id, status
+    26→    26→ *   case_milestones — id, case_id, milestone_id, status, visible_to_client
+    27→    27→ *   site_settings — id, key, value (JSONB)
+    28→    28→ *
+    29→    29→ * See service files for full endpoint documentation:
+    30→    30→ *   src/exxonim/services/pageService.ts
+    31→    31→ *   src/exxonim/services/consultationService.ts
+    32→    32→ *   src/exxonim/services/siteSettingsService.ts
+    33→    33→ */
+    34→    34→
+    35→    35→import { useMutation } from "@tanstack/react-query";
+    36→    36→import { Home } from "lucide-react";
+    37→    37→import { useState, type FormEvent } from "react";
+    38→    38→import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
+    39→    39→import { Button } from "@/exxonim/components/primitives/Button";
+    40→    40→import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
+    41→    41→import { usePage } from "@/exxonim/hooks/usePage";
+    42→    42→import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
+    43→    43→import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
+    44→    44→import { routes } from "@/exxonim/routes";
+    45→    45→import { submitPublicConsultation } from "@/exxonim/services/consultationService";
+    46→    46→import type {
+    47→    47→  ApiPublicConsultationSubmissionResponse,
+    48→    48→} from "@/exxonim/types/api";
+    49→    49→import type { ContactPageContent } from "@/exxonim/types";
+    50→    50→import { StructuredData } from "@/exxonim/components/StructuredData";
+    51→    51→
+    52→    52→/* ────────────────────────────────────────────
+    53→    53→   Form helpers
+    54→    54→   ──────────────────────────────────────────── */
+    55→    55→
+    56→    56→const SERVICE_OPTIONS = [
+    57→    57→  { label: "General consultation", value: "general_consultation" },
+    58→    58→  { label: "Registration support", value: "registration" },
+    59→    59→  { label: "Licensing support", value: "licensing" },
+    60→    60→  { label: "Tax returns", value: "tax_returns" },
+    61→    61→  { label: "Compliance support", value: "compliance" },
+    62→    62→] as const;
+    63→    63→
+    64→    64→function createSubmissionKey() {
+    65→    65→  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    66→    66→    return crypto.randomUUID();
+    67→    67→  }
+    68→    68→  return `public-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    69→    69→}
+    70→    70→
+    71→    71→function createInitialFormState() {
+    72→    72→  return {
+    73→    73→    fullName: "",
+    74→    74→    email: "",
+    75→    75→    phone: "",
+    76→    76→    company: "",
+    77→    77→    serviceTypeCode: "general_consultation",
+    78→    78→    message: "",
+    79→    79→    idempotencyKey: createSubmissionKey(),
+    80→    80→  };
+    81→    81→}
+    82→    82→
+    83→    83→/* ────────────────────────────────────────────
+    84→    84→   Live Business Hours — shows Open / Closed
+    85→    85→   based on the visitor's current time (EAT).
+    86→    86→   ──────────────────────────────────────────── */
+    87→    87→
+    88→    88→interface BusinessHoursStatus {
+    89→    89→  isOpen: boolean;
+    90→    90→  label: string;
+    91→    91→  detail: string;
+    92→    92→}
+    93→    93→
+    94→    94→function getBusinessHoursStatus(): BusinessHoursStatus {
+    95→    95→  if (typeof Intl === "undefined" || typeof Intl.DateTimeFormat === "undefined") {
+    96→    96→    return { isOpen: false, label: "Business Hours", detail: "Mon–Fri 8AM–4:30PM (EAT)" };
+    97→    97→  }
+    98→    98→
+    99→    99→  const now = new Date();
+   100→   100→  const eatHour = (now.getUTCHours() + 3) % 24;
+   101→   101→  const eatMinute = now.getUTCMinutes();
+   102→   102→  const day = now.getUTCDay(); // 0=Sun, 6=Sat
+   103→   103→
+   104→   104→  const currentMinutes = eatHour * 60 + eatMinute;
+   105→   105→
+   106→   106→  let isOpen: boolean;
+   107→   107→  let detail: string;
+   108→   108→
+   109→   109→  if (day === 0 || day === 6) {
+   110→   110→    isOpen = false;
+   111→   111→    detail = day === 6
+   112→   112→      ? "Closed today · Opens Mon 8AM"
+   113→   113→      : "Closed today · Opens Mon 8AM";
+   114→   114→  } else {
+   115→   115→    isOpen = currentMinutes >= 480 && currentMinutes < 990;
+   116→   116→    detail = isOpen
+   117→   117→      ? "Open now · Closes at 4:30PM"
+   118→   118→      : currentMinutes < 480
+   119→   119→        ? "Closed · Opens at 8AM"
+   120→   120→        : "Closed for today · Opens tomorrow 8AM";
+   121→   121→  }
+   122→   122→
+   123→   123→  return {
+   124→   124→    isOpen,
+   125→   125→    label: isOpen ? "Open" : "Closed",
+   126→   126→    detail,
+   127→   127→  };
+   128→   128→}
+   129→   129→
+   130→   130→/* ────────────────────────────────────────────
+   131→   131→   Main ContactPage
+   132→   132→   ──────────────────────────────────────────── */
+   133→   133→
+   134→   134→export function ContactPage() {
+   135→   135→  const { data: page, isPending, error } = usePage<ContactPageContent>("contact");
+   136→   136→  const shell = usePublicShell();
+   137→   137→  useResolvedPageSeo(page, routes.contact);
+   138→   138→
+   139→   139→  const [formValues, setFormValues] = useState(createInitialFormState);
+   140→   140→  const [submitError, setSubmitError] = useState<string | null>(null);
+   141→   141→  const [submissionResult, setSubmissionResult] =
+   142→   142→    useState<ApiPublicConsultationSubmissionResponse | null>(null);
+   143→   143→
+   144→   144→  const submissionMutation = useMutation({
+   145→   145→    mutationFn: submitPublicConsultation,
+   146→   146→  });
+   147→   147→
+   148→   148→  const isSubmitting = submissionMutation.isPending;
+   149→   149→
+   150→   150→  const canSubmit =
+   151→   151→    formValues.fullName.trim().length > 1 &&
+   152→   152→    formValues.email.trim().length > 3 &&
+   153→   153→    formValues.message.trim().length > 12 &&
+   154→   154→    !isSubmitting;
+   155→   155→
+   156→   156→  const handleFieldChange = (
+   157→   157→    field: "fullName" | "email" | "phone" | "company" | "serviceTypeCode" | "message",
+   158→   158→    value: string
+   159→   159→  ) => {
+   160→   160→    setFormValues((current) => ({ ...current, [field]: value }));
+   161→   161→  };
+   162→   162→
+   163→   163→  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+   164→   164→    event.preventDefault();
+   165→   165→    if (!canSubmit) return;
+   166→   166→    setSubmitError(null);
+   167→   167→    try {
+   168→   168→      const result = await submissionMutation.mutateAsync({
+   169→   169→        full_name: formValues.fullName.trim(),
+   170→   170→        email: formValues.email.trim(),
+   171→   171→        phone: formValues.phone.trim() || null,
+   172→   172→        company: formValues.company.trim() || null,
+   173→   173→        service_type_code: formValues.serviceTypeCode,
+   174→   174→        message: formValues.message.trim(),
+   175→   175→        idempotency_key: formValues.idempotencyKey,
+   176→   176→        source_channel: "public_contact_form",
+   177→   177→      });
+   178→   178→      setSubmissionResult(result);
+   179→   179→      setFormValues(createInitialFormState());
+   180→   180→    } catch {
+   181→   181→      setSubmitError(
+   182→   182→        "We couldn't send your request. Please try again or use one of the direct contact paths."
+   183→   183→      );
+   184→   184→    }
+   185→   185→  };
+   186→   186→
+   187→   187→  const { emails, phones, whatsapp, address } = shell.company;
+   188→   188→  const hours = getBusinessHoursStatus();
+   189→   189→
+   190→   190→  /* Shared input styling — using design tokens */
+   191→   191→  const inputCls =
+   192→   192→    "w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm";
+   193→   193→
+   194→   194→  /* Select-specific: hide native arrow, add custom chevron */
+   195→   195→  const selectCls =
+   196→   196→    `${inputCls} appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230f5c63%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat pr-10 sm:pr-10 cursor-pointer`;
+   197→   197→
+   198→   198→  return (
+   199→   199→    <LoadBoundary
+   200→   200→      error={error}
+   201→   201→      errorDetail="The contact page content could not be loaded right now."
+   202→   202→      errorTitle="Unable to load the contact page."
+   203→   203→      isPending={isPending}
+   204→   204→      isReady={Boolean(page?.content)}
+   205→   205→      loadingLabel="Loading contact page..."
+   206→   206→    >
+   207→   207→      {() => (
+   208→   208→        <section className="bg-page">
+   209→   209→          <StructuredData heroTitle="Contact Exxonim Consult" heroDescription="Reach Exxonim for registration, compliance, and advisory support." breadcrumbs={[{ name: 'Contact', path: routes.contact }]} />
+   210→   210→          {/* Breadcrumb */}
+   211→   211→          <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+   212→   212→            <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Contact" }]} />
+   213→   213→          </div>
+   214→   214→
+   215→   215→          {/* ═══════════════════════════════════════════════════════
+   216→   216→           * Two-column layout: Left = Contact info, Right = Form card
+   217→   217→           * ────────────────────────────────────────────────────────
+   218→   218→           * Left side sits on page bg — no card/container.
+   219→   219→           * Right side = form in a card (bg-surface + border + shadow).
+   220→   220→           * ═══════════════════════════════════════════════════════ */}
+   221→   221→          <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
+   222→   222→            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+   223→   223→
+   224→   224→              {/* ── Left column: Contact info on page bg ── */}
+   225→   225→              <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8">
+   226→   226→                {/* Page header */}
+   227→   227→                <div>
+   228→   228→                  <h1 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-bold tracking-tight text-text leading-tight">
+   229→   229→                    Get in Touch
+   230→   230→                  </h1>
+   231→   231→                  <p className="mt-2 sm:mt-3 text-text-muted text-[0.875rem] sm:text-[0.9375rem] leading-relaxed max-w-xl">
+   232→   232→                    Every situation is a little different. If you&apos;re unsure which service fits you, or you just want a clear explanation before you commit, we&apos;re here to help.
+   233→   233→                  </p>
+   234→   234→                </div>
+   235→   235→
+   236→   236→                {/* Contact info items — with icons */}
+   237→   237→                <div className="grid grid-cols-2 sm:grid-cols-2 gap-x-4 gap-y-3 sm:gap-x-8 sm:gap-y-5 text-sm">
+   238→   238→                  {/* Email */}
+   239→   239→                  <div className="flex items-start gap-2.5">
+   240→   240→                    <svg className="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   241→   241→                      <rect width="20" height="16" x="2" y="4" rx="2" />
+   242→   242→                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+   243→   243→                    </svg>
+   244→   244→                    <div>
+   245→   245→                      <span className="font-semibold text-text text-xs uppercase tracking-wider">Email</span>
+   246→   246→                      <div className="mt-0.5 grid gap-0.5">
+   247→   247→                        {emails.map((email) => (
+   248→   248→                          <a key={email} href={`mailto:${email}`} className="text-text-muted hover:text-accent transition-colors truncate">
+   249→   249→                            {email}
+   250→   250→                          </a>
+   251→   251→                        ))}
+   252→   252→                      </div>
+   253→   253→                    </div>
+   254→   254→                  </div>
+   255→   255→
+   256→   256→                  {/* Phone */}
+   257→   257→                  <div className="flex items-start gap-2.5">
+   258→   258→                    <svg className="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   259→   259→                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+   260→   260→                    </svg>
+   261→   261→                    <div>
+   262→   262→                      <span className="font-semibold text-text text-xs uppercase tracking-wider">Phone</span>
+   263→   263→                      <div className="mt-0.5 grid gap-0.5">
+   264→   264→                        {phones.map((phone) => (
+   265→   265→                          <a key={phone} href={`tel:${phone.replace(/\s+/g, "")}`} className="text-text-muted hover:text-accent transition-colors">
+   266→   266→                            {phone}
+   267→   267→                          </a>
+   268→   268→                        ))}
+   269→   269→                      </div>
+   270→   270→                    </div>
+   271→   271→                  </div>
+   272→   272→
+   273→   273→                  {/* Office */}
+   274→   274→                  <div className="flex items-start gap-2.5">
+   275→   275→                    <svg className="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   276→   276→                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+   277→   277→                      <circle cx="12" cy="10" r="3" />
+   278→   278→                    </svg>
+   279→   279→                    <div>
+   280→   280→                      <span className="font-semibold text-text text-xs uppercase tracking-wider">Office</span>
+   281→   281→                      <p className="mt-0.5 text-text-muted leading-relaxed">
+   282→   282→                        {address || "Dar es Salaam, Tanzania"}
+   283→   283→                      </p>
+   284→   284→                    </div>
+   285→   285→                  </div>
+   286→   286→
+   287→   287→                  {/* Hours — live open/closed */}
+   288→   288→                  <div className="flex items-start gap-2.5">
+   289→   289→                    <svg className="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   290→   290→                      <circle cx="12" cy="12" r="10" />
+   291→   291→                      <polyline points="12 6 12 12 16 14" />
+   292→   292→                    </svg>
+   293→   293→                    <div>
+   294→   294→                      <div className="flex items-center gap-1.5">
+   295→   295→                        <span className="font-semibold text-text text-xs uppercase tracking-wider">Hours</span>
+   296→   296→                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-1.5 py-0.5 rounded-full ${
+   297→   297→                          hours.isOpen
+   298→   298→                            ? "bg-success-soft text-success"
+   299→   299→                            : "bg-error-soft text-error"
+   300→   300→                        }`}>
+   301→   301→                          <span className={`w-1.5 h-1.5 rounded-full ${hours.isOpen ? "bg-success" : "bg-error"}`} />
+   302→   302→                          {hours.label}
+   303→   303→                        </span>
+   304→   304→                      </div>
+   305→   305→                      <p className="mt-0.5 text-text-muted leading-relaxed">
+   306→   306→                        {hours.detail}
+   307→   307→                      </p>
+   308→   308→                      <p className="text-text-soft text-xs mt-0.5">
+   309→   309→                        Mon–Fri: 8AM–4:30PM (EAT)
+   310→   310→                      </p>
+   311→   311→                    </div>
+   312→   312→                  </div>
+   313→   313→                </div>
+   314→   314→
+   315→   315→                {/* WhatsApp link — original inline style */}
+   316→   316→                {whatsapp && (
+   317→   317→                  <a
+   318→   318→                    href={whatsapp}
+   319→   319→                    target="_blank"
+   320→   320→                    rel="noreferrer"
+   321→   321→                    className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent-hover font-medium transition-colors"
+   322→   322→                  >
+   323→   323→                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+   324→   324→                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+   325→   325→                    </svg>
+   326→   326→                    Chat on WhatsApp
+   327→   327→                  </a>
+   328→   328→                )}
+   329→   329→              </div>
+   330→   330→
+   331→   331→              {/* ── Right column: Form card ── */}
+   332→   332→              <div
+   333→   333→                className="bg-surface border border-border-soft rounded-2xl p-5 sm:p-8 lg:p-10"
+   334→   334→                id="contact-form"
+   335→   335→              >
+   336→   336→                {submissionResult ? (
+   337→   337→                  /* Success state */
+   338→   338→                  <div className="text-center py-8">
+   339→   339→                    <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-soft text-accent mb-4">
+   340→   340→                      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+   341→   341→                        <path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+   342→   342→                      </svg>
+   343→   343→                    </span>
+   344→   344→                    <h3 className="text-lg font-bold text-text mb-2">Your request has been received.</h3>
+   345→   345→                    <p className="text-text-muted text-sm mb-1">
+   346→   346→                      Your tracking code is:
+   347→   347→                    </p>
+   348→   348→                    {/*
+   349→   349→                      BACKEND TEAM: The tracking_id is now a 6-character code (5 digits + 1 letter).
+   350→   350→                      Format: "84729A" in storage, displayed as "84 72 9A" (three groups of 2).
+   351→   351→                      This code is also sent to the client via WhatsApp:
+   352→   352→                        "Your tracking number is 84 72 9A. Check your file status anytime at exxonim.tz/track."
+   353→   353→                    */}
+   354→   354→                    <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
+   355→   355→                      {submissionResult.tracking_id.length === 6
+   356→   356→                        ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
+   357→   357→                        : submissionResult.tracking_id}
+   358→   358→                    </code>
+   359→   359→                    <p className="text-text-muted text-sm mt-3">
+   360→   360→                      Use this code to check your status at any time on our{" "}
+   361→   361→                      <a href={routes.trackConsultation} className="text-accent hover:underline font-medium">
+   362→   362→                        tracking page
+   363→   363→                      </a>. No login required.
+   364→   364→                    </p>
+   365→   365→                    <p className="text-text-soft text-xs mt-1">
+   366→   366→                      We&apos;ve also sent this code to your WhatsApp.
+   367→   367→                    </p>
+   368→   368→                  </div>
+   369→   369→                ) : (
+   370→   370→                  <form onSubmit={handleSubmit} className="space-y-4">
+   371→   371→                    <h2 className="text-lg sm:text-xl font-bold text-text mb-0.5">Send us a message</h2>
+   372→   372→                    <p className="text-text-muted text-sm mb-2">Fill out the form below and we&apos;ll get back to you.</p>
+   373→   373→
+   374→   374→                    {/* First name + Last name row */}
+   375→   375→                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+   376→   376→                      <div>
+   377→   377→                        <label htmlFor="contact-first-name" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   378→   378→                          First name<span className="text-accent ml-0.5">*</span>
+   379→   379→                        </label>
+   380→   380→                        <input
+   381→   381→                          id="contact-first-name"
+   382→   382→                          autoComplete="given-name"
+   383→   383→                          value={formValues.fullName.split(" ")[0] || ""}
+   384→   384→                          onChange={(e) => {
+   385→   385→                            const last = formValues.fullName.split(" ").slice(1).join(" ");
+   386→   386→                            handleFieldChange("fullName", `${e.target.value} ${last}`.trim());
+   387→   387→                          }}
+   388→   388→                          required
+   389→   389→                          placeholder="John"
+   390→   390→                          className={inputCls}
+   391→   391→                        />
+   392→   392→                      </div>
+   393→   393→                      <div>
+   394→   394→                        <label htmlFor="contact-last-name" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   395→   395→                          Last name<span className="text-accent ml-0.5">*</span>
+   396→   396→                        </label>
+   397→   397→                        <input
+   398→   398→                          id="contact-last-name"
+   399→   399→                          autoComplete="family-name"
+   400→   400→                          value={formValues.fullName.split(" ").slice(1).join(" ") || ""}
+   401→   401→                          onChange={(e) => {
+   402→   402→                            const first = formValues.fullName.split(" ")[0] || "";
+   403→   403→                            handleFieldChange("fullName", `${first} ${e.target.value}`.trim());
+   404→   404→                          }}
+   405→   405→                          required
+   406→   406→                          placeholder="Smith"
+   407→   407→                          className={inputCls}
+   408→   408→                        />
+   409→   409→                      </div>
+   410→   410→                    </div>
+   411→   411→
+   412→   412→                    {/* Email */}
+   413→   413→                    <div>
+   414→   414→                      <label htmlFor="contact-email" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   415→   415→                        Email<span className="text-accent ml-0.5">*</span>
+   416→   416→                      </label>
+   417→   417→                      <input
+   418→   418→                        id="contact-email"
+   419→   419→                        type="email"
+   420→   420→                        inputMode="email"
+   421→   421→                        autoComplete="email"
+   422→   422→                        value={formValues.email}
+   423→   423→                        onChange={(e) => handleFieldChange("email", e.target.value)}
+   424→   424→                        required
+   425→   425→                        placeholder="e.g john@company.com"
+   426→   426→                        className={inputCls}
+   427→   427→                      />
+   428→   428→                    </div>
+   429→   429→
+   430→   430→                    {/* Company + Phone row */}
+   431→   431→                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+   432→   432→                      <div>
+   433→   433→                        <label htmlFor="contact-company" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   434→   434→                          Company name
+   435→   435→                        </label>
+   436→   436→                        <input
+   437→   437→                          id="contact-company"
+   438→   438→                          autoComplete="organization"
+   439→   439→                          value={formValues.company}
+   440→   440→                          onChange={(e) => handleFieldChange("company", e.target.value)}
+   441→   441→                          placeholder="e.g Acme Tanzania Ltd"
+   442→   442→                          className={inputCls}
+   443→   443→                        />
+   444→   444→                      </div>
+   445→   445→                      <div>
+   446→   446→                        <label htmlFor="contact-phone" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   447→   447→                          Phone number
+   448→   448→                        </label>
+   449→   449→                        <input
+   450→   450→                          id="contact-phone"
+   451→   451→                          type="tel"
+   452→   452→                          inputMode="tel"
+   453→   453→                          autoComplete="tel"
+   454→   454→                          value={formValues.phone}
+   455→   455→                          onChange={(e) => handleFieldChange("phone", e.target.value)}
+   456→   456→                          placeholder="+255 794 689 099"
+   457→   457→                          className={inputCls}
+   458→   458→                        />
+   459→   459→                      </div>
+   460→   460→                    </div>
+   461→   461→
+   462→   462→                    {/* Service type */}
+   463→   463→                    <div>
+   464→   464→                      <label htmlFor="contact-service-type" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   465→   465→                        Primary support area
+   466→   466→                      </label>
+   467→   467→                      <div className="relative">
+   468→   468→                        <select
+   469→   469→                          id="contact-service-type"
+   470→   470→                          value={formValues.serviceTypeCode}
+   471→   471→                          onChange={(e) => handleFieldChange("serviceTypeCode", e.target.value)}
+   472→   472→                          className={selectCls}
+   473→   473→                        >
+   474→   474→                          {SERVICE_OPTIONS.map((option) => (
+   475→   475→                            <option key={option.value} value={option.value} className="bg-surface text-text">
+   476→   476→                              {option.label}
+   477→   477→                            </option>
+   478→   478→                          ))}
+   479→   479→                        </select>
+   480→   480→                      </div>
+   481→   481→                    </div>
+   482→   482→
+   483→   483→                    {/* Message */}
+   484→   484→                    <div>
+   485→   485→                      <label htmlFor="contact-message" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+   486→   486→                        Message<span className="text-accent ml-0.5">*</span>
+   487→   487→                      </label>
+   488→   488→                      <textarea
+   489→   489→                        id="contact-message"
+   490→   490→                        value={formValues.message}
+   491→   491→                        onChange={(e) => handleFieldChange("message", e.target.value)}
+   492→   492→                        required
+   493→   493→                        rows={3}
+   494→   494→                        placeholder="Tell us about your situation..."
+   495→   495→                        className={`${inputCls} resize-y`}
+   496→   496→                      />
+   497→   497→                    </div>
+   498→   498→
+   499→   499→                    {submitError && (
+   500→   500→                      <div className="p-3 rounded-xl bg-accent-soft border border-border-soft" role="alert">
+
+[showing lines 1-500 of 547; use offset=501 with limit to continue reading]

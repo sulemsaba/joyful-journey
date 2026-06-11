@@ -1,0 +1,525 @@
+     1→'use client';
+     2→
+     3→import { Home, ArrowRight, CheckCircle, Clock, ShieldCheck, Target, Users, Eye, Star } from 'lucide-react';
+     4→import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
+     5→import { Button } from '@/exxonim/components/primitives/Button';
+     6→import { routes } from '@/exxonim/routes';
+     7→import { LoadBoundary } from '@/exxonim/components/LoadBoundary';
+     8→import { usePage } from '@/exxonim/hooks/usePage';
+     9→import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
+    10→import { StructuredData } from '@/exxonim/components/StructuredData';
+    11→import type { AboutPageContent } from '@/exxonim/types';
+    12→
+    13→/* ── Google logo SVG (official 4-color) ──────────────────────── */
+    14→function GoogleLogo({ className }: { className?: string }) {
+    15→  return (
+    16→    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+    17→      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+    18→      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+    19→      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+    20→      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+    21→    </svg>
+    22→  );
+    23→}
+    24→
+    25→/* ── Icon map for support profiles ───────────────────── */
+    26→const profileIcons: Record<string, React.ReactNode> = {
+    27→  'Business setup': <ShieldCheck className="h-5 w-5" />,
+    28→  'Compliance': <CheckCircle className="h-5 w-5" />,
+    29→  'Consultation tracking': <Eye className="h-5 w-5" />,
+    30→};
+    31→
+    32→export function AboutPage() {
+    33→  const { data: page, isPending, error } = usePage<AboutPageContent>('about');
+    34→  useResolvedPageSeo(page, routes.about);
+    35→  const content = page?.content;
+    36→
+    37→  /* ─────────────────────────────────────────────────────────────────────────────
+    38→   * GOOGLE REVIEW DATA
+    39→   * ────────────────────────────────────────────
+    40→   * The review count below is currently hardcoded.
+    41→   * BACKEND INTEGRATION: Replace this with a live value fetched from
+    42→   * Google Business Profile API (or your backend proxy endpoint).
+    43→   * Suggested API: GET /api/v1/google-reviews/stats
+    44→   * Response shape: { rating: number, review_count: number }
+    45→   * When integrated, replace the hardcoded number with the API value.
+    46→   * ──────────────────────────────────────────────────────────────────────────── */
+    47→  const GOOGLE_REVIEW_RATING = 4.9;
+    48→  // REVIEW_COUNT: Hardcoded fallback — replace with API value on integration.
+    49→  // Example: const REVIEW_COUNT = googleReviewData?.review_count ?? 58;
+    50→  const REVIEW_COUNT = 58;
+    51→
+    52→  return (
+    53→    <LoadBoundary
+    54→      error={error}
+    55→      errorDetail="The about page content could not be loaded right now."
+    56→      errorTitle="Unable to load the about page."
+    57→      isPending={isPending}
+    58→      isReady={Boolean(content)}
+    59→      loadingLabel="Loading about page..."
+    60→    >
+    61→      {() => {
+    62→        if (!content) return null;
+    63→        return (
+    64→          <>
+    65→            <StructuredData
+    66→              heroTitle={content.hero.title}
+    67→              heroDescription={content.hero.description}
+    68→              breadcrumbs={[{ name: 'About', path: routes.about }]}
+    69→            />
+    70→            {/* Breadcrumb */}
+    71→            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+    72→              <Breadcrumb items={[{ label: 'Home', href: routes.home, icon: Home }, { label: 'About' }]} />
+    73→            </div>
+    74→
+    75→            {/* ──────────────────────────────────────────────────────────────
+    76→             *  SECTION 1: Hero — clean headline + Google review panel
+    77→             *  No gradients, no blur circles, no accent-contrast panels.
+    78→             *  Clean surface/82 cards with border-soft — matches services page.
+    79→             * ────────────────────────────────────────────────────────────── */}
+    80→            <section
+    81→              className="relative overflow-hidden pt-4 pb-12 md:pt-6 md:pb-20"
+    82→              aria-labelledby="about-hero-title"
+    83→            >
+    84→              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
+    85→                <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4 md:gap-5 items-start">
+    86→                  {/* Left — benefit headline + CTA */}
+    87→                  <article
+    88→                    className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
+    89→                    data-reveal
+    90→                  >
+    91→                    <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
+    92→                      {content.hero.eyebrow}
+    93→                    </p>
+    94→                    <h1
+    95→                      id="about-hero-title"
+    96→                      className="m-0 text-[clamp(1.9rem,4.2vw,3.2rem)] leading-[1.02] tracking-[-0.03em] text-text font-semibold"
+    97→                    >
+    98→                      {content.hero.title}
+    99→                    </h1>
+   100→                    <p className="text-base leading-relaxed text-text-muted mt-4">
+   101→                      {content.hero.description}
+   102→                    </p>
+   103→
+   104→                    {/* Single primary CTA */}
+   105→                    <div className="mt-5 md:mt-6">
+   106→                      <Button size="standard" variant="primary" href={routes.contact}>
+   107→                        Book a Free Consultation
+   108→                        <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+   109→                      </Button>
+   110→                    </div>
+   111→
+   112→                    {/* "No office visits" trust signal under CTA */}
+   113→                    <div className="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
+   114→                      <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
+   115→                      No office visits required
+   116→                    </div>
+   117→                  </article>
+   118→
+   119→                  {/* Right — Google review panel + key stats */}
+   120→                  <div className="grid gap-4 md:gap-5">
+   121→                    {/* Google review trust panel */}
+   122→                    <aside
+   123→                      className="rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface"
+   124→                      data-reveal
+   125→                    >
+   126→                      {/* Google branding row */}
+   127→                      <div className="flex items-center gap-2.5 mb-3">
+   128→                        <GoogleLogo className="h-5 w-5 flex-shrink-0" />
+   129→                        <span className="text-sm font-semibold text-text">
+   130→                          Google Reviews
+   131→                        </span>
+   132→                      </div>
+   133→
+   134→                      {/* Rating + stars + count */}
+   135→                      <div className="flex items-center gap-3 mb-3">
+   136→                        <span className="text-2xl font-bold text-text leading-none">
+   137→                          {GOOGLE_REVIEW_RATING}
+   138→                        </span>
+   139→                        <div className="flex flex-col gap-0.5">
+   140→                          <span className="flex items-center gap-0.5 text-star leading-none">
+   141→                            {[...Array(5)].map((_, i) => (
+   142→                              <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+   143→                            ))}
+   144→                          </span>
+   145→                          {/* REVIEW_COUNT: This "+N" display is sourced from the hardcoded
+   146→                              REVIEW_COUNT constant above. When integrating with Google
+   147→                              Business Profile API, this will auto-update from the live data.
+   148→                              API suggestion: GET /api/v1/google-reviews/stats → { review_count } */}
+   149→                          <span className="text-xs text-text-muted">
+   150→                            {REVIEW_COUNT}+ reviews
+   151→                          </span>
+   152→                        </div>
+   153→                      </div>
+   154→
+   155→                      {/* Selling word — trust headline */}
+   156→                      <p className="text-sm font-semibold text-text leading-snug">
+   157→                        Trusted by businesses across Tanzania
+   158→                      </p>
+   159→                      <p className="text-xs text-text-muted mt-1 leading-relaxed">
+   160→                        Real reviews from real clients on Google
+   161→                      </p>
+   162→
+   163→                      {/* CTA to see reviews */}
+   164→                      <a
+   165→                        href="https://www.google.com/search?q=Exxonim+Consult+reviews"
+   166→                        target="_blank"
+   167→                        rel="noopener noreferrer"
+   168→                        className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
+   169→                      >
+   170→                        See all reviews
+   171→                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+   172→                      </a>
+   173→                    </aside>
+   174→
+   175→                    {/* Key company stats */}
+   176→                    <aside
+   177→                      className="rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface"
+   178→                      data-reveal
+   179→                    >
+   180→                      <p className="text-sm font-semibold text-text mb-3 md:mb-4">
+   181→                        Why clients choose Exxonim
+   182→                      </p>
+   183→                      <div className="grid gap-2.5 md:gap-3">
+   184→                        <div className="flex items-center gap-3 px-3 py-2.5 md:px-3.5 md:py-3 rounded-xl bg-accent-soft/40">
+   185→                          <span className="inline-flex items-center justify-center h-9 w-9 md:h-9 md:w-9 px-1.5 rounded-full bg-accent text-accent-contrast font-extrabold text-xs flex-shrink-0">
+   186→                            120+
+   187→                          </span>
+   188→                          <div className="min-w-0">
+   189→                            <strong className="block text-sm leading-tight text-text">Companies registered</strong>
+   190→                            <span className="block mt-0.5 text-xs text-text-muted leading-relaxed">
+   191→                              Businesses trust Exxonim for registration and compliance
+   192→                            </span>
+   193→                          </div>
+   194→                        </div>
+   195→
+   196→                        <div className="flex items-center gap-3 px-3 py-2.5 md:px-3.5 md:py-3 rounded-xl bg-accent-soft/40">
+   197→                          <span className="inline-flex items-center justify-center h-9 w-9 md:h-9 md:w-9 px-1.5 rounded-full bg-accent text-accent-contrast font-extrabold text-xs flex-shrink-0">
+   198→                            100%
+   199→                          </span>
+   200→                          <div className="min-w-0">
+   201→                            <strong className="block text-sm leading-tight text-text">Tracked</strong>
+   202→                            <span className="block mt-0.5 text-xs text-text-muted leading-relaxed">
+   203→                              Every consultation assigned a reference ID
+   204→                            </span>
+   205→                          </div>
+   206→                        </div>
+   207→                      </div>
+   208→                    </aside>
+   209→                  </div>
+   210→                </div>
+   211→              </div>
+   212→            </section>
+   213→
+   214→            {/* ──────────────────────────────────────────────────────────────
+   215→             *  SECTION 2: Company Profile — who we are + working style
+   216→             * ────────────────────────────────────────────────────────────── */}
+   217→            <section
+   218→              className="py-10 md:py-20"
+   219→              aria-labelledby="about-profile-title"
+   220→            >
+   221→              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+   222→                <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-4 md:gap-5 items-start">
+   223→                  {/* Left — story */}
+   224→                  <article
+   225→                    className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
+   226→                    data-reveal
+   227→                  >
+   228→                    <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
+   229→                      {content.company_profile.eyebrow}
+   230→                    </p>
+   231→                    <h2
+   232→                      id="about-profile-title"
+   233→                      className="m-0 text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+   234→                    >
+   235→                      {content.company_profile.title}
+   236→                    </h2>
+   237→                    <div className="mt-5 grid gap-4">
+   238→                      {content.company_profile.paragraphs.map((paragraph) => (
+   239→                        <p key={paragraph} className="text-text-muted leading-relaxed">{paragraph}</p>
+   240→                      ))}
+   241→                    </div>
+   242→                  </article>
+   243→
+   244→                  {/* Right — working style card */}
+   245→                  <article
+   246→                    className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
+   247→                    data-reveal
+   248→                  >
+   249→                    {content.company_profile.working_style_label ? (
+   250→                      <p className="m-0 mb-3 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
+   251→                        {content.company_profile.working_style_label}
+   252→                      </p>
+   253→                    ) : null}
+   254→                    <p className="text-[clamp(1.3rem,2.5vw,1.8rem)] font-semibold leading-tight tracking-tight text-text">
+   255→                      {content.company_profile.working_style}
+   256→                    </p>
+   257→
+   258→                    {/* Core principles */}
+   259→                    <div className="grid gap-2.5 md:gap-3 mt-5 md:mt-6">
+   260→                      {[
+   261→                        { icon: <Target className="h-4 w-4" />, text: 'Every case tracked from intake to resolution' },
+   262→                        { icon: <Clock className="h-4 w-4" />, text: 'Proactive follow-up — no deadline surprises' },
+   263→                        { icon: <ShieldCheck className="h-4 w-4" />, text: 'No office visits — everything filed electronically' },
+   264→                        { icon: <Eye className="h-4 w-4" />, text: 'Transparent status updates at every milestone' },
+   265→                      ].map((item) => (
+   266→                        <div key={item.text} className="flex items-center gap-3 px-3 py-2.5 md:px-4 md:py-3 rounded-xl bg-accent-soft/40">
+   267→                          <span className="text-accent flex-shrink-0">{item.icon}</span>
+   268→                          <span className="text-sm text-text font-medium">{item.text}</span>
+   269→                        </div>
+   270→                      ))}
+   271→                    </div>
+   272→                  </article>
+   273→                </div>
+   274→              </div>
+   275→            </section>
+   276→
+   277→            {/* ──────────────────────────────────────────────────────────────
+   278→             *  SECTION 3: What We Support — 3 capability cards
+   279→             * ────────────────────────────────────────────────────────────── */}
+   280→            {content.support_profiles_section && (
+   281→              <section
+   282→                className="py-10 md:py-20"
+   283→                aria-labelledby="about-support-title"
+   284→              >
+   285→                <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+   286→                  {/* Section header */}
+   287→                  <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+   288→                    <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
+   289→                      {content.support_profiles_section.title}
+   290→                    </p>
+   291→                    <h2
+   292→                      id="about-support-title"
+   293→                      className="text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+   294→                    >
+   295→                      What we support
+   296→                    </h2>
+   297→                    <p className="text-text-muted text-sm leading-relaxed">
+   298→                      {content.support_profiles_section.description}
+   299→                    </p>
+   300→                  </div>
+   301→
+   302→                  {/* Cards */}
+   303→                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+   304→                    {content.support_profiles.map((profile) => (
+   305→                      <article
+   306→                        key={profile.title}
+   307→                        className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+   308→                        data-reveal
+   309→                      >
+   310→                        {/* Icon */}
+   311→                        <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-3 md:mb-4">
+   312→                          {profileIcons[profile.title] ?? <ShieldCheck className="h-5 w-5" />}
+   313→                        </div>
+   314→                        <h3 className="text-lg font-semibold text-text leading-tight">
+   315→                          {profile.title}
+   316→                        </h3>
+   317→                        <p className="mt-2.5 text-sm text-text-muted leading-relaxed">
+   318→                          {profile.description}
+   319→                        </p>
+   320→                        <a
+   321→                          href={routes.services}
+   322→                          className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
+   323→                        >
+   324→                          Learn more
+   325→                          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+   326→                        </a>
+   327→                      </article>
+   328→                    ))}
+   329→                  </div>
+   330→                </div>
+   331→              </section>
+   332→            )}
+   333→
+   334→            {/* ──────────────────────────────────────────────────────────────
+   335→             *  SECTION 4: How We Work — 4-step process
+   336→             * ────────────────────────────────────────────────────────────── */}
+   337→            {content.operating_model_section && (
+   338→              <section
+   339→                className="py-10 md:py-20"
+   340→                aria-labelledby="about-process-title"
+   341→              >
+   342→                <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+   343→                  {/* Section header */}
+   344→                  <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+   345→                    <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
+   346→                      Our process
+   347→                    </p>
+   348→                    <h2
+   349→                      id="about-process-title"
+   350→                      className="text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+   351→                    >
+   352→                      {content.operating_model_section.title}
+   353→                    </h2>
+   354→                    <p className="text-text-muted text-sm leading-relaxed">
+   355→                      {content.operating_model_section.description}
+   356→                    </p>
+   357→                  </div>
+   358→
+   359→                  {/* Steps — horizontal on desktop, vertical on mobile */}
+   360→                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+   361→                    {content.operating_model.map((item, i) => (
+   362→                      <article
+   363→                        key={item.step}
+   364→                        className="relative rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+   365→                        data-reveal
+   366→                      >
+   367→                        {/* Step number badge */}
+   368→                        <div className="flex items-center gap-3 mb-3 md:mb-4">
+   369→                          <span className="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-accent text-accent-contrast font-extrabold text-sm">
+   370→                            {item.step}
+   371→                          </span>
+   372→                          {/* Connector line (desktop only) */}
+   373→                          {i < content.operating_model.length - 1 && (
+   374→                            <span className="hidden lg:block absolute top-10 -right-[10px] w-5 h-0.5 bg-accent/30" aria-hidden="true" />
+   375→                          )}
+   376→                        </div>
+   377→                        <h3 className="text-lg font-semibold text-text leading-tight">
+   378→                          {item.title}
+   379→                        </h3>
+   380→                        <p className="mt-2.5 text-sm text-text-muted leading-relaxed">
+   381→                          {item.description}
+   382→                        </p>
+   383→                      </article>
+   384→                    ))}
+   385→                  </div>
+   386→                </div>
+   387→              </section>
+   388→            )}
+   389→
+   390→            {/* ──────────────────────────────────────────────────────────────
+   391→             *  SECTION 5: Service Scope — what we cover
+   392→             * ────────────────────────────────────────────────────────────── */}
+   393→            {content.service_scope_section && (
+   394→              <section
+   395→                className="py-10 md:py-20"
+   396→                aria-labelledby="about-scope-title"
+   397→              >
+   398→                <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+   399→                  {/* Section header */}
+   400→                  <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto" data-reveal>
+   401→                    <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
+   402→                      Service scope
+   403→                    </p>
+   404→                    <h2
+   405→                      id="about-scope-title"
+   406→                      className="text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+   407→                    >
+   408→                      {content.service_scope_section.title}
+   409→                    </h2>
+   410→                    <p className="text-text-muted text-sm leading-relaxed">
+   411→                      {content.service_scope_section.description}
+   412→                    </p>
+   413→                  </div>
+   414→
+   415→                  {/* Scope cards — 3 cols on desktop */}
+   416→                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
+   417→                    {content.service_scope.map((service) => (
+   418→                      <article
+   419→                        key={service.title}
+   420→                        className="rounded-xl md:rounded-[1.35rem] border border-border-soft bg-surface p-4 md:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+   421→                        data-reveal
+   422→                      >
+   423→                        <div className="flex items-center gap-2.5 mb-3">
+   424→                          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+   425→                          <h3 className="text-[0.9375rem] font-semibold text-text leading-tight">
+   426→                            {service.title}
+   427→                          </h3>
+   428→                        </div>
+   429→                        <p className="text-sm text-text-muted leading-relaxed">
+   430→                          {service.description}
+   431→                        </p>
+   432→                      </article>
+   433→                    ))}
+   434→                  </div>
+   435→                </div>
+   436→              </section>
+   437→            )}
+   438→
+   439→            {/* ──────────────────────────────────────────────────────────────
+   440→             *  SECTION 6: What to Expect — client promises
+   441→             * ────────────────────────────────────────────────────────────── */}
+   442→            {content.client_expectations_section && (
+   443→              <section
+   444→                className="py-10 md:py-20"
+   445→                aria-labelledby="about-expectations-title"
+   446→              >
+   447→                <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+   448→                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-4 md:gap-5 items-start">
+   449→                    {/* Left — section header */}
+   450→                    <div data-reveal>
+   451→                      <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-3">
+   452→                        What to expect
+   453→                      </p>
+   454→                      <h2
+   455→                        id="about-expectations-title"
+   456→                        className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+   457→                      >
+   458→                        {content.client_expectations_section.title}
+   459→                      </h2>
+   460→                      <p className="text-text-muted leading-relaxed mt-3">
+   461→                        {content.client_expectations_section.description}
+   462→                      </p>
+   463→                    </div>
+   464→
+   465→                    {/* Right — promise cards */}
+   466→                    <div className="grid gap-2.5 md:gap-3" data-reveal>
+   467→                      {content.client_expectations.map((item) => (
+   468→                        <div
+   469→                          key={item}
+   470→                          className="flex items-start gap-3 px-3 py-3 md:px-4 md:py-3.5 rounded-xl bg-surface border border-border-soft"
+   471→                        >
+   472→                          <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
+   473→                          <p className="text-sm text-text leading-relaxed font-medium">{item}</p>
+   474→                        </div>
+   475→                      ))}
+   476→                    </div>
+   477→                  </div>
+   478→                </div>
+   479→              </section>
+   480→            )}
+   481→
+   482→            {/* ──────────────────────────────────────────────────────────────
+   483→             *  SECTION 7: Final CTA
+   484→             * ────────────────────────────────────────────────────────────── */}
+   485→            <section
+   486→              className="py-10 md:py-20"
+   487→              aria-labelledby="about-cta-title"
+   488→            >
+   489→              <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+   490→                <div
+   491→                  className="max-w-[42rem] mx-auto rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-12 text-center"
+   492→                  style={{
+   493→                    background:
+   494→                      'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
+   495→                  }}
+   496→                  data-reveal
+   497→                >
+   498→                  <h2
+   499→                    id="about-cta-title"
+   500→                    className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
+   501→                  >
+   502→                    {content.cta.title}
+   503→                  </h2>
+   504→                  <p className="mt-3 text-text-muted text-sm leading-relaxed max-w-[min(48ch,90%)] mx-auto">
+   505→                    {content.cta.description}
+   506→                  </p>
+   507→                  <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+   508→                    <Button size="standard" variant="primary" href={content.cta.primary.href}>
+   509→                      {content.cta.primary.label}
+   510→                      <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+   511→                    </Button>
+   512→                    <Button size="standard" variant="secondary" href={content.cta.secondary.href}>
+   513→                      {content.cta.secondary.label}
+   514→                    </Button>
+   515→                  </div>
+   516→                </div>
+   517→              </div>
+   518→            </section>
+   519→          </>
+   520→        );
+   521→      }}
+   522→    </LoadBoundary>
+   523→  );
+   524→}
+   525→
