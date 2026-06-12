@@ -744,29 +744,10 @@ html:not([data-theme="dark"]) header[data-over-hero] .dark-header-icon {
 header .logo-light { mix-blend-mode: multiply; }
 header .logo-dark { mix-blend-mode: screen; }
 
-/* ── Floating pill navbar (mobile, < xl) ──────────────
- * Frosted glass background that adapts to theme + scroll state.
- * Inspired by Mobbin's floating capsule pattern.
- * Only shown when over the hero section — fades out once
- * the user scrolls, and the traditional bar takes over.
- *   - Light mode: warm gray rgba(237,237,237,...)
- *   - Dark mode: cool dark rgba(13,34,38,...)
- */
-header.nav-pill {
-  background-color: rgba(237, 237, 237, 0.64);
-}
-/* Dark mode pill */
-html[data-theme="dark"] header.nav-pill {
-  background-color: rgba(13, 34, 38, 0.64);
-}
-
-/* ── Traditional bar navbar (mobile, < xl, after scroll) ─
- * Full-width bar that replaces the pill once the user
- * scrolls past the hero. Solid bg + blur for readability. */
-
 /* ── Hamburger morph icon colors ───────────────────────
- * Lines need to be visible on both the frosted glass pill
- * and the solid bar. Light mode: dark lines. Dark mode: light lines. */
+ * Light mode: dark lines. Dark mode: light lines.
+ * Over hero (transparent header): same rules — the lines
+ * need to be visible regardless of header background. */
 .nav-hamburger-line {
   background-color: #102529;
 }
@@ -797,8 +778,7 @@ html:not([data-theme="dark"]) header[data-over-hero] .nav-hamburger-line {
   background: rgba(127, 188, 193, 0.4);
 }
 
-/* ── Smooth pill background transition during theme change ── */
-html.theme-transition header.nav-pill,
+/* ── Smooth theme transition for hamburger lines ── */
 html.theme-transition .nav-hamburger-line {
   transition: background-color 0.4s ease;
 }

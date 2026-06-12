@@ -6,25 +6,20 @@ import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
 
 /**
- * Mobile navigation panel — expandable section for mobile nav.
+ * Mobile navigation panel — dropdown from the traditional full-width bar.
  *
- * TWO VARIANTS:
- * ─────────────
- * 1. "pill" — expands inside the floating frosted pill. Compact,
- *    no backdrop, the pill IS the container. Used over the hero.
+ * LAYOUT:
+ * ───────
+ * - Phone: full-width panel below the bar, flush left/right
+ * - Tablet (md–xl): right-aligned card with max-width 360px,
+ *   so it doesn't cover the whole screen
  *
- * 2. "bar" — dropdown from the traditional full-width bar.
- *    On phones: full-width panel below the bar.
- *    On tablet (md–xl): right-aligned panel with max-width, so
- *    it doesn't cover the whole screen.
- *
- * ACCORDION IMPROVEMENTS:
- * ──────────────────────
- * - Sub-links have better visual distinction (card-like items)
- * - Panel is scrollable internally (overscroll-contain) so the
- *   page doesn't scroll when navigating inside
- * - Wider accordion items with more padding
- * - Description text under each link for context
+ * FEATURES:
+ * ─────────
+ * - Scrollable content with overscroll-contain (page doesn't scroll behind)
+ * - Custom thin scrollbar
+ * - Accordion sub-links with dot indicators and hover arrows
+ * - Generous padding and hit targets
  */
 interface MobileNavigationPanelProps {
   brandName: string;
@@ -42,7 +37,6 @@ interface MobileNavigationPanelProps {
   primaryPhone?: string;
   isActive: (href: string) => boolean;
   onClose: () => void;
-  variant?: "pill" | "bar";
 }
 
 interface AccordionProps {
@@ -84,9 +78,7 @@ function MobileAccordion({
             : "hover:bg-accent-soft/20"
         )}
       >
-        <span className={cn(
-          "text-[11px] font-bold tracking-[0.12em] uppercase text-accent"
-        )}>
+        <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-accent">
           {label}
           {isGroupActive && (
             <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full bg-accent text-accent-contrast text-[0.5rem] font-bold leading-none">
@@ -128,7 +120,6 @@ function MobileAccordion({
                           "hover:bg-accent-soft/25 transition-colors duration-150",
                         )}
                       >
-                        {/* Dot indicator for visual distinction */}
                         <span className="w-1 h-1 rounded-full bg-accent/60 shrink-0 group-hover:bg-accent transition-colors" aria-hidden="true" />
                         <span className="flex-1">{item.label}</span>
                         <ArrowRight className="w-3 h-3 text-text-muted/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150" aria-hidden="true" />
@@ -178,10 +169,7 @@ export function MobileNavigationPanel({
   primaryPhone,
   isActive,
   onClose,
-  variant = "pill",
 }: MobileNavigationPanelProps) {
-  const isBar = variant === "bar";
-
   return (
     <div
       id={id}
@@ -189,8 +177,8 @@ export function MobileNavigationPanel({
       className={cn(
         "grid transition-all duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
         isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
-        /* For bar variant on tablet: right-align, don't cover full screen */
-        isBar && "md:absolute md:right-0 md:top-full md:w-[360px]"
+        /* Tablet: right-aligned card, not full-width */
+        "md:absolute md:right-0 md:top-full md:w-[360px]"
       )}
     >
       <div className="overflow-hidden">
@@ -201,24 +189,16 @@ export function MobileNavigationPanel({
           aria-label="Site navigation"
           tabIndex={-1}
           className={cn(
-            /* Pill variant: contained inside the pill */
-            !isBar && "px-4 pb-5 pt-1",
-            /* Bar variant: full width on phone, card on tablet */
-            isBar && cn(
-              "px-4 pb-5 pt-2",
-              "md:px-5 md:py-4 md:mt-1 md:rounded-2xl md:shadow-xl md:ring-1 md:ring-border-soft md:bg-page"
-            ),
+            "px-4 pb-5 pt-2",
+            "md:px-5 md:py-4 md:mt-1 md:rounded-2xl md:shadow-xl md:ring-1 md:ring-border-soft md:bg-page"
           )}
         >
-          {/* ── Scrollable content area ────────────────────
-           * max-h constrains the panel so it doesn't push
-           * content off-screen. overscroll-contain prevents
-           * scroll chaining to the page behind. */}
+          {/* ── Scrollable content area ──────────────────── */}
           <div
             className={cn(
               "grid gap-2.5 overflow-y-auto overscroll-contain",
               "max-h-[min(70vh,560px)]",
-              "pr-1 -mr-1", /* scrollbar offset */
+              "pr-1 -mr-1",
               "scrollbar-thin"
             )}
           >

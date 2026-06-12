@@ -14,28 +14,17 @@ import { cn } from "@/exxonim/utils/cn";
 /**
  * Navigation component — the fixed site header.
  *
- * ARCHITECTURE DECISION:
- * ──────────────────────
- * Navigation is STATIC. It imports its structure from staticNavigation.ts
- * instead of fetching from the /navigation API.
+ * ARCHITECTURE:
+ * ─────────────
+ * Navigation is STATIC. It imports its structure from staticNavigation.ts.
  *
- * MOBILE NAVBAR — DUAL MODE:
- * ───────────────────────────
- * On mobile (< xl), there are TWO mobile headers:
+ * MOBILE (< xl): Traditional full-width bar at all times.
+ *   - Transparent when over hero (homepage, scroll top)
+ *   - Solid bg + backdrop-blur when scrolled
+ *   - Logo on the left, theme toggle + hamburger on the right
+ *   - Expanded menu: full-width on phone, right-aligned card on tablet
  *
- * 1. FLOATING PILL (over hero): When at the top of the homepage, a
- *    frosted-glass pill with blur(48px) floats over the hero. This
- *    matches the Mobbin pattern — minimal, elegant, content-first.
- *    The pill has: Logo | ThemeToggle | Hamburger
- *    When expanded, the pill grows downward to reveal nav links.
- *
- * 2. TRADITIONAL FULL-WIDTH BAR (after scroll): Once the user scrolls
- *    past the hero, the pill morphs into a conventional full-width bar
- *    with logo on the left and hamburger on the right. This is more
- *    practical for navigation-heavy sections below the hero.
- *
- * On tablet (md–xl), the expanded menu is right-aligned and doesn't
- * cover the full screen.
+ * DESKTOP (xl+): Full-width bar with centered nav, Call CTA, theme toggle.
  */
 interface NavigationProps {
   brand: BrandAssets;
@@ -49,7 +38,6 @@ function getHrefPath(href: string) {
   return normalizePathname(href.split("#")[0]);
 }
 
-/** Pages that are children of the "Resources" nav dropdown. */
 const RESOURCE_CHILD_PATHS = new Set([
   normalizePathname(routes.faq),
   normalizePathname(routes.support),
@@ -87,46 +75,6 @@ function HamburgerIcon({ open }: { open: boolean }) {
         )}
       />
     </span>
-  );
-}
-
-/* ── Logo sub-component (shared between pill & bar) ──── */
-function NavLogo({ brand, size = "sm", onClick }: { brand: BrandAssets; size?: "sm" | "lg"; onClick?: () => void }) {
-  const h = size === "sm" ? "h-7" : "h-11";
-  return (
-    <a
-      href={routes.home}
-      onClick={onClick}
-      className="relative flex items-center min-w-0"
-    >
-      <img
-        src={brand.lightLogoSrc}
-        alt={brand.name}
-        width="176"
-        height="44"
-        onError={(event) => {
-          const img = event.currentTarget;
-          if (img.dataset.fallbackApplied) return;
-          img.dataset.fallbackApplied = "true";
-          img.src = fallbackBrand.lightLogoSrc;
-        }}
-        className={`logo-light block ${h} w-auto`}
-      />
-      <img
-        src={brand.darkLogoSrc}
-        alt=""
-        aria-hidden="true"
-        width="176"
-        height="44"
-        onError={(event) => {
-          const img = event.currentTarget;
-          if (img.dataset.fallbackApplied) return;
-          img.dataset.fallbackApplied = "true";
-          img.src = fallbackBrand.darkLogoSrc;
-        }}
-        className={`logo-dark ${h} w-auto`}
-      />
-    </a>
   );
 }
 
@@ -172,11 +120,7 @@ export function Navigation({
     };
   }, []);
 
-  /** True when the header should be transparent (over hero, at scroll top). */
   const headerOverHero = isHomePage && !scrolled;
-
-  /** Whether to show the floating pill or the traditional bar */
-  const showPill = headerOverHero;
 
   const primaryPhone = company.phones[0];
   const callHref = primaryPhone
@@ -239,115 +183,66 @@ export function Navigation({
     setDesktopMenu(null);
   };
 
-  /* ── Shared mobile panel props ──────────────────────── */
-  const mobilePanelProps = {
-    brandName,
-    callHref,
-    currentPath,
-    regularLinks: [...staticNav.leftLinks, ...staticNav.rightLinks],
-    highlightLink: staticNav.highlightLink,
-    id: mobileMenuId,
-    isOpen: mobileMenuOpen,
-    resourcesActive: isResourcesPath(currentPath),
-    servicesActive: currentPath === normalizePathname(routes.services),
-    resourcesColumns: staticNav.resourcesColumns,
-    servicesColumns: staticNav.servicesColumns,
-    panelRef: mobilePanelRef,
-    primaryPhone,
-    isActive,
-    onClose: () => setMobileMenuOpen(false),
-  };
-
   return (
     <>
       {/* ═══════════════════════════════════════════════════════
-       * MOBILE: FLOATING PILL (only over hero on homepage)
+       * MOBILE: Traditional full-width bar (< xl)
        * ───────────────────────────────────────────────────────
-       * A frosted-glass capsule that sits over the hero.
-       * Contains: Logo | ThemeToggle | Hamburger
-       * When expanded, the pill grows downward with nav links.
-       * Theme toggle is ALWAYS visible in the pill bar. */}
-      <header
-        data-over-hero=""
-        className={cn(
-          "xl:hidden fixed z-50 top-2 left-6 right-6",
-          "rounded-[28px]",
-          "transition-[background-color,backdrop-filter,opacity,transform] duration-300",
-          "nav-pill",
-          /* Hide pill when not over hero — fade out, slide up */
-          !showPill && "opacity-0 pointer-events-none -translate-y-2"
-        )}
-        style={{
-          backdropFilter: "blur(48px)",
-          WebkitBackdropFilter: "blur(48px)",
-        }}
-      >
-        {/* ── Pill bar (always visible when pill is shown) ── */}
-        <div className={cn(
-          "flex items-center justify-between gap-2",
-          "px-4 py-3",
-        )}>
-          {/* Logo */}
-          <NavLogo brand={brand} size="sm" onClick={closeAllMenus} />
-
-          {/* Right: Theme toggle + Hamburger — always visible */}
-          <div className="flex items-center gap-0.5">
-            <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} compact />
-            <button
-              ref={mobileToggleRef}
-              type="button"
-              aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
-              aria-expanded={mobileMenuOpen}
-              aria-controls={mobileMenuId}
-              onClick={() => {
-                setDesktopMenu(null);
-                setMobileMenuOpen((open) => !open);
-              }}
-              className={cn(
-                "flex items-center justify-center w-9 h-9",
-                "rounded-full transition-colors duration-200",
-                "hover:bg-accent-soft/40",
-                "dark-header-icon"
-              )}
-            >
-              <HamburgerIcon open={mobileMenuOpen} />
-            </button>
-          </div>
-        </div>
-
-        {/* ── Expandable menu (inside the pill) ── */}
-        <MobileNavigationPanel
-          {...mobilePanelProps}
-          variant="pill"
-        />
-      </header>
-
-      {/* ═══════════════════════════════════════════════════════
-       * MOBILE: TRADITIONAL FULL-WIDTH BAR (after scrolling)
-       * ───────────────────────────────────────────────────────
-       * Standard full-width header bar with logo on left,
-       * theme toggle + hamburger on right. Appears once the
-       * user scrolls past the hero section. */}
+       * Single consistent bar: transparent over hero, solid
+       * when scrolled. Logo left, theme toggle + hamburger right.
+       * Menu expands below the bar naturally. */}
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
-          "xl:hidden fixed z-50 top-0 inset-x-0 h-[56px]",
-          "transition-[background-color,backdrop-filter,opacity,transform] duration-300",
+          "xl:hidden fixed z-50 top-0 inset-x-0 h-[60px]",
+          "transition-[background-color,backdrop-filter] duration-300",
           headerOverHero
             ? "bg-transparent"
-            : "bg-page/95 backdrop-blur-xl border-b border-border-soft",
-          /* Show bar only when pill is NOT showing — fade in, slide down */
-          showPill && "opacity-0 pointer-events-none -translate-y-1"
+            : "bg-page/95 backdrop-blur-xl border-b border-border-soft"
         )}
       >
         <div className="h-full px-4 flex items-center justify-between">
-          {/* Logo */}
-          <NavLogo brand={brand} size="sm" onClick={closeAllMenus} />
+          {/* Logo — matches footer size: h-8 sm:h-11 */}
+          <a
+            href={routes.home}
+            onClick={closeAllMenus}
+            aria-label={`${brand.name} home`}
+            className="relative flex items-center min-w-0"
+          >
+            <img
+              src={brand.lightLogoSrc}
+              alt={brand.name}
+              width="160"
+              height="44"
+              onError={(event) => {
+                const img = event.currentTarget;
+                if (img.dataset.fallbackApplied) return;
+                img.dataset.fallbackApplied = "true";
+                img.src = fallbackBrand.lightLogoSrc;
+              }}
+              className="logo-light block h-8 sm:h-11 w-auto"
+            />
+            <img
+              src={brand.darkLogoSrc}
+              alt=""
+              aria-hidden="true"
+              width="160"
+              height="44"
+              onError={(event) => {
+                const img = event.currentTarget;
+                if (img.dataset.fallbackApplied) return;
+                img.dataset.fallbackApplied = "true";
+                img.src = fallbackBrand.darkLogoSrc;
+              }}
+              className="logo-dark h-8 sm:h-11 w-auto"
+            />
+          </a>
 
           {/* Right: Theme toggle + Hamburger */}
           <div className="flex items-center gap-0.5">
             <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} compact />
             <button
+              ref={mobileToggleRef}
               type="button"
               aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={mobileMenuOpen}
@@ -372,8 +267,21 @@ export function Navigation({
 
         {/* ── Expandable menu (dropdown from bar) ── */}
         <MobileNavigationPanel
-          {...mobilePanelProps}
-          variant="bar"
+          brandName={brandName}
+          callHref={callHref}
+          currentPath={currentPath}
+          regularLinks={[...staticNav.leftLinks, ...staticNav.rightLinks]}
+          highlightLink={staticNav.highlightLink}
+          id={mobileMenuId}
+          isOpen={mobileMenuOpen}
+          resourcesActive={isResourcesPath(currentPath)}
+          servicesActive={currentPath === normalizePathname(routes.services)}
+          resourcesColumns={staticNav.resourcesColumns}
+          servicesColumns={staticNav.servicesColumns}
+          panelRef={mobilePanelRef}
+          primaryPhone={primaryPhone}
+          isActive={isActive}
+          onClose={() => setMobileMenuOpen(false)}
         />
       </header>
 
@@ -381,7 +289,7 @@ export function Navigation({
        * DESKTOP: Full-width bar (xl+)
        * ───────────────────────────────────────────────────────
        * Standard header bar with centered nav, Call CTA,
-       * theme toggle. Unchanged from previous version. */}
+       * theme toggle. */}
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
