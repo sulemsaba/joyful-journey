@@ -23,35 +23,74 @@ interface SkeletonProps {
 
 /* ═══════════════════════════════════════════════════════════════
  * ContentSkeleton — generic fallback for any page/section.
- * Shows a card with placeholder text bars and a 3-column grid.
- * Used by LoadBoundary when no specific skeleton is provided.
+ * Shows skeleton shapes (placeholder bars + cards) with a centered
+ * faded favicon pulse + animated dots overlay.
+ * Same visual pattern as HomePageSkeleton.
  * ═══════════════════════════════════════════════════════════════ */
-function ContentSkeleton({ label, variant }: SkeletonProps) {
+function ContentSkeleton({ variant }: SkeletonProps) {
   const isSection = variant === "section";
 
   return (
     <div
-      className={[
-        "grid border border-border-soft animate-pulse bg-surface-elevated",
+      className={cn(
+        "relative isolate overflow-hidden",
         isSection
-          ? "gap-4 min-h-[15rem] p-5 rounded-[1.35rem] w-full"
-          : "gap-6 min-h-[clamp(24rem,48vh,34rem)] p-8 rounded-[1.8rem] w-[min(1180px,calc(100%-2rem))] mx-auto mt-6",
-      ].join(" ")}
+          ? "flex items-center min-h-[15rem] w-full"
+          : "flex items-center min-h-[clamp(24rem,48vh,34rem)] w-full"
+      )}
       role="status"
       aria-live="polite"
     >
-      <div className="grid gap-3" aria-hidden="true">
-        <div className="h-4 w-28 rounded-full bg-accent-soft" />
-        <div className="h-11 w-[min(30rem,88%)] rounded-full bg-accent-soft" />
-        <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft" />
-        <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft" />
+      {/* Skeleton shapes */}
+      <div
+        className={cn(
+          "w-[min(1180px,calc(100%-2rem))] mx-auto",
+          isSection ? "p-5" : "mt-6 p-8"
+        )}
+        aria-hidden="true"
+      >
+        <div className="grid gap-3">
+          <div className="h-4 w-28 rounded-full bg-accent-soft animate-pulse" />
+          <div className="h-11 w-[min(30rem,88%)] rounded-full bg-accent-soft animate-pulse" />
+          <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft animate-pulse" />
+          <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft animate-pulse" />
+        </div>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
+          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
+          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4" aria-hidden="true">
-        <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50" />
-        <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50" />
-        <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50" />
+
+      {/* Centered favicon pulse + animated dots overlay */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
+            <img
+              src="/branding/exxonim-favicon-light.png"
+              alt=""
+              width="48"
+              height="48"
+              className="logo-light block w-12 h-12 object-contain opacity-40"
+            />
+            <img
+              src="/branding/exxonim-favicon-dark.png"
+              alt=""
+              width="48"
+              height="48"
+              className="logo-dark w-12 h-12 object-contain opacity-40"
+            />
+          </div>
+          <div className="flex items-center opacity-30">
+            <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">
+              Loading
+            </span>
+            <span className="loader-dots font-sans text-sm font-medium text-text-muted">
+              <span>.</span><span>.</span><span>.</span>
+            </span>
+          </div>
+        </div>
       </div>
-      <p className="m-0 text-text-muted text-sm">{label}</p>
     </div>
   );
 }

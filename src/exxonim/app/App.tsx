@@ -109,43 +109,56 @@ type IdleWindow = typeof window & {
  * Rendered inside <main> so the shell (nav + footer) stays
  * visible while a lazy page chunk loads.
  *
- * IMPORTANT: This is NOT a full-screen overlay. It sits inside
- * <main> so the nav and footer stay visible during navigation.
- * A full-screen loader would cause massive CLS and block LCP. */
+ * Shows skeleton shapes with a centered faded favicon pulse +
+ * animated dots overlay — same visual pattern as HomePageSkeleton
+ * and ContentSkeleton. */
 function PageSuspenseFallback() {
   return (
     <div
-      className="flex items-center justify-center min-h-[60vh]"
+      className="relative isolate overflow-hidden flex items-center min-h-[clamp(24rem,48vh,34rem)] w-full"
       role="status"
       aria-live="polite"
     >
-      <div className="flex flex-col items-center gap-4">
-        {/* Favicon image with smooth pulse */}
-        <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
-          {/* Light mode favicon */}
-          <img
-            src="/branding/exxonim-favicon-light.png"
-            alt=""
-            width="40"
-            height="40"
-            className="logo-light block w-10 h-10 object-contain"
-          />
-          {/* Dark mode favicon */}
-          <img
-            src="/branding/exxonim-favicon-dark.png"
-            alt=""
-            width="40"
-            height="40"
-            className="logo-dark w-10 h-10 object-contain"
-          />
+      {/* Skeleton shapes */}
+      <div className="w-[min(1180px,calc(100%-2rem))] mx-auto mt-6 p-8" aria-hidden="true">
+        <div className="grid gap-3">
+          <div className="h-4 w-28 rounded-full bg-accent-soft animate-pulse" />
+          <div className="h-11 w-[min(30rem,88%)] rounded-full bg-accent-soft animate-pulse" />
+          <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft animate-pulse" />
+          <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft animate-pulse" />
         </div>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
+          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
+          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
+        </div>
+      </div>
 
-        {/* Loading text with animated dots */}
-        <div className="flex items-center">
-          <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
-          <span className="loader-dots font-sans text-sm font-medium text-text-muted" aria-hidden="true">
-            <span>.</span><span>.</span><span>.</span>
-          </span>
+      {/* Centered favicon pulse + animated dots overlay */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
+            <img
+              src="/branding/exxonim-favicon-light.png"
+              alt=""
+              width="48"
+              height="48"
+              className="logo-light block w-12 h-12 object-contain opacity-40"
+            />
+            <img
+              src="/branding/exxonim-favicon-dark.png"
+              alt=""
+              width="48"
+              height="48"
+              className="logo-dark w-12 h-12 object-contain opacity-40"
+            />
+          </div>
+          <div className="flex items-center opacity-30">
+            <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
+            <span className="loader-dots font-sans text-sm font-medium text-text-muted" aria-hidden="true">
+              <span>.</span><span>.</span><span>.</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
