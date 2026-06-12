@@ -18,8 +18,9 @@ interface LoaderOverlayProps {
   variant?: LoaderOverlayVariant;
 }
 
-/* ── Reusable favicon pulse + animated dots ─────────────── */
-function LoaderIndicator() {
+/* ── Reusable favicon pulse + animated dots ─────────────── *
+ * Also exported for direct use (e.g. inside HomePageSkeleton). */
+export function LoaderIndicator() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">

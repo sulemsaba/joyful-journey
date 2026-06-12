@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
+import { cn } from "@/exxonim/utils/cn";
 import { ErrorMessage } from "./ErrorMessage";
-import { LoaderOverlay } from "./LoaderOverlay";
+import { LoaderOverlay, LoaderIndicator } from "./LoaderOverlay";
 
 type LoadBoundaryVariant = "page" | "section";
 type LoadBoundaryChildren = ReactNode | (() => ReactNode);
@@ -68,34 +69,9 @@ export function HomePageSkeleton() {
           </div>
         </div>
 
-        {/* Centered favicon pulse loader — same as PageSuspenseFallback */}
+        {/* Centered favicon pulse loader */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
-              <img
-                src="/branding/exxonim-favicon-light.png"
-                alt=""
-                width="48"
-                height="48"
-                className="logo-light block w-12 h-12 object-contain opacity-40"
-              />
-              <img
-                src="/branding/exxonim-favicon-dark.png"
-                alt=""
-                width="48"
-                height="48"
-                className="logo-dark w-12 h-12 object-contain opacity-40"
-              />
-            </div>
-            <div className="flex items-center opacity-30">
-              <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">
-                Loading
-              </span>
-              <span className="loader-dots font-sans text-sm font-medium text-text-muted">
-                <span>.</span><span>.</span><span>.</span>
-              </span>
-            </div>
-          </div>
+          <LoaderIndicator />
         </div>
       </section>
 
@@ -140,7 +116,7 @@ export function HomePageSkeleton() {
         className="relative bg-[linear-gradient(180deg,var(--color-page)_0%,var(--color-page)_52%,var(--color-page-strong)_100%)] py-16"
       >
         <div className="max-w-[1320px] mx-auto px-4">
-          <div className="rounded-3xl border border-border-soft bg-surface p-8 md:p-12 animate-pulse">
+          <div className="rounded-3xl p-8 md:p-12 animate-pulse">
             <div className="grid gap-4">
               <div className="h-3 w-20 rounded-full bg-accent-soft" />
               <div className="h-8 w-[min(24rem,70%)] rounded-full bg-accent-soft" />
@@ -173,10 +149,10 @@ export function HomePageSkeleton() {
               <div
                 key={i}
                 className={cn(
-                  "flex flex-col rounded-3xl border p-7 animate-pulse",
+                  "flex flex-col rounded-3xl p-7 animate-pulse",
                   card.featured
-                    ? "border-transparent bg-text"
-                    : "border-border-soft bg-surface"
+                    ? "bg-text"
+                    : ""
                 )}
               >
                 {/* Plan name + badge */}
@@ -252,7 +228,7 @@ export function HomePageSkeleton() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="flex min-w-0 flex-col rounded-[30px] border border-border-soft bg-surface animate-pulse flex-[0_0_clamp(260px,22vw,360px)] max-sm:rounded-[24px]"
+                className="flex min-w-0 flex-col rounded-[30px] animate-pulse flex-[0_0_clamp(260px,22vw,360px)] max-sm:rounded-[24px]"
               >
                 {/* Image area */}
                 <div className="aspect-[16/10] bg-accent-soft/60" />
@@ -294,11 +270,7 @@ export function HomePageSkeleton() {
        */}
       <section aria-hidden="true" className="py-10 md:py-16">
         <div className="mx-auto w-[min(1240px,calc(100%-2rem))]">
-          <div className="relative overflow-hidden border border-border-soft sm:rounded-[2rem] rounded-2xl sm:p-8 md:p-12 p-5 animate-pulse text-center"
-            style={{
-              background:
-                'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
-            }}
+          <div className="relative overflow-hidden sm:rounded-[2rem] rounded-2xl sm:p-8 md:p-12 p-5 animate-pulse text-center"
           >
             {/* Unified CTA skeleton — always centered */}
             <div className="mx-auto inline-flex h-4 w-24 rounded-full bg-accent-soft" />

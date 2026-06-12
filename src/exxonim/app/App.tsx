@@ -107,10 +107,12 @@ type IdleWindow = typeof window & {
 };
 
 /* ── Page-level Suspense fallback ──────────────────────
- * Uses LoaderOverlay — the single source of truth for
- * all loading states across the app. */
+ * Shown briefly while a lazy page chunk downloads.
+ * Uses compact variant (favicon + dots only) because the
+ * page's own LoadBoundary will show the full skeleton once
+ * the component mounts — avoids double skeleton flash. */
 function PageSuspenseFallback() {
-  return <LoaderOverlay variant="page" />;
+  return <LoaderOverlay variant="compact" />;
 }
 
 /* ── ScrollToTop on route change ──────────────────── */
