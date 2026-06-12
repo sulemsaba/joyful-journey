@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { StackItem } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
@@ -11,17 +10,6 @@ import { ArrowRight } from "lucide-react";
 const EASE = [0.25, 0.4, 0.25, 1] as const;
 const DURATION = 0.6;
 const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
-
-/* ── Phone mockup screen inset percentages ──────────────
- * Measured from the AI-generated phone-mockup.png:
- *   Top: 8%   Bottom: 12%   Left: 12%   Right: 12%
- * These position the video inside the phone screen area. */
-const PHONE_SCREEN_INSET = {
-  top: "8%",
-  bottom: "12%",
-  left: "12%",
-  right: "12%",
-} as const;
 
 interface StackSectionProps {
   items: StackItem[];
@@ -67,7 +55,6 @@ interface StackItemRowProps {
 function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
   const badge = item.windowTag || undefined;
   const hasVideo = Boolean(item.videoSrc);
-  const hasPhoneMockup = Boolean(item.phoneMockupSrc);
 
   return (
     <div
@@ -124,262 +111,95 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         </div>
       </motion.div>
 
-      {/* ── Video Surface Half ── */}
+      {/* ── Video Surface Half ── Fades in like going beneath the text card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 12 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={VIEWPORT_ONCE}
         transition={{ duration: DURATION + 0.15, ease: EASE }}
         className={cn(
-          "relative w-full flex justify-center",
+          "relative w-full",
+          /* CSS custom properties for responsive video positioning */
+          "[--video-width:80%] [--video-y-offset:8%]",
+          "md:[--video-width:65%] md:[--video-y-offset:8%]",
+          "xl:[--video-width:42%] xl:[--video-y-offset:9%]",
           isReversed && "md:[direction:ltr]"
         )}
       >
-        {hasVideo && hasPhoneMockup ? (
-          /* ── Real phone mockup with video inside ── */
-          <PhoneMockupVideo
-            videoSrc={item.videoSrc}
-            phoneImageSrc={item.phoneMockupSrc!}
-          />
-        ) : hasVideo ? (
-          /* ── Video without phone mockup (original behavior) ── */
-          <VideoSurface videoSrc={item.videoSrc} />
-        ) : (
-          /* ── Placeholder surface — no video ── */
-          <PlaceholderSurface index={index} label={item.windowTitle || item.title} />
-        )}
-      </motion.div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────
- * PHONE MOCKUP + VIDEO
- *
- * Renders a real phone PNG frame with the video clipped
- * inside the screen area. Slow-internet friendly:
- *   - poster image (15KB) shows instantly
- *   - video only loads when in viewport (IntersectionObserver)
- *   - preload="none" — no bandwidth wasted until visible
- *   - graceful fallback: if video fails, poster stays visible
- * ───────────────────────────────────────────────────────── */
-
-function PhoneMockupVideo({
-  videoSrc,
-  phoneImageSrc,
-}: {
-  videoSrc: string;
-  phoneImageSrc: string;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isInView, setIsInView] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-
-  /* Only load the video when the phone enters the viewport */
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect(); // once is enough
-        }
-      },
-      { rootMargin: "200px" } // start loading slightly before visible
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  /* Auto-play when video data is ready */
-  useEffect(() => {
-    if (!isInView || !videoRef.current) return;
-    videoRef.current.play().catch(() => {
-      // autoplay blocked — user can tap to play
-    });
-  }, [isInView, videoLoaded]);
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative mx-auto w-full max-w-[320px] md:max-w-[360px] xl:max-w-[400px]"
-      style={{ aspectRatio: "864 / 1152" }}
-    >
-      {/* Layer 1: Video clipped to screen area (behind the phone frame) */}
-      {isInView && (
+        {/* Surface (background container) */}
         <div
-          className="absolute overflow-hidden rounded-[1.2rem]"
-          style={{
-            top: PHONE_SCREEN_INSET.top,
-            bottom: PHONE_SCREEN_INSET.bottom,
-            left: PHONE_SCREEN_INSET.left,
-            right: PHONE_SCREEN_INSET.right,
-            zIndex: 1,
-          }}
-        >
-          <video
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            disablePictureInPicture
-            disableRemotePlayback
-            preload="none"
-            onCanPlay={() => setVideoLoaded(true)}
-            poster="/videos/track-consultation-poster.webp"
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover object-top"
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-
-          {/* Poster fallback — shown until video is ready */}
-          {!videoLoaded && (
-            <img
-              src="/videos/track-consultation-poster.webp"
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover object-top"
-              aria-hidden="true"
-            />
+          className={cn(
+            "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
+            "bg-page",
+            /* NO portrait on mobile — landscape always */
+            "aspect-[1.22]",
+            "md:aspect-[1.22]",
+            "xl:aspect-[1.22]"
           )}
+        >
+          <div className="relative size-full">
+            {hasVideo ? (
+              /* ── Actual video ── */
+              <>
+                {/* Mobile: landscape, fills container */}
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
+                >
+                  <source src={item.videoSrc} type="video/mp4" />
+                </video>
+                {/* Desktop: phone-in-frame portrait style */}
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  aria-hidden="true"
+                  className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
+                  style={{
+                    top: "var(--video-y-offset)",
+                    left: "calc((100% - var(--video-width)) / 2)",
+                    width: "var(--video-width)",
+                    aspectRatio: "0.462",
+                  }}
+                >
+                  <source src={item.videoSrc} type="video/mp4" />
+                </video>
+              </>
+            ) : (
+              /* ── Placeholder surface — no video ── */
+              <>
+                {/* Mobile: landscape, fills container */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden md:hidden"
+                >
+                  <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
+                </div>
+                {/* Desktop: phone-in-frame portrait style */}
+                <div
+                  className="pointer-events-none absolute hidden md:block rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
+                  style={{
+                    top: "var(--video-y-offset)",
+                    left: "calc((100% - var(--video-width)) / 2)",
+                    width: "var(--video-width)",
+                    aspectRatio: "0.462",
+                  }}
+                >
+                  <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      )}
-
-      {/* If not in view yet, show a static poster inside the screen area */}
-      {!isInView && (
-        <div
-          className="absolute overflow-hidden rounded-[1.2rem] bg-surface-soft"
-          style={{
-            top: PHONE_SCREEN_INSET.top,
-            bottom: PHONE_SCREEN_INSET.bottom,
-            left: PHONE_SCREEN_INSET.left,
-            right: PHONE_SCREEN_INSET.right,
-            zIndex: 1,
-          }}
-        >
-          <img
-            src="/videos/track-consultation-poster.webp"
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover object-top"
-            aria-hidden="true"
-          />
-        </div>
-      )}
-
-      {/* Layer 2: Phone frame image (on top, with transparent screen) */}
-      <img
-        src={phoneImageSrc}
-        alt="Phone showing consultation tracking"
-        className="relative w-full h-full object-contain"
-        style={{ zIndex: 2 }}
-        loading="lazy"
-      />
-
-      {/* Subtle shadow beneath the phone */}
-      <div
-        className="absolute inset-0 -z-10 translate-y-4 blur-2xl opacity-20"
-        style={{
-          background: "radial-gradient(ellipse at center, var(--color-accent, #10b981) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────
- * VIDEO SURFACE (no phone mockup — original CSS frame)
- * ───────────────────────────────────────────────────────── */
-
-function VideoSurface({ videoSrc }: { videoSrc: string }) {
-  return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
-        "bg-page",
-        "aspect-[1.22]"
-      )}
-    >
-      <div className="relative size-full">
-        {/* Mobile: landscape, fills container */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          disablePictureInPicture
-          disableRemotePlayback
-          preload="metadata"
-          poster="/videos/track-consultation-poster.webp"
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-        {/* Desktop: phone-in-frame portrait style */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          disablePictureInPicture
-          disableRemotePlayback
-          preload="metadata"
-          poster="/videos/track-consultation-poster.webp"
-          aria-hidden="true"
-          className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
-          style={{
-            top: "var(--video-y-offset, 8%)",
-            left: "calc((100% - var(--video-width, 65%)) / 2)",
-            width: "var(--video-width, 65%)",
-            aspectRatio: "0.462",
-          }}
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────
- * PLACEHOLDER SURFACE (no video available)
- * ───────────────────────────────────────────────────────── */
-
-function PlaceholderSurface({ index, label }: { index: number; label: string }) {
-  return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
-        "bg-page",
-        "aspect-[1.22]"
-      )}
-    >
-      <div className="relative size-full">
-        {/* Mobile: landscape, fills container */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden md:hidden"
-        >
-          <PlaceholderGraphic index={index} label={label} />
-        </div>
-        {/* Desktop: phone-in-frame portrait style */}
-        <div
-          className="pointer-events-none absolute hidden md:block rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
-          style={{
-            top: "var(--video-y-offset, 8%)",
-            left: "calc((100% - var(--video-width, 65%)) / 2)",
-            width: "var(--video-width, 65%)",
-            aspectRatio: "0.462",
-          }}
-        >
-          <PlaceholderGraphic index={index} label={label} />
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
