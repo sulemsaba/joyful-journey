@@ -267,7 +267,7 @@ function TrackingResultCard({
                 </span>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/10 text-[0.58rem] font-bold text-accent tracking-wide uppercase">
                   <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                  Instant
+                  Instant Result
                 </span>
               </div>
               <span className="text-2xl md:text-3xl font-mono font-bold text-text tracking-[0.15em]">
@@ -403,12 +403,6 @@ function TrackingResultCard({
           <RotateCcw className="w-4 h-4" />
           Look up another code
         </button>
-        <a
-          href={routes.contact}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-accent transition-colors"
-        >
-          Forgot your tracking number?
-        </a>
       </div>
     </div>
   );
@@ -826,7 +820,7 @@ export function TrackConsultationPage() {
               Track Your Consultation
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
-              One code. Instant status. WhatsApp updates at every step.
+              One code. Full timeline. WhatsApp updates at every step.
             </p>
 
           </div>
@@ -863,6 +857,12 @@ export function TrackConsultationPage() {
                   Check Status
                 </Button>
               </form>
+              <a
+                href="#lost-code"
+                className="text-xs text-text-muted hover:text-accent transition-colors text-center -mt-1"
+              >
+                Lost your code?
+              </a>
 
               {/* Error state — dismissible */}
               {searchError && (
@@ -887,7 +887,7 @@ export function TrackConsultationPage() {
                 <div className="grid gap-1 items-center text-center">
                   <Clock className="w-5 h-5 text-accent mx-auto" />
                   <span className="text-xs text-text-muted font-semibold">
-                    Instant Lookup
+                    Always Current
                   </span>
                 </div>
                 <div className="grid gap-1 items-center text-center">
@@ -995,7 +995,7 @@ export function TrackConsultationPage() {
       </section>
 
       {/* ── Privacy + Lost code — combined to reduce redundancy ── */}
-      <section className="py-16 md:py-20">
+      <section id="lost-code" className="py-16 md:py-20 scroll-mt-8">
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[42rem] grid gap-4">
           <div className="flex items-start gap-4 p-5 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
             <span className="text-accent mt-0.5 flex-shrink-0"><ShieldCheck className="w-5 h-5" /></span>
