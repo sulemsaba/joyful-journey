@@ -122,3 +122,26 @@ Stage Summary:
 - Mobile footer is compact - just arrows + "See more" (paragraph hidden on small screens)
 - First card no longer glued to left edge - scroll-padding-left ensures visible margin
 - Both homepage InsightsSection and ResourcesPage updated consistently
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix the "Track every consultation" video not showing - browser cache issue
+
+Work Log:
+- Investigated why video wasn't showing in the "Track every consultation" section
+- Discovered the mini-server on port 3000 was serving PRE-BUILT static files from `dist/`, NOT the Vite dev server
+- The `dist/` folder had the OLD built JavaScript with `videoSrc` (single string) instead of `videoSources` (array of objects)
+- Added cache-busting `?v=2` query params to video source URLs in `fallbackPublicContent.ts`
+- Fixed `exxonim-data.ts` — changed `videoSrc: "/videos/track-consultation.mp4"` to `videoSources: [{src: "...webm?v=2", type: "video/webm"}, {src: "...mp4?v=2", type: "video/mp4"}]`
+- Copied updated video files to `dist/videos/`
+- Rebuilt the Vite app (`vite build`) to update the `dist/` folder with the latest code
+- Restarted the mini-server on port 3000
+- Verified in browser: video plays correctly with both webm+mp4 sources, readyState=4, playbackRate=0.7x
+- Floating pill navbar also verified working (blur(48px), border-radius 28px, fixed position)
+- No browser errors or console errors
+
+Stage Summary:
+- Root cause: The mini-server served stale built files from `dist/` that had the old `videoSrc` format. Source code changes weren't reflected because the `dist/` folder wasn't rebuilt.
+- Fix: Rebuilt the Vite app and copied video files to `dist/`
+- Video now plays correctly with 2 sources (webm + mp4), cache-busting, and 0.7x playback rate
+- All design changes (floating pill navbar, etc.) are working correctly

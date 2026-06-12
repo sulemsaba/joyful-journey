@@ -1,0 +1,2002 @@
+     1→import type {
+     2→  AboutPageContent,
+     3→  BlogCategory,
+     4→  BlogPost,
+     5→  CareerPageContent,
+     6→  ContactPageContent,
+     7→  FaqPageContent,
+     8→  HomePageContent,
+     9→  InfoPageContent,
+    10→  PageRecord,
+    11→  PricingPlan,
+    12→  ResourcesPageContent,
+    13→  ServicesPageContent,
+    14→  SiteSetting,
+    15→  Testimonial,
+    16→} from '@/exxonim/types';
+    17→import type { BrandAssets, CompanyInfo } from '@/exxonim/types';
+    18→import type { ApiCareerJob, SiteSettingFooterValue } from "@/exxonim/types/api";
+    19→import {
+    20→  fallbackBrand,
+    21→  fallbackCompanyInfo,
+    22→  fallbackFooter,
+    23→  fallbackNavigationItems,
+    24→} from "./fallbackShell";
+    25→import { routes } from "@/exxonim/routes";
+    26→const utecLogo = "/clients/utec.webp";
+    27→const trcsLogo = "/clients/trcs.webp";
+    28→const levoLogo = "/clients/levo.webp";
+    29→const getLogo = "/clients/get.webp";
+    30→const bpoLogo = "/clients/bpo.webp";
+    31→const famaLogo = "/clients/fama.webp";
+    32→const jotofaLogo = "/clients/jotofa.webp";
+    33→const jkmLogo = "/clients/jkm.webp";
+    34→const djemaLogo = "/clients/djema_consult.webp";
+    35→const exxonimLogo = "/clients/exxonim-logo.webp";
+    36→const lightLogo = "/branding/exxonimLogoLight.webp";
+    37→const darkLogo = "/branding/logo-dark.png";
+    38→
+    39→/* BACKEND / ADMIN INTEGRATION NOTES (Blog cover images):
+    40→ * ─────────────────────────────────────────────────────
+    41→ * Blog cover images are served from /public/blog/ during development.
+    42→ * In production, they will come from the database via the /media/ API endpoint
+    43→ * (admin upload → CDN). The admin should enforce:
+    44→ *   - Format: WebP preferred (better compression, supports transparency).
+    45→ *   - Minimum dimensions: 1344×768px (16:9 landscape for hero cards).
+    46→ *   - Aspect ratio: 16:9 for hero/featured cards, 16:10 for grid cards.
+    47→ *     The image will be cropped via object-cover in CSS, so the key subject
+    48→ *     should be centered with some margin on all sides.
+    49→ *   - File size: max 500KB per image (WebP at 1344×768 typically 80-200KB).
+    50→ *   - Alt text: Every cover image MUST have a descriptive `coverAlt` string
+    51→ *     for accessibility. The admin should make this a required field.
+    52→ *   - Author avatars: 96×96px minimum, square, WebP or PNG.
+    53→ *     Displayed as a 38px circle (rounded-full) so center the subject.
+    54→ *
+    55→ * Database schema suggestion for blog posts:
+    56→ *   TABLE blog_posts (
+    57→ *     id              SERIAL PRIMARY KEY,
+    58→ *     slug            VARCHAR(255) UNIQUE NOT NULL,
+    59→ *     title           VARCHAR(255) NOT NULL,
+    60→ *     excerpt         TEXT NOT NULL,
+    61→ *     cover_image_url VARCHAR(512),        -- CDN URL from /media/ upload
+    62→ *     cover_alt       VARCHAR(255),        -- Accessibility description
+    63→ *     media_label     VARCHAR(255),        -- Short overlay text on hero cards
+    64→ *     published_at    TIMESTAMPTZ NOT NULL,
+    65→ *     category_id     INTEGER REFERENCES blog_categories(id),
+    66→ *     author_id       INTEGER REFERENCES blog_authors(id),
+    67→ *     featured_slot   VARCHAR(50),          -- 'hero' | 'popular' | 'editors-pick' | NULL
+    68→ *     featured_on_home BOOLEAN DEFAULT FALSE,
+    69→ *     read_time_minutes INTEGER,
+    70→ *     is_published    BOOLEAN DEFAULT TRUE,
+    71→ *     created_at      TIMESTAMPTZ DEFAULT NOW(),
+    72→ *     updated_at      TIMESTAMPTZ DEFAULT NOW()
+    73→ *   );
+    74→ *
+    75→ *   TABLE blog_authors (
+    76→ *     id              SERIAL PRIMARY KEY,
+    77→ *     name            VARCHAR(255) NOT NULL,
+    78→ *     role            VARCHAR(255),
+    79→ *     avatar_url      VARCHAR(512),         -- CDN URL from /media/ upload
+    80→ *     bio             TEXT,
+    81→ *     created_at      TIMESTAMPTZ DEFAULT NOW()
+    82→ *   );
+    83→ */
+    84→const blogCoverRegistration = "/blog/company-registration-basics.webp";
+    85→const blogCoverTin = "/blog/tin-registration-checklist.webp";
+    86→const blogCoverLicensing = "/blog/licensing-renewal-prep.webp";
+    87→const blogCoverCalendar = "/blog/compliance-calendar-basics.webp";
+    88→const blogCoverTimeline = "/blog/business-registration-timeline.webp";
+    89→const blogCoverNgo = "/blog/ngo-registration-guide.webp";
+    90→const blogCoverBizName = "/blog/business-name-registration.webp";
+    91→const blogCoverTaxReturn = "/blog/tax-return-preparation.webp";
+    92→const blogCoverRegulatory = "/blog/regulatory-compliance-framework.webp";
+    93→const blogCoverAnnualReturn = "/blog/annual-return-filing.webp";
+    94→const blogCoverImportExport = "/blog/import-export-licensing.webp";
+    95→const blogCoverBankAccount = "/blog/business-bank-account-setup.webp";
+    96→const blogCoverTraObligations = "/blog/tra-tax-obligations.webp";
+    97→const blogCoverPartnership = "/blog/partnership-registration.webp";
+    98→const blogCoverWorkPermit = "/blog/work-permit-foreign-investors.webp";
+    99→const blogCoverDigital = "/blog/digital-business-compliance.webp";
+   100→
+   101→/**
+   102→ * Public API fallback records used when live content cannot be reached.
+   103→ * Keep these objects aligned with the domain types so page rendering still works offline.
+   104→ */
+   105→const FALLBACK_RECORD_ID = 0;
+   106→const FALLBACK_TIMESTAMP = "fallback";
+   107→
+   108→function createFallbackPage<TContent>(
+   109→  slug: string,
+   110→  title: string,
+   111→  content: TContent,
+   112→  metaTitle?: string,
+   113→  metaDescription?: string
+   114→): PageRecord<TContent> {
+   115→  return {
+   116→    id: FALLBACK_RECORD_ID,
+   117→    title,
+   118→    slug,
+   119→    content,
+   120→    metaTitle,
+   121→    metaDescription,
+   122→    isPublished: true,
+   123→    createdAt: FALLBACK_TIMESTAMP,
+   124→    updatedAt: FALLBACK_TIMESTAMP,
+   125→  };
+   126→}
+   127→
+   128→function createFallbackSiteSetting<TValue>(
+   129→  key: string,
+   130→  value: TValue
+   131→): SiteSetting<TValue> {
+   132→  return {
+   133→    id: FALLBACK_RECORD_ID,
+   134→    key,
+   135→    value,
+   136→    createdAt: FALLBACK_TIMESTAMP,
+   137→    updatedAt: FALLBACK_TIMESTAMP,
+   138→  };
+   139→}
+   140→
+   141→const fallbackBlogCategories: BlogCategory[] = [
+   142→  {
+   143→    id: "business-setup",
+   144→    label: "Business Setup",
+   145→    description: "Foundational guidance for registrations, filings, and first-step compliance.",
+   146→  },
+   147→  {
+   148→    id: "compliance",
+   149→    label: "Compliance",
+   150→    description: "Practical reminders and process notes for recurring obligations.",
+   151→  },
+   152→  {
+   153→    id: "operations",
+   154→    label: "Operations",
+   155→    description: "Operational guidance for teams managing growing workloads and deadlines.",
+   156→  },
+   157→];
+   158→
+   159→function getFallbackCategory(id: string) {
+   160→  return fallbackBlogCategories.find((category) => category.id === id);
+   161→}
+   162→
+   163→export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
+   164→  "home",
+   165→  "Exxonim Consult | Business Registration & Compliance Tanzania",
+   166→  {
+   167→    hero: {
+   168→      eyebrow: "Business consulting — Tanzania",
+   169→      title: "Your obligations, handled and tracked.",
+   170→      description:
+   171→        "Exxonim guides you through registration, licensing, and compliance — with proactive updates at every milestone.",
+   172→      cta: {
+   173→        label: "Get Started",
+   174→        href: routes.contact,
+   175→      },
+   176→      secondary_cta: {
+   177→        label: "Explore Services",
+   178→        href: routes.services,
+   179→      },
+   180→      highlights: [
+   181→        {
+   182→          title: "Entity Setup",
+   183→          detail: "Company, NGO, business name, and foreign investor registration",
+   184→        },
+   185→        {
+   186→          title: "Tax & Licensing",
+   187→          detail: "TIN, VAT, business licences, and sector-specific permits",
+   188→        },
+   189→        {
+   190→          title: "Proactive Tracking",
+   191→          detail: "Automated updates at every milestone — no need to call and ask",
+   192→        },
+   193→      ],
+   194→    },
+   195→    provider_section: {
+   196→      kicker: "Trusted workflow references",
+   197→      title: "Recognised by organisations and partners across the region.",
+   198→      logos: [
+   199→        { alt: "Utec", src: utecLogo, opticalWeight: "solid" },
+   200→        { alt: "TRCS", src: trcsLogo, opticalWeight: "solid" },
+   201→        { alt: "Levo", src: levoLogo, opticalWeight: "wordmark" },
+   202→        { alt: "GET", src: getLogo, opticalWeight: "wordmark" },
+   203→        { alt: "BPO", src: bpoLogo, opticalWeight: "solid" },
+   204→        { alt: "FAMA", src: famaLogo, opticalWeight: "solid" },
+   205→        { alt: "Jotofa", src: jotofaLogo, opticalWeight: "wordmark" },
+   206→        { alt: "JKM", src: jkmLogo, opticalWeight: "solid" },
+   207→        { alt: "Djema Consult", src: djemaLogo, opticalWeight: "wordmark" },
+   208→        { alt: "Exxonim", src: exxonimLogo, opticalWeight: "wordmark" },
+   209→      ],
+   210→    },
+   211→    stack_section: {
+   212→      items: [
+   213→        {
+   214→          title: "Start with the right entity setup",
+   215→          subtitle: "Company, NGO, business name, or foreign investor registration — guided from start to certificate.",
+   216→          description:
+   217→            "Every registration journey starts with the correct entity type, ownership structure, and document set. Exxonim guides you through the sequence so the process does not stall later.",
+   218→          ctaLabel: "Discuss your case",
+   219→          ctaHref: routes.contact,
+   220→          windowTitle: "Setup",
+   221→          windowTag: "Guide",
+   222→          videoSources: [],
+   223→        },
+   224→        {
+   225→          title: "Keep tax and licensing work on track",
+   226→          subtitle: "TIN, VAT, business licences, sector permits, and work permits — managed through a clear workflow.",
+   227→          description:
+   228→            "A practical approach to tax registration, licensing applications, and regulatory follow-through — so your team can focus on operations instead of chasing approvals.",
+   229→          ctaLabel: "Explore services",
+   230→          ctaHref: routes.services,
+   231→          windowTitle: "Compliance",
+   232→          windowTag: "Guide",
+   233→          videoSources: [],
+   234→        },
+   235→        {
+   236→          title: "Track every consultation — automatically",
+   237→          subtitle: "Proactive updates at every milestone. You never need to call and ask what is happening.",
+   238→          description:
+   239→            "Upon engagement, you receive a unique tracking number. At every key milestone — name clearance, document submission, approval, issuance — Exxonim sends you an update via WhatsApp, email, or SMS. You can also look up your status on the website anytime, no login required.",
+   240→          ctaLabel: "Track a consultation",
+   241→          ctaHref: routes.trackConsultation,
+   242→          windowTitle: "Tracking",
+   243→          windowTag: "Guide",
+   244→          videoSources: [
+   245→            { src: "/videos/track-consultation.webm", type: "video/webm" },
+   246→            { src: "/videos/track-consultation.mp4", type: "video/mp4" },
+   247→          ],
+   248→        },
+   249→      ],
+   250→      default_feature_rows: [
+   251→        {
+   252→          title: "Entity registration",
+   253→          description: "Company, NGO, business name, and foreign investor setup.",
+   254→          visualKey: "registration",
+   255→        },
+   256→        {
+   257→          title: "Tax & licensing",
+   258→          description: "TIN, VAT, business licences, work permits, and sector approvals.",
+   259→          visualKey: "tax",
+   260→        },
+   261→        {
+   262→          title: "Proactive tracking",
+   263→          description: "Automated milestone updates — WhatsApp, email, or SMS.",
+   264→          visualKey: "institutional",
+   265→        },
+   266→      ],
+   267→      feature_visual_content: {
+   268→        registration: {
+   269→          workstreamValue: "Registration",
+   270→          counterpartLabel: "Client",
+   271→          counterpartValue: "Organization setup",
+   272→          focusValue: "Setup path",
+   273→          summaryTitle: "Clear process from start to submission.",
+   274→          summaryBody:
+   275→            "Exxonim provides structured guidance through entity registration, document preparation, and authority submissions — including TIC/TISEZA investment registration for foreign investors.",
+   276→        },
+   277→        tax: {
+   278→          workstreamValue: "Compliance",
+   279→          counterpartLabel: "Client",
+   280→          counterpartValue: "Ongoing obligations",
+   281→          focusValue: "Filings and renewals",
+   282→          summaryTitle: "Stay ahead of filing deadlines.",
+   283→          summaryBody:
+   284→            "A practical compliance framework covering TIN, VAT, business licences, work permits, and sector-specific permits — with renewal reminders built in.",
+   285→        },
+   286→        institutional: {
+   287→          workstreamValue: "Operations",
+   288→          counterpartLabel: "Client",
+   289→          counterpartValue: "Always informed",
+   290→          focusValue: "Proactive updates, compliance calendar, advisory",
+   291→          summaryTitle: "Professional support when you need it.",
+   292→          summaryBody:
+   293→            "Automated updates at every milestone, compliance calendar management, and operational advisory packages — monthly or quarterly retainer support available.",
+   294→        },
+   295→        tracking: {
+   296→          workstreamValue: "Consultation tracking",
+   297→          counterpartLabel: "Reference",
+   298→          counterpartValue: "EXX-24091",
+   299→          focusValue: "Status checkpoints, proactive updates, and next actions",
+   300→          summaryTitle: "Know what is complete and what comes next — automatically.",
+   301→          summaryBody:
+   302→            "Every engagement gets a unique tracking number. You receive proactive updates via your preferred channel at every milestone, and can look up your status on the website anytime.",
+   303→        },
+   304→      },
+   305→    },
+   306→    insights_section: {
+   307→      title: "Latest insights",
+   308→      intro: "Practical guidance for registration, compliance, and operational planning.",
+   309→      footer_copy: "Explore more practical articles from our resource library.",
+   310→    },
+   311→  },
+   312→  undefined,
+   313→  "Exxonim Consult helps businesses, NGOs, and institutions with company registration, business name registration, trademark protection, licensing, tax compliance, annual returns, and proactive consultation tracking from intake to resolution."
+   314→);
+   315→
+   316→/* BACKEND / ADMIN INTEGRATION NOTES:
+   317→ * ──────────────────────────────────
+   318→ * About page content. The admin should be able to edit all text fields.
+   319→ * Optional sections (support_profiles_section, service_scope_section,
+   320→ * operating_model_section, client_expectations_section) can be hidden
+   321→ * by setting them to null/undefined in the admin panel.
+   322→ *
+   323→ * Image requirements (if photos are added in future):
+   324→ *   - Team/office photos: WebP, 800×600px, aspect ratio 4:3.
+   325→ *   - All images served via CDN (/media/ endpoint from admin upload).
+   326→ */
+   327→export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPage(
+   328→  "about",
+   329→  "About Exxonim Consult | Tanzania Business Advisory",
+   330→  {
+   331→    hero: {
+   332→      eyebrow: "About Exxonim Consult",
+   333→      title: "Your business obligations — handled, tracked, and delivered without the office visits.",
+   334→      description:
+   335→        "Founded in 2020, Exxonim Consult helps businesses, NGOs, and institutions move through registration, licensing, and regulatory compliance — with proactive tracking that keeps you informed at every milestone. No office visits required.",
+   336→    },
+   337→    company_profile: {
+   338→      eyebrow: "Who we are",
+   339→      title: "We built Exxonim so you never have to chase an office again.",
+   340→      paragraphs: [
+   341→        "Exxonim was founded to address a specific gap: organisations in Tanzania often face unclear processes, missed deadlines, and avoidable delays when navigating registration, licensing, and compliance obligations.",
+   342→        "The practice provides structured guidance through entity registration, document preparation, tax applications, licensing, and recurring regulatory follow-up — so teams can focus on operations instead of deadline recovery.",
+   343→        "Every engagement is tracked from intake to resolution, and the next action stays visible at every stage.",
+   344→      ],
+   345→      working_style_label: "Working style",
+   346→      working_style: "Structured. Visible. Follow-through oriented.",
+   347→    },
+   348→    support_profiles_section: {
+   349→      title: "What we support",
+   350→      description:
+   351→        "Exxonim provides guidance across the main operational areas where organisations need reliable follow-through.",
+   352→    },
+   353→    support_profiles: [
+   354→      {
+   355→        title: "Business setup",
+   356→        description:
+   357→          "Company, NGO, and business-name registration — from entity type selection through to certificate. Legally trade within 5–10 business days.",
+   358→      },
+   359→      {
+   360→        title: "Compliance",
+   361→        description:
+   362→          "Licensing, renewals, and filing follow-up managed on your behalf. Never miss a deadline again — we send unlimited reminders.",
+   363→      },
+   364→      {
+   365→        title: "Consultation tracking",
+   366→        description:
+   367→          "Every engagement gets a 6-character tracking code. Check your status anytime — no login required. Automatic updates via WhatsApp, email, or SMS.",
+   368→      },
+   369→    ],
+   370→    service_scope_section: {
+   371→      title: "Service scope",
+   372→      description:
+   373→        "The areas where Exxonim provides direct, structured support.",
+   374→    },
+   375→    service_scope: [
+   376→      {
+   377→        title: "Company registration",
+   378→        description:
+   379→          "Incorporation, entity type guidance, and first-step authority submissions for companies, NGOs, and business names.",
+   380→      },
+   381→      {
+   382→        title: "TIN and tax registration",
+   383→        description:
+   384→          "Tax Identification Number applications and related account setup for new and existing entities.",
+   385→      },
+   386→      {
+   387→        title: "Business licensing",
+   388→        description:
+   389→          "License applications, renewals, and regulatory approval support managed through a clear workflow.",
+   390→      },
+   391→      {
+   392→        title: "Statutory filings",
+   393→        description:
+   394→          "Recurring filing obligations tracked, prepared, and submitted on schedule.",
+   395→      },
+   396→      {
+   397→        title: "Regulatory renewals",
+   398→        description:
+   399→          "Proactive tracking and timely processing of renewals so obligations do not lapse.",
+   400→      },
+   401→      {
+   402→        title: "Operational advisory",
+   403→        description:
+   404→          "Structured guidance on process, sequence, and follow-up for teams managing multiple obligations.",
+   405→      },
+   406→    ],
+   407→    operating_model_section: {
+   408→      title: "How we work",
+   409→      description:
+   410→        "A simple, repeatable approach that keeps every engagement visible and on track.",
+   411→    },
+   412→    operating_model: [
+   413→      {
+   414→        step: "01",
+   415→        title: "Intake",
+   416→        description:
+   417→          "We gather the details, confirm the entity type, and identify the correct filing sequence for your case.",
+   418→      },
+   419→      {
+   420→        step: "02",
+   421→        title: "Preparation",
+   422→        description:
+   423→          "Documents are reviewed, requirements confirmed, and the submission path is mapped before anything is filed.",
+   424→      },
+   425→      {
+   426→        step: "03",
+   427→        title: "Submission",
+   428→        description:
+   429→          "Your application is submitted to the relevant authority with supporting documents prepared and attached.",
+   430→      },
+   431→      {
+   432→        step: "04",
+   433→        title: "Follow-through",
+   434→        description:
+   435→          "We track the status, follow up on queries, and confirm the outcome so you know where things stand.",
+   436→      },
+   437→    ],
+   438→    client_expectations_section: {
+   439→      title: "What to expect",
+   440→      description:
+   441→        "How working with Exxonim looks in practice.",
+   442→    },
+   443→    client_expectations: [
+   444→      "A clear process from the first conversation to the final delivery.",
+   445→      "A reference ID to track your consultation at every stage.",
+   446→      "Proactive follow-up so deadlines do not become surprises.",
+   447→      "Direct communication when you need to know what comes next.",
+   448→      "Structured support that fits the way your team actually works.",
+   449→    ],
+   450→    cta: {
+   451→      title: "Ready to get started?",
+   452→      description:
+   453→        "Book a free consultation and receive a tracking code that keeps you informed at every step — from intake to resolution.",
+   454→      primary: {
+   455→        label: "Contact Exxonim",
+   456→        href: routes.contact,
+   457→      },
+   458→      secondary: {
+   459→        label: "Explore services",
+   460→        href: routes.services,
+   461→      },
+   462→    },
+   463→  },
+   464→  undefined,
+   465→  "Founded in 2020, Exxonim Consult provides structured business registration, business name and trademark registration, licensing, compliance, and work permit advisory with proactive tracking at every milestone."
+   466→);
+   467→
+   468→/* BACKEND / ADMIN INTEGRATION NOTES:
+   469→ * ──────────────────────────────────
+   470→ * FAQ page content. The admin should be able to add, edit, reorder, and
+   471→ * delete FAQ items. Suggested guidelines:
+   472→ *   - Keep questions short (max ~80 characters).
+   473→ *   - Keep answers practical and concise (2–3 sentences).
+   474→ *   - Max 12 items recommended (avoids overwhelming the 2-column grid).
+   475→ *   - Order controls the display sequence.
+   476→ */
+   477→export const fallbackFaqPage: PageRecord<FaqPageContent> = createFallbackPage(
+   478→  "faq",
+   479→  "FAQ | Registration, Licensing & Compliance Questions",
+   480→  {
+   481→    hero: {
+   482→      eyebrow: "Common questions",
+   483→      title: "Frequently asked questions",
+   484→      description:
+   485→        "Practical answers to the questions organisations ask most often about registration, compliance, and working with Exxonim.",
+   486→    },
+   487→    items: [
+   488→      {
+   489→        question: "What types of entities can Exxonim help register?",
+   490→        answer:
+   491→          "Exxonim supports registration for companies, NGOs, and business names. The team guides you through entity type selection, document preparation, and authority submission.",
+   492→      },
+   493→      {
+   494→        question: "How long does company registration take?",
+   495→        answer:
+   496→          "Timelines depend on the entity type and authority processing speed. Exxonim tracks every submission and follows up proactively so you always know where things stand.",
+   497→      },
+   498→      {
+   499→        question: "What is a TIN and do I need one?",
+   500→        answer:
+   501→          "A Tax Identification Number is required for most registered entities in Tanzania. Exxonim handles TIN applications as part of the setup process.",
+   502→      },
+   503→      {
+   504→        question: "Can I track the status of my consultation?",
+   505→        answer:
+   506→          "Yes. Every consultation is assigned a reference ID. You can use it to check what is complete, what is pending, and what comes next at every stage.",
+   507→      },
+   508→      {
+   509→        question: "What happens after I submit a request?",
+   510→        answer:
+   511→          "The Exxonim team reviews your case, confirms the required documents, and prepares the filing sequence. You receive a reference ID to track progress throughout.",
+   512→      },
+   513→      {
+   514→        question: "Does Exxonim handle licensing renewals?",
+   515→        answer:
+   516→          "Yes. Exxonim tracks renewal deadlines, prepares the required documents, and submits renewals on your behalf so obligations do not lapse.",
+   517→      },
+   518→    ],
+   519→  },
+   520→  undefined,
+   521→  "Answers to common questions about business registration, TIN applications, licensing renewals, and consultation tracking with Exxonim Consult in Tanzania."
+   522→);
+   523→
+   524→/* BACKEND / ADMIN INTEGRATION NOTES:
+   525→ * ──────────────────────────────────
+   526→ * Services page content. The admin should be able to:
+   527→ *   - Edit overview text (eyebrow, title, description, panel)
+   528→ *   - Manage service_signals (the 3 metric badges): value should be short
+   529→ *     (e.g., "3+", "100%"), label concise, detail one sentence.
+   530→ *   - Manage service_nav_groups (the navigation cards): title, summary,
+   531→ *     href, and items list. Max 3 groups recommended.
+   532→ *   - Manage service_flow (the step-by-step flow): step is a short label
+   533→ *     (e.g., "01"), title and detail are 1–2 sentences each. Max 4 steps.
+   534→ *   - Manage service_promises (bullet list): max 4 items.
+   535→ *   - Manage catalog: eyebrow, title, description, service_groups.
+   536→ *     Each group has title, description, and services list.
+   537→ *     Max 3 groups, max 6 services per group.
+   538→ *   - Manage tracking_section: checkpoints, case_examples, workflow_steps.
+   539→ * Image requirements:
+   540→ *   - Service icons: SVG, 24×24px viewbox, single-color (uses currentColor).
+   541→ *   - Catalog illustrations: WebP, 400×300px, aspect ratio 4:3.
+   542→ */
+   543→export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallbackPage(
+   544→  "services",
+   545→  "Business Registration, Licensing & Compliance Services",
+   546→  {
+   547→    overview: {
+   548→      eyebrow: "Registration & Compliance",
+   549→      title: "Your business, registered and kept compliant — without the office visits",
+   550→      description:
+   551→        "From first registration to recurring filings, Exxonim handles every step so you can focus on running your business. No office visits required — we file everything electronically and keep you updated via WhatsApp.",
+   552→      panel_title: "Trusted by businesses across Tanzania",
+   553→      panel_body:
+   554→        "Every engagement is tracked from intake to resolution. You always know what is complete, what is pending, and what comes next.",
+   555→      service_signals: [
+   556→        { value: "120+", label: "Companies registered", detail: "Businesses trust Exxonim for registration and compliance" },
+   557→        { value: "100%", label: "Tracked", detail: "Every consultation assigned a reference ID" },
+   558→        { value: "58+", label: "Google reviews", detail: "Verified reviews from real clients on Google" },
+   559→      ],
+   560→      service_nav_groups: [
+   561→        {
+   562→          title: "Business Setup",
+   563→          summary: "Registration support for companies, business names, NGOs, and trademarks.",
+   564→          href: routes.services,
+   565→          items: ["Company Registration", "Business Name Registration", "Trademark Registration", "TIN Application"],
+   566→        },
+   567→        {
+   568→          title: "Compliance Support",
+   569→          summary: "Annual returns, recurring filings, renewals, and regulatory follow-up.",
+   570→          href: routes.services,
+   571→          items: ["Annual Returns", "Statutory Filings", "Regulatory Renewals", "Operational Advisory"],
+   572→        },
+   573→        {
+   574→          title: "Work Permits & Foreign Investment",
+   575→          summary: "Support for international investors and expatriate workers.",
+   576→          href: routes.services,
+   577→          items: ["Work Permit Applications", "TIC / TISEZA Registration", "Foreign Company Registration"],
+   578→        },
+   579→      ],
+   580→      service_flow: [
+   581→        { step: "01", title: "Intake", detail: "We confirm the entity type, document requirements, and filing sequence." },
+   582→        { step: "02", title: "Preparation", detail: "Documents are reviewed and the submission path is mapped before filing." },
+   583→        { step: "03", title: "Submission", detail: "Your application is submitted to the relevant authority with supporting documents." },
+   584→        { step: "04", title: "Follow-through", detail: "We track the status, follow up, and confirm the outcome." },
+   585→      ],
+   586→      service_promises: [
+   587→        "Every case is tracked with a reference ID.",
+   588→        "Proactive follow-up on deadlines and queries.",
+   589→        "Clear communication at every stage.",
+   590→        "Structured support that fits how your team works.",
+   591→      ],
+   592→    },
+   593→    catalog: {
+   594→      eyebrow: "Service catalog",
+   595→      title: "What Exxonim covers",
+   596→      description:
+   597→        "A structured overview of the registration, licensing, and compliance services available.",
+   598→      service_groups: [
+   599→        {
+   600→          title: "Business Setup",
+   601→          description: "End-to-end registration support for new entities.",
+   602→          benefitHeadline: "Legally trade within 5–10 business days",
+   603→          services: [
+   604→            { id: "company-registration", label: "Company Registration", detail: "Incorporation and first-step authority submissions.", startingPrice: "From TZS 350,000" },
+   605→            { id: "business-name-registration", label: "Business Name Registration", detail: "Sole proprietorship and trading name registration through BRELA.", startingPrice: "From TZS 150,000" },
+   606→            { id: "ngo-registration", label: "NGO Registration", detail: "Non-profit entity setup and compliance baseline.", startingPrice: "From TZS 500,000" },
+   607→            { id: "trademark-registration", label: "Trademark Registration", detail: "Brand and trade name protection through BRELA intellectual property office.", startingPrice: "From TZS 200,000" },
+   608→            { id: "tin-application", label: "TIN Application", detail: "Tax Identification Number registration and account setup.", startingPrice: "From TZS 100,000" },
+   609→            { id: "business-license", label: "Business License Applications", detail: "License applications and regulatory approvals." },
+   610→          ],
+   611→        },
+   612→        {
+   613→          title: "Compliance Support",
+   614→          description: "Ongoing obligations managed with clear follow-through.",
+   615→          benefitHeadline: "Never miss a filing deadline again",
+   616→          services: [
+   617→            { id: "annual-returns", label: "Annual Returns", detail: "BRELA annual return filing and beneficial ownership updates.", startingPrice: "From TZS 150,000" },
+   618→            { id: "statutory-filings", label: "Statutory Filings", detail: "Recurring filing obligations prepared and submitted on schedule.", startingPrice: "From TZS 100,000" },
+   619→            { id: "regulatory-renewals", label: "Regulatory Renewals", detail: "Proactive tracking and timely processing of renewals.", startingPrice: "From TZS 100,000" },
+   620→            { id: "operational-advisory", label: "Operational Advisory", detail: "Structured guidance for teams managing multiple obligations." },
+   621→          ],
+   622→        },
+   623→        {
+   624→          title: "Work Permits & Foreign Investment",
+   625→          description: "Support for international investors and expatriate workers.",
+   626→          benefitHeadline: "Set up in Tanzania without leaving home",
+   627→          services: [
+   628→            { id: "work-permit", label: "Work Permit Applications", detail: "Residence and work permit processing for foreign investors and employees.", startingPrice: "From TZS 500,000" },
+   629→            { id: "tic-registration", label: "TIC / TISEZA Registration", detail: "Investment centre registration and compliance for foreign-owned entities.", startingPrice: "From TZS 800,000" },
+   630→            { id: "foreign-company-reg", label: "Foreign Company Registration", detail: "Branch office and subsidiary setup for international businesses.", startingPrice: "From TZS 600,000" },
+   631→          ],
+   632→        },
+   633→      ],
+   634→    },
+   635→    problem_framing: [
+   636→      {
+   637→        icon: "frustrated",
+   638→        quote: "I spent 3 days going back and forth to BRELA...",
+   639→        description: "Multiple office visits, unclear requirements, and long queues waste time you don't have.",
+   640→      },
+   641→      {
+   642→        icon: "documents",
+   643→        quote: "I never know which documents are right until they get rejected.",
+   644→        description: "Incomplete submissions mean rejections, delays, and costly resubmissions.",
+   645→      },
+   646→      {
+   647→        icon: "clock",
+   648→        quote: "I missed the BRELA return deadline again.",
+   649→        description: "Deadline surprises lead to penalties and compliance risks you could have avoided.",
+   650→      },
+   651→    ],
+   652→    faq: [
+   653→      {
+   654→        question: "Do I need to visit any office in person?",
+   655→        answer: "No. We file everything electronically and keep you updated via WhatsApp. Our team liaises with all regulators — BRELA, TRA, NSSF, WCF, OSHA — on your behalf.",
+   656→        cta: { label: "Book a free consultation", href: routes.contact },
+   657→      },
+   658→      {
+   659→        question: "How long does company registration take?",
+   660→        answer: "Typically 5–10 business days from when we receive your complete documents. Delays can occur if BRELA requests additional information, but we follow up proactively.",
+   661→        cta: { label: "Get started with registration", href: routes.contact },
+   662→      },
+   663→      {
+   664→        question: "What documents do I need to get started?",
+   665→        answer: "It depends on the service. For company registration, you'll need director details, a proposed company name, and a registered office address. We'll send you a clear checklist after your consultation.",
+   666→        cta: { label: "Request a consultation", href: routes.contact },
+   667→      },
+   668→      {
+   669→        question: "Can I track my consultation status?",
+   670→        answer: "Yes — every engagement gets a 6-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.",
+   671→        cta: { label: "Track your consultation", href: routes.trackConsultation },
+   672→      },
+   673→      {
+   674→        question: "What's included in the compliance reminders?",
+   675→        answer: "We track all major compliance deadlines — BRELA returns, TRA filings, WCF, NSSF, OSHA renewals — and send you advance reminders via WhatsApp. No time limit, no cut-off.",
+   676→        cta: { label: "Get compliance support", href: routes.contact },
+   677→      },
+   678→      {
+   679→        question: "Do you handle work permits for foreign employees?",
+   680→        answer: "Yes. We process work permits, residence permits, and TIC/TISEZA registration for foreign investors and employees. Everything is handled remotely — no office visits needed.",
+   681→        cta: { label: "Apply for a work permit", href: routes.contact },
+   682→      },
+   683→      {
+   684→        question: "What are your service fees?",
+   685→        answer: "Fees vary by service. Company registration starts from TZS 350,000. We provide a clear quote before any work begins — no hidden charges, no surprises.",
+   686→        cta: { label: "Get a quote", href: routes.contact },
+   687→      },
+   688→      {
+   689→        question: "What happens after I submit an inquiry?",
+   690→        answer: "You'll receive a tracking code via WhatsApp within one business day. Use it to check your status anytime. We also send milestone updates automatically.",
+   691→        cta: { label: "Submit an inquiry", href: routes.contact },
+   692→      },
+   693→    ],
+   694→    tracking_section: {
+   695→      eyebrow: "Consultation tracking",
+   696→      title: "Track every consultation from intake to resolution",
+   697→      description:
+   698→        "Every consultation is assigned a unique reference ID. You can see what is complete, what is pending, and what comes next at every stage.",
+   699→      checkpoints: [
+   700→        { title: "Intake", detail: "Case details confirmed, reference ID assigned.", status: "complete" },
+   701→        { title: "Review", detail: "Documents verified, filing sequence prepared.", status: "complete" },
+   702→        { title: "Submission", detail: "Application filed with the relevant authority.", status: "in_progress" },
+   703→        { title: "Resolution", detail: "Outcome confirmed, documents delivered.", status: "pending" },
+   704→      ],
+   705→      case_examples: [
+   706→        { title: "Company Registration", detail: "EXX-24091 — In submission phase" },
+   707→        { title: "TIN Application", detail: "EXX-24088 — Resolved, TIN issued" },
+   708→      ],
+   709→      workflow_steps: [
+   710→        { title: "Request submitted", detail: "Client reaches out, Exxonim logs the inquiry." },
+   711→        { title: "Review and preparation", detail: "Team confirms documents and filing path." },
+   712→        { title: "Authority submission", detail: "Application is filed with the relevant body." },
+   713→        { title: "Resolution and delivery", detail: "Outcome confirmed, final documents delivered." },
+   714→      ],
+   715→    },
+   716→  },
+   717→  undefined,
+   718→  "Business registration, business name registration, trademark registration, TIN applications, licensing, annual returns, statutory filings, compliance, and work permit support services from Exxonim Consult."
+   719→);
+   720→
+   721→/* BACKEND / ADMIN INTEGRATION NOTES (Resources/Blog page):
+   722→ * ────────────────────────────────────────────────────────
+   723→ * The Resources page displays a hero post + trending rail + category grid.
+   724→ * The `top_media` object provides fallback images for the hero banner and
+   725→ * trending section when posts don't have coverImageSrc. In production,
+   726→ * these will come from the blog API and the post's own coverImageSrc.
+   727→ *
+   728→ * Image specs for top_media:
+   729→ *   - hero: 1344×768px WebP, landscape, used as the featured post cover.
+   730→ *   - banner: 1008×336px WebP, wide landscape, used as the trending header.
+   731→ *   - trending[]: 288×240px WebP, used as thumbnails in the trending rail.
+   732→ * All images served via CDN (/media/ endpoint) in production.
+   733→ */
+   734→export const fallbackResourcesPage: PageRecord<ResourcesPageContent> =
+   735→  createFallbackPage("resources", "Resources", {
+   736→    hero_title: "Guides, updates, and practical notes for setup and compliance work",
+   737→    trending_label: "Trending reads",
+   738→    top_media: {
+   739→      hero: blogCoverRegistration,
+   740→      banner: blogCoverTin,
+   741→      trending: [
+   742→        blogCoverLicensing,
+   743→        blogCoverCalendar,
+   744→        blogCoverRegistration,
+   745→      ],
+   746→    },
+   747→    article_sidebar: {
+   748→      title: "Need direct help?",
+   749→      description:
+   750→        "Browse the available articles or contact Exxonim directly for personalised guidance on your specific situation.",
+   751→      primary_cta: {
+   752→        label: "Contact Exxonim",
+   753→        href: routes.contact,
+   754→      },
+   755→    },
+   756→    empty_state: {
+   757→      title: "No articles match this filter.",
+   758→      description:
+   759→        "Try adjusting your search or filter, or contact Exxonim directly for immediate guidance.",
+   760→    },
+   761→  },
+   762→  "Guides, Compliance Updates & Articles | Exxonim Consult",
+   763→  "Practical guides, compliance updates, and articles on business registration, licensing, and regulatory requirements in Tanzania."
+   764→);
+   765→
+   766→export const fallbackCareerPage: PageRecord<CareerPageContent> = createFallbackPage(
+   767→  "career",
+   768→  "Careers at Exxonim Consult | Tanzania",
+   769→  {
+   770→    hero: {
+   771→      eyebrow: "Join the team",
+   772→      title: "Build your career at Exxonim.",
+   773→      description:
+   774→        "Explore current opportunities and learn about the teams Exxonim is building across client operations, compliance, and advisory work.",
+   775→      banner_image: "/careers/banner-enhanced.png",
+   776→    },
+   777→    focus_areas: [
+   778→      "Client operations and workflow coordination",
+   779→      "Regulatory and compliance support",
+   780→      "Structured follow-up and document readiness",
+   781→    ],
+   782→    status: {
+   783→      label: "Current opportunities",
+   784→      description:
+   785→        "Explore open roles and send your application through the contact page. The Exxonim team reviews every submission.",
+   786→      primary: {
+   787→        label: "Contact Exxonim",
+   788→        href: routes.contact,
+   789→      },
+   790→      secondary: {
+   791→        label: "Browse resources",
+   792→        href: routes.resources,
+   793→      },
+   794→    },
+   795→  },
+   796→  undefined,
+   797→  "Explore career opportunities at Exxonim Consult in Tanzania. Roles in client operations, compliance support, and regulatory advisory."
+   798→);
+   799→
+   800→export const fallbackContactPage: PageRecord<ContactPageContent> = createFallbackPage(
+   801→  "contact",
+   802→  "Contact Exxonim Consult | Business Advisory Tanzania",
+   803→  {
+   804→    hero: {
+   805→      eyebrow: "Get in touch",
+   806→      title: "Reach Exxonim for registration, compliance, and advisory support.",
+   807→      description:
+   808→        "Use the contact route that works best for you — email, phone, or WhatsApp — and the Exxonim team will follow up promptly.",
+   809→    },
+   810→    cards: [
+   811→      {
+   812→        label: "Email",
+   813→        value: fallbackCompanyInfo.emails[0] ?? "Send an email to Exxonim",
+   814→        description: "Best for sending structured details and follow-up questions.",
+   815→        action: {
+   816→          label: "Email Exxonim",
+   817→          href: `mailto:${fallbackCompanyInfo.emails[0] ?? ""}`,
+   818→        },
+   819→      },
+   820→      {
+   821→        label: "Phone",
+   822→        value: fallbackCompanyInfo.phones[0] ?? "Call Exxonim directly",
+   823→        description: "Use the direct phone path when you need a quick conversation.",
+   824→        action: {
+   825→          label: "Call Exxonim",
+   826→          href: `tel:${(fallbackCompanyInfo.phones[0] ?? "").replace(/\s+/g, "")}`,
+   827→        },
+   828→      },
+   829→      {
+   830→        label: "WhatsApp",
+   831→        value: "Direct messaging",
+   832→        description: "Send a message through WhatsApp and the team will respond as soon as possible.",
+   833→        action: {
+   834→          label: "Open WhatsApp",
+   835→          href: fallbackCompanyInfo.whatsapp || routes.contact,
+   836→        },
+   837→      },
+   838→    ],
+   839→  },
+   840→  undefined,
+   841→  "Contact Exxonim Consult by email, phone, or WhatsApp for business registration, licensing, and compliance advisory in Tanzania."
+   842→);
+   843→
+   844→export const fallbackPrivacyPage: PageRecord<InfoPageContent> = createFallbackPage(
+   845→  "privacy",
+   846→  "Privacy Policy",
+   847→  {
+   848→    hero: {
+   849→      eyebrow: "Privacy notice",
+   850→      title: "Customer and service history lives in the database, not in browser cookies.",
+   851→      description:
+   852→        "Exxonim uses secure session cookies for admin access, keeps customer and service records in PostgreSQL, and limits browser-side storage to optional preferences like theme memory when you allow it.",
+   853→    },
+   854→    sections: [
+   855→      {
+   856→        title: "What we store",
+   857→        paragraphs: [
+   858→          "Customer history, service records, notes, documents, inbox messages, notifications, and audit logs are stored in the backend database.",
+   859→          "We do not use cookies as the main source of truth for business records.",
+   860→        ],
+   861→      },
+   862→      {
+   863→        title: "Why we store it",
+   864→        paragraphs: [
+   865→          "The platform needs operational history to manage requests, track work, notify staff, and produce internal reports grounded in real records.",
+   866→          "Retention and access are governed by internal policies and role-based permissions.",
+   867→        ],
+   868→      },
+   869→    ],
+   870→    next_step: {
+   871→      title: "Need a data request?",
+   872→      description:
+   873→        "Use Exxonim's support or contact channels and the team will log and process the request through the admin privacy workflow.",
+   874→      primary_action: {
+   875→        label: "Contact Exxonim",
+   876→        href: routes.contact,
+   877→      },
+   878→      secondary_action: {
+   879→        label: "Read your data rights",
+   880→        href: routes.dataRights,
+   881→      },
+   882→    },
+   883→  }
+   884→);
+   885→
+   886→export const fallbackCookiePage: PageRecord<InfoPageContent> = createFallbackPage(
+   887→  "cookies",
+   888→  "Cookie Notice",
+   889→  {
+   890→    hero: {
+   891→      eyebrow: "Cookie notice",
+   892→      title: "Cookies stay minimal and tied to real browser behavior.",
+   893→      description:
+   894→        "Necessary cookies support secure admin sessions and consent-state identification. Optional preference storage is limited to browser-side theme memory when you allow it.",
+   895→    },
+   896→    sections: [
+   897→      {
+   898→        title: "Necessary storage",
+   899→        paragraphs: [
+   900→          "Admin authentication uses secure session cookies together with CSRF protection.",
+   901→          "Consent records are tied to a consent identifier so the site can remember your choice.",
+   902→        ],
+   903→      },
+   904→      {
+   905→        title: "Optional preferences",
+   906→        paragraphs: [
+   907→          "Theme memory is the only browser preference storage used in this phase, and it should not be treated as a business record.",
+   908→          "Analytics and marketing cookies are not active unless the product truly starts using them in a later phase.",
+   909→        ],
+   910→      },
+   911→    ],
+   912→    next_step: {
+   913→      title: "Review the full privacy details",
+   914→      description:
+   915→        "The privacy policy and data-rights notice explain what is stored in the system and how requests are handled.",
+   916→      primary_action: {
+   917→        label: "Privacy policy",
+   918→        href: routes.privacy,
+   919→      },
+   920→      secondary_action: {
+   921→        label: "Data rights",
+   922→        href: routes.dataRights,
+   923→      },
+   924→    },
+   925→  }
+   926→);
+   927→
+   928→export const fallbackDataRightsPage: PageRecord<InfoPageContent> = createFallbackPage(
+   929→  "data-rights",
+   930→  "Data Rights",
+   931→  {
+   932→    hero: {
+   933→      eyebrow: "Data rights",
+   934→      title: "Access, correction, and deletion requests are handled through a documented internal workflow.",
+   935→      description:
+   936→        "Exxonim keeps privacy handling operational and auditable. Requests are logged internally, reviewed, and processed without silently deleting audit-critical history.",
+   937→    },
+   938→    sections: [
+   939→      {
+   940→        title: "Available request types",
+   941→        paragraphs: [
+   942→          "You can ask for access to personal data, correction of inaccurate data, or deletion handling where legally and operationally appropriate.",
+   943→        ],
+   944→        bullets: [
+   945→          "Access requests",
+   946→          "Correction requests",
+   947→          "Deletion requests with reviewed anonymization or constrained delete handling",
+   948→        ],
+   949→      },
+   950→      {
+   951→        title: "How requests are handled",
+   952→        paragraphs: [
+   953→          "Requests currently come through existing support and contact channels, then staff log them into the admin privacy-request workflow.",
+   954→          "Deletion handling avoids silent hard deletion of audit-critical records and keeps an explicit audit trail.",
+   955→        ],
+   956→      },
+   957→    ],
+   958→    next_step: {
+   959→      title: "Start a request",
+   960→      description:
+   961→        "Use the contact or support page and Exxonim staff will log the request for verification and follow-up.",
+   962→      primary_action: {
+   963→        label: "Contact Exxonim",
+   964→        href: routes.contact,
+   965→      },
+   966→      secondary_action: {
+   967→        label: "Support",
+   968→        href: routes.support,
+   969→      },
+   970→    },
+   971→  }
+   972→);
+   973→
+   974→/* BACKEND / ADMIN INTEGRATION NOTES (Fallback blog posts):
+   975→ * ──────────────────────────────────────────────────────────
+   976→ * These 4 fallback posts are used when the blog API is unavailable.
+   977→ * They demonstrate the full BlogPost type including coverImageSrc, author,
+   978→ * and featuredSlot. The admin should create real posts matching this structure.
+   979→ *
+   980→ * Image paths: During development, images are served from /public/blog/.
+   981→ * In production, coverImageSrc will contain CDN URLs from the /media/ endpoint.
+   982→ * The admin upload flow should:
+   983→ *   1. Accept WebP, PNG, or JPEG uploads.
+   984→ *   2. Auto-generate a WebP version at 1344×768px for the cover.
+   985→ *   3. Auto-generate a 400×250px thumbnail for grid cards.
+   986→ *   4. Store the CDN URL in the blog_posts.cover_image_url column.
+   987→ *   5. Require cover_alt text (accessibility) — min 10 characters.
+   988→ *
+   989→ * Author data: In production, author info comes from the blog_authors table.
+   990→ * The admin should manage author profiles with name, role, and avatar.
+   991→ * Avatar: 96×96px square, WebP or PNG. Centered subject (displayed as 38px circle).
+   992→ */
+   993→export const fallbackBlogPosts: BlogPost[] = [
+   994→  {
+   995→    id: 1,
+   996→    slug: "company-registration-basics",
+   997→    title: "Company registration basics before your first filing",
+   998→    excerpt:
+   999→      "A short checklist for preparing incorporation details, supporting documents, and first-step authority submissions.",
+  1000→    publishedAt: "2026-03-22",
+  1001→    category: getFallbackCategory("business-setup"),
+  1002→    author: {
+  1003→      id: "author-exxonim-1",
+  1004→      name: "Exxonim Advisory",
+  1005→      role: "Registration Specialist",
+  1006→      avatarSrc: undefined,
+  1007→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1008→    },
+  1009→    coverImageSrc: blogCoverRegistration,
+  1010→    coverAlt: undefined,
+  1011→    mediaLabel: "Company registration basics",
+  1012→    featuredSlot: "hero",
+  1013→    featuredOnHome: true,
+  1014→    readTimeMinutes: 9,
+  1015→    relatedSlugs: ["tin-registration-checklist", "compliance-calendar-basics"],
+  1016→    content: {
+  1017→      introduction:
+  1018→        "Start with the exact entity type, ownership information, and document set you expect to file so the process does not stall later.",
+  1019→      highlights: [
+  1020→        "Confirm the legal structure first.",
+  1021→        "Prepare identity and address documents before filing.",
+  1022→        "Map which authority comes first in your sequence.",
+  1023→        "Tanzania registration process.",
+  1024→      ],
+  1025→      html: `<p>Starting a company in Tanzania involves several sequential steps that, when followed correctly, lead to a smooth registration process. Whether you are registering a limited liability company, a branch office, or a business name, the foundational requirements remain largely the same.</p>
+  1026→
+  1027→<h2>Choose the right entity type</h2>
+  1028→<p>The first and most important decision is selecting the correct legal structure for your business. In Tanzania, the main entity types are:</p>
+  1029→<ul>
+  1030→<li><strong>Private Limited Company</strong> — The most common structure for local and foreign investors. Requires at least one director and one shareholder. Liability is limited to share capital.</li>
+  1031→<li><strong>Public Limited Company</strong> — Suitable for larger operations planning to raise capital publicly. Requires at least three directors and seven shareholders.</li>
+  1032→<li><strong>Business Name Registration</strong> — For sole proprietors or partnerships operating under a trade name. Simpler registration, but no limited liability protection.</li>
+  1033→<li><strong>NGO Registration</strong> — For non-profit organisations. Registered through the Ministry of Health, Community Development, Gender, Elderly and Children or the Vice President's Office.</li>
+  1034→</ul>
+  1035→<p>Choosing the wrong entity type early on can cause delays later when you discover that your structure does not support the activities you planned. Take time to confirm the right fit before moving forward.</p>
+  1036→
+  1037→<h2>Gather your documents before filing</h2>
+  1038→<p>Document readiness is the single biggest factor in whether a registration proceeds smoothly or stalls. Before you approach any authority, make sure you have the following prepared:</p>
+  1039→<ol>
+  1040→<li>Copy of national ID or passport for each director and shareholder</li>
+  1041→<li>Passport-size photographs of each director</li>
+  1042→<li>Proof of registered office address (lease agreement or utility bill)</li>
+  1043→<li>Draft memorandum and articles of association</li>
+  1044→<li>Proposed company names (at least three alternatives, in order of preference)</li>
+  1045→<li>Share capital details and allocation among shareholders</li>
+  1046→</ol>
+  1047→<p>Missing even one document can mean a return trip to the authority. A simple filing checklist prevents these avoidable delays.</p>
+  1048→
+  1049→<blockquote><p>The most common reason registrations stall is not the authority processing time — it is incomplete document submissions. Prepare thoroughly before your first filing.</p></blockquote>
+  1050→
+  1051→<h2>Understand the filing sequence</h2>
+  1052→<p>Registration in Tanzania follows a specific sequence. Attempting to skip steps or file out of order almost always creates additional work:</p>
+  1053→<p><strong>Step 1: Name reservation</strong> — Submit your proposed names to BRELA (Business Registration and Licensing Agency). Name clearance typically takes 1 to 3 working days. Once approved, the name is reserved for 30 days.</p>
+  1054→<p><strong>Step 2: Document preparation</strong> — With a reserved name, prepare the memorandum and articles of association, Form 1A (application for incorporation), and all supporting documents.</p>
+  1055→<p><strong>Step 3: Incorporation filing</strong> — Submit the complete package to BRELA. Processing typically takes 5 to 10 working days, though this can vary based on workload and completeness of your submission.</p>
+  1056→<p><strong>Step 4: Certificate collection</strong> — Once approved, collect your Certificate of Incorporation. This document is required for every subsequent step, including TIN registration, bank account opening, and business license applications.</p>
+  1057→
+  1058→<h2>Common mistakes that delay registration</h2>
+  1059→<p>After guiding hundreds of registrations, the same issues come up repeatedly. Being aware of these in advance can save weeks of delay:</p>
+  1060→<ul>
+  1061→<li><strong>Name conflicts</strong> — Choosing names that are too similar to existing companies. Always prepare multiple alternatives.</li>
+  1062→<li><strong>Inconsistent information</strong> — Names, addresses, and ID numbers must match exactly across all documents. Even minor discrepancies trigger queries.</li>
+  1063→<li><strong>Missing share capital details</strong> — The minimum share capital for a limited company must be stated clearly. Ambiguity here causes rejection.</li>
+  1064→<li><strong>Incorrect forms</strong> — Using outdated or wrong BRELA forms. Always verify the current form version before submission.</li>
+  1065→</ul>
+  1066→
+  1067→<h2>What happens after registration</h2>
+  1068→<p>Receiving your Certificate of Incorporation is the beginning, not the end. Immediately after registration, you need to address several follow-on requirements:</p>
+  1069→<ol>
+  1070→<li><strong>TIN Registration</strong> — Apply for a Tax Identification Number with TRA (Tanzania Revenue Authority). Required for all registered entities.</li>
+  1071→<li><strong>Business License</strong> — Apply through your local government authority or the Online Business Registration Portal (BRIS).</li>
+  1072→<li><strong>Bank Account</strong> — Open a corporate bank account using your certificate and TIN.</li>
+  1073→<li><strong>VAT Registration</strong> — If your projected turnover exceeds the threshold, register for VAT within 30 days.</li>
+  1074→<li><strong>Sector-specific permits</strong> — Depending on your industry, additional permits may be required (e.g., TCIA for construction, TFDA for food and pharmaceuticals).</li>
+  1075→</ol>
+  1076→<p>Each of these steps has its own document requirements and processing times. Planning them in sequence — rather than discovering them reactively — keeps your business operational on schedule.</p>
+  1077→
+  1078→<blockquote><p>A successful registration is one where every step after incorporation has already been planned before the certificate is issued. That is what structured preparation looks like.</p></blockquote>`,
+  1079→      sections: [],
+  1080→    },
+  1081→  },
+  1082→  {
+  1083→    id: 2,
+  1084→    slug: "tin-registration-checklist",
+  1085→    title: "TIN registration checklist for new businesses",
+  1086→    excerpt:
+  1087→      "The basic inputs teams should verify before starting tax registration and related account setup.",
+  1088→    publishedAt: "2026-03-10",
+  1089→    category: getFallbackCategory("compliance"),
+  1090→    author: {
+  1091→      id: "author-exxonim-1",
+  1092→      name: "Exxonim Advisory",
+  1093→      role: "Registration Specialist",
+  1094→      avatarSrc: undefined,
+  1095→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1096→    },
+  1097→    coverImageSrc: blogCoverTin,
+  1098→    coverAlt: "Tax registration forms and documents organized on a professional desk",
+  1099→    mediaLabel: "TIN registration checklist",
+  1100→    featuredSlot: "popular",
+  1101→    featuredOnHome: true,
+  1102→    readTimeMinutes: 7,
+  1103→    relatedSlugs: ["company-registration-basics", "licensing-renewal-prep"],
+  1104→    content: {
+  1105→      introduction:
+  1106→        "Tax registration runs more smoothly when core entity details, contact records, and supporting documents are already aligned.",
+  1107→      highlights: [
+  1108→        "Keep legal and trading names consistent.",
+  1109→        "Prepare contact and location details exactly as filed elsewhere.",
+  1110→        "TIN application requirements.",
+  1111→      ],
+  1112→      html: `<p>A Tax Identification Number (TIN) is required for virtually every registered entity in Tanzania. Whether you are a newly incorporated company or an existing business formalising your tax position, the TRA registration process follows a defined set of steps that reward preparation.</p>
+  1113→
+  1114→<h2>What you need before applying</h2>
+  1115→<p>Before visiting the TRA office or using the online portal, ensure you have the following documents ready:</p>
+  1116→<ul>
+  1117→<li><strong>Certificate of Incorporation</strong> — Original and one certified copy</li>
+  1118→<li><strong>Memorandum and Articles of Association</strong> — Certified copy</li>
+  1119→<li><strong>Directors' IDs</strong> — National ID or passport copies for all directors</li>
+  1120→<li><strong>Proof of business address</strong> — Lease agreement, utility bill, or title deed</li>
+  1121→<li><strong>Bank introduction letter</strong> — From your corporate bank confirming account opening</li>
+  1122→</ul>
+  1123→<p>Missing any of these documents will result in your application being returned. TRA does not accept partial submissions.</p>
+  1124→
+  1125→<h2>Common consistency issues</h2>
+  1126→<p>The most frequent cause of TIN application rejection is inconsistency between documents. Small mismatches create avoidable back-and-forth during review:</p>
+  1127→<ul>
+  1128→<li>Company name spelling differences between the certificate and the application form</li>
+  1129→<li>Director names that do not match across ID documents and company records</li>
+  1130→<li>Address formats that differ between the lease agreement and the TRA form</li>
+  1131→<li>TIN numbers for existing directors that are recorded incorrectly</li>
+  1132→</ul>
+  1133→<p>Double-check every field against your source documents before submission. A 15-minute review can prevent a two-week delay.</p>
+  1134→
+  1135→<blockquote><p>Consistency across documents is not optional — it is the difference between a one-visit registration and a multi-visit correction cycle.</p></blockquote>
+  1136→
+  1137→<h2>Online vs. in-person registration</h2>
+  1138→<p>TRA now supports both online and in-person TIN applications. Each method has its own considerations:</p>
+  1139→<p><strong>Online registration</strong> through the TRA portal is faster for straightforward cases. Upload scanned documents, fill in the forms, and receive your TIN electronically. Processing typically takes 2 to 5 working days.</p>
+  1140→<p><strong>In-person registration</strong> at your local TRA office is better for complex cases, such as entities with foreign directors or those requiring additional clarification. You can address queries immediately rather than waiting for online correspondence.</p>
+  1141→<p>Choose the method that matches your situation. For most standard registrations, the online process is efficient and sufficient.</p>
+  1142→
+  1143→<h2>After you receive your TIN</h2>
+  1144→<p>Once your TIN is issued, several follow-up obligations take effect immediately:</p>
+  1145→<ol>
+  1146→<li>Update your bank account records with the TIN</li>
+  1147→<li>Include the TIN on all official invoices and receipts</li>
+  1148→<li>File your first tax return by the applicable deadline (even if no tax is due)</li>
+  1149→<li>Register for VAT if your turnover exceeds the threshold</li>
+  1150→<li>Set up electronic filing access through the TRA portal</li>
+  1151→</ol>
+  1152→<p>A TIN is not a one-time registration — it creates an ongoing relationship with the tax authority. Understanding your obligations from day one prevents compliance issues later.</p>`,
+  1153→      sections: [],
+  1154→    },
+  1155→  },
+  1156→  {
+  1157→    id: 3,
+  1158→    slug: "licensing-renewal-prep",
+  1159→    title: "How to prepare for licensing and renewal cycles",
+  1160→    excerpt:
+  1161→      "A practical way to track renewal dates, support files, and internal approvals before deadlines start to compress.",
+  1162→    publishedAt: "2026-02-28",
+  1163→    category: getFallbackCategory("compliance"),
+  1164→    author: {
+  1165→      id: "author-exxonim-2",
+  1166→      name: "Exxonim Operations",
+  1167→      role: "Compliance Lead",
+  1168→      avatarSrc: undefined,
+  1169→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1170→    },
+  1171→    coverImageSrc: blogCoverLicensing,
+  1172→    coverAlt: "Business planner with organized calendar and scheduled reminders on a desk",
+  1173→    mediaLabel: "Licensing renewal prep",
+  1174→    featuredSlot: "editors-pick",
+  1175→    featuredOnHome: false,
+  1176→    readTimeMinutes: 8,
+  1177→    relatedSlugs: ["tin-registration-checklist", "compliance-calendar-basics"],
+  1178→    content: {
+  1179→      introduction:
+  1180→        "Renewal work is easier when the team keeps one calendar, one document source, and one owner for each filing track.",
+  1181→      highlights: [
+  1182→        "Track deadlines in one place.",
+  1183→        "Assign one accountable owner per renewal stream.",
+  1184→        "Licensing renewal best practices.",
+  1185→      ],
+  1186→      html: `<p>Business licences in Tanzania are not perpetual — they require periodic renewal, and missed deadlines can result in penalties, operational disruption, or even licence revocation. A structured approach to renewal management prevents these outcomes.</p>
+  1187→
+  1188→<h2>Types of licences that require renewal</h2>
+  1189→<p>Most businesses in Tanzania hold multiple licences, each with its own renewal cycle:</p>
+  1190→<ul>
+  1191→<li><strong>Business Licence</strong> — Annual renewal through the local government authority or BRIS portal</li>
+  1192→<li><strong>Professional Licences</strong> — Sector-specific permits (e.g., engineering, legal, medical) with varying renewal periods</li>
+  1193→<li><strong>Import/Export Permits</strong> — Typically annual, managed through TRA and relevant sector authorities</li>
+  1194→<li><strong>Occupational Licences</strong> — Health and safety permits, fire safety certificates, environmental compliance permits</li>
+  1195→</ul>
+  1196→<p>Each licence has a different renewal authority, different document requirements, and different processing times. Tracking them in one place is essential.</p>
+  1197→
+  1198→<h2>Build a renewal calendar</h2>
+  1199→<p>The foundation of effective renewal management is a single, visible calendar that captures every licence, its expiry date, and the lead time required for renewal. A practical renewal calendar includes:</p>
+  1200→<ol>
+  1201→<li><strong>Licence name and issuing authority</strong> — So you know where to go</li>
+  1202→<li><strong>Expiry date</strong> — The hard deadline</li>
+  1203→<li><strong>Internal reminder date</strong> — 60 days before expiry to begin preparation</li>
+  1204→<li><strong>Document checklist</strong> — What you need to submit</li>
+  1205→<li><strong>Assigned owner</strong> — One person accountable for tracking each renewal</li>
+  1206→</ol>
+  1207→<p>A shared filing calendar prevents deadlines from becoming last-minute recovery work. The calendar only helps if the team can see what is pending and who moves it forward.</p>
+  1208→
+  1209→<h2>Assign ownership per renewal stream</h2>
+  1210→<p>Without clear ownership, renewals fall through the cracks. Assign one person as the accountable owner for each renewal stream. Their responsibilities include:</p>
+  1211→<ul>
+  1212→<li>Monitoring the renewal calendar and triggering preparation at the reminder date</li>
+  1213→<li>Collecting and verifying all required documents before submission</li>
+  1214→<li>Following up with the issuing authority if processing takes longer than expected</li>
+  1215→<li>Confirming the renewal is completed and updating the calendar for the next cycle</li>
+  1216→</ul>
+  1217→<p>When multiple people share responsibility without clear accountability, everyone assumes someone else is handling it. One owner per stream eliminates this gap.</p>
+  1218→
+  1219→<blockquote><p>The cost of a missed renewal is always higher than the cost of preparation. Late fees, operational downtime, and reputational damage compound quickly.</p></blockquote>
+  1220→
+  1221→<h2>Common renewal pitfalls</h2>
+  1222→<p>After managing renewal cycles across dozens of organisations, the same patterns emerge:</p>
+  1223→<ul>
+  1224→<li><strong>Starting too late</strong> — 30 days is not enough for most renewals. Start at 60 days to accommodate document gathering and processing time.</li>
+  1225→<li><strong>Missing prerequisite updates</strong> — Some renewals require an up-to-date TIN certificate or tax clearance. If these have expired, the renewal itself will be delayed.</li>
+  1226→<li><strong>Ignoring processing delays</strong> — Authorities do not always process renewals on schedule. Build buffer into your timeline.</li>
+  1227→<li><strong>Not retaining proof</strong> — Always keep copies of submitted documents and receipts. If the authority loses your submission, you have evidence of timely filing.</li>
+  1228→</ul>
+  1229→
+  1230→<h2>When to seek professional support</h2>
+  1231→<p>For organisations with multiple licence types or those operating across different jurisdictions, professional compliance support can reduce risk and save time. Consider engaging support when:</p>
+  1232→<ul>
+  1233→<li>You hold more than five distinct licence types</li>
+  1234→<li>Your licences span multiple authorities or sectors</li>
+  1235→<li>You have experienced a missed renewal in the past 12 months</li>
+  1236→<li>Your team does not have a dedicated compliance function</li>
+  1237→</ul>
+  1238→<p>Professional support is not about outsourcing responsibility — it is about adding structure and visibility to a process that directly affects your ability to operate.</p>`,
+  1239→      sections: [],
+  1240→    },
+  1241→  },
+  1242→  {
+  1243→    id: 4,
+  1244→    slug: "compliance-calendar-basics",
+  1245→    title: "Build a simple compliance calendar your team can actually use",
+  1246→    excerpt:
+  1247→      "A lightweight operating model for recurring filings, reminders, and decision points across the year.",
+  1248→    publishedAt: "2026-02-12",
+  1249→    category: getFallbackCategory("operations"),
+  1250→    author: {
+  1251→      id: "author-exxonim-2",
+  1252→      name: "Exxonim Operations",
+  1253→      role: "Compliance Lead",
+  1254→      avatarSrc: undefined,
+  1255→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1256→    },
+  1257→    coverImageSrc: blogCoverCalendar,
+  1258→    coverAlt: "Wall calendar with marked dates and a planning workspace",
+  1259→    mediaLabel: "Compliance calendar basics",
+  1260→    featuredOnHome: false,
+  1261→    readTimeMinutes: 6,
+  1262→    relatedSlugs: ["licensing-renewal-prep", "company-registration-basics"],
+  1263→    content: {
+  1264→      introduction:
+  1265→        "A workable calendar is short, visible, and tied to the next action rather than stored in disconnected spreadsheets.",
+  1266→      highlights: [
+  1267→        "Use one owner and one date per obligation.",
+  1268→        "Record the next action, not just the deadline.",
+  1269→        "Compliance calendar framework.",
+  1270→      ],
+  1271→      html: `<p>A compliance calendar is only useful if your team actually refers to it. The most effective calendars are simple, visible, and action-oriented — not comprehensive lists of every possible obligation buried in a spreadsheet nobody opens.</p>
+  1272→
+  1273→<h2>What makes a compliance calendar work</h2>
+  1274→<p>Three principles separate calendars that get used from calendars that get ignored:</p>
+  1275→<ol>
+  1276→<li><strong>Visibility</strong> — The calendar must be accessible to everyone who needs it, without requiring special software access or login credentials. A shared document or dashboard that updates in real time works best.</li>
+  1277→<li><strong>Action-orientation</strong> — Each entry should describe the next action, not just the deadline. "Submit VAT return by March 25" is more useful than "VAT due Q1."</li>
+  1278→<li><strong>Single ownership</strong> — Every entry has one person responsible. If two people are listed, neither feels fully accountable.</li>
+  1279→</ol>
+  1280→<p>When these three elements are in place, the calendar becomes a working tool rather than a reference document.</p>
+  1281→
+  1282→<h2>Key dates to include</h2>
+  1283→<p>At minimum, your compliance calendar should capture the following recurring obligations:</p>
+  1284→<ul>
+  1285→<li><strong>VAT returns</strong> — Monthly or quarterly, depending on your registration status</li>
+  1286→<li><strong>PAYE remittances</strong> — Monthly, by the 9th of the following month</li>
+  1287→<li><strong>Corporate tax instalments</strong> — Quarterly, based on estimated annual tax</li>
+  1288→<li><strong>Business licence renewals</strong> — Annual, typically aligned with your registration anniversary</li>
+  1289→<li><strong>Annual return filing</strong> — Within 30 days of the company's anniversary of incorporation</li>
+  1290→<li><strong>Statutory audits</strong> — For companies meeting the turnover threshold, annually</li>
+  1291→</ul>
+  1292→<p>Each entry should include the authority, the document requirements, and the contact point for queries.</p>
+  1293→
+  1294→<blockquote><p>The calendar only helps if the team can see what is pending and who moves it forward. A hidden calendar is a useless calendar.</p></blockquote>
+  1295→
+  1296→<h2>Tools and formats</h2>
+  1297→<p>The format of your calendar matters less than whether people use it. Common options include:</p>
+  1298→<ul>
+  1299→<li><strong>Shared spreadsheet</strong> — Simple, familiar, easy to set up. Works for small teams with fewer than 20 obligations.</li>
+  1300→<li><strong>Project management tool</strong> — Asana, Monday, or similar platforms add reminders, assignees, and progress tracking. Better for larger teams.</li>
+  1301→<li><strong>Dedicated compliance platform</strong> — Purpose-built tools with regulatory content pre-loaded. Suitable for organisations with complex compliance landscapes.</li>
+  1302→</ul>
+  1303→<p>Start with the simplest tool that your team will actually use. You can always upgrade later — the priority is getting the calendar into daily use.</p>
+  1304→
+  1305→<h2>Review and maintain</h2>
+  1306→<p>A compliance calendar is a living document. Schedule a monthly review to:</p>
+  1307→<ol>
+  1308→<li>Confirm upcoming deadlines are still accurate</li>
+  1309→<li>Update any changes in document requirements or processing times</li>
+  1310→<li>Mark completed items and carry forward any missed deadlines</li>
+  1311→<li>Add new obligations that have emerged from regulatory changes</li>
+  1312→</ol>
+  1313→<p>Without regular maintenance, the calendar drifts out of date and loses credibility. A 30-minute monthly review keeps it accurate and trusted.</p>`,
+  1314→      sections: [],
+  1315→    },
+  1316→  },
+  1317→  {
+  1318→    id: 5,
+  1319→    slug: "business-registration-timeline",
+  1320→    title: "What to expect on the company registration timeline",
+  1321→    excerpt:
+  1322→      "A realistic overview of how long each registration stage takes and what can cause delays in Tanzania.",
+  1323→    publishedAt: "2026-02-04",
+  1324→    category: getFallbackCategory("business-setup"),
+  1325→    author: {
+  1326→      id: "author-exxonim-1",
+  1327→      name: "Exxonim Advisory",
+  1328→      role: "Registration Specialist",
+  1329→      avatarSrc: undefined,
+  1330→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1331→    },
+  1332→    coverImageSrc: blogCoverTimeline,
+  1333→    coverAlt: "Modern office building in Dar es Salaam business district",
+  1334→    mediaLabel: "Registration timeline",
+  1335→    featuredOnHome: true,
+  1336→    readTimeMinutes: 5,
+  1337→    relatedSlugs: ["company-registration-basics", "ngo-registration-guide"],
+  1338→    content: {
+  1339→      introduction:
+  1340→        "Registration timelines depend on entity type, document readiness, and authority processing speed. Understanding the typical sequence helps teams plan around realistic expectations.",
+  1341→      highlights: [
+  1342→        "Name reservation can take 1-3 working days.",
+  1343→        "Incorporation filing typically takes 5-10 working days.",
+  1344→        "Delays often come from incomplete documents, not the authority.",
+  1345→      ],
+  1346→      sections: [
+  1347→        {
+  1348→          heading: "Typical stages and durations",
+  1349→          paragraphs: [
+  1350→            "Name reservation, document preparation, incorporation filing, and certificate collection each have their own processing window.",
+  1351→            "Build buffer time into your plan so a slow stage does not block everything downstream.",
+  1352→          ],
+  1353→        },
+  1354→      ],
+  1355→    },
+  1356→  },
+  1357→  {
+  1358→    id: 6,
+  1359→    slug: "ngo-registration-guide",
+  1360→    title: "NGO registration steps and compliance requirements",
+  1361→    excerpt:
+  1362→      "How non-profit organisations can navigate the registration process and maintain compliance with Tanzanian regulations.",
+  1363→    publishedAt: "2026-01-20",
+  1364→    category: getFallbackCategory("business-setup"),
+  1365→    author: {
+  1366→      id: "author-exxonim-2",
+  1367→      name: "Exxonim Operations",
+  1368→      role: "Compliance Lead",
+  1369→      avatarSrc: undefined,
+  1370→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1371→    },
+  1372→    coverImageSrc: blogCoverNgo,
+  1373→    coverAlt: "Community meeting discussing NGO plans in Tanzania",
+  1374→    mediaLabel: "NGO registration guide",
+  1375→    featuredOnHome: true,
+  1376→    readTimeMinutes: 7,
+  1377→    relatedSlugs: ["company-registration-basics", "regulatory-compliance-framework"],
+  1378→    content: {
+  1379→      introduction:
+  1380→        "NGO registration follows a distinct path from company registration, with its own documentation requirements and compliance obligations.",
+  1381→      highlights: [
+  1382→        "Prepare constitution and board details before filing.",
+  1383→        "Compliance obligations differ from for-profit entities.",
+  1384→        "Annual returns and activity reports are recurring requirements.",
+  1385→      ],
+  1386→      sections: [
+  1387→        {
+  1388→          heading: "Key differences from company registration",
+  1389→          paragraphs: [
+  1390→            "NGOs must submit a constitution, board member details, and proof of intended activities. The review process also involves sector-specific approvals in some cases.",
+  1391→          ],
+  1392→        },
+  1393→      ],
+  1394→    },
+  1395→  },
+  1396→  {
+  1397→    id: 7,
+  1398→    slug: "business-name-registration",
+  1399→    title: "Business name registration for sole proprietors",
+  1400→    excerpt:
+  1401→      "A straightforward guide for individuals registering a business name in Tanzania, from name search to certificate.",
+  1402→    publishedAt: "2026-01-08",
+  1403→    category: getFallbackCategory("business-setup"),
+  1404→    author: {
+  1405→      id: "author-exxonim-1",
+  1406→      name: "Exxonim Advisory",
+  1407→      role: "Registration Specialist",
+  1408→      avatarSrc: undefined,
+  1409→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1410→    },
+  1411→    coverImageSrc: blogCoverBizName,
+  1412→    coverAlt: "Entrepreneur opening a small business storefront",
+  1413→    mediaLabel: "Business name registration",
+  1414→    featuredOnHome: false,
+  1415→    readTimeMinutes: 4,
+  1416→    relatedSlugs: ["company-registration-basics", "business-registration-timeline"],
+  1417→    content: {
+  1418→      introduction:
+  1419→        "Business name registration is the simplest entity setup path in Tanzania, but it still requires the right documents and steps in the correct order.",
+  1420→      highlights: [
+  1421→        "Name availability search comes first.",
+  1422→        "Sole proprietor registration is faster than company incorporation.",
+  1423→        "A business name does not create a separate legal entity.",
+  1424→      ],
+  1425→      sections: [
+  1426→        {
+  1427→          heading: "The registration path",
+  1428→          paragraphs: [
+  1429→            "Start with a name search, then submit the registration form with identity documents and the prescribed fee. Processing is typically faster than company registration.",
+  1430→          ],
+  1431→        },
+  1432→      ],
+  1433→    },
+  1434→  },
+  1435→  {
+  1436→    id: 8,
+  1437→    slug: "tax-return-preparation",
+  1438→    title: "How to prepare for your first tax return filing",
+  1439→    excerpt:
+  1440→      "Practical steps for new entities preparing their first tax return, including documentation, deadlines, and common mistakes.",
+  1441→    publishedAt: "2025-12-18",
+  1442→    category: getFallbackCategory("compliance"),
+  1443→    author: {
+  1444→      id: "author-exxonim-2",
+  1445→      name: "Exxonim Operations",
+  1446→      role: "Compliance Lead",
+  1447→      avatarSrc: undefined,
+  1448→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1449→    },
+  1450→    coverImageSrc: blogCoverTaxReturn,
+  1451→    coverAlt: "Accountant preparing financial statements on a laptop",
+  1452→    mediaLabel: "Tax return preparation",
+  1453→    featuredOnHome: false,
+  1454→    readTimeMinutes: 6,
+  1455→    relatedSlugs: ["tin-registration-checklist", "annual-return-filing"],
+  1456→    content: {
+  1457→      introduction:
+  1458→        "The first tax return filing can feel complicated, but it follows a predictable structure when you have the right documents prepared.",
+  1459→      highlights: [
+  1460→        "Gather financial records early.",
+  1461→        "Understand which return type applies to your entity.",
+  1462→        "File on time to avoid penalties.",
+  1463→      ],
+  1464→      sections: [
+  1465→        {
+  1466→          heading: "Common first-time mistakes",
+  1467→          paragraphs: [
+  1468→            "Missing the filing deadline, incomplete financial statements, and inconsistent information across forms are the most common issues Exxonim sees in first-time filings.",
+  1469→          ],
+  1470→        },
+  1471→      ],
+  1472→    },
+  1473→  },
+  1474→  {
+  1475→    id: 9,
+  1476→    slug: "regulatory-compliance-framework",
+  1477→    title: "Building a regulatory compliance framework for your organisation",
+  1478→    excerpt:
+  1479→      "A structured approach to identifying, tracking, and meeting your regulatory obligations across the year.",
+  1480→    publishedAt: "2025-12-05",
+  1481→    category: getFallbackCategory("operations"),
+  1482→    author: {
+  1483→      id: "author-exxonim-1",
+  1484→      name: "Exxonim Advisory",
+  1485→      role: "Registration Specialist",
+  1486→      avatarSrc: undefined,
+  1487→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1488→    },
+  1489→    coverImageSrc: blogCoverRegulatory,
+  1490→    coverAlt: "Compliance checklist clipboard with organized filing system",
+  1491→    mediaLabel: "Compliance framework",
+  1492→    featuredOnHome: true,
+  1493→    readTimeMinutes: 8,
+  1494→    relatedSlugs: ["compliance-calendar-basics", "licensing-renewal-prep"],
+  1495→    content: {
+  1496→      introduction:
+  1497→        "A compliance framework does not need to be complex. It needs to be visible, owned, and tied to the next action for each obligation.",
+  1498→      highlights: [
+  1499→        "List every obligation with its authority and deadline.",
+  1500→        "Assign one owner per obligation.",
+  1501→        "Review and update the framework quarterly.",
+  1502→      ],
+  1503→      sections: [
+  1504→        {
+  1505→          heading: "Starting the framework",
+  1506→          paragraphs: [
+  1507→            "Begin with the obligations you already know, then add new ones as they emerge. A simple spreadsheet or tracking tool is enough to start — the key is consistent review.",
+  1508→          ],
+  1509→        },
+  1510→      ],
+  1511→    },
+  1512→  },
+  1513→  {
+  1514→    id: 10,
+  1515→    slug: "annual-return-filing",
+  1516→    title: "Annual return filing: what to prepare and when",
+  1517→    excerpt:
+  1518→      "A practical timeline for annual return preparation, including the documents you need and common reasons for delays.",
+  1519→    publishedAt: "2025-11-22",
+  1520→    category: getFallbackCategory("compliance"),
+  1521→    author: {
+  1522→      id: "author-exxonim-2",
+  1523→      name: "Exxonim Operations",
+  1524→      role: "Compliance Lead",
+  1525→      avatarSrc: undefined,
+  1526→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1527→    },
+  1528→    coverImageSrc: blogCoverAnnualReturn,
+  1529→    coverAlt: "Annual report documents with charts and organized folders",
+  1530→    mediaLabel: "Annual return filing",
+  1531→    featuredOnHome: false,
+  1532→    readTimeMinutes: 5,
+  1533→    relatedSlugs: ["tax-return-preparation", "licensing-renewal-prep"],
+  1534→    content: {
+  1535→      introduction:
+  1536→        "Annual returns are a recurring compliance obligation. Preparing early and having a consistent process makes each cycle smoother.",
+  1537→      highlights: [
+  1538→        "Start preparing 30 days before the due date.",
+  1539→        "Confirm the return type matches your entity structure.",
+  1540→        "Keep financial statements consistent with prior filings.",
+  1541→      ],
+  1542→      sections: [
+  1543→        {
+  1544→          heading: "Preparation checklist",
+  1545→          paragraphs: [
+  1546→            "Verify your entity details are current, confirm the filing period, prepare the financial summary, and submit before the deadline. Late filing triggers penalties and can affect your compliance record.",
+  1547→          ],
+  1548→        },
+  1549→      ],
+  1550→    },
+  1551→  },
+  1552→  {
+  1553→    id: 11,
+  1554→    slug: "import-export-licensing",
+  1555→    title: "Import and export licensing requirements in Tanzania",
+  1556→    excerpt:
+  1557→      "A clear breakdown of permits, registrations, and documentation needed to move goods across Tanzanian borders.",
+  1558→    publishedAt: "2025-11-10",
+  1559→    category: getFallbackCategory("operations"),
+  1560→    author: {
+  1561→      id: "author-exxonim-2",
+  1562→      name: "Exxonim Operations",
+  1563→      role: "Compliance Lead",
+  1564→      avatarSrc: undefined,
+  1565→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1566→    },
+  1567→    coverImageSrc: blogCoverImportExport,
+  1568→    coverAlt: "Shipping containers at Dar es Salaam port with customs documentation",
+  1569→    mediaLabel: "Import-export licensing",
+  1570→    featuredOnHome: false,
+  1571→    readTimeMinutes: 6,
+  1572→    relatedSlugs: ["regulatory-compliance-framework", "business-registration-timeline"],
+  1573→    content: {
+  1574→      introduction:
+  1575→        "Importing and exporting goods in Tanzania requires specific licenses, permits, and registrations depending on the product category and trade direction.",
+  1576→      highlights: [
+  1577→        "Confirm which licenses apply to your product type.",
+  1578→        "Prepare customs documentation before shipping.",
+  1579→        "Track renewal dates for trade permits.",
+  1580→      ],
+  1581→      sections: [
+  1582→        {
+  1583→          heading: "Key permits and where to start",
+  1584→          paragraphs: [
+  1585→            "Most trade activities require a business license, TRA tax registration, and product-specific permits. Start with the Tanzania Revenue Authority and the relevant sector regulator before arranging logistics.",
+  1586→          ],
+  1587→        },
+  1588→      ],
+  1589→    },
+  1590→  },
+  1591→  {
+  1592→    id: 12,
+  1593→    slug: "business-bank-account-setup",
+  1594→    title: "How to open a business bank account in Tanzania",
+  1595→    excerpt:
+  1596→      "Practical steps and document requirements for setting up a corporate bank account after entity registration.",
+  1597→    publishedAt: "2025-10-28",
+  1598→    category: getFallbackCategory("business-setup"),
+  1599→    author: {
+  1600→      id: "author-exxonim-1",
+  1601→      name: "Exxonim Advisory",
+  1602→      role: "Registration Specialist",
+  1603→      avatarSrc: undefined,
+  1604→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1605→    },
+  1606→    coverImageSrc: blogCoverBankAccount,
+  1607→    coverAlt: "Business professional at a bank counter opening a corporate account",
+  1608→    mediaLabel: "Business bank account setup",
+  1609→    featuredOnHome: false,
+  1610→    readTimeMinutes: 5,
+  1611→    relatedSlugs: ["company-registration-basics", "tin-registration-checklist"],
+  1612→    content: {
+  1613→      introduction:
+  1614→        "Opening a business bank account requires your registration certificate, TIN, and director identification. Each bank has its own requirements, but the core documents are consistent.",
+  1615→      highlights: [
+  1616→        "Bring the certificate of incorporation and TIN certificate.",
+  1617→        "Prepare director and shareholder identification documents.",
+  1618→        "Some banks require a board resolution to open the account.",
+  1619→      ],
+  1620→      sections: [
+  1621→        {
+  1622→          heading: "Typical document checklist",
+  1623→          paragraphs: [
+  1624→            "Certificate of incorporation, memorandum and articles of association, TIN certificate, business license (if applicable), and identification for all signatories. Having these ready before visiting the bank saves time.",
+  1625→          ],
+  1626→        },
+  1627→      ],
+  1628→    },
+  1629→  },
+  1630→  {
+  1631→    id: 13,
+  1632→    slug: "tra-tax-obligations",
+  1633→    title: "Understanding your TRA tax obligations as a business",
+  1634→    excerpt:
+  1635→      "A straightforward overview of the main tax types, filing schedules, and compliance expectations from the Tanzania Revenue Authority.",
+  1636→    publishedAt: "2025-10-12",
+  1637→    category: getFallbackCategory("compliance"),
+  1638→    author: {
+  1639→      id: "author-exxonim-2",
+  1640→      name: "Exxonim Operations",
+  1641→      role: "Compliance Lead",
+  1642→      avatarSrc: undefined,
+  1643→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1644→    },
+  1645→    coverImageSrc: blogCoverTraObligations,
+  1646→    coverAlt: "Tax compliance documents and TRA forms on a professional desk",
+  1647→    mediaLabel: "TRA tax obligations",
+  1648→    featuredOnHome: false,
+  1649→    readTimeMinutes: 7,
+  1650→    relatedSlugs: ["tax-return-preparation", "compliance-calendar-basics"],
+  1651→    content: {
+  1652→      introduction:
+  1653→        "Every registered business in Tanzania has tax obligations determined by entity type, revenue, and sector. Understanding which taxes apply and when they are due prevents penalties.",
+  1654→      highlights: [
+  1655→        "Corporate tax, VAT, and PAYE are the most common obligations.",
+  1656→        "Filing schedules differ by tax type and entity size.",
+  1657→        "Late filing triggers interest and penalties.",
+  1658→      ],
+  1659→      sections: [
+  1660→        {
+  1661→          heading: "Common tax types for businesses",
+  1662→          paragraphs: [
+  1663→            "Corporate income tax (30%), value added tax (18% for standard-rated supplies), pay-as-you-earn for employees, and skills development levy. Some sectors have additional excise or stamp duties.",
+  1664→          ],
+  1665→        },
+  1666→      ],
+  1667→    },
+  1668→  },
+  1669→  {
+  1670→    id: 14,
+  1671→    slug: "partnership-registration",
+  1672→    title: "Partnership registration steps in Tanzania",
+  1673→    excerpt:
+  1674→      "How to register a general or limited partnership, including the documentation and regulatory steps involved.",
+  1675→    publishedAt: "2025-09-25",
+  1676→    category: getFallbackCategory("business-setup"),
+  1677→    author: {
+  1678→      id: "author-exxonim-1",
+  1679→      name: "Exxonim Advisory",
+  1680→      role: "Registration Specialist",
+  1681→      avatarSrc: undefined,
+  1682→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1683→    },
+  1684→    coverImageSrc: blogCoverPartnership,
+  1685→    coverAlt: "Two business partners reviewing registration documents together",
+  1686→    mediaLabel: "Partnership registration",
+  1687→    featuredOnHome: false,
+  1688→    readTimeMinutes: 5,
+  1689→    relatedSlugs: ["company-registration-basics", "ngo-registration-guide"],
+  1690→    content: {
+  1691→      introduction:
+  1692→        "Partnerships offer a simpler structure than companies, but they still require formal registration and a partnership deed. Understanding the difference between general and limited partnerships is the first step.",
+  1693→      highlights: [
+  1694→        "A partnership deed is essential before registration.",
+  1695→        "General partnerships have unlimited liability for all partners.",
+  1696→        "Limited partnerships protect some partners' liability.",
+  1697→      ],
+  1698→      sections: [
+  1699→        {
+  1700→          heading: "Registration path",
+  1701→          paragraphs: [
+  1702→            "Draft a partnership deed, register with the Business Registration and Licensing Authority (BRELA), obtain a TIN, and apply for relevant business licenses. The process is faster than company incorporation but still requires complete documentation.",
+  1703→          ],
+  1704→        },
+  1705→      ],
+  1706→    },
+  1707→  },
+  1708→  {
+  1709→    id: 15,
+  1710→    slug: "work-permit-foreign-investors",
+  1711→    title: "Work permits and residency for foreign investors in Tanzania",
+  1712→    excerpt:
+  1713→      "What foreign investors need to know about work permits, residence classes, and the regulatory process for operating in Tanzania.",
+  1714→    publishedAt: "2025-09-10",
+  1715→    category: getFallbackCategory("operations"),
+  1716→    author: {
+  1717→      id: "author-exxonim-1",
+  1718→      name: "Exxonim Advisory",
+  1719→      role: "Registration Specialist",
+  1720→      avatarSrc: undefined,
+  1721→      bio: "Exxonim's advisory team provides structured guidance through entity registration and compliance workflows.",
+  1722→    },
+  1723→    coverImageSrc: blogCoverWorkPermit,
+  1724→    coverAlt: "Immigration office with work permit documents and passport",
+  1725→    mediaLabel: "Work permits for investors",
+  1726→    featuredOnHome: false,
+  1727→    readTimeMinutes: 8,
+  1728→    relatedSlugs: ["business-registration-timeline", "import-export-licensing"],
+  1729→    content: {
+  1730→      introduction:
+  1731→        "Foreign nationals seeking to work or invest in Tanzania must obtain the appropriate work permit and residence class. The process involves multiple government agencies and specific documentation.",
+  1732→      highlights: [
+  1733→        "Choose the correct residence class for your activity.",
+  1734→        "Prepare supporting documents before applying.",
+  1735→        "Processing times vary by permit type.",
+  1736→      ],
+  1737→      sections: [
+  1738→        {
+  1739→          heading: "Residence classes and work permits",
+  1740→          paragraphs: [
+  1741→            "Tanzania offers several residence classes for investors, professionals, and employees. Class A covers investors, Class B covers professionals, and Class C covers other employment. Each has distinct requirements and processing timelines through the Immigration Services Department.",
+  1742→          ],
+  1743→        },
+  1744→      ],
+  1745→    },
+  1746→  },
+  1747→  {
+  1748→    id: 16,
+  1749→    slug: "digital-business-compliance",
+  1750→    title: "Digital business compliance and online registration in Tanzania",
+  1751→    excerpt:
+  1752→      "How digital platforms and online systems are changing the way businesses register, file, and stay compliant in Tanzania.",
+  1753→    publishedAt: "2025-08-22",
+  1754→    category: getFallbackCategory("operations"),
+  1755→    author: {
+  1756→      id: "author-exxonim-2",
+  1757→      name: "Exxonim Operations",
+  1758→      role: "Compliance Lead",
+  1759→      avatarSrc: undefined,
+  1760→      bio: "Exxonim's operations team focuses on practical compliance tracking and deadline management.",
+  1761→    },
+  1762→    coverImageSrc: blogCoverDigital,
+  1763→    coverAlt: "Laptop screen showing online business registration portal in Tanzania",
+  1764→    mediaLabel: "Digital business compliance",
+  1765→    featuredOnHome: false,
+  1766→    readTimeMinutes: 5,
+  1767→    relatedSlugs: ["company-registration-basics", "tra-tax-obligations"],
+  1768→    content: {
+  1769→      introduction:
+  1770→        "Tanzania is gradually digitising business registration and compliance processes. Understanding which systems are available online and which still require in-person visits saves time and reduces errors.",
+  1771→      highlights: [
+  1772→        "BRELA and TRA both offer online portals for key services.",
+  1773→        "Not all processes are fully digitised yet.",
+  1774→        "Digital submissions still require correct documentation.",
+  1775→      ],
+  1776→      sections: [
+  1777→        {
+  1778→          heading: "Current digital services",
+  1779→          paragraphs: [
+  1780→            "Name search and reservation can be done online through the BRELA portal. TIN registration, VAT registration, and some return filings are available through the TRA e-services platform. However, some steps like document verification still require physical submission.",
+  1781→          ],
+  1782→        },
+  1783→      ],
+  1784→    },
+  1785→  },
+  1786→];
+  1787→
+  1788→export const fallbackPricingPlans: PricingPlan[] = [
+  1789→  {
+  1790→    id: 1,
+  1791→    name: "Foundation",
+  1792→    badge: "Getting started",
+  1793→    description: "Registration and first-step compliance — ideal for new entities getting set up.",
+  1794→    notes: "Use the Exxonim contact route for the latest package guidance.",
+  1795→    recommended: false,
+  1796→    features: [
+  1797→      { label: "Company or business name registration filed on your behalf", included: true },
+  1798→      { label: "TIN application included", included: true },
+  1799→      { label: "Document checklist and readiness review", included: true },
+  1800→      { label: "Consultation tracking with milestone updates", included: true },
+  1801→      { label: "Annual return filing", included: false },
+  1802→      { label: "Compliance reminders", included: false },
+  1803→    ],
+  1804→  },
+  1805→  {
+  1806→    id: 2,
+  1807→    name: "Operating",
+  1808→    badge: "Recommended",
+  1809→    description: "Registration, licensing, and recurring compliance support for active businesses.",
+  1810→    notes: "Live package details return automatically after the next successful sync.",
+  1811→    recommended: true,
+  1812→    features: [
+  1813→      { label: "Company or business name registration filed on your behalf", included: true },
+  1814→      { label: "TIN application included", included: true },
+  1815→      { label: "Business license application", included: true },
+  1816→      { label: "Annual return filing", included: true },
+  1817→      { label: "Ongoing compliance reminders", included: true },
+  1818→      { label: "Trademark registration", included: false },
+  1819→    ],
+  1820→  },
+  1821→  {
+  1822→    id: 3,
+  1823→    name: "Continuity",
+  1824→    badge: "Extended coverage",
+  1825→    description: "Full-service support — registration, compliance, work permits, and ongoing advisory.",
+  1826→    notes: "Contact Exxonim directly for a tailored scope while the live catalog reconnects.",
+  1827→    recommended: false,
+  1828→    features: [
+  1829→      { label: "Everything in Operating", included: true },
+  1830→      { label: "Trademark registration and protection", included: true },
+  1831→      { label: "Work permit and TIC registration support", included: true },
+  1832→      { label: "Priority support coordination", included: true },
+  1833→      { label: "Multi-stream document management", included: true },
+  1834→      { label: "Quarterly compliance review and planning", included: true },
+  1835→    ],
+  1836→  },
+  1837→];
+  1838→
+  1839→export const fallbackTestimonials: Testimonial[] = [
+  1840→  {
+  1841→    id: 1,
+  1842→    eyebrow: "Business setup",
+  1843→    headline: "Clear process from the first conversation.",
+  1844→    support:
+  1845→      "Exxonim helped us move through the setup phase with a clear checklist and practical follow-through at every step.",
+  1846→    quote:
+  1847→      "We knew exactly what to prepare, when to submit, and who to contact if anything was unclear.",
+  1848→    name: "Operations Team",
+  1849→    role: "Client reference",
+  1850→    initials: "OT",
+  1851→  },
+  1852→  {
+  1853→    id: 2,
+  1854→    eyebrow: "Compliance support",
+  1855→    headline: "Deadlines never caught us off guard.",
+  1856→    support:
+  1857→      "Proactive reminders and structured follow-up meant our licensing renewals and filings were always on schedule.",
+  1858→    quote:
+  1859→      "The experience felt intentional because the process stayed visible and the next step was always clear.",
+  1860→    name: "Compliance Lead",
+  1861→    role: "Client reference",
+  1862→    initials: "CL",
+  1863→  },
+  1864→  {
+  1865→    id: 3,
+  1866→    eyebrow: "Consultation tracking",
+  1867→    headline: "We always knew where things stood.",
+  1868→    support:
+  1869→      "Every consultation came with a tracking reference and milestone updates — no need to call and ask for status.",
+  1870→    quote:
+  1871→      "Getting a WhatsApp update when our certificate was issued saved us days of back-and-forth.",
+  1872→    name: "Programme Coordinator",
+  1873→    role: "Client reference",
+  1874→    initials: "PC",
+  1875→  },
+  1876→];
+  1877→
+  1878→/* BACKEND / ADMIN INTEGRATION NOTES (Job listings):
+  1879→ * ──────────────────────────────────────────────────────────
+  1880→ * These 7 fallback jobs are used when the jobs API is unavailable.
+  1881→ * The admin should create real jobs matching the ApiCareerJob structure.
+  1882→ *
+  1883→ * Key fields for admin:
+  1884→ *   - title: Clear, specific role title (max ~60 chars)
+  1885→ *   - department: Short, 1-2 words (used for pills and filtering)
+  1886→ *   - employment_type: "Full-time" | "Part-time" | "Contract" | "Internship"
+  1887→ *   - experience_label: "Entry-level" | "Mid-level" | "Senior" | "Lead"
+  1888→ *   - location_mode: "on-site" | "hybrid" | "remote"
+  1889→ *   - city/country: Physical location for the role
+  1890→ *   - compensation_label: Optional salary range (e.g., "TZS 1.5M–2.5M/mo")
+  1891→ *   - summary: 1-sentence overview (shown in collapsed/preview)
+  1892→ *   - description: 1-2 sentence full description (shown in full details)
+  1893→ *   - responsibilities[]: 3-5 action-oriented bullet points
+  1894→ *   - requirements[]: 3-5 qualification bullet points
+  1895→ *   - published_at: ISO date string — used for "Posted X" and 72h+ indicator
+  1896→ *
+  1897→ * 72-hour indicator: If published_at is >72h ago, a "72h+ posted" pill appears.
+  1898→ * This is VISUAL ONLY — jobs are never auto-removed. Admin must unpublish to remove.
+  1899→ *
+  1900→ * Application flow: "Apply Now" opens an application modal (not the contact page).
+  1901→ * The modal collects: name, email, phone, cover note, and CV/resume file upload.
+  1902→ * Submission sends to the email configured for the job (fallback: info@exxonim.co.tz).
+  1903→ * Backend endpoint: POST /api/public/jobs/{id}/apply
+  1904→ */
+  1905→export const fallbackJobs: ApiCareerJob[] = [
+  1906→  {
+  1907→    id: 1,
+  1908→    title: "Client Operations Coordinator",
+  1909→    slug: "client-operations-coordinator",
+  1910→    department: "Operations",
+  1911→    employment_type: "Full-time",
+  1912→    location_mode: "hybrid",
+  1913→    city: "Dar es Salaam",
+  1914→    country: "Tanzania",
+  1915→    compensation_label: null,
+  1916→    experience_label: "Mid-level",
+  1917→    summary:
+  1918→      "Coordinate internal follow-through, document readiness, and status visibility across active client work.",
+  1919→    description:
+  1920→      "Coordinate internal follow-through, document readiness, and status visibility across active client work. You will be the connective tissue between case managers, compliance officers, and clients — making sure nothing falls through the cracks.",
+  1921→    requirements: [
+  1922→      "Comfort working with operational checklists",
+  1923→      "Clear written communication",
+  1924→      "Confidence handling structured follow-up work",
+  1925→    ],
+  1926→    responsibilities: [
+  1927→      "Track active workstreams",
+  1928→      "Coordinate next actions with the team",
+  1929→      "Help keep filing and follow-up work organized",
+  1930→    ],
+  1931→    status: "published",
+  1932→    is_published: true,
+  1933→    published_at: "2026-04-01T00:00:00Z",
+  1934→    created_at: "2026-04-01T00:00:00Z",
+  1935→    updated_at: "2026-04-01T00:00:00Z",
+  1936→  },
+  1937→  {
+  1938→    id: 2,
+  1939→    title: "Compliance Support Analyst",
+  1940→    slug: "compliance-support-analyst",
+  1941→    department: "Compliance",
+  1942→    employment_type: "Full-time",
+  1943→    location_mode: "on-site",
+  1944→    city: "Dar es Salaam",
+  1945→    country: "Tanzania",
+  1946→    compensation_label: null,
+  1947→    experience_label: "Entry-level",
+  1948→    summary:
+  1949→      "Assist with regulatory filings, license renewals, and compliance deadline tracking for Exxonim clients.",
+  1950→    description:
+  1951→      "Support the compliance team by preparing filing documents, tracking renewal deadlines, and following up with regulatory bodies. Ideal for someone starting their career in regulatory operations.",
+  1952→    requirements: [
+  1953→      "Degree in business, law, or related field",
+  1954→      "Attention to detail and deadline awareness",
+  1955→      "Ability to follow structured processes",
+  1956→    ],
+  1957→    responsibilities: [
+  1958→      "Prepare and review filing documents",
+  1959→      "Track compliance deadlines and send reminders",
+  1960→      "Follow up with regulatory authorities on pending applications",
+  1961→    ],
+  1962→    status: "published",
+  1963→    is_published: true,
+  1964→    published_at: "2026-04-02T00:00:00Z",
+  1965→    created_at: "2026-04-02T00:00:00Z",
+  1966→    updated_at: "2026-04-02T00:00:00Z",
+  1967→  },
+  1968→  {
+  1969→    id: 3,
+  1970→    title: "Tax & Filing Assistant",
+  1971→    slug: "tax-filing-assistant",
+  1972→    department: "Accounting",
+  1973→    employment_type: "Full-time",
+  1974→    location_mode: "on-site",
+  1975→    city: "Dar es Salaam",
+  1976→    country: "Tanzania",
+  1977→    compensation_label: null,
+  1978→    experience_label: "Entry-level",
+  1979→    summary:
+  1980→      "Support TIN applications, VAT filings, and tax registration workflows for new and existing entities.",
+  1981→    description:
+  1982→      "Work alongside the accounting team to process tax registration applications, prepare VAT returns, and maintain accurate filing records. A great starting role for someone interested in Tanzanian tax operations.",
+  1983→    requirements: [
+  1984→      "Basic understanding of tax concepts (TIN, VAT)",
+  1985→      "Organized and comfortable with numbers",
+  1986→      "Willingness to learn TRA processes",
+  1987→    ],
+  1988→    responsibilities: [
+  1989→      "Process TIN and VAT registration applications",
+  1990→      "Prepare monthly VAT return drafts",
+  1991→      "Maintain filing records and client tax schedules",
+  1992→    ],
+  1993→    status: "published",
+  1994→    is_published: true,
+  1995→    published_at: "2026-04-03T00:00:00Z",
+  1996→    created_at: "2026-04-03T00:00:00Z",
+  1997→    updated_at: "2026-04-03T00:00:00Z",
+  1998→  },
+  1999→  {
+  2000→    id: 4,
+
+[showing lines 1-2000 of 2312; use offset=2001 with limit to continue reading]

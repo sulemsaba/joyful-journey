@@ -272,7 +272,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = {
           ctaHref: "/track-consultation",
           windowTitle: "Tracking",
           windowTag: "Guide",
-          videoSrc: "/videos/track-consultation.mp4",
+          videoSources: [
+            { src: "/videos/track-consultation.webm?v=2", type: "video/webm" },
+            { src: "/videos/track-consultation.mp4?v=2", type: "video/mp4" },
+          ],
         },
       ],
       default_feature_rows: [
