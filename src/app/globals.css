@@ -728,10 +728,8 @@ html[data-theme="dark"] header[data-over-hero] button {
 }
 
 /* Light mode over hero: ensure dark text (not white)
- * This overrides any stale white from a theme transition */
-html:not([data-theme="dark"]) header[data-over-hero] .dark-header-icon {
-  color: #102529;
-}
+ * This overrides any stale white from a theme transition.
+ * Only applies to desktop header (xl+) which still uses data-over-hero. */
 
 /* ── Navigation logo blend modes ────────────────────
  * The nav logo images have solid colored backgrounds
@@ -746,21 +744,14 @@ header .logo-dark { mix-blend-mode: screen; }
 
 /* ── Hamburger morph icon colors ───────────────────────
  * Light mode: dark lines. Dark mode: light lines.
- * Over hero (transparent header): same rules — the lines
- * need to be visible regardless of header background. */
+ * Mobile header always has solid bg, so default colors work.
+ * Desktop header can be transparent over hero, but lines follow
+ * the same theme-based rules regardless. */
 .nav-hamburger-line {
   background-color: #102529;
 }
 html[data-theme="dark"] .nav-hamburger-line {
   background-color: #f7fbfb;
-}
-/* Over hero in dark mode: keep lines light */
-html[data-theme="dark"] header[data-over-hero] .nav-hamburger-line {
-  background-color: #f7fbfb;
-}
-/* Over hero in light mode: keep lines dark */
-html:not([data-theme="dark"]) header[data-over-hero] .nav-hamburger-line {
-  background-color: #102529;
 }
 
 /* ── Mobile nav panel scrollbar styling ────────────── */

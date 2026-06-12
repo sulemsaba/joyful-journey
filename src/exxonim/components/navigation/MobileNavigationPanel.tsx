@@ -178,7 +178,7 @@ export function MobileNavigationPanel({
         "grid transition-all duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
         isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
         /* Tablet: right-aligned card, not full-width */
-        "md:absolute md:right-0 md:top-full md:w-[360px]"
+        "relative z-50 md:absolute md:right-0 md:top-full md:w-[360px]"
       )}
     >
       <div className="overflow-hidden">
@@ -189,8 +189,8 @@ export function MobileNavigationPanel({
           aria-label="Site navigation"
           tabIndex={-1}
           className={cn(
-            "px-4 pb-5 pt-2",
-            "md:px-5 md:py-4 md:mt-1 md:rounded-2xl md:shadow-xl md:ring-1 md:ring-border-soft md:bg-page"
+            "px-4 pb-5 pt-2 bg-page",
+            "md:px-5 md:py-4 md:mt-1 md:rounded-2xl md:shadow-xl md:ring-1 md:ring-border-soft"
           )}
         >
           {/* ── Scrollable content area ──────────────────── */}

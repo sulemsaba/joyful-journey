@@ -188,17 +188,15 @@ export function Navigation({
       {/* ═══════════════════════════════════════════════════════
        * MOBILE: Traditional full-width bar (< xl)
        * ───────────────────────────────────────────────────────
-       * Single consistent bar: transparent over hero, solid
-       * when scrolled. Logo left, theme toggle + hamburger right.
-       * Menu expands below the bar naturally. */}
+       * Single consistent bar with solid bg at all times.
+       * Logo left, theme toggle + hamburger right.
+       * Menu expands below the bar naturally.
+       * Click outside closes the menu. */}
       <header
-        data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
           "xl:hidden fixed z-50 top-0 inset-x-0 h-[60px]",
-          "transition-[background-color,backdrop-filter] duration-300",
-          headerOverHero
-            ? "bg-transparent"
-            : "bg-page/95 backdrop-blur-xl border-b border-border-soft"
+          "bg-page/95 backdrop-blur-xl border-b border-border-soft",
+          "transition-[background-color,backdrop-filter] duration-300"
         )}
       >
         <div className="h-full px-4 flex items-center justify-between">
@@ -255,9 +253,7 @@ export function Navigation({
                 "flex items-center justify-center w-9 h-9",
                 "rounded-full transition-colors duration-200",
                 "hover:bg-accent-soft/40",
-                headerOverHero
-                  ? "text-white dark-header-icon"
-                  : "text-text"
+                "text-text"
               )}
             >
               <HamburgerIcon open={mobileMenuOpen} />
@@ -284,6 +280,16 @@ export function Navigation({
           onClose={() => setMobileMenuOpen(false)}
         />
       </header>
+
+      {/* ── Click-outside backdrop (outside header to avoid
+           backdrop-filter creating a new containing block) ── */}
+      {mobileMenuOpen && (
+        <div
+          className="xl:hidden fixed inset-0 top-[60px] z-40 bg-black/20 md:bg-black/10"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* ═══════════════════════════════════════════════════════
        * DESKTOP: Full-width bar (xl+)
