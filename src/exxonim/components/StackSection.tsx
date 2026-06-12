@@ -7,7 +7,17 @@ import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { ArrowRight } from "lucide-react";
 
-/* ── Lazy-loaded video with intersection observer ──── */
+/* ── Animation config ────────────────────────────────── */
+const EASE = [0.25, 0.4, 0.25, 1] as const;
+const DURATION = 0.6;
+const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
+
+/* ── Lazy video: only loads when scrolled into view ──── *
+ * Prevents videos from being fetched during page load.  *
+ * Uses IntersectionObserver to start loading only when  *
+ * the video container becomes visible.                  *
+ * Supports multiple sources (webm + mp4) and playback   *
+ * rate control for cinematic feel.                      */
 function LazyVideo({ sources, playbackRate, className, style }: { sources: { src: string; type: string }[]; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -48,49 +58,6 @@ function LazyVideo({ sources, playbackRate, className, style }: { sources: { src
       style={style}
     >
       {shouldLoad && sources.map((s) => <source key={s.src} src={s.src} type={s.type} />)}
-    </video>
-  );
-}
-
-/* ── Animation config ────────────────────────────────── */
-const EASE = [0.25, 0.4, 0.25, 1] as const;
-const DURATION = 0.6;
-const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
-
-/* ── Lazy video: only loads when scrolled into view ──── *
- * Prevents videos from being fetched during page load.  *
- * Uses IntersectionObserver to start loading only when  *
- * the video container becomes visible.                  */
-function LazyVideo({ src, className, style }: { src: string; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current?.parentElement;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setShouldLoad(true); observer.disconnect(); } },
-      { rootMargin: "200px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <video
-      ref={ref}
-      autoPlay
-      muted
-      loop
-      playsInline
-      disablePictureInPicture
-      disableRemotePlayback
-      preload="none"
-      aria-hidden="true"
-      className={className}
-      style={style}
-    >
-      {shouldLoad && <source src={src} type="video/mp4" />}
     </video>
   );
 }
@@ -227,22 +194,14 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
               <>
                 {/* Mobile: landscape, fills container */}
                 <LazyVideo
-<<<<<<< HEAD
-                  src={item.videoSrc}
-=======
                   sources={item.videoSources}
                   playbackRate={0.7}
->>>>>>> 5d80c07 (feat: floating frosted pill mobile navbar + video compression & lazy loading)
                   className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
                 />
                 {/* Desktop: phone-in-frame portrait style */}
                 <LazyVideo
-<<<<<<< HEAD
-                  src={item.videoSrc}
-=======
                   sources={item.videoSources}
                   playbackRate={0.7}
->>>>>>> 5d80c07 (feat: floating frosted pill mobile navbar + video compression & lazy loading)
                   className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
                   style={{
                     top: "var(--video-y-offset)",
