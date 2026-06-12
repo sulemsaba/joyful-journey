@@ -241,7 +241,8 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
           windowTag: "Guide",
-          videoSrc: "/videos/track-consultation.mp4",
+          videoSrc: "/videos/exxonm-tracking.mp4",
+          phoneMockupSrc: "/images/phone-mockup.png",
         },
       ],
       default_feature_rows: [
