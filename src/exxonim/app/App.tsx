@@ -119,11 +119,34 @@ function PageSuspenseFallback() {
       role="status"
       aria-live="polite"
     >
-      <div className="flex items-center">
-        <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
-        <span className="loader-dots font-sans text-sm font-medium text-text-muted" aria-hidden="true">
-          <span>.</span><span>.</span><span>.</span>
-        </span>
+      <div className="flex flex-col items-center gap-4">
+        {/* Favicon image with smooth pulse */}
+        <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
+          {/* Light mode favicon */}
+          <img
+            src="/branding/exxonim-favicon-light.png"
+            alt=""
+            width="40"
+            height="40"
+            className="logo-light block w-10 h-10 object-contain"
+          />
+          {/* Dark mode favicon */}
+          <img
+            src="/branding/exxonim-favicon-dark.png"
+            alt=""
+            width="40"
+            height="40"
+            className="logo-dark w-10 h-10 object-contain"
+          />
+        </div>
+
+        {/* Loading text with animated dots */}
+        <div className="flex items-center">
+          <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
+          <span className="loader-dots font-sans text-sm font-medium text-text-muted" aria-hidden="true">
+            <span>.</span><span>.</span><span>.</span>
+          </span>
+        </div>
       </div>
     </div>
   );

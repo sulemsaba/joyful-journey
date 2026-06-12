@@ -108,15 +108,33 @@ export function HomePageSkeleton() {
           </div>
         </div>
 
-        {/* Centered loading indicator with animated dots */}
+        {/* Centered favicon pulse loader — same as PageSuspenseFallback */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex items-center opacity-40">
-            <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">
-              Loading
-            </span>
-            <span className="loader-dots font-sans text-sm font-medium text-text-muted">
-              <span>.</span><span>.</span><span>.</span>
-            </span>
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
+              <img
+                src="/branding/exxonim-favicon-light.png"
+                alt=""
+                width="48"
+                height="48"
+                className="logo-light block w-12 h-12 object-contain opacity-40"
+              />
+              <img
+                src="/branding/exxonim-favicon-dark.png"
+                alt=""
+                width="48"
+                height="48"
+                className="logo-dark w-12 h-12 object-contain opacity-40"
+              />
+            </div>
+            <div className="flex items-center opacity-30">
+              <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">
+                Loading
+              </span>
+              <span className="loader-dots font-sans text-sm font-medium text-text-muted">
+                <span>.</span><span>.</span><span>.</span>
+              </span>
+            </div>
           </div>
         </div>
       </section>

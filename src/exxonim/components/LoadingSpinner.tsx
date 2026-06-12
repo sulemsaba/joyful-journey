@@ -69,12 +69,10 @@ export function LoadingSpinner({
       aria-live="polite"
       style={reservedHeight ? { '--spinner-min-h': reservedHeight } as React.CSSProperties : undefined}
     >
-      <div className="flex items-center">
-        <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
-        <span className="loader-dots font-sans text-sm font-medium text-text-muted" aria-hidden="true">
-          <span>.</span><span>.</span><span>.</span>
-        </span>
-      </div>
+      <span
+        className="block w-8 h-8 rounded-full border-2 border-accent-soft border-t-accent animate-spin"
+        aria-hidden="true"
+      />
       <p className="m-0 text-base leading-relaxed">{label}</p>
     </div>
   );
