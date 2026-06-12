@@ -1,0 +1,926 @@
+     1→@import "tailwindcss";
+     2→@import "tw-animate-css";
+     3→
+     4→/* ── Prevent horizontal scroll from full-bleed elements ── */
+     5→html, body {
+     6→  overflow-x: hidden; /* fallback for older browsers */
+     7→  overflow-x: clip;   /* modern: clips without creating a stacking context */
+     8→}
+     9→
+    10→/* ── Full-bleed utility — safe for iOS Safari ────────────
+    11→ * Replaces w-screen / 100vw which includes scrollbar width
+    12→ * on iOS Safari, causing horizontal overflow.
+    13→ * Uses 100dvw (dynamic viewport width) which excludes the
+    14→ * scrollbar. Fallback to 100vw for older browsers.
+    15→ *
+    16→ * Usage: Replace `w-screen -ml-[50vw] left-1/2` or
+    17→ *        `w-screen ml-[calc(50%-50vw)]` with `full-bleed`
+    18→ */
+    19→.full-bleed {
+    20→  width: 100vw;
+    21→  width: 100dvw;
+    22→  max-width: 100vw;
+    23→  max-width: 100dvw;
+    24→  margin-left: calc(50% - 50vw);
+    25→  margin-left: calc(50% - 50dvw);
+    26→}
+    27→
+    28→/* ── CSS Custom Property Animation Registration ──────────
+    29→ * @property tells the browser these custom properties hold
+    30→ * animatable <color> values. This enables smooth transitions
+    31→ * on :root — when a custom property transitions, ALL elements
+    32→ * using var(--that-property) automatically update smoothly,
+    33→ * including backgrounds, text colors, borders, AND gradients.
+    34→ *
+    35→ * BROWSER COMPATIBILITY (Samsung Internet / older browsers):
+    36→ * ─────────────────────────────────────────────────────────
+    37→ * ONLY hex color values are used in initial-value. rgba()
+    38→ * values in initial-value cause @property registration to
+    39→ * fail silently in Samsung Internet and some Chromium forks,
+    40→ * making the property "guaranteed-invalid" — which means
+    41→ * even :root declarations can't override it, resulting in
+    42→ * black/missing colors. Hex values are universally supported.
+    43→ *
+    44→ * Semi-transparent tokens (surface-elevated, text-muted, etc.)
+    45→ * do NOT use @property registration — they rely on :root
+    46→ * declarations only. This sacrifices smooth theme transitions
+    47→ * for those tokens but guarantees correct color rendering
+    48→ * in all browsers.
+    49→ *
+    50→ * Progressive enhancement: browsers without @property support
+    51→ * (Firefox < 128) get instant theme swaps instead of smooth
+    52→ * transitions. The site still works perfectly.
+    53→ */
+    54→@property --color-page { syntax: '<color>'; inherits: true; initial-value: #F5F5EE; }
+    55→@property --color-page-strong { syntax: '<color>'; inherits: true; initial-value: #EAE9E2; }
+    56→@property --color-surface { syntax: '<color>'; inherits: true; initial-value: #FAFAF7; }
+    57→@property --color-surface-soft { syntax: '<color>'; inherits: true; initial-value: #F8F8F3; }
+    58→@property --color-text { syntax: '<color>'; inherits: true; initial-value: #102529; }
+    59→@property --color-accent { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+    60→@property --color-accent-hover { syntax: '<color>'; inherits: true; initial-value: #0b4b51; }
+    61→@property --color-accent-secondary { syntax: '<color>'; inherits: true; initial-value: #7fbcc1; }
+    62→@property --color-accent-contrast { syntax: '<color>'; inherits: true; initial-value: #f7fbfb; }
+    63→@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #edf0eb; }
+    64→@property --color-success { syntax: '<color>'; inherits: true; initial-value: #0f8a5f; }
+    65→@property --color-error { syntax: '<color>'; inherits: true; initial-value: #c4372f; }
+    66→@property --color-warning { syntax: '<color>'; inherits: true; initial-value: #b45309; }
+    67→@property --color-star { syntax: '<color>'; inherits: true; initial-value: #d4930d; }
+    68→@property --color-footer-bg { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+    69→@property --color-cta-primary { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+    70→@property --color-cta-secondary { syntax: '<color>'; inherits: true; initial-value: #102529; }
+    71→
+    72→/* shadcn/ui color tokens — registered for smooth transitions
+    73→ * NOTE: Using hex/rgba instead of oklch() for Samsung Internet / older browser support.
+    74→ * oklch() is not supported in Samsung Internet Browser, causing colors to appear black. */
+    75→@property --background { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+    76→@property --foreground { syntax: '<color>'; inherits: true; initial-value: #0a0a0a; }
+    77→@property --card { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+    78→@property --card-foreground { syntax: '<color>'; inherits: true; initial-value: #0a0a0a; }
+    79→@property --popover { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+    80→@property --popover-foreground { syntax: '<color>'; inherits: true; initial-value: #0a0a0a; }
+    81→@property --primary { syntax: '<color>'; inherits: true; initial-value: #171717; }
+    82→@property --primary-foreground { syntax: '<color>'; inherits: true; initial-value: #fafafa; }
+    83→@property --secondary { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
+    84→@property --secondary-foreground { syntax: '<color>'; inherits: true; initial-value: #171717; }
+    85→@property --muted { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
+    86→@property --muted-foreground { syntax: '<color>'; inherits: true; initial-value: #737373; }
+    87→@property --accent { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
+    88→@property --accent-foreground { syntax: '<color>'; inherits: true; initial-value: #171717; }
+    89→@property --destructive { syntax: '<color>'; inherits: true; initial-value: #ef4444; }
+    90→@property --border { syntax: '<color>'; inherits: true; initial-value: #e5e5e5; }
+    91→@property --input { syntax: '<color>'; inherits: true; initial-value: #e5e5e5; }
+    92→@property --ring { syntax: '<color>'; inherits: true; initial-value: #a1a1a1; }
+    93→
+    94→/* ── Exxonim theme system ──────────────────────────────
+    95→ * Uses data-theme attribute (not .dark class) for theme switching.
+    96→ * Tokens: @theme generates Tailwind utility classes.
+    97→ * Runtime values: :root (light) and html[data-theme="dark"] (dark).
+    98→ */
+    99→@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+   100→
+   101→@theme {
+   102→  /* Keep shadcn/ui compatibility tokens */
+   103→  --color-background: var(--background);
+   104→  --color-foreground: var(--foreground);
+   105→  --font-sans: var(--font-geist-sans);
+   106→  --font-mono: var(--font-geist-mono);
+   107→  --color-sidebar-ring: var(--sidebar-ring);
+   108→  --color-sidebar-border: var(--sidebar-border);
+   109→  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+   110→  --color-sidebar-accent: var(--sidebar-accent);
+   111→  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+   112→  --color-sidebar-primary: var(--sidebar-primary);
+   113→  --color-sidebar-foreground: var(--sidebar-foreground);
+   114→  --color-sidebar: var(--sidebar);
+   115→  --color-chart-5: var(--chart-5);
+   116→  --color-chart-4: var(--chart-4);
+   117→  --color-chart-3: var(--chart-3);
+   118→  --color-chart-2: var(--chart-2);
+   119→  --color-chart-1: var(--chart-1);
+   120→  --color-ring: var(--ring);
+   121→  --color-input: var(--input);
+   122→  --color-border: var(--border);
+   123→  --color-destructive: var(--destructive);
+   124→  --color-accent-foreground: var(--accent-foreground);
+   125→  --color-muted-foreground: var(--muted-foreground);
+   126→  --color-muted: var(--muted);
+   127→  --color-secondary-foreground: var(--secondary-foreground);
+   128→  --color-secondary: var(--secondary);
+   129→  --color-primary-foreground: var(--primary-foreground);
+   130→  --color-primary: var(--primary);
+   131→  --color-popover-foreground: var(--popover-foreground);
+   132→  --color-popover: var(--popover);
+   133→  --color-card-foreground: var(--card-foreground);
+   134→  --color-card: var(--card);
+   135→  --radius-sm: calc(var(--radius) - 4px);
+   136→  --radius-md: calc(var(--radius) - 2px);
+   137→  --radius-lg: var(--radius);
+   138→  --radius-xl: calc(var(--radius) + 4px);
+   139→
+   140→  /* ── Exxonim design tokens ──────────────────────────
+   141→   * NOTE: These MUST be in @theme (not @theme inline) so that
+   142→   * Tailwind generates utility classes using var(--color-*) refs.
+   143→   * This allows html[data-theme="dark"] to override them at runtime.
+   144→   * With @theme inline, values are baked into utility classes and
+   145→   * dark mode overrides have no effect.
+   146→   */
+   147→  --color-page: #F5F5EE;
+   148→  --color-page-strong: #EAE9E2;
+   149→  --color-surface: #FAFAF7;
+   150→  --color-surface-soft: #F8F8F3;
+   151→  --color-surface-elevated: rgba(248, 249, 246, 0.88);
+   152→  --color-text: #102529;
+   153→  --color-text-muted: rgba(16, 37, 41, 0.72);
+   154→  --color-text-soft: rgba(16, 37, 41, 0.56);
+   155→  --color-accent: #0f5c63;
+   156→  --color-accent-hover: #0b4b51;
+   157→  --color-accent-secondary: #7fbcc1;
+   158→  --color-accent-soft: rgba(15, 92, 99, 0.12);
+   159→  --color-accent-soft-strong: rgba(15, 92, 99, 0.22);
+   160→  --color-accent-contrast: #f7fbfb;
+   161→  --color-border-soft: rgba(15, 92, 99, 0.12);
+   162→  --color-border-strong: rgba(15, 92, 99, 0.22);
+   163→  --color-overlay: rgba(8, 24, 27, 0.54);
+   164→  --color-hero-bg: #edf0eb;
+   165→  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
+   166→  --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
+   167→  --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
+   168→  --color-success: #0f8a5f;
+   169→  --color-success-soft: rgba(15, 138, 95, 0.10);
+   170→  --color-warning: #b45309;
+   171→  --color-warning-soft: rgba(180, 83, 9, 0.10);
+   172→  --color-error: #c4372f;
+   173→  --color-error-soft: rgba(196, 55, 47, 0.10);
+   174→  --color-star: #d4930d;
+   175→  --color-footer-bg: #0f5c63;
+   176→  --color-footer-text: rgba(247, 251, 251, 0.70);
+   177→  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+   178→  --color-footer-heading: rgba(247, 251, 251, 0.90);
+   179→  --color-footer-border: rgba(247, 251, 251, 0.12);
+   180→  --color-cta-primary: #0f5c63;
+   181→  --color-cta-secondary: #102529;
+   182→
+   183→  --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
+   184→  --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
+   185→  --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);
+   186→  --shadow-cinematic: 0 0 0 rgba(0, 0, 0, 0);
+   187→  --shadow-card: 0 0 0 rgba(0, 0, 0, 0);
+   188→  --shadow-popover: 0 0 0 rgba(0, 0, 0, 0);
+   189→  --shadow-accent-glow: 0 0 0 rgba(0, 0, 0, 0);
+   190→
+   191→  --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
+   192→  --animate-phone-ring: phone-ring 2s ease-in-out infinite;
+   193→  --animate-provider-marquee: provider-marquee 90s linear infinite;
+   194→  --animate-code-pan: code-pan 12s linear infinite alternate;
+   195→  --animate-call-shimmer: call-shimmer 4.5s linear infinite;
+   196→  --animate-call-ping: call-ping 1.85s ease-out infinite;
+   197→  --animate-tagline-float: footer-tagline-float 5.8s ease-in-out infinite;
+   198→  --animate-tagline-line: footer-tagline-line 4.8s ease-in-out infinite;
+   199→  --animate-reference-slide-primary: reference-hero-slide-primary 14s ease-in-out infinite;
+   200→  --animate-reference-slide-secondary: reference-hero-slide-secondary 14s ease-in-out infinite;
+   201→  --animate-page-enter: page-enter 0.6s ease-out both;
+   202→  --animate-scale-in: scale-in 0.4s ease-out both;
+   203→  --animate-float: float 3s ease-in-out infinite;
+   204→  --animate-float-bob: float-bob 3.4s ease-in-out infinite;
+   205→  --animate-float-bob-delayed: float-bob 3.4s ease-in-out 1.7s infinite;
+   206→  --animate-accent-pulse: accent-pulse 2.2s ease-in-out infinite;
+   207→  --animate-reveal-up: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+   208→  --animate-reveal-fade: reveal-fade 0.6s ease forwards;
+   209→  --animate-shimmer: shimmer 2.5s ease-in-out infinite;
+   210→  --animate-dropdown-enter: dropdown-enter 200ms ease-out;
+   211→
+   212→  --radius-2xl: 1.7rem;
+   213→  --radius-pill: 999px;
+   214→}
+   215→
+   216→/* ── Keyframes ─────────────────────────────────────── */
+   217→@keyframes dropdown-enter {
+   218→  from {
+   219→    opacity: 0;
+   220→    transform: translateY(-8px);
+   221→  }
+   222→  to {
+   223→    opacity: 1;
+   224→    transform: translateY(0);
+   225→  }
+   226→}
+   227→@keyframes whatsapp-pulse {
+   228→  0% { transform: scale(1); opacity: 0.65; }
+   229→  100% { transform: scale(1.45); opacity: 0; }
+   230→}
+   231→@keyframes phone-ring {
+   232→  0%, 100% { transform: rotate(0deg); }
+   233→  10% { transform: rotate(14deg); }
+   234→  20% { transform: rotate(-10deg); }
+   235→  30% { transform: rotate(14deg); }
+   236→  40% { transform: rotate(-10deg); }
+   237→  50% { transform: rotate(0deg); }
+   238→}
+   239→@keyframes provider-marquee {
+   240→  from { transform: translateX(0); }
+   241→  to { transform: translateX(-50%); }
+   242→}
+   243→@keyframes call-shimmer {
+   244→  0% { transform: translateX(0) skewX(-22deg); }
+   245→  100% { transform: translateX(420%) skewX(-22deg); }
+   246→}
+   247→@keyframes call-ping {
+   248→  0% { transform: scale(0.92); opacity: 0; }
+   249→  30% { opacity: 0.7; }
+   250→  100% { transform: scale(1.42); opacity: 0; }
+   251→}
+   252→@keyframes footer-tagline-float {
+   253→  0%, 100% { transform: translateY(0); opacity: 1; }
+   254→  50% { transform: translateY(-2px); opacity: 0.92; }
+   255→}
+   256→@keyframes footer-tagline-line {
+   257→  0%, 100% { transform: scaleX(0.45); opacity: 0.14; }
+   258→  50% { transform: scaleX(1); opacity: 0.5; }
+   259→}
+   260→@keyframes float-bob {
+   261→  0%, 100% { transform: translateY(0); }
+   262→  50% { transform: translateY(-8px); }
+   263→}
+   264→@keyframes accent-pulse {
+   265→  0%, 100% { box-shadow: 0 0 0 0 rgba(15, 92, 99, 0.4); }
+   266→  50% { box-shadow: 0 0 0 10px rgba(15, 92, 99, 0); }
+   267→}
+   268→@keyframes page-enter {
+   269→  from { opacity: 0; transform: translateY(18px); }
+   270→  to { opacity: 1; transform: translateY(0); }
+   271→}
+   272→@keyframes reference-hero-slide-primary {
+   273→  0%, 44% { opacity: 1; transform: scale(1); }
+   274→  50%, 94% { opacity: 0; transform: scale(1.02); }
+   275→  100% { opacity: 1; transform: scale(1); }
+   276→}
+   277→@keyframes reference-hero-slide-secondary {
+   278→  0%, 44% { opacity: 0; transform: scale(1.02); }
+   279→  50%, 94% { opacity: 1; transform: scale(1); }
+   280→  100% { opacity: 0; transform: scale(1.02); }
+   281→}
+   282→@keyframes scale-in {
+   283→  from { opacity: 0; transform: scale(0.5); }
+   284→  to { opacity: 1; transform: scale(1); }
+   285→}
+   286→@keyframes float {
+   287→  0%, 100% { transform: translateY(0); }
+   288→  50% { transform: translateY(-12px); }
+   289→}
+   290→@keyframes reveal-up {
+   291→  from { opacity: 0; transform: translateY(24px); }
+   292→  to { opacity: 1; transform: translateY(0); }
+   293→}
+   294→@keyframes reveal-fade {
+   295→  from { opacity: 0; }
+   296→  to { opacity: 1; }
+   297→}
+   298→@keyframes shimmer {
+   299→  0% { background-position: -200% 0; }
+   300→  100% { background-position: 200% 0; }
+   301→}
+   302→@keyframes gradient-rotate {
+   303→  0% { --gradient-angle: 0deg; }
+   304→  100% { --gradient-angle: 360deg; }
+   305→}
+   306→@keyframes code-pan {
+   307→  from { transform: translateY(0); }
+   308→  to { transform: translateY(-18%); }
+   309→}
+   310→/* ── Favicon loader: smooth scale pulse in/out ──── */
+   311→@keyframes loader-pulse {
+   312→  0%, 100% { transform: scale(1); opacity: 1; }
+   313→  50% { transform: scale(1.12); opacity: 0.8; }
+   314→}
+   315→@keyframes loader-fade {
+   316→  0%, 100% { opacity: 0.4; }
+   317→  50% { opacity: 1; }
+   318→}
+   319→/* ── Loading dots animation: . → .. → ... → (reset) ──
+   320→ * Each dot fades in with a staggered delay so they
+   321→ * appear one by one, then all reset together.
+   322→ */
+   323→.loader-dots span {
+   324→  opacity: 0;
+   325→  animation: loader-dot 1.4s ease-in-out infinite;
+   326→}
+   327→.loader-dots span:nth-child(1) { animation-delay: 0.0s; }
+   328→.loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+   329→.loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+   330→@keyframes loader-dot {
+   331→  0%, 20%  { opacity: 0; }
+   332→  40%, 100% { opacity: 1; }
+   333→}
+   334→
+   335→/* ── Hero section — responsive height (no CLS) ──── */
+   336→.hero-section {
+   337→  /* Desktop: nearly full viewport */
+   338→  height: 94.5svh;
+   339→  height: 94.5dvh;
+   340→  /* Mobile: leave room for Trusted By section to peek */
+   341→  max-height: 600px;
+   342→  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+   343→  will-change: transform;
+   344→}
+   345→@media (min-width: 768px) {
+   346→  .hero-section {
+   347→    max-height: none;
+   348→    height: 94.5svh;
+   349→    height: 94.5dvh;
+   350→  }
+   351→}
+   352→.hero-section.hero-shrunk {
+   353→  transform: scale(0.96);
+   354→  border-bottom-left-radius: 40px;
+   355→  border-bottom-right-radius: 40px;
+   356→}
+   357→
+   358→/* ── Scroll indicator — fades out when user scrolls ── */
+   359→.hero-scroll-indicator {
+   360→  opacity: 1;
+   361→  transition: opacity 0.4s ease;
+   362→}
+   363→.hero-section.hero-shrunk .hero-scroll-indicator {
+   364→  opacity: 0;
+   365→}
+   366→
+   367→/* ── Review bar — stable height (no CLS) ────────── */
+   368→.hero-review-bar {
+   369→  height: 5.5svh;
+   370→  min-height: 48px;
+   371→}
+   372→@media (max-width: 767px) {
+   373→  .hero-section + .hero-review-bar {
+   374→    height: auto;
+   375→    min-height: 40px;
+   376→    padding-top: 8px;
+   377→    padding-bottom: 8px;
+   378→  }
+   379→}
+   380→
+   381→/* ── Scroll-reveal: start hidden, animate on first intersection ──
+   382→ * iOS SAFETY: Elements with [data-reveal] start at opacity:0.
+   383→ * If IntersectionObserver fails (rare on iOS with overflow-x:clip),
+   384→ * the useRevealOnScroll hook has a 5s safety fallback that reveals
+   385→ * all remaining elements. Additionally, when the page first loads,
+   386→ * we briefly show all content then hide data-reveal elements only
+   387→ * after JS loads — this prevents a flash of invisible content.
+   388→ */
+   389→[data-reveal] {
+   390→  opacity: 0;
+   391→  -webkit-transform: translateY(24px);
+   392→  transform: translateY(24px);
+   393→  -webkit-transition: opacity 0.7s ease-out, -webkit-transform 0.7s ease-out;
+   394→  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+   395→  will-change: opacity, transform;
+   396→}
+   397→[data-reveal].revealed {
+   398→  opacity: 1;
+   399→  -webkit-transform: translateY(0);
+   400→  transform: translateY(0);
+   401→  will-change: auto;
+   402→}
+   403→
+   404→/* ── Runtime theme variables ───────────────────────── */
+   405→:root {
+   406→  /* shadcn/ui tokens — hex/rgba for Samsung Internet / older browser support */
+   407→  --radius: 0.625rem;
+   408→  --background: #ffffff;
+   409→  --foreground: #0a0a0a;
+   410→  --card: #ffffff;
+   411→  --card-foreground: #0a0a0a;
+   412→  --popover: #ffffff;
+   413→  --popover-foreground: #0a0a0a;
+   414→  --primary: #171717;
+   415→  --primary-foreground: #fafafa;
+   416→  --secondary: #f5f5f5;
+   417→  --secondary-foreground: #171717;
+   418→  --muted: #f5f5f5;
+   419→  --muted-foreground: #737373;
+   420→  --accent: #f5f5f5;
+   421→  --accent-foreground: #171717;
+   422→  --destructive: #ef4444;
+   423→  --border: #e5e5e5;
+   424→  --input: #e5e5e5;
+   425→  --ring: #a1a1a1;
+   426→  --chart-1: #e85d04;
+   427→  --chart-2: #1b8a7a;
+   428→  --chart-3: #3a7ca5;
+   429→  --chart-4: #dba63e;
+   430→  --chart-5: #cc8833;
+   431→  --sidebar: #fafafa;
+   432→  --sidebar-foreground: #0a0a0a;
+   433→  --sidebar-primary: #171717;
+   434→  --sidebar-primary-foreground: #fafafa;
+   435→  --sidebar-accent: #f5f5f5;
+   436→  --sidebar-accent-foreground: #171717;
+   437→  --sidebar-border: #e5e5e5;
+   438→  --sidebar-ring: #a1a1a1;
+   439→
+   440→  /* ── Exxonim light-mode tokens ──────────────────── */
+   441→  --color-page: #F5F5EE;
+   442→  --color-page-strong: #EAE9E2;
+   443→  --color-surface: #FAFAF7;
+   444→  --color-surface-soft: #F8F8F3;
+   445→  --color-surface-elevated: rgba(248, 249, 246, 0.88);
+   446→  --color-text: #102529;
+   447→  --color-text-muted: rgba(16, 37, 41, 0.72);
+   448→  --color-text-soft: rgba(16, 37, 41, 0.56);
+   449→  --color-accent: #0f5c63;
+   450→  --color-accent-hover: #0b4b51;
+   451→  --color-accent-secondary: #7fbcc1;
+   452→  --color-accent-soft: rgba(15, 92, 99, 0.12);
+   453→  --color-accent-soft-strong: rgba(15, 92, 99, 0.22);
+   454→  --color-accent-contrast: #f7fbfb;
+   455→  --color-border-soft: rgba(15, 92, 99, 0.12);
+   456→  --color-border-strong: rgba(15, 92, 99, 0.22);
+   457→  --color-overlay: rgba(8, 24, 27, 0.54);
+   458→  --color-hero-bg: #edf0eb;
+   459→  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
+   460→  --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
+   461→  --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
+   462→  --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);
+   463→  --shadow-cinematic: 0 0 0 rgba(0, 0, 0, 0);
+   464→  --shadow-card: 0 0 0 rgba(0, 0, 0, 0);
+   465→  --shadow-popover: 0 0 0 rgba(0, 0, 0, 0);
+   466→  --shadow-accent-glow: 0 0 0 rgba(0, 0, 0, 0);
+   467→  --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
+   468→  --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
+   469→  --color-success: #0f8a5f;
+   470→  --color-success-soft: rgba(15, 138, 95, 0.10);
+   471→  --color-warning: #b45309;
+   472→  --color-warning-soft: rgba(180, 83, 9, 0.10);
+   473→  --color-error: #c4372f;
+   474→  --color-error-soft: rgba(196, 55, 47, 0.10);
+   475→  --color-star: #d4930d;
+   476→  --color-footer-bg: #0f5c63;
+   477→  --color-footer-text: rgba(247, 251, 251, 0.70);
+   478→  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+   479→  --color-footer-heading: rgba(247, 251, 251, 0.90);
+   480→  --color-footer-border: rgba(247, 251, 251, 0.12);
+   481→  --color-cta-primary: #0f5c63;
+   482→  --color-cta-secondary: #102529;
+   483→
+   484→  /* ── Accent gradient tokens (replace color-mix() for Samsung Internet compatibility) ──
+   485→   * color-mix(in srgb, var(--color-accent) 18%, transparent) is not supported
+   486→   * in Samsung Internet < v23. Pre-computed values for each theme instead. */
+   487→  --color-accent-gradient-subtle: rgba(15, 92, 99, 0.18);
+   488→  --color-accent-gradient-weak: rgba(15, 92, 99, 0.10);
+   489→  --color-accent-gradient-medium: rgba(15, 92, 99, 0.22);
+   490→}
+   491→
+   492→html[data-theme="dark"] {
+   493→  /* shadcn/ui dark tokens — hex/rgba for Samsung Internet / older browser support */
+   494→  --background: #0f0f0f;
+   495→  --foreground: #e9e9e9;
+   496→  --card: #161616;
+   497→  --card-foreground: #e9e9e9;
+   498→  --popover: #161616;
+   499→  --popover-foreground: #e9e9e9;
+   500→  --primary: #e5e5e5;
+   501→  --primary-foreground: #171717;
+   502→  --secondary: #2b2b2b;
+   503→  --secondary-foreground: #e9e9e9;
+   504→  --muted: #2b2b2b;
+   505→  --muted-foreground: #8f8f8f;
+   506→  --accent: #2b2b2b;
+   507→  --accent-foreground: #e9e9e9;
+   508→  --destructive: #f87171;
+   509→  --border: rgba(255, 255, 255, 0.14);
+   510→  --input: rgba(255, 255, 255, 0.18);
+   511→  --ring: #737373;
+   512→  --chart-1: #4f46e5;
+   513→  --chart-2: #10b981;
+   514→  --chart-3: #cc8833;
+   515→  --chart-4: #8b5cf6;
+   516→  --chart-5: #f97316;
+   517→  --sidebar: #171717;
+   518→  --sidebar-foreground: #e9e9e9;
+   519→  --sidebar-primary: #4f46e5;
+   520→  --sidebar-primary-foreground: #fafafa;
+   521→  --sidebar-accent: #2b2b2b;
+   522→  --sidebar-accent-foreground: #e9e9e9;
+   523→  --sidebar-border: rgba(255, 255, 255, 0.14);
+   524→  --sidebar-ring: #737373;
+   525→
+   526→  /* ── Exxonim dark-mode tokens — comfortable dark palette ──
+   527→   *
+   528→   * DESIGN RATIONALE:
+   529→   * Previous values were near-black (~3% lightness), causing:
+   530→   *   1. "Dark cave" feeling instead of comfortable dark room
+   531→   *   2. Excessive text contrast (>17:1) → eye strain
+   532→   *   3. Indistinguishable surface layers (page vs surface vs surface-soft)
+   533→   *   4. Invisible borders and shadows
+   534→   *
+   535→   * New values use ~13% base lightness with clear surface steps,
+   536→   * softer text (~87% lightness), and visible borders. This follows
+   537→   * Material Design 3 and Apple HIG dark mode best practices.
+   538→   */
+   539→  --color-page: #111d20;
+   540→  --color-page-strong: #152629;
+   541→  --color-surface: #1a2f34;
+   542→  --color-surface-soft: #1e373c;
+   543→  --color-surface-elevated: rgba(24, 45, 50, 0.92);
+   544→  --color-text: #d6e5e1;
+   545→  --color-text-muted: rgba(214, 229, 225, 0.72);
+   546→  --color-text-soft: rgba(214, 229, 225, 0.54);
+   547→  --color-accent: #7fbcc1;
+   548→  --color-accent-hover: #96cacf;
+   549→  --color-accent-secondary: #aacfd2;
+   550→  --color-accent-soft: rgba(127, 188, 193, 0.14);
+   551→  --color-accent-soft-strong: rgba(127, 188, 193, 0.28);
+   552→  --color-accent-contrast: #08181b;
+   553→  --color-border-soft: rgba(127, 188, 193, 0.20);
+   554→  --color-border-strong: rgba(127, 188, 193, 0.34);
+   555→  --color-overlay: rgba(8, 18, 22, 0.68);
+   556→  --color-hero-bg: #131f23;
+   557→  --color-hero-bg-fade: rgba(19, 31, 35, 0.8);
+   558→  --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
+   559→  --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
+   560→  --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);
+   561→  --shadow-cinematic: 0 0 0 rgba(0, 0, 0, 0);
+   562→  --shadow-card: 0 0 0 rgba(0, 0, 0, 0);
+   563→  --shadow-popover: 0 0 0 rgba(0, 0, 0, 0);
+   564→  --shadow-accent-glow: 0 0 0 rgba(0, 0, 0, 0);
+   565→  --color-cinematic-card-border: rgba(127, 188, 193, 0.20);
+   566→  --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.34);
+   567→  --color-success: #34d399;
+   568→  --color-success-soft: rgba(52, 211, 153, 0.14);
+   569→  --color-warning: #fbbf24;
+   570→  --color-warning-soft: rgba(251, 191, 36, 0.14);
+   571→  --color-error: #f87171;
+   572→  --color-error-soft: rgba(248, 113, 113, 0.14);
+   573→  --color-star: #fbbf24;
+   574→  --color-footer-bg: #152629;
+   575→  --color-footer-text: rgba(214, 229, 225, 0.70);
+   576→  --color-footer-text-muted: rgba(214, 229, 225, 0.50);
+   577→  --color-footer-heading: #d6e5e1;
+   578→  --color-footer-border: rgba(127, 188, 193, 0.16);
+   579→  --color-cta-primary: #7fbcc1;
+   580→  --color-cta-secondary: #7fbcc1;
+   581→
+   582→  /* Accent gradient tokens — dark mode values */
+   583→  --color-accent-gradient-subtle: rgba(127, 188, 193, 0.18);
+   584→  --color-accent-gradient-weak: rgba(127, 188, 193, 0.10);
+   585→  --color-accent-gradient-medium: rgba(127, 188, 193, 0.22);
+   586→}
+   587→
+   588→/* ── Smooth theme switch via CSS custom property transitions
+   589→ * ────────────────────────────────────────────────────────
+   590→ * ARCHITECTURE: Instead of forcing `transition` on every DOM
+   591→ * element with `* !important` (which clobbers the toggle knob
+   592→ * slide, hero shrink animation, and all hover effects), we
+   593→ * transition the CSS custom properties THEMSELVES on :root.
+   594→ *
+   595→ * When a registered custom property (via @property) transitions
+   596→ * on :root, ALL elements using var(--that-property) automatically
+   597→ * see the smoothly interpolated value — including elements with
+   598→ * gradients, box-shadows, and border-colors that reference it.
+   599→ *
+   600→ * This approach:
+   601→ *   ✅ Preserves element-level transitions (knob slide, shrink)
+   602→ *   ✅ Smooths gradients using var() (hero overlay gradients)
+   603→ *   ✅ Smooths all color tokens everywhere (no missed elements)
+   604→ *   ✅ Doesn't clobber hover effects or animation transitions
+   605→ *   ✅ Progressive enhancement (older browsers: instant swap)
+   606→ *
+   607→ * The `.theme-transition` class is added to <html> before the
+   608→ * theme change and removed after 400ms. Without the class,
+   609→ * no transitions are active — so initial page load has no flash.
+   610→ */
+   611→html.theme-transition {
+   612→  transition:
+   613→    /* Exxonim design tokens — only @property-registered (hex initial-value) tokens get smooth transitions.
+   614→     * Semi-transparent tokens (rgba initial-values) are NOT @property-registered for Samsung Internet
+   615→     * compatibility, so they can't be transitioned here. They swap instantly instead. */
+   616→    --color-page 0.4s ease,
+   617→    --color-page-strong 0.4s ease,
+   618→    --color-surface 0.4s ease,
+   619→    --color-surface-soft 0.4s ease,
+   620→    --color-text 0.4s ease,
+   621→    --color-accent 0.4s ease,
+   622→    --color-accent-hover 0.4s ease,
+   623→    --color-accent-secondary 0.4s ease,
+   624→    --color-accent-contrast 0.4s ease,
+   625→    --color-hero-bg 0.4s ease,
+   626→    --color-success 0.4s ease,
+   627→    --color-warning 0.4s ease,
+   628→    --color-error 0.4s ease,
+   629→    --color-star 0.4s ease,
+   630→    --color-footer-bg 0.4s ease,
+   631→    --color-cta-primary 0.4s ease,
+   632→    --color-cta-secondary 0.4s ease,
+   633→    /* shadcn/ui tokens */
+   634→    --background 0.4s ease,
+   635→    --foreground 0.4s ease,
+   636→    --card 0.4s ease,
+   637→    --card-foreground 0.4s ease,
+   638→    --popover 0.4s ease,
+   639→    --popover-foreground 0.4s ease,
+   640→    --primary 0.4s ease,
+   641→    --primary-foreground 0.4s ease,
+   642→    --secondary 0.4s ease,
+   643→    --secondary-foreground 0.4s ease,
+   644→    --muted 0.4s ease,
+   645→    --muted-foreground 0.4s ease,
+   646→    --accent 0.4s ease,
+   647→    --accent-foreground 0.4s ease,
+   648→    --destructive 0.4s ease,
+   649→    --border 0.4s ease,
+   650→    --input 0.4s ease,
+   651→    --ring 0.4s ease;
+   652→}
+   653→
+   654→/* ── Logo crossfade during theme transition ───────────
+   655→ * Both logos are always rendered — one visible, one hidden
+   656→ * via opacity. During theme transitions, opacity smoothly
+   657→ * crossfades between them. Without .theme-transition, the
+   658→ * swap is instant (no initial-load flash).
+   659→ *
+   660→ * BLEND MODES: The logo images have solid colored backgrounds
+   661→ * (light logo = teal text on white, dark logo = white text on black).
+   662→ * mix-blend-mode eliminates these backgrounds:
+   663→ *   - logo-light uses multiply → white bg becomes transparent
+   664→ *   - logo-dark uses screen → black bg becomes transparent
+   665→ * This makes both logos appear as if they have transparent backgrounds.
+   666→ *
+   667→ * NO-FLASH ARCHITECTURE: Logo visibility is controlled ENTIRELY by CSS
+   668→ * using html[data-theme]. The data-theme attribute is set by a blocking
+   669→ * <script> in <head> BEFORE first paint, so the correct logo shows
+   670→ * instantly on every page load — no React hydration flash.
+   671→ *
+   672→ * header[data-over-hero] is set on the <header> when it's transparent
+   673→ * (homepage, scroll top). In light mode over hero, the header elements
+   674→ * need dark text/icons. In dark mode over hero, they need light text/icons.
+   675→ * CSS handles this with attribute selectors — zero React dependency.
+   676→ */
+   677→
+   678→/* ── Default: light mode ─────────────────────────── */
+   679→.logo-light {
+   680→  opacity: 1;
+   681→  mix-blend-mode: multiply;
+   682→}
+   683→.logo-dark {
+   684→  opacity: 0;
+   685→  position: absolute;
+   686→  top: 0;
+   687→  left: 0;
+   688→  mix-blend-mode: screen;
+   689→}
+   690→
+   691→/* ── Dark mode ───────────────────────────────────── */
+   692→html[data-theme="dark"] .logo-light { opacity: 0; }
+   693→html[data-theme="dark"] .logo-dark { opacity: 1; }
+   694→
+   695→/* ── Smooth crossfade during theme transition ────── */
+   696→html.theme-transition .logo-light,
+   697→html.theme-transition .logo-dark {
+   698→  transition: opacity 0.4s ease;
+   699→}
+   700→
+   701→/* ── Header elements when transparent over hero ────
+   702→ * In light mode over hero: elements need to be dark (hero is light teal).
+   703→ * In dark mode over hero: elements need to be light (hero is dark).
+   704→ * The default CSS above already handles this correctly:
+   705→ *   - Light mode → logo-light visible (dark text) ✓
+   706→ *   - Dark mode → logo-dark visible (light text) ✓
+   707→ * No overrides needed — the theme-based CSS just works.
+   708→ *
+   709→ * However, for the hamburger icon, theme toggle, and other nav elements
+   710→ * that use Tailwind color classes (not logo images), we need CSS overrides
+   711→ * when the header is transparent over the hero.
+   712→ */
+   713→
+   714→/* Light mode over hero: nav elements need dark color for readability
+   715→ * (hero bg is light teal #e4f0f2) — already handled by default text colors.
+   716→ * But if the header was previously showing white text (e.g., from a
+   717→ * dark→light theme switch while at scroll top), these ensure correct colors. */
+   718→
+   719→/* Dark mode over hero: nav elements need light/white color
+   720→ * (hero bg is dark #131f23) — override text colors to white */
+   721→html[data-theme="dark"] header[data-over-hero] {
+   722→  color: #f7fbfb;
+   723→}
+   724→/* Force nav link colors when header is over hero in dark mode */
+   725→html[data-theme="dark"] header[data-over-hero] a,
+   726→html[data-theme="dark"] header[data-over-hero] button {
+   727→  color: #f7fbfb;
+   728→}
+   729→
+   730→/* Light mode over hero: ensure dark text (not white)
+   731→ * This overrides any stale white from a theme transition */
+   732→html:not([data-theme="dark"]) header[data-over-hero] .dark-header-icon {
+   733→  color: #102529;
+   734→}
+   735→
+   736→/* ── Navigation logo blend modes ────────────────────
+   737→ * The nav logo images have solid colored backgrounds
+   738→ * (light logo = teal text on white, dark logo = white text on black).
+   739→ * mix-blend-mode eliminates these backgrounds:
+   740→ *   - logo-light uses multiply → white bg becomes transparent
+   741→ *   - logo-dark uses screen → black bg becomes transparent
+   742→ * Scoped to header only so favicons/PageLoader are unaffected.
+   743→ */
+   744→header .logo-light { mix-blend-mode: multiply; }
+   745→header .logo-dark { mix-blend-mode: screen; }
+   746→
+   747→/* ── Hero background image opacity ────────────────────
+   748→ * The hero bg image has different opacity in light (0.25)
+   749→ * vs dark (0.8) mode. This transitions smoothly only during
+   750→ * theme changes — no transition on initial load.
+   751→ */
+   752→.hero-bg-image { opacity: 0.25; }
+   753→html[data-theme="dark"] .hero-bg-image { opacity: 0.8; }
+   754→html.theme-transition .hero-bg-image {
+   755→  transition: opacity 0.4s ease;
+   756→}
+   757→
+   758→/* ── Provider logos — muted brand color, full color on hover ── */
+   759→/* Logos appear in a single muted brand color by default.
+   760→ * On hover, they reveal their original full color.
+   761→ * Uses CSS filters: grayscale + sepia + hue-rotate to tint
+   762→ * logos to the brand accent, then removes filters on hover. */
+   763→.provider-logo-img {
+   764→  filter: grayscale(1) opacity(0.5);
+   765→  transition: filter 0.3s ease, opacity 0.3s ease;
+   766→}
+   767→.provider-logo-item:hover .provider-logo-img {
+   768→  filter: grayscale(0) opacity(1);
+   769→}
+   770→/* Dark mode: slightly brighter muted state */
+   771→html[data-theme="dark"] .provider-logo-img {
+   772→  filter: grayscale(1) opacity(0.4);
+   773→}
+   774→html[data-theme="dark"] .provider-logo-item:hover .provider-logo-img {
+   775→  filter: grayscale(0) opacity(1);
+   776→}
+   777→
+   778→/* ── Hero aurora canvas — theme-reactive opacity ──── */
+   779→/* The aurora canvas has different visual weight in light vs dark.
+   780→ * Light: subtle (0.7) so text stays prominent.
+   781→ * Dark: stronger (1.0) for visual richness against dark bg.
+   782→ * No transition on initial load — only during theme changes. */
+   783→.hero-aurora-canvas { opacity: 0.7; }
+   784→html[data-theme="dark"] .hero-aurora-canvas { opacity: 1; }
+   785→html.theme-transition .hero-aurora-canvas {
+   786→  transition: opacity 0.4s ease;
+   787→}
+   788→
+   789→/* ── Respect user motion preferences ─────────────── */
+   790→@media (prefers-reduced-motion: reduce) {
+   791→  *, *::before, *::after {
+   792→    animation-duration: 0.01ms !important;
+   793→    animation-iteration-count: 1 !important;
+   794→    transition-duration: 0.01ms !important;
+   795→    scroll-behavior: auto !important;
+   796→  }
+   797→}
+   798→
+   799→/* ── Base layer ──────────────────────────────────── */
+   800→@layer base {
+   801→  * {
+   802→    @apply border-border outline-ring/50;
+   803→  }
+   804→  body {
+   805→    @apply bg-page text-text;
+   806→  }
+   807→}
+   808→
+   809→/* ── Scroll-reveal animation utilities ────────────── */
+   810→.animate-reveal-up {
+   811→  animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+   812→  opacity: 0;
+   813→}
+   814→.animate-reveal-fade {
+   815→  animation: reveal-fade 0.6s ease forwards;
+   816→  opacity: 0;
+   817→}
+   818→
+   819→/* ── Stagger delay utilities ──────────────────────── */
+   820→.stagger-1 { animation-delay: 0.08s; }
+   821→.stagger-2 { animation-delay: 0.16s; }
+   822→.stagger-3 { animation-delay: 0.24s; }
+   823→.stagger-4 { animation-delay: 0.32s; }
+   824→.stagger-5 { animation-delay: 0.4s; }
+   825→.stagger-6 { animation-delay: 0.48s; }
+   826→
+   827→/* ── Float/bob animation for hero floating chips ──── */
+   828→.animate-float-bob {
+   829→  animation: float-bob 4s ease-in-out infinite;
+   830→}
+   831→.animate-float-bob-delayed {
+   832→  animation: float-bob 4s ease-in-out infinite;
+   833→  animation-delay: 1.2s;
+   834→}
+   835→
+   836→/* ── Shimmer loading effect ───────────────────────── */
+   837→.animate-shimmer {
+   838→  background: linear-gradient(90deg, transparent, rgba(127, 188, 193, 0.08), transparent);
+   839→  background-size: 200% 100%;
+   840→  animation: shimmer 2.5s ease-in-out infinite;
+   841→}
+   842→
+   843→/* ── Smooth page content entrance ─────────────────── */
+   844→.animate-page-enter {
+   845→  animation: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+   846→}
+   847→
+   848→/* ── Pulse glow for accent elements ───────────────── */
+   849→.animate-accent-pulse {
+   850→  animation: accent-pulse 2.5s ease-in-out infinite;
+   851→}
+   852→
+   853→/* ── iOS safe area utilities ──────────────────────── */
+   854→.pb-safe {
+   855→  padding-bottom: env(safe-area-inset-bottom, 0px);
+   856→}
+   857→.pb-env {
+   858→  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+   859→}
+   860→
+   861→/* ── Better scrollbar styling ─────────────────────── */
+   862→::-webkit-scrollbar {
+   863→  width: 8px;
+   864→  height: 8px;
+   865→}
+   866→::-webkit-scrollbar-track {
+   867→  background: var(--color-page);
+   868→}
+   869→::-webkit-scrollbar-thumb {
+   870→  background: var(--color-border-strong);
+   871→  border-radius: 4px;
+   872→}
+   873→::-webkit-scrollbar-thumb:hover {
+   874→  background: var(--color-accent);
+   875→}
+   876→
+   877→/* ── Custom select dropdown chevron — dark mode ──── */
+   878→html[data-theme="dark"] select[class*="appearance-none"] {
+   879→  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237fbcc1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E') !important;
+   880→}
+   881→
+   882→/* ── Hide scrollbar for carousel / marquee tracks ── */
+   883→.scrollbar-none {
+   884→  -ms-overflow-style: none;
+   885→  scrollbar-width: none;
+   886→}
+   887→.scrollbar-none::-webkit-scrollbar {
+   888→  display: none;
+   889→}
+   890→
+   891→/* ── Image placeholder background (zero CLS) ────────
+   892→ * Only applies to images that explicitly opt in via the
+   893→ * .img-placeholder class. Avoids tinting logos, icons,
+   894→ * and decorative images that look bad with a bg color.
+   895→ */
+   896→.img-placeholder {
+   897→  background-color: var(--color-accent-soft);
+   898→}
+   899→
+   900→/* ── Smooth selection color ───────────────────────── */
+   901→::selection {
+   902→  background: rgba(15, 92, 99, 0.2);
+   903→  color: var(--color-text);
+   904→}
+   905→html[data-theme="dark"] ::selection {
+   906→  background: rgba(127, 188, 193, 0.25);
+   907→}
+   908→
+   909→/* ── Responsive visibility utilities ── */
+   910→.show-on-lg {
+   911→  display: none;
+   912→}
+   913→@media (min-width: 1024px) {
+   914→  .show-on-lg {
+   915→    display: flex;
+   916→  }
+   917→}
+   918→.hide-on-lg {
+   919→  display: flex;
+   920→}
+   921→@media (min-width: 1024px) {
+   922→  .hide-on-lg {
+   923→    display: none;
+   924→  }
+   925→}
+   926→

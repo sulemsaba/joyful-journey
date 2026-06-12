@@ -79,26 +79,6 @@ export function PageLoader({ isLoading = true }: PageLoaderProps) {
       aria-hidden={isHidden}
     >
       <div className="flex flex-col items-center gap-6">
-        {/* Favicon image with smooth pulse animation */}
-        <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
-          {/* Light mode favicon */}
-          <img
-            src="/branding/exxonim-favicon-light.png"
-            alt=""
-            width="56"
-            height="56"
-            className="logo-light block w-14 h-14 object-contain"
-          />
-          {/* Dark mode favicon */}
-          <img
-            src="/branding/exxonim-favicon-dark.png"
-            alt=""
-            width="56"
-            height="56"
-            className="logo-dark w-14 h-14 object-contain"
-          />
-        </div>
-
         {/* Loading text with animated dots */}
         <div className="flex items-center">
           <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
