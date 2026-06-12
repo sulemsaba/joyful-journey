@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { StackItem } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
@@ -11,17 +10,6 @@ import { ArrowRight } from "lucide-react";
 const EASE = [0.25, 0.4, 0.25, 1] as const;
 const DURATION = 0.6;
 const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
-
-/* ── Phone mockup screen inset percentages ──────────────
- * Measured from the AI-generated phone-mockup.png:
- *   Top: 8%   Bottom: 12%   Left: 12%   Right: 12%
- * These position the video inside the phone screen area. */
-const PHONE_SCREEN = {
-  top: "8%",
-  bottom: "12%",
-  left: "12%",
-  right: "12%",
-} as const;
 
 interface StackSectionProps {
   items: StackItem[];
@@ -67,7 +55,6 @@ interface StackItemRowProps {
 function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
   const badge = item.windowTag || undefined;
   const hasVideo = Boolean(item.videoSrc);
-  const hasPhoneMockup = Boolean(item.phoneMockupSrc);
 
   return (
     <div
@@ -139,25 +126,20 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           isReversed && "md:[direction:ltr]"
         )}
       >
-        {/* ── Surface (background container) — SAME for all items ── */}
+        {/* Surface (background container) */}
         <div
           className={cn(
             "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
             "bg-page",
+            /* NO portrait on mobile — landscape always */
             "aspect-[1.22]",
             "md:aspect-[1.22]",
             "xl:aspect-[1.22]"
           )}
         >
           <div className="relative size-full">
-            {hasVideo && hasPhoneMockup ? (
-              /* ── Phone mockup with video inside ── */
-              <PhoneMockupVideo
-                videoSrc={item.videoSrc}
-                phoneImageSrc={item.phoneMockupSrc!}
-              />
-            ) : hasVideo ? (
-              /* ── Raw video (no phone mockup) — original behavior ── */
+            {hasVideo ? (
+              /* ── Actual video ── */
               <>
                 {/* Mobile: landscape, fills container */}
                 <video
@@ -167,7 +149,6 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                   playsInline
                   disablePictureInPicture
                   disableRemotePlayback
-                  preload="metadata"
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
                 >
@@ -181,7 +162,6 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                   playsInline
                   disablePictureInPicture
                   disableRemotePlayback
-                  preload="metadata"
                   aria-hidden="true"
                   className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
                   style={{
@@ -220,131 +200,6 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           </div>
         </div>
       </motion.div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────
- * PHONE MOCKUP + VIDEO
- *
- * Sits INSIDE the same container as other stack items.
- * The phone PNG frame overlays the video, which is clipped
- * to the phone's screen area.
- *
- * The phone keeps its real aspect ratio (864×1152 = ~0.75)
- * and is centered inside the container. It may be partially
- * cropped by the container — that's intentional.
- *
- * Slow-internet friendly:
- *   - poster image (15KB) shows instantly
- *   - video only loads when in viewport (IntersectionObserver)
- *   - preload="none" — no bandwidth wasted until visible
- *   - graceful fallback: if video fails, poster stays visible
- * ───────────────────────────────────────────────────────── */
-
-function PhoneMockupVideo({
-  videoSrc,
-  phoneImageSrc,
-}: {
-  videoSrc: string;
-  phoneImageSrc: string;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isInView, setIsInView] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
-
-  /* Only load the video when the phone enters the viewport */
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  /* Auto-play when video data is ready */
-  useEffect(() => {
-    if (!isInView || !videoRef.current) return;
-    videoRef.current.play().catch(() => {
-      // autoplay blocked — poster stays visible, user can tap
-    });
-  }, [isInView, videoReady]);
-
-  return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 flex items-center justify-center"
-    >
-      {/* Phone device — real aspect ratio, centered, may overflow container */}
-      <div
-        className="relative"
-        style={{
-          width: "55%",
-          aspectRatio: "864 / 1152",
-          maxHeight: "105%",
-        }}
-      >
-        {/* Layer 1: Video clipped to screen area (behind phone frame) */}
-        <div
-          className="absolute overflow-hidden rounded-[1.1rem]"
-          style={{
-            top: PHONE_SCREEN.top,
-            bottom: PHONE_SCREEN.bottom,
-            left: PHONE_SCREEN.left,
-            right: PHONE_SCREEN.right,
-            zIndex: 1,
-          }}
-        >
-          {isInView && (
-            <video
-              ref={videoRef}
-              muted
-              loop
-              playsInline
-              disablePictureInPicture
-              disableRemotePlayback
-              preload="none"
-              onCanPlay={() => setVideoReady(true)}
-              poster="/videos/track-consultation-poster.webp"
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover object-top"
-            >
-              <source src={videoSrc} type="video/mp4" />
-            </video>
-          )}
-
-          {/* Poster fallback — always visible until video plays */}
-          {(!isInView || !videoReady) && (
-            <img
-              src="/videos/track-consultation-poster.webp"
-              alt=""
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover object-top"
-              aria-hidden="true"
-            />
-          )}
-        </div>
-
-        {/* Layer 2: Phone frame PNG (on top, transparent screen cutout) */}
-        <img
-          src={phoneImageSrc}
-          alt="Phone showing consultation tracking"
-          className="relative w-full h-full object-contain"
-          style={{ zIndex: 2 }}
-          loading="lazy"
-        />
-      </div>
     </div>
   );
 }
