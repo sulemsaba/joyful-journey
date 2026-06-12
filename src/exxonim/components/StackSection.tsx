@@ -121,8 +121,8 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           "relative w-full",
           /* CSS custom properties for responsive video positioning */
           "[--video-width:80%] [--video-y-offset:8%]",
-          "md:[--video-width:65%] md:[--video-y-offset:8%]",
-          "xl:[--video-width:42%] xl:[--video-y-offset:9%]",
+          "md:[--video-width:70%] md:[--video-y-offset:5%]",
+          "xl:[--video-width:50%] xl:[--video-y-offset:4%]",
           isReversed && "md:[direction:ltr]"
         )}
       >
