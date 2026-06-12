@@ -73,8 +73,6 @@ export interface StackItem {
   videoSrc: string;
   /** When true, the item is hidden from the stack section (e.g., consultation tracking card) */
   isHidden?: boolean;
-  /** Phone mockup frame image — when set, the video plays inside a real phone mockup */
-  phoneMockupSrc?: string;
 }
 
 export interface FeatureRow {
