@@ -139,41 +139,25 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         >
           <div className="relative size-full">
             {hasVideo ? (
-              /* ── Actual video ── */
-              <>
-                {/* Mobile: landscape, fills container */}
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  disablePictureInPicture
-                  disableRemotePlayback
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
-                >
-                  <source src={item.videoSrc} type="video/mp4" />
-                </video>
-                {/* Desktop: phone-in-frame portrait style */}
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  disablePictureInPicture
-                  disableRemotePlayback
-                  aria-hidden="true"
-                  className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
-                  style={{
-                    top: "var(--video-y-offset)",
-                    left: "calc((100% - var(--video-width)) / 2)",
-                    width: "var(--video-width)",
-                    aspectRatio: "0.462",
-                  }}
-                >
-                  <source src={item.videoSrc} type="video/mp4" />
-                </video>
-              </>
+              /* ── Actual video ── Single <video>, responsive positioning */
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                disablePictureInPicture
+                disableRemotePlayback
+                preload="metadata"
+                poster="/videos/track-consultation-poster.webp"
+                aria-hidden="true"
+                className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft
+                  /* Mobile: centered portrait, 60% width */
+                  left-[20%] top-[4%] w-[60%] aspect-[9/16]
+                  /* Desktop: same portrait positioning via CSS vars */
+                  md:left-[calc((100%-var(--video-width))/2)] md:top-[var(--video-y-offset)] md:w-[var(--video-width)] md:aspect-[0.462]"
+              >
+                <source src={item.videoSrc} type="video/mp4" />
+              </video>
             ) : (
               /* ── Placeholder surface — no video ── */
               <>
