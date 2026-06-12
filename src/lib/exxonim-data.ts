@@ -263,6 +263,17 @@ export const fallbackHomePage: PageRecord<HomePageContent> = {
           windowTag: "Advisory",
           videoSrc: "",
         },
+        {
+          title: "Track every consultation — automatically",
+          subtitle: "Proactive updates at every milestone. You never need to call and ask what is happening.",
+          description:
+            "Upon engagement, you receive a unique tracking number. At every key milestone — name clearance, document submission, approval, issuance — Exxonim sends you an update via WhatsApp, email, or SMS. You can also look up your status on the website anytime, no login required.",
+          ctaLabel: "Track a consultation",
+          ctaHref: "/track-consultation",
+          windowTitle: "Tracking",
+          windowTag: "Guide",
+          videoSrc: "/videos/track-consultation.mp4",
+        },
       ],
       default_feature_rows: [
         {
