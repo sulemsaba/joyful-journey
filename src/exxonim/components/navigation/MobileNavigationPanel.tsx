@@ -1,36 +1,30 @@
 import { useState, type RefObject } from "react";
-import { ChevronDown, Phone } from "lucide-react";
+import { ChevronDown, Phone, ArrowRight } from "lucide-react";
 import type { MenuColumn, MenuItem } from "@/exxonim/components/navigation/types";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
-import { ThemeToggle } from "@/exxonim/components/navigation/ThemeToggle";
-import type { Theme } from "@/exxonim/types";
 
 /**
- * Mobile navigation panel — expanding section inside the floating pill.
+ * Mobile navigation panel — expandable section for mobile nav.
  *
- * MOBIN-INSPIRED PATTERN:
- *   Instead of a separate overlay or side drawer, this panel is rendered
- *   INSIDE the pill's <header>. When isOpen=true, it expands downward
- *   with a smooth grid-rows animation. The frosted glass effect comes
- *   from the parent pill's backdrop-filter: blur(48px).
+ * TWO VARIANTS:
+ * ─────────────
+ * 1. "pill" — expands inside the floating frosted pill. Compact,
+ *    no backdrop, the pill IS the container. Used over the hero.
  *
- * CONTENT (unchanged from previous version):
- *   [Home] [About] [Career] [Contact] (regular links)
- *   ── separator ──
- *   [Services ▼ accordion]
- *   [Resources ▼ accordion]
- *   ── separator ──
- *   [● Track Consultation] (highlighted)
- *   [Theme Toggle]
- *   [Call Now CTA]
+ * 2. "bar" — dropdown from the traditional full-width bar.
+ *    On phones: full-width panel below the bar.
+ *    On tablet (md–xl): right-aligned panel with max-width, so
+ *    it doesn't cover the whole screen.
  *
- * STYLING:
- *   - No border, no white card — the frosted pill IS the container
- *   - Links are larger and more spacious (Mobbin uses 20px/600 weight)
- *   - Accordion sections blend into the pill naturally
- *   - Separator lines are subtle (accent-soft opacity)
+ * ACCORDION IMPROVEMENTS:
+ * ──────────────────────
+ * - Sub-links have better visual distinction (card-like items)
+ * - Panel is scrollable internally (overscroll-contain) so the
+ *   page doesn't scroll when navigating inside
+ * - Wider accordion items with more padding
+ * - Description text under each link for context
  */
 interface MobileNavigationPanelProps {
   brandName: string;
@@ -48,8 +42,7 @@ interface MobileNavigationPanelProps {
   primaryPhone?: string;
   isActive: (href: string) => boolean;
   onClose: () => void;
-  theme: Theme;
-  onToggleTheme: () => void;
+  variant?: "pill" | "bar";
 }
 
 interface AccordionProps {
@@ -79,15 +72,15 @@ function MobileAccordion({
   if (!columns.length) return null;
 
   return (
-    <div className="rounded-xl overflow-hidden bg-accent-soft/20">
+    <div className="rounded-xl overflow-hidden bg-accent-soft/15 ring-1 ring-accent-soft/20">
       <button
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left transition-colors",
+          "w-full flex items-center justify-between gap-3 px-4 py-3 text-left transition-colors",
           isGroupActive
-            ? "bg-accent-soft/30"
+            ? "bg-accent-soft/25"
             : "hover:bg-accent-soft/20"
         )}
       >
@@ -96,14 +89,14 @@ function MobileAccordion({
         )}>
           {label}
           {isGroupActive && (
-            <span className="ml-1.5 inline-flex items-center px-1 py-0.5 rounded-full bg-accent text-accent-contrast text-[0.5rem] font-bold leading-none">
+            <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full bg-accent text-accent-contrast text-[0.5rem] font-bold leading-none">
               Active
             </span>
           )}
         </span>
         <ChevronDown
           className={cn(
-            "w-3.5 h-3.5 text-accent transition-transform duration-300",
+            "w-4 h-4 text-accent transition-transform duration-300",
             open && "rotate-180"
           )}
           aria-hidden="true"
@@ -117,28 +110,35 @@ function MobileAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <div className="px-4 pb-3 pt-0.5 grid gap-3">
+          <div className="px-3 pb-3 pt-1 grid gap-3">
             {columns.map((column) => (
-              <div key={column.title} className="grid gap-1">
-                <p className="text-[10px] font-bold tracking-wider uppercase text-text-muted">
+              <div key={column.title} className="grid gap-1.5">
+                <p className="text-[10px] font-bold tracking-wider uppercase text-text-muted px-1">
                   {column.title}
                 </p>
-                <ul className="grid gap-0.5">
+                <ul className="grid gap-1">
                   {column.items.map((item) => (
                     <li key={`${item.href}-${item.label}`}>
                       <a
                         href={item.href}
                         onClick={onClose}
-                        className="block py-1 text-[13px] text-text hover:text-accent transition-colors"
+                        className={cn(
+                          "group flex items-center gap-3 px-3 py-2.5 rounded-lg",
+                          "text-[13px] font-medium text-text",
+                          "hover:bg-accent-soft/25 transition-colors duration-150",
+                        )}
                       >
-                        {item.label}
+                        {/* Dot indicator for visual distinction */}
+                        <span className="w-1 h-1 rounded-full bg-accent/60 shrink-0 group-hover:bg-accent transition-colors" aria-hidden="true" />
+                        <span className="flex-1">{item.label}</span>
+                        <ArrowRight className="w-3 h-3 text-text-muted/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150" aria-hidden="true" />
                       </a>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-accent-soft/30">
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-accent-soft/25">
               <Button
                 size="compact"
                 variant="primary"
@@ -178,16 +178,19 @@ export function MobileNavigationPanel({
   primaryPhone,
   isActive,
   onClose,
-  theme,
-  onToggleTheme,
+  variant = "pill",
 }: MobileNavigationPanelProps) {
+  const isBar = variant === "bar";
+
   return (
     <div
       id={id}
       aria-hidden={!isOpen}
       className={cn(
         "grid transition-all duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
-        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+        /* For bar variant on tablet: right-align, don't cover full screen */
+        isBar && "md:absolute md:right-0 md:top-full md:w-[360px]"
       )}
     >
       <div className="overflow-hidden">
@@ -197,9 +200,28 @@ export function MobileNavigationPanel({
           aria-modal="true"
           aria-label="Site navigation"
           tabIndex={-1}
-          className="px-5 pb-5 pt-1"
+          className={cn(
+            /* Pill variant: contained inside the pill */
+            !isBar && "px-4 pb-5 pt-1",
+            /* Bar variant: full width on phone, card on tablet */
+            isBar && cn(
+              "px-4 pb-5 pt-2",
+              "md:px-5 md:py-4 md:mt-1 md:rounded-2xl md:shadow-xl md:ring-1 md:ring-border-soft md:bg-page"
+            ),
+          )}
         >
-          <div className="grid gap-2">
+          {/* ── Scrollable content area ────────────────────
+           * max-h constrains the panel so it doesn't push
+           * content off-screen. overscroll-contain prevents
+           * scroll chaining to the page behind. */}
+          <div
+            className={cn(
+              "grid gap-2.5 overflow-y-auto overscroll-contain",
+              "max-h-[min(70vh,560px)]",
+              "pr-1 -mr-1", /* scrollbar offset */
+              "scrollbar-thin"
+            )}
+          >
             {/* Regular links: Home, About, Career, Contact */}
             <div className="grid gap-0.5">
               {regularLinks.map((link) => (
@@ -266,11 +288,6 @@ export function MobileNavigationPanel({
               </span>
               {highlightLink.label}
             </Button>
-
-            {/* Theme toggle */}
-            <div className="flex items-center justify-center py-1">
-              <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} />
-            </div>
 
             {/* Call Now CTA */}
             <a

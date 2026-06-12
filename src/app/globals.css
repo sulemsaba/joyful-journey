@@ -746,31 +746,27 @@ header .logo-dark { mix-blend-mode: screen; }
 
 /* ── Floating pill navbar (mobile, < xl) ──────────────
  * Frosted glass background that adapts to theme + scroll state.
- * Inspired by Mobbin's floating capsule pattern:
- *   - Always has blur(48px) for strong frosted glass
- *   - Over hero: more transparent (bg opacity ~0.5)
- *   - Scrolled: more opaque (bg opacity ~0.7)
+ * Inspired by Mobbin's floating capsule pattern.
+ * Only shown when over the hero section — fades out once
+ * the user scrolls, and the traditional bar takes over.
  *   - Light mode: warm gray rgba(237,237,237,...)
  *   - Dark mode: cool dark rgba(13,34,38,...)
  */
 header.nav-pill {
   background-color: rgba(237, 237, 237, 0.64);
 }
-/* Scrolled (not over hero): slightly more opaque for readability */
-header.nav-pill:not([data-over-hero]) {
-  background-color: rgba(237, 237, 237, 0.72);
-}
-/* Dark mode */
+/* Dark mode pill */
 html[data-theme="dark"] header.nav-pill {
   background-color: rgba(13, 34, 38, 0.64);
 }
-html[data-theme="dark"] header.nav-pill:not([data-over-hero]) {
-  background-color: rgba(13, 34, 38, 0.72);
-}
+
+/* ── Traditional bar navbar (mobile, < xl, after scroll) ─
+ * Full-width bar that replaces the pill once the user
+ * scrolls past the hero. Solid bg + blur for readability. */
 
 /* ── Hamburger morph icon colors ───────────────────────
- * Lines need to be visible on the frosted glass background.
- * Light mode: dark lines. Dark mode: light lines. */
+ * Lines need to be visible on both the frosted glass pill
+ * and the solid bar. Light mode: dark lines. Dark mode: light lines. */
 .nav-hamburger-line {
   background-color: #102529;
 }
@@ -784,6 +780,21 @@ html[data-theme="dark"] header[data-over-hero] .nav-hamburger-line {
 /* Over hero in light mode: keep lines dark */
 html:not([data-theme="dark"]) header[data-over-hero] .nav-hamburger-line {
   background-color: #102529;
+}
+
+/* ── Mobile nav panel scrollbar styling ────────────── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(127, 188, 193, 0.25);
+  border-radius: 2px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(127, 188, 193, 0.4);
 }
 
 /* ── Smooth pill background transition during theme change ── */
