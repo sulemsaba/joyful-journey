@@ -7,6 +7,51 @@ import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { ArrowRight } from "lucide-react";
 
+/* ── Lazy-loaded video with intersection observer ──── */
+function LazyVideo({ sources, playbackRate, className, style }: { sources: { src: string; type: string }[]; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current?.parentElement;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShouldLoad(true); observer.disconnect(); } },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  /* Apply playback rate once the video element is ready */
+  useEffect(() => {
+    const video = ref.current;
+    if (!video || !playbackRate) return;
+    const apply = () => { video.playbackRate = playbackRate; };
+    video.addEventListener("loadedmetadata", apply);
+    if (video.readyState >= 1) apply();
+    return () => video.removeEventListener("loadedmetadata", apply);
+  }, [shouldLoad, playbackRate]);
+
+  return (
+    <video
+      ref={ref}
+      autoPlay
+      muted
+      loop
+      playsInline
+      disablePictureInPicture
+      disableRemotePlayback
+      preload="none"
+      aria-hidden="true"
+      className={className}
+      style={style}
+    >
+      {shouldLoad && sources.map((s) => <source key={s.src} src={s.src} type={s.type} />)}
+    </video>
+  );
+}
+
 /* ── Animation config ────────────────────────────────── */
 const EASE = [0.25, 0.4, 0.25, 1] as const;
 const DURATION = 0.6;
@@ -93,7 +138,7 @@ interface StackItemRowProps {
 
 function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
   const badge = item.windowTag || undefined;
-  const hasVideo = Boolean(item.videoSrc);
+  const hasVideo = item.videoSources.length > 0;
 
   return (
     <div
@@ -182,12 +227,22 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
               <>
                 {/* Mobile: landscape, fills container */}
                 <LazyVideo
+<<<<<<< HEAD
                   src={item.videoSrc}
+=======
+                  sources={item.videoSources}
+                  playbackRate={0.7}
+>>>>>>> 5d80c07 (feat: floating frosted pill mobile navbar + video compression & lazy loading)
                   className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
                 />
                 {/* Desktop: phone-in-frame portrait style */}
                 <LazyVideo
+<<<<<<< HEAD
                   src={item.videoSrc}
+=======
+                  sources={item.videoSources}
+                  playbackRate={0.7}
+>>>>>>> 5d80c07 (feat: floating frosted pill mobile navbar + video compression & lazy loading)
                   className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
                   style={{
                     top: "var(--video-y-offset)",

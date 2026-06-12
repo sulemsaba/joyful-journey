@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { Phone } from "lucide-react";
 import { DesktopNavigation } from "@/exxonim/components/navigation/DesktopNavigation";
 import { MobileNavigationPanel } from "@/exxonim/components/navigation/MobileNavigationPanel";
 import { ThemeToggle } from "@/exxonim/components/navigation/ThemeToggle";
@@ -10,7 +10,6 @@ import { useMobileMenuFocusTrap } from "@/exxonim/components/navigation/useMobil
 import { normalizePathname, routes } from "@/exxonim/routes";
 import type { BrandAssets, CompanyInfo, Theme } from '@/exxonim/types';
 import { cn } from "@/exxonim/utils/cn";
-import { Button } from "@/exxonim/components/primitives/Button";
 
 /**
  * Navigation component — the fixed site header.
@@ -53,6 +52,14 @@ import { Button } from "@/exxonim/components/primitives/Button";
  *    `@custom-variant dark` defined in globals.css. The logo <img> elements
  *    have an `onError` fallback that loads `fallbackBrand` assets when the
  *    API-sourced image fails to load.
+ *
+ * MOBILE NAVBAR — FLOATING PILL PATTERN (Mobbin-inspired):
+ * ────────────────────────────────────────────────────────
+ * On mobile (< xl), the header is a floating frosted-glass pill with 24px side
+ * margins and 8px top offset, instead of a full-width bar. When the menu opens,
+ * the pill expands downward in-place to reveal navigation links — no separate
+ * overlay or side drawer. The frosted glass effect (blur(48px) + semi-transparent
+ * background) keeps content visible but blurred behind the pill.
  */
 interface NavigationProps {
   brand: BrandAssets;
@@ -93,6 +100,29 @@ function isResourcesPath(path: string): boolean {
   return false;
 }
 
+/* ── Morphing hamburger icon ────────────────────────────
+ * Two horizontal lines that rotate ±45° to form an X.
+ * CSS-driven animation via .nav-hamburger-open class.
+ * Matches the Mobbin morph pattern — no icon swap. */
+function HamburgerIcon({ open }: { open: boolean }) {
+  return (
+    <span className="nav-hamburger relative w-5 h-5 flex items-center justify-center">
+      <span
+        className={cn(
+          "nav-hamburger-line absolute block w-[18px] h-[1.5px] rounded-full transition-transform duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
+          open ? "rotate-45" : "rotate-0"
+        )}
+      />
+      <span
+        className={cn(
+          "nav-hamburger-line absolute block w-[18px] h-[1.5px] rounded-full transition-transform duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
+          open ? "-rotate-45" : "rotate-0 translate-y-[5px]"
+        )}
+      />
+    </span>
+  );
+}
+
 export function Navigation({
   brand,
   company,
@@ -115,7 +145,11 @@ export function Navigation({
    * When at the top of the home page (over the hero), the
    * header is transparent so the hero bleeds through.
    * When scrolled past the hero, it gains a solid background.
-   * Only applies on the home page where a hero section exists. */
+   * Only applies on the home page where a hero section exists.
+   *
+   * For the floating pill: transparency is subtle — the pill always
+   * has its frosted glass, but over the hero it's more transparent
+   * (lower bg opacity) and when scrolled it becomes more opaque. */
   const isHomePage = currentPath === normalizePathname(routes.home);
   const [scrolled, setScrolled] = useState(false);
 
@@ -209,31 +243,36 @@ export function Navigation({
 
   return (
     <>
+      {/* ── Mobile: Floating frosted pill (< xl) ────────────
+       * A detached capsule with generous margins, strong blur,
+       * and semi-transparent background. When the menu opens,
+       * this pill expands downward to reveal the navigation.
+       * Over hero: more transparent. Scrolled: more opaque. */}
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
-          "fixed top-0 inset-x-0 z-50 h-[60px] sm:h-[68px] [--header-height:60px] sm:[--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
-          headerOverHero
-            ? "bg-transparent"
-            : "bg-page/95 backdrop-blur-xl"
+          "xl:hidden fixed z-50 top-2 left-6 right-6",
+          "rounded-[28px]",
+          "transition-[background-color,backdrop-filter,opacity] duration-300",
+          "nav-pill"
         )}
+        style={{
+          backdropFilter: "blur(48px)",
+          WebkitBackdropFilter: "blur(48px)",
+        }}
       >
-        {/* Layout: flex on mobile (logo left, actions right), grid on xl+ (logo left, nav centered, actions right) */}
-        <div className="h-full w-full px-[clamp(12px,2vw,24px)] flex xl:grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between xl:justify-center gap-4">
-          {/* Left: Brand logo — links to Home */}
+        {/* ── Pill bar (always visible) ── */}
+        <div className={cn(
+          "flex items-center justify-between gap-3",
+          "px-5 py-3",
+        )}>
+          {/* Logo */}
           <a
             href={routes.home}
             onClick={closeAllMenus}
             aria-label={`${brand.name} home`}
             className="relative flex items-center min-w-0"
           >
-            {/* Logo crossfade — both logos always rendered, opacity
-              controlled by .logo-light/.logo-dark CSS classes.
-              CSS uses header[data-over-hero] + html[data-theme] to pick
-              the right logo INSTANTLY — no React flash on refresh.
-              mix-blend-mode on both removes their solid backgrounds.
-              BACKEND: Admin should recommend SVG or WebP format for logos.
-              Min width: 140px, max height: 72px. */}
             <img
               src={brand.lightLogoSrc}
               alt={brand.name}
@@ -245,7 +284,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className="logo-light block h-8 sm:h-11 w-auto"
+              className="logo-light block h-7 w-auto"
             />
             <img
               src={brand.darkLogoSrc}
@@ -259,11 +298,107 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className="logo-dark h-8 sm:h-11 w-auto"
+              className="logo-dark h-7 w-auto"
             />
           </a>
 
-          {/* Center: Desktop navigation — perfectly centered via grid layout */}
+          {/* Hamburger/X morph */}
+          <button
+            ref={mobileToggleRef}
+            type="button"
+            aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls={mobileMenuId}
+            onClick={() => {
+              setDesktopMenu(null);
+              setMobileMenuOpen((open) => !open);
+            }}
+            className={cn(
+              "flex items-center justify-center w-9 h-9 -mr-1",
+              "rounded-full transition-colors duration-200",
+              "hover:bg-accent-soft/40",
+              headerOverHero
+                ? "text-white dark-header-icon"
+                : "text-text"
+            )}
+          >
+            <HamburgerIcon open={mobileMenuOpen} />
+          </button>
+        </div>
+
+        {/* ── Expandable menu (inside the pill) ── */}
+        <MobileNavigationPanel
+          brandName={brandName}
+          callHref={callHref}
+          currentPath={currentPath}
+          regularLinks={[...staticNav.leftLinks, ...staticNav.rightLinks]}
+          highlightLink={staticNav.highlightLink}
+          id={mobileMenuId}
+          isOpen={mobileMenuOpen}
+          resourcesActive={isResourcesPath(currentPath)}
+          servicesActive={currentPath === normalizePathname(routes.services)}
+          resourcesColumns={staticNav.resourcesColumns}
+          servicesColumns={staticNav.servicesColumns}
+          panelRef={mobilePanelRef}
+          primaryPhone={primaryPhone}
+          isActive={isActive}
+          onClose={() => setMobileMenuOpen(false)}
+          theme={theme}
+          onToggleTheme={onToggleTheme}
+        />
+      </header>
+
+      {/* ── Desktop: Full-width bar (xl+) ──────────────────
+       * Standard header bar with centered nav, Call CTA,
+       * theme toggle. Same as before — only the mobile
+       * shell changed to a floating pill. */}
+      <header
+        data-over-hero={headerOverHero ? "" : undefined}
+        className={cn(
+          "hidden xl:block fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
+          headerOverHero
+            ? "bg-transparent"
+            : "bg-page/95 backdrop-blur-xl"
+        )}
+      >
+        <div className="h-full w-full px-[clamp(12px,2vw,24px)] grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between xl:justify-center gap-4">
+          {/* Left: Brand logo */}
+          <a
+            href={routes.home}
+            onClick={closeAllMenus}
+            aria-label={`${brand.name} home`}
+            className="relative flex items-center min-w-0"
+          >
+            <img
+              src={brand.lightLogoSrc}
+              alt={brand.name}
+              width="176"
+              height="44"
+              onError={(event) => {
+                const img = event.currentTarget;
+                if (img.dataset.fallbackApplied) return;
+                img.dataset.fallbackApplied = "true";
+                img.src = fallbackBrand.lightLogoSrc;
+              }}
+              className="logo-light block h-11 w-auto"
+            />
+            <img
+              src={brand.darkLogoSrc}
+              alt=""
+              aria-hidden="true"
+              width="176"
+              height="44"
+              onError={(event) => {
+                const img = event.currentTarget;
+                if (img.dataset.fallbackApplied) return;
+                img.dataset.fallbackApplied = "true";
+                img.src = fallbackBrand.darkLogoSrc;
+              }}
+              className="logo-dark h-11 w-auto"
+            />
+          </a>
+
+          {/* Center: Desktop navigation */}
           <DesktopNavigation
             brandName={brandName}
             leftLinks={staticNav.leftLinks}
@@ -288,18 +423,12 @@ export function Navigation({
             setDesktopMenu={setDesktopMenu}
           />
 
-          {/* Right: Actions — theme toggle, Call Now CTA, mobile menu button */}
+          {/* Right: Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 justify-end">
             <ThemeToggle
               theme={theme}
               onToggleTheme={onToggleTheme}
             />
-
-            {/* Call Now CTA — visible on md+ screens.
-                BACKEND: If company.phones[] is empty, this degrades to a
-                "Contact {brandName}" link pointing to /contact/. The admin
-                should mark phone as a required field if this CTA is important.
-                Phone format: E.164 or display format (spaces ok, we strip them for tel:). */}
             <a
               href={callHref}
               className="hidden md:inline-flex items-center gap-2 h-12 px-4 rounded-full bg-accent text-accent-contrast hover:bg-accent-hover transition-colors duration-200"
@@ -307,58 +436,9 @@ export function Navigation({
               <Phone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span className="text-[13px] font-semibold">{primaryPhone || `Contact ${brandName}`}</span>
             </a>
-
-            <Button
-              ref={mobileToggleRef}
-              size="icon"
-              variant="ghost"
-              aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
-              aria-expanded={mobileMenuOpen}
-              aria-controls={mobileMenuId}
-              onClick={() => {
-                setDesktopMenu(null);
-                setMobileMenuOpen((open) => !open);
-              }}
-              className={cn(
-                "xl:hidden",
-                headerOverHero
-                  ? "text-white dark-header-icon"
-                  : mobileMenuOpen
-                    ? "text-accent-contrast"
-                    : ""
-              )}
-            >
-              <span className="sr-only">Toggle navigation</span>
-              <Menu
-                className={cn("w-6 h-6", mobileMenuOpen && "hidden")}
-                aria-hidden="true"
-              />
-              <X
-                className={cn("w-6 h-6", !mobileMenuOpen && "hidden")}
-                aria-hidden="true"
-              />
-            </Button>
           </div>
         </div>
       </header>
-
-      <MobileNavigationPanel
-        brandName={brandName}
-        callHref={callHref}
-        currentPath={currentPath}
-        regularLinks={[...staticNav.leftLinks, ...staticNav.rightLinks]}
-        highlightLink={staticNav.highlightLink}
-        id={mobileMenuId}
-        isOpen={mobileMenuOpen}
-        resourcesActive={isResourcesPath(currentPath)}
-        servicesActive={currentPath === normalizePathname(routes.services)}
-        resourcesColumns={staticNav.resourcesColumns}
-        servicesColumns={staticNav.servicesColumns}
-        panelRef={mobilePanelRef}
-        primaryPhone={primaryPhone}
-        isActive={isActive}
-        onClose={() => setMobileMenuOpen(false)}
-      />
     </>
   );
 }

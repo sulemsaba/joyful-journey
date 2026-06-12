@@ -219,7 +219,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaHref: routes.contact,
           windowTitle: "Setup",
           windowTag: "Guide",
-          videoSrc: "",
+          videoSources: [],
         },
         {
           title: "Keep tax and licensing work on track",
@@ -230,7 +230,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaHref: routes.services,
           windowTitle: "Compliance",
           windowTag: "Guide",
-          videoSrc: "",
+          videoSources: [],
         },
         {
           title: "Track every consultation — automatically",
@@ -241,7 +241,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
           windowTag: "Guide",
-          videoSrc: "/videos/track-consultation.mp4",
+          videoSources: [
+            { src: "/videos/track-consultation.webm", type: "video/webm" },
+            { src: "/videos/track-consultation.mp4", type: "video/mp4" },
+          ],
         },
       ],
       default_feature_rows: [

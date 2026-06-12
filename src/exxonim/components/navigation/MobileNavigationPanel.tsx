@@ -4,25 +4,33 @@ import type { MenuColumn, MenuItem } from "@/exxonim/components/navigation/types
 import { Button } from "@/exxonim/components/primitives/Button";
 import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
+import { ThemeToggle } from "@/exxonim/components/navigation/ThemeToggle";
+import type { Theme } from "@/exxonim/types";
 
 /**
- * Mobile navigation panel — slide-down overlay for screens below xl breakpoint.
+ * Mobile navigation panel — expanding section inside the floating pill.
  *
- * MOBILE-FIRST DESIGN:
- *   - Compact link heights (36px) — touch-friendly but not bloated
- *   - Tight accordion triggers (32px) with small uppercase labels
- *   - Single-line Call Now button — icon + phone number only
- *   - Thin separators between sections
- *   - Reduced padding to keep panel within viewport height
+ * MOBIN-INSPIRED PATTERN:
+ *   Instead of a separate overlay or side drawer, this panel is rendered
+ *   INSIDE the pill's <header>. When isOpen=true, it expands downward
+ *   with a smooth grid-rows animation. The frosted glass effect comes
+ *   from the parent pill's backdrop-filter: blur(48px).
  *
- * LAYOUT ORDER:
+ * CONTENT (unchanged from previous version):
  *   [Home] [About] [Career] [Contact] (regular links)
  *   ── separator ──
  *   [Services ▼ accordion]
  *   [Resources ▼ accordion]
  *   ── separator ──
  *   [● Track Consultation] (highlighted)
+ *   [Theme Toggle]
  *   [Call Now CTA]
+ *
+ * STYLING:
+ *   - No border, no white card — the frosted pill IS the container
+ *   - Links are larger and more spacious (Mobbin uses 20px/600 weight)
+ *   - Accordion sections blend into the pill naturally
+ *   - Separator lines are subtle (accent-soft opacity)
  */
 interface MobileNavigationPanelProps {
   brandName: string;
@@ -40,6 +48,8 @@ interface MobileNavigationPanelProps {
   primaryPhone?: string;
   isActive: (href: string) => boolean;
   onClose: () => void;
+  theme: Theme;
+  onToggleTheme: () => void;
 }
 
 interface AccordionProps {
@@ -69,21 +79,16 @@ function MobileAccordion({
   if (!columns.length) return null;
 
   return (
-    <div className={cn(
-      "rounded-lg border overflow-hidden",
-      isGroupActive
-        ? "border-accent/30 bg-accent-soft/30"
-        : "border-border-soft bg-surface-elevated"
-    )}>
+    <div className="rounded-xl overflow-hidden bg-accent-soft/20">
       <button
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "w-full flex items-center justify-between gap-3 px-3 py-2 text-left transition-colors",
+          "w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left transition-colors",
           isGroupActive
-            ? "bg-accent-soft/40"
-            : "hover:bg-accent-soft/40"
+            ? "bg-accent-soft/30"
+            : "hover:bg-accent-soft/20"
         )}
       >
         <span className={cn(
@@ -98,7 +103,7 @@ function MobileAccordion({
         </span>
         <ChevronDown
           className={cn(
-            "w-3.5 h-3.5 text-accent transition-transform",
+            "w-3.5 h-3.5 text-accent transition-transform duration-300",
             open && "rotate-180"
           )}
           aria-hidden="true"
@@ -112,7 +117,7 @@ function MobileAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <div className="px-3 pb-3 pt-0.5 grid gap-3">
+          <div className="px-4 pb-3 pt-0.5 grid gap-3">
             {columns.map((column) => (
               <div key={column.title} className="grid gap-1">
                 <p className="text-[10px] font-bold tracking-wider uppercase text-text-muted">
@@ -133,7 +138,7 @@ function MobileAccordion({
                 </ul>
               </div>
             ))}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border-soft">
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-accent-soft/30">
               <Button
                 size="compact"
                 variant="primary"
@@ -173,37 +178,26 @@ export function MobileNavigationPanel({
   primaryPhone,
   isActive,
   onClose,
+  theme,
+  onToggleTheme,
 }: MobileNavigationPanelProps) {
   return (
     <div
       id={id}
       aria-hidden={!isOpen}
       className={cn(
-        "fixed inset-0 z-40 xl:hidden transition-opacity duration-200",
-        isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+        "grid transition-all duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
+        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
       )}
     >
-      <button
-        type="button"
-        aria-label="Close navigation"
-        tabIndex={isOpen ? 0 : -1}
-        onClick={onClose}
-        className="absolute inset-0 bg-surface-strong/60 backdrop-blur-sm"
-      />
-
-      <div className="absolute top-[68px] right-3 left-3 sm:left-auto sm:w-[min(380px,calc(100vw-2rem))]">
+      <div className="overflow-hidden">
         <div
           ref={panelRef}
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
           tabIndex={-1}
-          className={cn(
-            "max-h-[calc(100vh-84px)] overflow-y-auto rounded-xl border border-border-soft bg-surface p-3 transition-all duration-300 ease-out",
-            isOpen
-              ? "translate-y-0 opacity-100 scale-100"
-              : "-translate-y-2 opacity-0 scale-[0.98]"
-          )}
+          className="px-5 pb-5 pt-1"
         >
           <div className="grid gap-2">
             {/* Regular links: Home, About, Career, Contact */}
@@ -214,10 +208,10 @@ export function MobileNavigationPanel({
                   href={link.href}
                   onClick={onClose}
                   className={cn(
-                    "flex items-center justify-between px-3 h-9 rounded-lg text-[13px] font-medium transition-colors",
+                    "flex items-center px-4 h-11 rounded-xl text-[15px] font-semibold transition-colors",
                     isActive(link.href)
                       ? "bg-accent text-accent-contrast"
-                      : "text-text hover:bg-accent-soft"
+                      : "text-text hover:bg-accent-soft/30"
                   )}
                 >
                   {link.label}
@@ -226,7 +220,7 @@ export function MobileNavigationPanel({
             </div>
 
             {/* Thin separator */}
-            <div className="h-px bg-border-soft" />
+            <div className="h-px bg-accent-soft/30" />
 
             {/* Services accordion */}
             <MobileAccordion
@@ -253,7 +247,7 @@ export function MobileNavigationPanel({
             />
 
             {/* Thin separator */}
-            <div className="h-px bg-border-soft" />
+            <div className="h-px bg-accent-soft/30" />
 
             {/* Highlight link — Track Consultation */}
             <Button
@@ -262,7 +256,7 @@ export function MobileNavigationPanel({
               href={highlightLink.href}
               onClick={onClose}
               className={cn(
-                "gap-2 justify-center",
+                "gap-2 justify-center h-11 rounded-xl text-[15px] font-semibold",
                 isActive(highlightLink.href) && "bg-accent-hover ring-2 ring-accent/30"
               )}
             >
@@ -273,13 +267,18 @@ export function MobileNavigationPanel({
               {highlightLink.label}
             </Button>
 
-            {/* Call Now CTA — compact single-line */}
+            {/* Theme toggle */}
+            <div className="flex items-center justify-center py-1">
+              <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} />
+            </div>
+
+            {/* Call Now CTA */}
             <a
               href={callHref}
               onClick={onClose}
-              className="flex items-center justify-center gap-2 h-9 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors duration-200 text-[13px] font-semibold"
+              className="flex items-center justify-center gap-2 h-11 rounded-xl bg-accent-soft/20 text-accent hover:bg-accent-soft/30 transition-colors duration-200 text-[15px] font-semibold"
             >
-              <Phone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <Phone className="w-4 h-4 shrink-0" aria-hidden="true" />
               <span>Call {primaryPhone || brandName}</span>
             </a>
           </div>

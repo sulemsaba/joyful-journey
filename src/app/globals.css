@@ -744,6 +744,54 @@ html:not([data-theme="dark"]) header[data-over-hero] .dark-header-icon {
 header .logo-light { mix-blend-mode: multiply; }
 header .logo-dark { mix-blend-mode: screen; }
 
+/* ── Floating pill navbar (mobile, < xl) ──────────────
+ * Frosted glass background that adapts to theme + scroll state.
+ * Inspired by Mobbin's floating capsule pattern:
+ *   - Always has blur(48px) for strong frosted glass
+ *   - Over hero: more transparent (bg opacity ~0.5)
+ *   - Scrolled: more opaque (bg opacity ~0.7)
+ *   - Light mode: warm gray rgba(237,237,237,...)
+ *   - Dark mode: cool dark rgba(13,34,38,...)
+ */
+header.nav-pill {
+  background-color: rgba(237, 237, 237, 0.64);
+}
+/* Scrolled (not over hero): slightly more opaque for readability */
+header.nav-pill:not([data-over-hero]) {
+  background-color: rgba(237, 237, 237, 0.72);
+}
+/* Dark mode */
+html[data-theme="dark"] header.nav-pill {
+  background-color: rgba(13, 34, 38, 0.64);
+}
+html[data-theme="dark"] header.nav-pill:not([data-over-hero]) {
+  background-color: rgba(13, 34, 38, 0.72);
+}
+
+/* ── Hamburger morph icon colors ───────────────────────
+ * Lines need to be visible on the frosted glass background.
+ * Light mode: dark lines. Dark mode: light lines. */
+.nav-hamburger-line {
+  background-color: #102529;
+}
+html[data-theme="dark"] .nav-hamburger-line {
+  background-color: #f7fbfb;
+}
+/* Over hero in dark mode: keep lines light */
+html[data-theme="dark"] header[data-over-hero] .nav-hamburger-line {
+  background-color: #f7fbfb;
+}
+/* Over hero in light mode: keep lines dark */
+html:not([data-theme="dark"]) header[data-over-hero] .nav-hamburger-line {
+  background-color: #102529;
+}
+
+/* ── Smooth pill background transition during theme change ── */
+html.theme-transition header.nav-pill,
+html.theme-transition .nav-hamburger-line {
+  transition: background-color 0.4s ease;
+}
+
 /* ── Hero background image opacity ────────────────────
  * The hero bg image has different opacity in light (0.25)
  * vs dark (0.8) mode. This transitions smoothly only during

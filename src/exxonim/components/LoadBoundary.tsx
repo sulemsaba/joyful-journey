@@ -47,7 +47,7 @@ export function HomePageSkeleton() {
         aria-hidden="true"
         className={cn(
           "relative isolate overflow-hidden",
-          "-mt-[60px] sm:-mt-[68px] pt-[60px] sm:pt-[68px]",
+          "-mt-[60px] xl:-mt-[68px] pt-[60px] xl:pt-[68px]",
           "flex items-center",
           "bg-hero-bg",
           "hero-section"

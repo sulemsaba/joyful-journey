@@ -70,7 +70,9 @@ export interface StackItem {
   ctaHref: string;
   windowTitle: string;
   windowTag: string;
-  videoSrc: string;
+  /** Video sources in preference order (e.g. webm first for smaller size, mp4 as fallback).
+   *  Empty array = no video (shows placeholder graphic). */
+  videoSources: { src: string; type: string }[];
   /** When true, the item is hidden from the stack section (e.g., consultation tracking card) */
   isHidden?: boolean;
 }

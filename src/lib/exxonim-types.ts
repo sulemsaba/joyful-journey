@@ -88,7 +88,7 @@ export interface StackItem {
   ctaHref: string;
   windowTitle: string;
   windowTag: string;
-  videoSrc: string;
+  videoSources: { src: string; type: string }[];
 }
 
 export interface StackSectionContent {

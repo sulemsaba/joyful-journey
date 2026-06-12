@@ -202,7 +202,7 @@ export function App() {
           Suspense only wraps <main> so the nav + footer shell
           stays mounted during chunk loading.
         */}
-        <main id="top" className="relative isolate overflow-x-clip flex-1 pt-[68px]">
+        <main id="top" className="relative isolate overflow-x-clip flex-1 pt-[60px] xl:pt-[68px]">
           <ScrollToTop />
           <ErrorBoundary>
             <Suspense fallback={<PageSuspenseFallback />}>

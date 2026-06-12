@@ -1,0 +1,1456 @@
+     1→/**
+     2→ * Fallback content data for the Exxonim public website.
+     3→ *
+     4→ * This is the offline resilience layer — when the FastAPI backend is
+     5→ * unavailable, the site uses these fallback values. This is a core
+     6→ * architectural pattern: every piece of content that would normally come
+     7→ * from the API has a local default so the site never shows blank areas.
+     8→ */
+     9→
+    10→import type {
+    11→  BrandAssets,
+    12→  CompanyInfo,
+    13→  NavigationItem,
+    14→  FooterContent,
+    15→  HomePageContent,
+    16→  AboutPageContent,
+    17→  ServicesPageContent,
+    18→  CareerPageContent,
+    19→  ContactPageContent,
+    20→  FaqPageContent,
+    21→  ResourcesPageContent,
+    22→  BlogPost,
+    23→  PricingPlan,
+    24→  Testimonial,
+    25→  ApiCareerJob,
+    26→  InfoPageContent,
+    27→  BlogCategory,
+    28→  PageRecord,
+    29→} from "./exxonim-types";
+    30→
+    31→/* ------------------------------------------------------------------ */
+    32→/* Routes                                                              */
+    33→/* ------------------------------------------------------------------ */
+    34→
+    35→export const routes = {
+    36→  home: "/",
+    37→  about: "/about",
+    38→  faq: "/faq",
+    39→  services: "/services",
+    40→  resources: "/resources",
+    41→  career: "/career",
+    42→  contact: "/contact",
+    43→  support: "/support",
+    44→  terms: "/terms",
+    45→  privacy: "/privacy",
+    46→  cookies: "/cookies",
+    47→  dataRights: "/data-rights",
+    48→} as const;
+    49→
+    50→/* ------------------------------------------------------------------ */
+    51→/* Brand & Company                                                     */
+    52→/* ------------------------------------------------------------------ */
+    53→
+    54→export const fallbackBrand: BrandAssets = {
+    55→  name: "Exxonim",
+    56→  lightLogoSrc: "/branding/exxonimLogoLight.webp",
+    57→  darkLogoSrc: "/branding/logo-dark.png",
+    58→};
+    59→
+    60→export const fallbackCompanyInfo: CompanyInfo = {
+    61→  name: "Exxonim Advisory",
+    62→  phones: ["+255 222 700 089", "+255 768 500 089"],
+    63→  emails: ["info@exxonim.com", "support@exxonim.com"],
+    64→  address: "Ohio Street, Exas Complex, 6th Floor, Dar es Salaam, Tanzania",
+    65→  whatsapp: "+255768500089",
+    66→};
+    67→
+    68→/* ------------------------------------------------------------------ */
+    69→/* Navigation                                                          */
+    70→/* ------------------------------------------------------------------ */
+    71→
+    72→export const fallbackNavigationItems: NavigationItem[] = [
+    73→  {
+    74→    id: 1,
+    75→    title: "Home",
+    76→    url: "/",
+    77→    description: "Exxonim homepage",
+    78→    kind: "internal",
+    79→    order: 1,
+    80→    isActive: true,
+    81→    parentId: null,
+    82→    createdAt: "2025-01-01T00:00:00Z",
+    83→    updatedAt: "2025-01-01T00:00:00Z",
+    84→    children: [],
+    85→  },
+    86→  {
+    87→    id: 2,
+    88→    title: "About",
+    89→    url: "/about",
+    90→    description: "Learn about Exxonim and our team",
+    91→    kind: "internal",
+    92→    order: 2,
+    93→    isActive: true,
+    94→    parentId: null,
+    95→    createdAt: "2025-01-01T00:00:00Z",
+    96→    updatedAt: "2025-01-01T00:00:00Z",
+    97→    children: [],
+    98→  },
+    99→  {
+   100→    id: 3,
+   101→    title: "Services",
+   102→    url: "/services",
+   103→    description: "Business advisory and compliance services",
+   104→    kind: "internal",
+   105→    order: 3,
+   106→    isActive: true,
+   107→    parentId: null,
+   108→    createdAt: "2025-01-01T00:00:00Z",
+   109→    updatedAt: "2025-01-01T00:00:00Z",
+   110→    children: [],
+   111→  },
+   112→  {
+   113→    id: 4,
+   114→    title: "Resources",
+   115→    url: "/resources",
+   116→    description: "Insights, articles and media",
+   117→    kind: "internal",
+   118→    order: 4,
+   119→    isActive: true,
+   120→    parentId: null,
+   121→    createdAt: "2025-01-01T00:00:00Z",
+   122→    updatedAt: "2025-01-01T00:00:00Z",
+   123→    children: [],
+   124→  },
+   125→  {
+   126→    id: 5,
+   127→    title: "Career",
+   128→    url: "/career",
+   129→    description: "Join the Exxonim team",
+   130→    kind: "internal",
+   131→    order: 5,
+   132→    isActive: true,
+   133→    parentId: null,
+   134→    createdAt: "2025-01-01T00:00:00Z",
+   135→    updatedAt: "2025-01-01T00:00:00Z",
+   136→    children: [],
+   137→  },
+   138→  {
+   139→    id: 6,
+   140→    title: "FAQ",
+   141→    url: "/faq",
+   142→    description: "Frequently asked questions",
+   143→    kind: "internal",
+   144→    order: 6,
+   145→    isActive: true,
+   146→    parentId: null,
+   147→    createdAt: "2025-01-01T00:00:00Z",
+   148→    updatedAt: "2025-01-01T00:00:00Z",
+   149→    children: [],
+   150→  },
+   151→  {
+   152→    id: 7,
+   153→    title: "Contact",
+   154→    url: "/contact",
+   155→    description: "Get in touch with us",
+   156→    kind: "internal",
+   157→    order: 7,
+   158→    isActive: true,
+   159→    parentId: null,
+   160→    createdAt: "2025-01-01T00:00:00Z",
+   161→    updatedAt: "2025-01-01T00:00:00Z",
+   162→    children: [],
+   163→  },
+   164→];
+   165→
+   166→/* ------------------------------------------------------------------ */
+   167→/* Footer                                                              */
+   168→/* ------------------------------------------------------------------ */
+   169→
+   170→export const fallbackFooter: FooterContent = {
+   171→  quick_links: [
+   172→    { label: "Home", href: "/" },
+   173→    { label: "About", href: "/about" },
+   174→    { label: "Services", href: "/services" },
+   175→    { label: "Resources", href: "/resources" },
+   176→    { label: "Career", href: "/career" },
+   177→    { label: "FAQ", href: "/faq" },
+   178→    { label: "Contact", href: "/contact" },
+   179→  ],
+   180→  other_resources: [
+   181→    { label: "Privacy Policy", href: "/privacy" },
+   182→    { label: "Terms of Service", href: "/terms" },
+   183→    { label: "Cookie Policy", href: "/cookies" },
+   184→    { label: "Data Rights", href: "/data-rights" },
+   185→  ],
+   186→  tagline: "Empowering businesses across Tanzania with expert advisory, compliance, and registration services.",
+   187→  primary_cta: { label: "Get Started", href: "/contact" },
+   188→  social_links: [
+   189→    { platform: "linkedin", url: "https://www.linkedin.com/company/exxonim", label: "LinkedIn", isActive: true },
+   190→    { platform: "twitter", url: "https://twitter.com/exxonim", label: "Twitter", isActive: true },
+   191→    { platform: "instagram", url: "https://instagram.com/exxonim", label: "Instagram", isActive: true },
+   192→    { platform: "facebook", url: "https://facebook.com/exxonim", label: "Facebook", isActive: true },
+   193→  ],
+   194→  copyright: `© ${new Date().getFullYear()} Exxonim Advisory. All rights reserved.`,
+   195→};
+   196→
+   197→/* ------------------------------------------------------------------ */
+   198→/* Home Page                                                           */
+   199→/* ------------------------------------------------------------------ */
+   200→
+   201→export const fallbackHomePage: PageRecord<HomePageContent> = {
+   202→  id: 1,
+   203→  title: "Home",
+   204→  slug: "home",
+   205→  isPublished: true,
+   206→  createdAt: "2025-01-01T00:00:00Z",
+   207→  updatedAt: "2025-01-01T00:00:00Z",
+   208→  content: {
+   209→    hero: {
+   210→      eyebrow: "Exxonim Advisory",
+   211→      title: "Your Trusted Business Partner in Tanzania",
+   212→      description:
+   213→        "We help local and international businesses navigate Tanzania's regulatory landscape with confidence — from company registration and licensing to tax compliance and ongoing advisory support.",
+   214→      cta: { label: "Start Your Journey", href: "/contact" },
+   215→      highlights: [
+   216→        { title: "500+", detail: "Businesses Registered" },
+   217→        { title: "98%", detail: "Compliance Success Rate" },
+   218→        { title: "10+", detail: "Years of Experience" },
+   219→      ],
+   220→    },
+   221→    provider_section: {
+   222→      kicker: "Trusted by leading organizations",
+   223→      title: "We work with businesses that shape Tanzania's future",
+   224→      logos: [
+   225→        { alt: "UTEC", src: "/clients/utec.webp" },
+   226→        { alt: "TRCS", src: "/clients/trcs.webp" },
+   227→        { alt: "Levo", src: "/clients/levo.webp" },
+   228→        { alt: "GET", src: "/clients/get.webp" },
+   229→      ],
+   230→    },
+   231→    stack_section: {
+   232→      items: [
+   233→        {
+   234→          title: "Company Registration",
+   235→          subtitle: "Business Formation",
+   236→          description:
+   237→            "End-to-end support for registering your company in Tanzania — from name search and document preparation to BRELA filing and certificate issuance.",
+   238→          ctaLabel: "Learn More",
+   239→          ctaHref: "/services",
+   240→          windowTitle: "Company Registration",
+   241→          windowTag: "Formation",
+   242→          videoSrc: "",
+   243→        },
+   244→        {
+   245→          title: "Business Licensing",
+   246→          subtitle: "License & Permits",
+   247→          description:
+   248→            "Navigate Tanzania's licensing requirements with ease. We handle business licenses, sector-specific permits, and regulatory approvals across all industries.",
+   249→          ctaLabel: "Learn More",
+   250→          ctaHref: "/services",
+   251→          windowTitle: "Business Licensing",
+   252→          windowTag: "Compliance",
+   253→          videoSrc: "",
+   254→        },
+   255→        {
+   256→          title: "Tax & Compliance",
+   257→          subtitle: "Ongoing Support",
+   258→          description:
+   259→            "Stay compliant with TRA requirements. We provide tax registration, filing support, audit preparation, and year-round advisory to keep your business on track.",
+   260→          ctaLabel: "Learn More",
+   261→          ctaHref: "/services",
+   262→          windowTitle: "Tax & Compliance",
+   263→          windowTag: "Advisory",
+   264→          videoSrc: "",
+   265→        },
+   266→      ],
+   267→      default_feature_rows: [
+   268→        {
+   269→          title: "Company Registration",
+   270→          description: "Register your business with BRELA and obtain all necessary certificates.",
+   271→          visualKey: "company-registration",
+   272→        },
+   273→        {
+   274→          title: "Business Licensing",
+   275→          description: "Secure the right licenses and permits for your industry.",
+   276→          visualKey: "business-licensing",
+   277→        },
+   278→        {
+   279→          title: "Tax Compliance",
+   280→          description: "File returns on time and stay ahead of regulatory changes.",
+   281→          visualKey: "tax-compliance",
+   282→        },
+   283→      ],
+   284→      feature_visual_content: {
+   285→        "company-registration": {
+   286→          workstreamValue: "12+ registrations per week",
+   287→          counterpartLabel: "Filing Authority",
+   288→          counterpartValue: "BRELA / Tanzania Revenue Authority",
+   289→          focusValue: "Same-day name search, 5-day incorporation",
+   290→          summaryTitle: "Fast-Track Registration",
+   291→          summaryBody:
+   292→            "Our streamlined process gets your company registered and operational faster. We handle name search, memorandum & articles, and all BRELA filings.",
+   293→        },
+   294→        "business-licensing": {
+   295→          workstreamValue: "40+ license types supported",
+   296→          counterpartLabel: "Regulatory Bodies",
+   297→          counterpartValue: "Local Government / Sector Authorities",
+   298→          focusValue: "End-to-end permit management",
+   299→          summaryTitle: "Comprehensive Licensing",
+   300→          summaryBody:
+   301→            "From general business licenses to sector-specific permits, we manage the full licensing lifecycle so you can focus on growing your business.",
+   302→        },
+   303→        "tax-compliance": {
+   304→          workstreamValue: "100% filing accuracy",
+   305→          counterpartLabel: "Tax Authority",
+   306→          counterpartValue: "Tanzania Revenue Authority (TRA)",
+   307→          focusValue: "Proactive compliance calendar",
+   308→          summaryTitle: "Always Compliant",
+   309→          summaryBody:
+   310→            "Never miss a filing deadline. Our compliance calendar and expert team ensure your tax obligations are met accurately and on time, every time.",
+   311→        },
+   312→      },
+   313→    },
+   314→    insights_section: {
+   315→      title: "Insights & Resources",
+   316→      intro:
+   317→        "Stay informed with the latest regulatory updates, business tips, and industry insights tailored for the Tanzanian market.",
+   318→      footer_copy: "Explore all resources to keep your business ahead.",
+   319→    },
+   320→  },
+   321→};
+   322→
+   323→/* ------------------------------------------------------------------ */
+   324→/* About Page                                                          */
+   325→/* ------------------------------------------------------------------ */
+   326→
+   327→export const fallbackAboutPage: PageRecord<AboutPageContent> = {
+   328→  id: 2,
+   329→  title: "About Exxonim",
+   330→  slug: "about",
+   331→  isPublished: true,
+   332→  createdAt: "2025-01-01T00:00:00Z",
+   333→  updatedAt: "2025-01-01T00:00:00Z",
+   334→  content: {
+   335→    hero: {
+   336→      eyebrow: "About Us",
+   337→      title: "Building Business Confidence in Tanzania",
+   338→      description:
+   339→        "Exxonim Advisory is a Tanzania-based business consulting firm dedicated to helping entrepreneurs and organizations start, grow, and maintain compliant operations across the country.",
+   340→    },
+   341→    company_profile: {
+   342→      eyebrow: "Who We Are",
+   343→      title: "A Team Committed to Your Success",
+   344→      paragraphs: [
+   345→        "Founded in Dar es Salaam, Exxonim Advisory has spent over a decade building deep expertise in Tanzania's business regulatory environment. We understand the challenges that businesses face — from navigating complex registration requirements to staying compliant with ever-changing tax laws.",
+   346→        "Our team of experienced consultants and legal professionals works closely with clients to provide tailored solutions that address their unique needs. Whether you are a local entrepreneur starting your first venture or an international corporation expanding into the Tanzanian market, we offer the guidance and support you need to succeed.",
+   347→        "We pride ourselves on transparency, reliability, and a genuine commitment to our clients' growth. Our track record of over 500 successful business registrations speaks to the trust our clients place in us.",
+   348→      ],
+   349→      working_style_label: "Our Approach",
+   350→      working_style:
+   351→        "We combine deep local knowledge with international best practices, delivering hands-on support that goes beyond paperwork — we become your long-term business partner.",
+   352→    },
+   353→    support_profiles_section: {
+   354→      title: "What We Stand For",
+   355→      description: "Our core principles guide every engagement.",
+   356→    },
+   357→    support_profiles: [
+   358→      {
+   359→        title: "Integrity",
+   360→        description: "We operate with complete transparency and honesty in every client interaction and regulatory engagement.",
+   361→      },
+   362→      {
+   363→        title: "Excellence",
+   364→        description: "We hold ourselves to the highest standards of accuracy and thoroughness in all our services.",
+   365→      },
+   366→      {
+   367→        title: "Client Focus",
+   368→        description: "Your success is our success. We tailor our approach to meet your specific business objectives and timeline.",
+   369→      },
+   370→      {
+   371→        title: "Innovation",
+   372→        description: "We continuously improve our processes and leverage technology to deliver faster, more efficient outcomes.",
+   373→      },
+   374→    ],
+   375→    service_scope_section: {
+   376→      title: "Our Service Scope",
+   377→      description: "Comprehensive business support across key areas.",
+   378→    },
+   379→    service_scope: [
+   380→      {
+   381→        title: "Business Registration & Formation",
+   382→        description: "Complete company incorporation services including name search, document preparation, BRELA filing, and certificate issuance for all entity types.",
+   383→      },
+   384→      {
+   385→        title: "Licensing & Permits",
+   386→        description: "Full licensing support from general business licenses to sector-specific permits and regulatory approvals across all Tanzanian industries.",
+   387→      },
+   388→      {
+   389→        title: "Tax Advisory & Compliance",
+   390→        description: "Tax registration, return filing, audit preparation, and year-round advisory to ensure full compliance with Tanzania Revenue Authority requirements.",
+   391→      },
+   392→      {
+   393→        title: "Regulatory Compliance",
+   394→        description: "Ongoing monitoring and management of compliance obligations across all relevant regulatory bodies and government agencies.",
+   395→      },
+   396→      {
+   397→        title: "Business Consulting",
+   398→        description: "Strategic advisory services for market entry, business planning, operational optimization, and organizational development.",
+   399→      },
+   400→      {
+   401→        title: "Legal Support",
+   402→        description: "Legal documentation, contract review, and liaison with legal practitioners for business-related legal matters.",
+   403→      },
+   404→    ],
+   405→    operating_model_section: {
+   406→      title: "How We Work",
+   407→      description: "Our proven four-step process ensures consistent results.",
+   408→    },
+   409→    operating_model: [
+   410→      {
+   411→        step: "01",
+   412→        title: "Discovery & Assessment",
+   413→        description: "We begin by understanding your business goals, current status, and regulatory requirements through a thorough consultation.",
+   414→      },
+   415→      {
+   416→        step: "02",
+   417→        title: "Strategy & Planning",
+   418→        description: "Based on our assessment, we develop a detailed action plan with clear timelines, deliverables, and milestones.",
+   419→      },
+   420→      {
+   421→        step: "03",
+   422→        title: "Execution & Filing",
+   423→        description: "Our team handles all document preparation, submissions, and follow-ups with relevant authorities on your behalf.",
+   424→      },
+   425→      {
+   426→        step: "04",
+   427→        title: "Ongoing Support",
+   428→        description: "We provide continuous monitoring, compliance alerts, and advisory support to keep your business on track long after the initial engagement.",
+   429→      },
+   430→    ],
+   431→    client_expectations_section: {
+   432→      title: "What Our Clients Can Expect",
+   433→      description: "Our commitment to every engagement.",
+   434→    },
+   435→    client_expectations: [
+   436→      "Clear, upfront communication about timelines and costs",
+   437→      "Dedicated consultant assigned to your account",
+   438→      "Regular progress updates throughout the engagement",
+   439→      "Proactive compliance reminders and deadline alerts",
+   440→      "Post-completion support and follow-up",
+   441→      "Complete confidentiality of all business information",
+   442→    ],
+   443→    cta: {
+   444→      title: "Ready to Get Started?",
+   445→      description:
+   446→        "Whether you're starting a new business or need help with compliance, our team is here to guide you every step of the way.",
+   447→      primary: { label: "Contact Us", href: "/contact" },
+   448→      secondary: { label: "View Our Services", href: "/services" },
+   449→    },
+   450→  },
+   451→};
+   452→
+   453→/* ------------------------------------------------------------------ */
+   454→/* Services Page                                                       */
+   455→/* ------------------------------------------------------------------ */
+   456→
+   457→export const fallbackServicesPage: PageRecord<ServicesPageContent> = {
+   458→  id: 3,
+   459→  title: "Our Services",
+   460→  slug: "services",
+   461→  isPublished: true,
+   462→  createdAt: "2025-01-01T00:00:00Z",
+   463→  updatedAt: "2025-01-01T00:00:00Z",
+   464→  content: {
+   465→    overview: {
+   466→      eyebrow: "Our Services",
+   467→      title: "Comprehensive Business Solutions for Tanzania",
+   468→      description:
+   469→        "From company formation to ongoing compliance, Exxonim provides a full spectrum of business advisory services designed to help you operate with confidence in Tanzania's regulatory environment.",
+   470→      features: [
+   471→        {
+   472→          icon: "building",
+   473→          label: "Company Registration",
+   474→          description: "Full incorporation support for all business entity types in Tanzania.",
+   475→        },
+   476→        {
+   477→          icon: "shield",
+   478→          label: "Licensing & Permits",
+   479→          description: "Navigate licensing requirements across all sectors and jurisdictions.",
+   480→        },
+   481→        {
+   482→          icon: "calculator",
+   483→          label: "Tax Compliance",
+   484→          description: "Stay compliant with TRA through accurate filing and proactive advisory.",
+   485→        },
+   486→        {
+   487→          icon: "users",
+   488→          label: "Ongoing Advisory",
+   489→          description: "Dedicated consultant support for all your business compliance needs.",
+   490→        },
+   491→      ],
+   492→    },
+   493→    catalog: {
+   494→      title: "Service Catalog",
+   495→      description: "Explore our full range of business advisory and compliance services.",
+   496→      groups: [
+   497→        {
+   498→          title: "Business Formation",
+   499→          items: [
+   500→            {
+   501→              title: "Company Registration",
+   502→              description:
+   503→                "Complete company incorporation including name search, memorandum & articles of association, BRELA filing, and certificate of incorporation.",
+   504→              cta_label: "Get Started",
+   505→              cta_href: "/contact",
+   506→            },
+   507→            {
+   508→              title: "Business Name Registration",
+   509→              description:
+   510→                "Sole proprietorship and business name registration for individual entrepreneurs and small businesses.",
+   511→              cta_label: "Get Started",
+   512→              cta_href: "/contact",
+   513→            },
+   514→            {
+   515→              title: "Foreign Company Registration",
+   516→              description:
+   517→                "Registration of foreign companies and branch offices looking to establish operations in Tanzania.",
+   518→              cta_label: "Get Started",
+   519→              cta_href: "/contact",
+   520→            },
+   521→            {
+   522→              title: "NGO & Society Registration",
+   523→              description:
+   524→                "Registration support for non-governmental organizations, societies, and other non-profit entities.",
+   525→              cta_label: "Get Started",
+   526→              cta_href: "/contact",
+   527→            },
+   528→          ],
+   529→        },
+   530→        {
+   531→          title: "Licensing & Compliance",
+   532→          items: [
+   533→            {
+   534→              title: "Business License",
+   535→              description:
+   536→                "Application and renewal of general business licenses from local government authorities.",
+   537→              cta_label: "Get Started",
+   538→              cta_href: "/contact",
+   539→            },
+   540→            {
+   541→              title: "Sector-Specific Permits",
+   542→              description:
+   543→                "Industry-specific permits including mining, telecommunications, financial services, and more.",
+   544→              cta_label: "Get Started",
+   545→              cta_href: "/contact",
+   546→            },
+   547→            {
+   548→              title: "TIN & VRN Registration",
+   549→              description:
+   550→                "Tax Identification Number and Value Added Tax registration with the Tanzania Revenue Authority.",
+   551→              cta_label: "Get Started",
+   552→              cta_href: "/contact",
+   553→            },
+   554→            {
+   555→              title: "Work Permits",
+   556→              description:
+   557→                "Work permit applications and renewals for expatriate employees and foreign directors.",
+   558→              cta_label: "Get Started",
+   559→              cta_href: "/contact",
+   560→            },
+   561→          ],
+   562→        },
+   563→        {
+   564→          title: "Tax & Financial Advisory",
+   565→          items: [
+   566→            {
+   567→              title: "Tax Return Filing",
+   568→              description:
+   569→                "Preparation and filing of all tax returns including income tax, VAT, and withholding tax.",
+   570→              cta_label: "Get Started",
+   571→              cta_href: "/contact",
+   572→            },
+   573→            {
+   574→              title: "Tax Audit Support",
+   575→              description:
+   576→                "Expert support during TRA tax audits, including documentation preparation and representation.",
+   577→              cta_label: "Get Started",
+   578→              cta_href: "/contact",
+   579→            },
+   580→            {
+   581→              title: "Transfer Pricing",
+   582→              description:
+   583→                "Transfer pricing documentation and compliance for related-party transactions.",
+   584→              cta_label: "Get Started",
+   585→              cta_href: "/contact",
+   586→            },
+   587→            {
+   588→              title: "Financial Reporting",
+   589→              description:
+   590→                "Preparation of financial statements in compliance with Tanzanian accounting standards.",
+   591→              cta_label: "Get Started",
+   592→              cta_href: "/contact",
+   593→            },
+   594→          ],
+   595→        },
+   596→        {
+   597→          title: "Ongoing Support",
+   598→          items: [
+   599→            {
+   600→              title: "Compliance Monitoring",
+   601→              description:
+   602→                "Proactive monitoring of all filing deadlines and regulatory changes affecting your business.",
+   603→              cta_label: "Get Started",
+   604→              cta_href: "/contact",
+   605→            },
+   606→            {
+   607→              title: "Annual Returns",
+   608→              description:
+   609→                "Preparation and filing of annual returns with BRELA and other regulatory bodies.",
+   610→              cta_label: "Get Started",
+   611→              cta_href: "/contact",
+   612→            },
+   613→            {
+   614→              title: "Company Secretarial",
+   615→              description:
+   616→                "Board meeting support, minute keeping, and statutory record maintenance.",
+   617→              cta_label: "Get Started",
+   618→              cta_href: "/contact",
+   619→            },
+   620→            {
+   621→              title: "Business Consulting",
+   622→              description:
+   623→                "Strategic advisory for business growth, market entry, and operational improvement.",
+   624→              cta_label: "Get Started",
+   625→              cta_href: "/contact",
+   626→            },
+   627→          ],
+   628→        },
+   629→      ],
+   630→    },
+   631→  },
+   632→};
+   633→
+   634→/* ------------------------------------------------------------------ */
+   635→/* Career Page                                                         */
+   636→/* ------------------------------------------------------------------ */
+   637→
+   638→export const fallbackCareerPage: PageRecord<CareerPageContent> = {
+   639→  id: 4,
+   640→  title: "Careers",
+   641→  slug: "career",
+   642→  isPublished: true,
+   643→  createdAt: "2025-01-01T00:00:00Z",
+   644→  updatedAt: "2025-01-01T00:00:00Z",
+   645→  content: {
+   646→    hero: {
+   647→      eyebrow: "Careers",
+   648→      title: "Join the Exxonim Team",
+   649→      description:
+   650→        "We're always looking for talented professionals who share our passion for helping businesses succeed in Tanzania. Explore opportunities to grow your career with us.",
+   651→    },
+   652→    focus_areas: [
+   653→      "Business Advisory & Consulting",
+   654→      "Tax & Compliance",
+   655→      "Legal & Regulatory Affairs",
+   656→      "Client Relations & Support",
+   657→      "Operations & Administration",
+   658→      "Technology & Innovation",
+   659→    ],
+   660→    status: {
+   661→      label: "We're Hiring",
+   662→      description:
+   663→        "We currently have open positions across multiple departments. If you're passionate about business advisory and want to make a difference, we'd love to hear from you.",
+   664→      primary: { label: "View Open Positions", href: "/career#positions" },
+   665→      secondary: { label: "Send Your CV", href: "/contact" },
+   666→    },
+   667→  },
+   668→};
+   669→
+   670→/* ------------------------------------------------------------------ */
+   671→/* Contact Page                                                        */
+   672→/* ------------------------------------------------------------------ */
+   673→
+   674→export const fallbackContactPage: PageRecord<ContactPageContent> = {
+   675→  id: 5,
+   676→  title: "Contact Us",
+   677→  slug: "contact",
+   678→  isPublished: true,
+   679→  createdAt: "2025-01-01T00:00:00Z",
+   680→  updatedAt: "2025-01-01T00:00:00Z",
+   681→  content: {
+   682→    hero: {
+   683→      eyebrow: "Contact",
+   684→      title: "Let's Start a Conversation",
+   685→      description:
+   686→        "Whether you need help with company registration, licensing, tax compliance, or any other business matter, our team is ready to assist you.",
+   687→    },
+   688→    cards: [
+   689→      {
+   690→        label: "Phone",
+   691→        value: "+255 222 700 089",
+   692→        description: "Mon–Fri, 8:00 AM – 5:00 PM EAT",
+   693→        action: { label: "Call Us", href: "tel:+255222700089" },
+   694→      },
+   695→      {
+   696→        label: "Email",
+   697→        value: "info@exxonim.com",
+   698→        description: "We typically respond within 24 hours",
+   699→        action: { label: "Send Email", href: "mailto:info@exxonim.com" },
+   700→      },
+   701→      {
+   702→        label: "Office",
+   703→        value: "Ohio Street, Exas Complex",
+   704→        description: "6th Floor, Dar es Salaam, Tanzania",
+   705→        action: { label: "Get Directions", href: "https://maps.google.com/?q=Exas+Complex+Ohio+Street+Dar+es+Salaam" },
+   706→      },
+   707→      {
+   708→        label: "WhatsApp",
+   709→        value: "+255 768 500 089",
+   710→        description: "Quick questions? Chat with us on WhatsApp",
+   711→        action: { label: "Chat Now", href: "https://wa.me/255768500089" },
+   712→      },
+   713→    ],
+   714→  },
+   715→};
+   716→
+   717→/* ------------------------------------------------------------------ */
+   718→/* FAQ Page                                                            */
+   719→/* ------------------------------------------------------------------ */
+   720→
+   721→export const fallbackFaqPage: PageRecord<FaqPageContent> = {
+   722→  id: 6,
+   723→  title: "Frequently Asked Questions",
+   724→  slug: "faq",
+   725→  isPublished: true,
+   726→  createdAt: "2025-01-01T00:00:00Z",
+   727→  updatedAt: "2025-01-01T00:00:00Z",
+   728→  content: {
+   729→    hero: {
+   730→      eyebrow: "FAQ",
+   731→      title: "Common Questions, Clear Answers",
+   732→      description:
+   733→        "Find answers to the most frequently asked questions about business registration, licensing, and compliance in Tanzania.",
+   734→    },
+   735→    items: [
+   736→      {
+   737→        question: "How long does it take to register a company in Tanzania?",
+   738→        answer:
+   739→          "The standard timeline for company registration is typically 5–7 business days after all documents are submitted. With our fast-track service, we can often complete registration within 3 business days. The process includes name search (1 day), document preparation (1–2 days), and BRELA filing and certificate issuance (2–4 days).",
+   740→      },
+   741→      {
+   742→        question: "What documents do I need to register a company?",
+   743→        answer:
+   744→          "For a limited liability company, you'll need: proposed company names (at least 3 options), director and shareholder details (names, addresses, ID copies), memorandum and articles of association, Form 1A (application for registration), and the prescribed filing fees. Our team will guide you through preparing all necessary documentation.",
+   745→      },
+   746→      {
+   747→        question: "Do I need a business license to operate in Tanzania?",
+   748→        answer:
+   749→          "Yes, all businesses operating in Tanzania must obtain a business license from the local government authority where the business is located. Additional sector-specific permits may also be required depending on your industry. We handle the entire licensing process for our clients.",
+   750→      },
+   751→      {
+   752→        question: "What is TIN and do I need one?",
+   753→        answer:
+   754→          "A Tax Identification Number (TIN) is a unique identifier issued by the Tanzania Revenue Authority (TRA). It is required for all registered businesses and must be used in all tax-related transactions. We assist with TIN registration as part of our company registration package or as a standalone service.",
+   755→      },
+   756→      {
+   757→        question: "What is VRN and when is it required?",
+   758→        answer:
+   759→          "A Value Added Tax Registration Number (VRN) is required for businesses with an annual turnover exceeding TZS 100 million. Businesses below this threshold may register voluntarily. VRN registration is done through TRA, and we handle the entire application process.",
+   760→      },
+   761→      {
+   762→        question: "Can a foreigner register a company in Tanzania?",
+   763→        answer:
+   764→          "Yes, foreigners can register companies in Tanzania. However, there are specific requirements including minimum capital thresholds for foreign-owned companies (typically USD 100,000 for wholly foreign-owned entities). We specialize in assisting international clients with the registration process and can advise on the most suitable entity structure.",
+   765→      },
+   766→      {
+   767→        question: "How much does company registration cost?",
+   768→        answer:
+   769→          "Costs vary depending on the type of entity and specific requirements. Our fees cover all government charges, professional fees, and incidental costs. We provide transparent, upfront pricing after understanding your specific needs. Contact us for a detailed quote.",
+   770→      },
+   771→      {
+   772→        question: "Do you provide ongoing compliance support?",
+   773→        answer:
+   774→          "Yes, we offer comprehensive ongoing compliance support including tax return filing, annual return preparation, regulatory deadline monitoring, and general advisory. Our retainer packages are designed to give you peace of mind knowing that your compliance obligations are being handled by experts.",
+   775→      },
+   776→      {
+   777→        question: "What is the difference between BRELA and TRA?",
+   778→        answer:
+   779→          "BRELA (Business Registration and Licensing Agency) handles company registration, business names, and intellectual property. TRA (Tanzania Revenue Authority) handles all tax-related matters including TIN, VAT, income tax, and customs. Both agencies are important for business compliance, and we work with both on your behalf.",
+   780→      },
+   781→      {
+   782→        question: "How do I get started with Exxonim?",
+   783→        answer:
+   784→          "Simply contact us through our website, phone, email, or WhatsApp. We'll schedule an initial consultation to understand your needs and provide a clear action plan with timelines and costs. There's no obligation — we're happy to discuss your requirements before you commit.",
+   785→      },
+   786→    ],
+   787→  },
+   788→};
+   789→
+   790→/* ------------------------------------------------------------------ */
+   791→/* Resources Page                                                      */
+   792→/* ------------------------------------------------------------------ */
+   793→
+   794→export const fallbackResourcesPage: PageRecord<ResourcesPageContent> = {
+   795→  id: 7,
+   796→  title: "Resources & Insights",
+   797→  slug: "resources",
+   798→  isPublished: true,
+   799→  createdAt: "2025-01-01T00:00:00Z",
+   800→  updatedAt: "2025-01-01T00:00:00Z",
+   801→  content: {
+   802→    hero_title: "Resources & Insights",
+   803→    trending_label: "Trending",
+   804→    top_media: {
+   805→      youtube_url: "https://www.youtube.com/@exxonim",
+   806→      podcast_url: "https://anchor.fm/exxonim",
+   807→    },
+   808→    article_sidebar: {
+   809→      title: "Need Expert Guidance?",
+   810→      description:
+   811→        "Our consultants are ready to help you navigate Tanzania's business landscape with confidence.",
+   812→      primary_cta: { label: "Book a Consultation", href: "/contact" },
+   813→    },
+   814→    empty_state: {
+   815→      title: "No articles yet",
+   816→      description: "Check back soon for insightful articles and resources about doing business in Tanzania.",
+   817→    },
+   818→  },
+   819→};
+   820→
+   821→/* ------------------------------------------------------------------ */
+   822→/* Blog Posts                                                          */
+   823→/* ------------------------------------------------------------------ */
+   824→
+   825→export const fallbackBlogPosts: BlogPost[] = [
+   826→  {
+   827→    id: 1,
+   828→    slug: "guide-to-company-registration-in-tanzania",
+   829→    title: "The Complete Guide to Company Registration in Tanzania",
+   830→    excerpt:
+   831→      "Everything you need to know about registering a company in Tanzania, from choosing the right entity type to navigating BRELA requirements.",
+   832→    publishedAt: "2025-01-15T00:00:00Z",
+   833→    category: { id: "guides", label: "Guides", description: "Step-by-step business guides" },
+   834→    mediaLabel: "Article",
+   835→    featuredSlot: "main",
+   836→    featuredOnHome: true,
+   837→    relatedSlugs: ["tanzania-business-license-requirements", "tin-registration-guide"],
+   838→    author: { name: "Exxonim Team", role: "Business Advisory" },
+   839→    content: {
+   840→      introduction:
+   841→        "Registering a company in Tanzania is a critical first step for any entrepreneur or business looking to operate legally in the country. This comprehensive guide walks you through every step of the process.",
+   842→      highlights: [
+   843→        "Tanzania offers several entity types including limited liability companies, partnerships, and sole proprietorships",
+   844→        "The registration process is managed by BRELA (Business Registration and Licensing Agency)",
+   845→        "Foreign investors can register companies but must meet minimum capital requirements",
+   846→        "Post-registration compliance including TIN and business license is mandatory",
+   847→      ],
+   848→      sections: [
+   849→        {
+   850→          heading: "Choosing the Right Entity Type",
+   851→          paragraphs: [
+   852→            "The most common business entity in Tanzania is the Limited Liability Company (LLC), which provides liability protection for shareholders. Other options include public limited companies, partnerships, and sole proprietorships. The right choice depends on your business size, ownership structure, and growth plans.",
+   853→          ],
+   854→        },
+   855→        {
+   856→          heading: "The Registration Process",
+   857→          paragraphs: [
+   858→            "Company registration in Tanzania involves several key steps: name search and reservation, preparation of memorandum and articles of association, completion of registration forms, and submission to BRELA. The entire process typically takes 5–7 business days when all documents are in order.",
+   859→          ],
+   860→        },
+   861→        {
+   862→          heading: "Post-Registration Requirements",
+   863→          paragraphs: [
+   864→            "After registration, you'll need to obtain a Tax Identification Number (TIN) from TRA, register for VAT if applicable, and apply for a business license from your local government authority. These are mandatory for operating legally in Tanzania.",
+   865→          ],
+   866→        },
+   867→      ],
+   868→    },
+   869→  },
+   870→  {
+   871→    id: 2,
+   872→    slug: "tanzania-business-license-requirements",
+   873→    title: "Understanding Business License Requirements in Tanzania",
+   874→    excerpt:
+   875→      "A detailed overview of the licensing landscape in Tanzania, including when you need a license, types of licenses, and how to apply.",
+   876→    publishedAt: "2025-02-01T00:00:00Z",
+   877→    category: { id: "compliance", label: "Compliance", description: "Regulatory compliance articles" },
+   878→    mediaLabel: "Article",
+   879→    featuredSlot: "side",
+   880→    featuredOnHome: true,
+   881→    relatedSlugs: ["guide-to-company-registration-in-tanzania", "tin-registration-guide"],
+   882→    author: { name: "Exxonim Team", role: "Business Advisory" },
+   883→    content: {
+   884→      introduction:
+   885→        "Operating a business in Tanzania without the proper licenses can result in significant penalties. This article explains the licensing requirements and how to stay compliant.",
+   886→      highlights: [
+   887→        "Every business in Tanzania must hold a valid business license",
+   888→        "Additional sector-specific permits may be required",
+   889→        "Business licenses must be renewed annually",
+   890→        "Operating without a license carries fines and potential closure",
+   891→      ],
+   892→      sections: [
+   893→        {
+   894→          heading: "Types of Business Licenses",
+   895→          paragraphs: [
+   896→            "Tanzania has two main categories of business licenses: the general business license issued by local government authorities, and sector-specific permits issued by relevant regulatory bodies. Most businesses need both a general license and any applicable sector permits.",
+   897→          ],
+   898→        },
+   899→        {
+   900→          heading: "Application Process",
+   901→          paragraphs: [
+   902→            "Business license applications are submitted to the local government authority where your business is located. You'll need your certificate of incorporation, TIN certificate, and any sector-specific prerequisites. Processing times vary by location and license type.",
+   903→          ],
+   904→        },
+   905→      ],
+   906→    },
+   907→  },
+   908→  {
+   909→    id: 3,
+   910→    slug: "tin-registration-guide",
+   911→    title: "TIN Registration in Tanzania: A Step-by-Step Guide",
+   912→    excerpt:
+   913→      "Learn how to register for a Tax Identification Number with TRA, including required documents and common pitfalls to avoid.",
+   914→    publishedAt: "2025-02-15T00:00:00Z",
+   915→    category: { id: "tax", label: "Tax", description: "Tax advisory articles" },
+   916→    mediaLabel: "Article",
+   917→    featuredOnHome: false,
+   918→    relatedSlugs: ["guide-to-company-registration-in-tanzania", "tanzania-business-license-requirements"],
+   919→    author: { name: "Exxonim Team", role: "Business Advisory" },
+   920→    content: {
+   921→      introduction:
+   922→        "A Tax Identification Number (TIN) is essential for conducting business in Tanzania. This guide covers everything you need to know about the TIN registration process.",
+   923→      highlights: [
+   924→        "TIN is mandatory for all registered businesses",
+   925→        "Registration is free and done through TRA",
+   926→        "Both companies and individuals can obtain a TIN",
+   927→        "TIN must be quoted on all tax-related documents",
+   928→      ],
+   929→      sections: [
+   930→        {
+   931→          heading: "What is a TIN?",
+   932→          paragraphs: [
+   933→            "A Tax Identification Number is a unique identifier assigned by the Tanzania Revenue Authority to taxpayers. It is used for all tax transactions including filing returns, paying taxes, and correspondence with TRA.",
+   934→          ],
+   935→        },
+   936→        {
+   937→          heading: "Registration Steps",
+   938→          paragraphs: [
+   939→            "To register for a TIN, visit your nearest TRA office with your certificate of incorporation, director identification documents, and a completed TIN application form. Online registration is also available through the TRA portal. Processing typically takes 1–3 business days.",
+   940→          ],
+   941→        },
+   942→      ],
+   943→    },
+   944→  },
+   945→  {
+   946→    id: 4,
+   947→    slug: "foreign-investment-tanzania-2025",
+   948→    title: "Foreign Investment in Tanzania: What You Need to Know in 2025",
+   949→    excerpt:
+   950→      "Key updates and considerations for international investors looking to establish operations in Tanzania this year.",
+   951→    publishedAt: "2025-03-01T00:00:00Z",
+   952→    category: { id: "insights", label: "Insights", description: "Industry insights and analysis" },
+   953→    mediaLabel: "Article",
+   954→    featuredOnHome: false,
+   955→    relatedSlugs: ["guide-to-company-registration-in-tanzania"],
+   956→    author: { name: "Exxonim Team", role: "Business Advisory" },
+   957→    content: {
+   958→      introduction:
+   959→        "Tanzania continues to be an attractive destination for foreign investment in East Africa. Here's what international investors should know about the current regulatory environment.",
+   960→      highlights: [
+   961→        "Minimum capital requirement for wholly foreign-owned companies is USD 100,000",
+   962→        "New investment incentives available through TIC (Tanzania Investment Centre)",
+   963→        "Sector-specific regulations may impose additional requirements",
+   964→        "Partnership with local firms can simplify market entry",
+   965→      ],
+   966→      sections: [
+   967→        {
+   968→          heading: "Regulatory Framework",
+   969→          paragraphs: [
+   970→            "Foreign investment in Tanzania is governed by the Tanzania Investment Act and various sector-specific regulations. The Tanzania Investment Centre (TIC) serves as the primary agency for facilitating foreign investment and offers various incentives for qualifying projects.",
+   971→          ],
+   972→        },
+   973→      ],
+   974→    },
+   975→  },
+   976→];
+   977→
+   978→/* ------------------------------------------------------------------ */
+   979→/* Blog Categories                                                     */
+   980→/* ------------------------------------------------------------------ */
+   981→
+   982→export const fallbackBlogCategories: BlogCategory[] = [
+   983→  { id: "guides", label: "Guides", description: "Step-by-step business guides" },
+   984→  { id: "compliance", label: "Compliance", description: "Regulatory compliance articles" },
+   985→  { id: "tax", label: "Tax", description: "Tax advisory articles" },
+   986→  { id: "insights", label: "Insights", description: "Industry insights and analysis" },
+   987→  { id: "news", label: "News", description: "Latest business news and updates" },
+   988→];
+   989→
+   990→/* ------------------------------------------------------------------ */
+   991→/* Pricing Plans                                                       */
+   992→/* ------------------------------------------------------------------ */
+   993→
+   994→export const fallbackPricingPlans: PricingPlan[] = [
+   995→  {
+   996→    id: 1,
+   997→    name: "Starter",
+   998→    badge: "",
+   999→    description: "Essential services for new businesses getting started in Tanzania.",
+  1000→    notes: "Ideal for sole proprietors and small businesses",
+  1001→    recommended: false,
+  1002→    features: [
+  1003→      { label: "Company Name Search", included: true },
+  1004→      { label: "Company Registration", included: true },
+  1005→      { label: "TIN Registration", included: true },
+  1006→      { label: "Business License Application", included: true },
+  1007→      { label: "VAT Registration", included: false },
+  1008→      { label: "Annual Return Filing", included: false },
+  1009→      { label: "Tax Return Filing", included: false },
+  1010→      { label: "Dedicated Consultant", included: false },
+  1011→      { label: "Compliance Monitoring", included: false },
+  1012→    ],
+  1013→  },
+  1014→  {
+  1015→    id: 2,
+  1016→    name: "Professional",
+  1017→    badge: "Most Popular",
+  1018→    description: "Comprehensive support for growing businesses that need ongoing compliance assistance.",
+  1019→    notes: "Best value for established businesses",
+  1020→    recommended: true,
+  1021→    features: [
+  1022→      { label: "Company Name Search", included: true },
+  1023→      { label: "Company Registration", included: true },
+  1024→      { label: "TIN Registration", included: true },
+  1025→      { label: "Business License Application", included: true },
+  1026→      { label: "VAT Registration", included: true },
+  1027→      { label: "Annual Return Filing", included: true },
+  1028→      { label: "Tax Return Filing", included: true },
+  1029→      { label: "Dedicated Consultant", included: false },
+  1030→      { label: "Compliance Monitoring", included: false },
+  1031→    ],
+  1032→  },
+  1033→  {
+  1034→    id: 3,
+  1035→    name: "Enterprise",
+  1036→    badge: "Premium",
+  1037→    description: "Full-service advisory with dedicated support for complex business operations.",
+  1038→    notes: "For businesses requiring comprehensive ongoing support",
+  1039→    recommended: false,
+  1040→    features: [
+  1041→      { label: "Company Name Search", included: true },
+  1042→      { label: "Company Registration", included: true },
+  1043→      { label: "TIN Registration", included: true },
+  1044→      { label: "Business License Application", included: true },
+  1045→      { label: "VAT Registration", included: true },
+  1046→      { label: "Annual Return Filing", included: true },
+  1047→      { label: "Tax Return Filing", included: true },
+  1048→      { label: "Dedicated Consultant", included: true },
+  1049→      { label: "Compliance Monitoring", included: true },
+  1050→    ],
+  1051→  },
+  1052→];
+  1053→
+  1054→/* ------------------------------------------------------------------ */
+  1055→/* Testimonials                                                        */
+  1056→/* ------------------------------------------------------------------ */
+  1057→
+  1058→export const fallbackTestimonials: Testimonial[] = [
+  1059→  {
+  1060→    id: 1,
+  1061→    eyebrow: "Business Registration",
+  1062→    headline: "Exxonim made company registration effortless",
+  1063→    support: "From name search to certificate in just 5 days",
+  1064→    quote:
+  1065→      "I was amazed at how smooth the registration process was with Exxonim. They handled everything from name search to filing with BRELA, and I had my certificate of incorporation within a week. Their team was responsive and kept me informed at every step.",
+  1066→    name: "Amina Mbwana",
+  1067→    role: "Founder, Mbwana Consulting",
+  1068→    initials: "AM",
+  1069→  },
+  1070→  {
+  1071→    id: 2,
+  1072→    eyebrow: "Tax Compliance",
+  1073→    headline: "Reliable tax support I can count on",
+  1074→    support: "Zero missed deadlines for three consecutive years",
+  1075→    quote:
+  1076→      "Before working with Exxonim, I was always stressed about tax deadlines and compliance requirements. Since switching to their professional package, I haven't missed a single filing. Their compliance calendar and proactive reminders are a game-changer.",
+  1077→    name: "James Katura",
+  1078→    role: "Director, Katura Enterprises",
+  1079→    initials: "JK",
+  1080→  },
+  1081→  {
+  1082→    id: 3,
+  1083→    eyebrow: "Foreign Investment",
+  1084→    headline: "The perfect partner for entering the Tanzanian market",
+  1085→    support: "Full regulatory support for our East Africa expansion",
+  1086→    quote:
+  1087→      "As a foreign company, navigating Tanzania's regulatory landscape seemed daunting. Exxonim guided us through every step — from company registration to licensing and tax compliance. Their deep local knowledge and professional approach gave us the confidence to invest here.",
+  1088→    name: "Sarah Mitchell",
+  1089→    role: "Regional Director, AfriConnect Ltd",
+  1090→    initials: "SM",
+  1091→  },
+  1092→];
+  1093→
+  1094→/* ------------------------------------------------------------------ */
+  1095→/* Jobs                                                                */
+  1096→/* ------------------------------------------------------------------ */
+  1097→
+  1098→export const fallbackJobs: ApiCareerJob[] = [
+  1099→  {
+  1100→    id: 1,
+  1101→    title: "Business Advisory Consultant",
+  1102→    slug: "business-advisory-consultant",
+  1103→    department: "Advisory",
+  1104→    employment_type: "Full-time",
+  1105→    location_mode: "On-site",
+  1106→    city: "Dar es Salaam",
+  1107→    country: "Tanzania",
+  1108→    compensation_label: "Competitive",
+  1109→    experience_label: "3–5 years",
+  1110→    summary:
+  1111→      "Join our advisory team to help clients navigate Tanzania's business regulatory environment. You'll work on company registrations, licensing, and compliance projects.",
+  1112→    description:
+  1113→      "We are looking for an experienced Business Advisory Consultant to join our growing team. You will be responsible for managing client engagements from initial consultation through to completion, ensuring all regulatory requirements are met accurately and on time.",
+  1114→    requirements: [
+  1115→      "Bachelor's degree in Business, Law, or related field",
+  1116→      "3–5 years of experience in business advisory or corporate services",
+  1117→      "Deep knowledge of Tanzanian business registration and licensing processes",
+  1118→      "Strong communication and client management skills",
+  1119→      "Attention to detail and ability to manage multiple engagements simultaneously",
+  1120→    ],
+  1121→    responsibilities: [
+  1122→      "Manage client engagements from consultation to completion",
+  1123→      "Prepare and file regulatory documents with BRELA, TRA, and other agencies",
+  1124→      "Provide expert advice on business formation and compliance matters",
+  1125→      "Maintain up-to-date knowledge of regulatory changes",
+  1126→      "Build and maintain strong client relationships",
+  1127→    ],
+  1128→    status: "open",
+  1129→    is_published: true,
+  1130→    published_at: "2025-01-15T00:00:00Z",
+  1131→    created_at: "2025-01-10T00:00:00Z",
+  1132→    updated_at: "2025-01-15T00:00:00Z",
+  1133→  },
+  1134→  {
+  1135→    id: 2,
+  1136→    title: "Tax Compliance Officer",
+  1137→    slug: "tax-compliance-officer",
+  1138→    department: "Tax & Compliance",
+  1139→    employment_type: "Full-time",
+  1140→    location_mode: "On-site",
+  1141→    city: "Dar es Salaam",
+  1142→    country: "Tanzania",
+  1143→    compensation_label: "Competitive",
+  1144→    experience_label: "2–4 years",
+  1145→    summary:
+  1146→      "Help our clients stay compliant with TRA requirements through accurate tax filing, audit support, and proactive advisory.",
+  1147→    description:
+  1148→      "We are seeking a Tax Compliance Officer to join our tax and compliance department. You will handle tax return preparation, filing, and provide ongoing compliance support to our diverse client base.",
+  1149→    requirements: [
+  1150→      "Bachelor's degree in Accounting, Finance, or related field",
+  1151→      "2–4 years of experience in tax compliance or accounting",
+  1152→      "Knowledge of Tanzanian tax laws and TRA procedures",
+  1153→      "CPA or equivalent certification preferred",
+  1154→      "Proficiency in accounting software and MS Office",
+  1155→    ],
+  1156→    responsibilities: [
+  1157→      "Prepare and file tax returns for individual and corporate clients",
+  1158→      "Monitor compliance deadlines and send proactive reminders",
+  1159→      "Assist with tax audit preparation and representation",
+  1160→      "Advise clients on tax planning and optimization strategies",
+  1161→      "Maintain accurate client records and documentation",
+  1162→    ],
+  1163→    status: "open",
+  1164→    is_published: true,
+  1165→    published_at: "2025-02-01T00:00:00Z",
+  1166→    created_at: "2025-01-25T00:00:00Z",
+  1167→    updated_at: "2025-02-01T00:00:00Z",
+  1168→  },
+  1169→  {
+  1170→    id: 3,
+  1171→    title: "Client Relations Associate",
+  1172→    slug: "client-relations-associate",
+  1173→    department: "Client Relations",
+  1174→    employment_type: "Full-time",
+  1175→    location_mode: "Hybrid",
+  1176→    city: "Dar es Salaam",
+  1177→    country: "Tanzania",
+  1178→    compensation_label: "Competitive",
+  1179→    experience_label: "1–3 years",
+  1180→    summary:
+  1181→      "Be the first point of contact for our clients, ensuring exceptional service and smooth onboarding experiences.",
+  1182→    description:
+  1183→      "We are looking for a Client Relations Associate to manage client communications, onboarding, and ongoing relationship management. This role is perfect for someone who is passionate about customer service and business development.",
+  1184→    requirements: [
+  1185→      "Bachelor's degree in Business Administration or related field",
+  1186→      "1–3 years of experience in client services or business development",
+  1187→      "Excellent communication and interpersonal skills",
+  1188→      "Proficiency in CRM tools and MS Office",
+  1189→      "Fluency in English and Swahili",
+  1190→    ],
+  1191→    responsibilities: [
+  1192→      "Serve as the primary point of contact for assigned clients",
+  1193→      "Manage client onboarding and documentation processes",
+  1194→      "Coordinate with advisory teams to ensure timely service delivery",
+  1195→      "Handle client inquiries and resolve issues promptly",
+  1196→      "Contribute to business development through client referrals",
+  1197→    ],
+  1198→    status: "open",
+  1199→    is_published: true,
+  1200→    published_at: "2025-02-15T00:00:00Z",
+  1201→    created_at: "2025-02-10T00:00:00Z",
+  1202→    updated_at: "2025-02-15T00:00:00Z",
+  1203→  },
+  1204→];
+  1205→
+  1206→/* ------------------------------------------------------------------ */
+  1207→/* Info Pages — Privacy, Terms, Cookies, Data Rights                   */
+  1208→/* ------------------------------------------------------------------ */
+  1209→
+  1210→export const fallbackPrivacyPage: PageRecord<InfoPageContent> = {
+  1211→  id: 10,
+  1212→  title: "Privacy Policy",
+  1213→  slug: "privacy",
+  1214→  isPublished: true,
+  1215→  createdAt: "2025-01-01T00:00:00Z",
+  1216→  updatedAt: "2025-01-01T00:00:00Z",
+  1217→  content: {
+  1218→    hero: {
+  1219→      eyebrow: "Legal",
+  1220→      title: "Privacy Policy",
+  1221→      description: "Your privacy is important to us. This policy explains how Exxonim Advisory collects, uses, and protects your personal information.",
+  1222→    },
+  1223→    sections: [
+  1224→      {
+  1225→        title: "Information We Collect",
+  1226→        paragraphs: [
+  1227→          "We collect information you provide directly to us, such as when you fill out a contact form, request a consultation, or communicate with us by email or phone. This may include your name, email address, phone number, company name, and the nature of your inquiry.",
+  1228→          "We also collect certain information automatically when you visit our website, including your IP address, browser type, operating system, referring URLs, and information about how you interact with our website.",
+  1229→        ],
+  1230→      },
+  1231→      {
+  1232→        title: "How We Use Your Information",
+  1233→        paragraphs: [
+  1234→          "We use the information we collect to provide, maintain, and improve our services, communicate with you about your inquiries and engagements, send you important updates about regulatory changes that may affect your business, and comply with legal obligations.",
+  1235→        ],
+  1236→        bullets: [
+  1237→          "To respond to your inquiries and provide requested services",
+  1238→          "To send you updates about regulatory changes and deadlines",
+  1239→          "To improve our website and services",
+  1240→          "To comply with legal and regulatory requirements",
+  1241→          "To protect against fraud and unauthorized activity",
+  1242→        ],
+  1243→      },
+  1244→      {
+  1245→        title: "Information Sharing",
+  1246→        paragraphs: [
+  1247→          "We do not sell, trade, or rent your personal information to third parties. We may share your information with trusted third parties who assist us in operating our business, provided they agree to keep this information confidential.",
+  1248→          "We may also disclose your information when required by law, regulation, or legal process, or when we believe disclosure is necessary to protect our rights or the safety of others.",
+  1249→        ],
+  1250→      },
+  1251→      {
+  1252→        title: "Data Security",
+  1253→        paragraphs: [
+  1254→          "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.",
+  1255→        ],
+  1256→      },
+  1257→      {
+  1258→        title: "Data Retention",
+  1259→        paragraphs: [
+  1260→          "We retain your personal information for as long as necessary to fulfill the purposes outlined in this privacy policy, unless a longer retention period is required by law. For client engagement records, we retain information for the duration of the engagement plus seven years for regulatory compliance purposes.",
+  1261→        ],
+  1262→      },
+  1263→      {
+  1264→        title: "Changes to This Policy",
+  1265→        paragraphs: [
+  1266→          "We may update this privacy policy from time to time. We will notify you of any changes by posting the new privacy policy on this page and updating the 'Last Updated' date. Your continued use of our services after changes are posted constitutes acceptance of the updated policy.",
+  1267→        ],
+  1268→      },
+  1269→    ],
+  1270→    next_step: {
+  1271→      title: "Questions About Your Privacy?",
+  1272→      description: "If you have questions or concerns about how we handle your data, we're here to help.",
+  1273→      primary_action: { label: "Contact Us", href: "/contact" },
+  1274→      secondary_action: { label: "View Cookie Policy", href: "/cookies" },
+  1275→    },
+  1276→  },
+  1277→};
+  1278→
+  1279→export const fallbackCookiePage: PageRecord<InfoPageContent> = {
+  1280→  id: 11,
+  1281→  title: "Cookie Policy",
+  1282→  slug: "cookies",
+  1283→  isPublished: true,
+  1284→  createdAt: "2025-01-01T00:00:00Z",
+  1285→  updatedAt: "2025-01-01T00:00:00Z",
+  1286→  content: {
+  1287→    hero: {
+  1288→      eyebrow: "Legal",
+  1289→      title: "Cookie Policy",
+  1290→      description: "This policy explains how Exxonim Advisory uses cookies and similar technologies on our website.",
+  1291→    },
+  1292→    sections: [
+  1293→      {
+  1294→        title: "What Are Cookies?",
+  1295→        paragraphs: [
+  1296→          "Cookies are small text files that are placed on your device when you visit our website. They help us improve your browsing experience, understand how you use our site, and remember your preferences.",
+  1297→        ],
+  1298→      },
+  1299→      {
+  1300→        title: "Types of Cookies We Use",
+  1301→        paragraphs: [
+  1302→          "We use the following types of cookies on our website:",
+  1303→        ],
+  1304→        bullets: [
+  1305→          "Essential cookies — Required for the website to function properly",
+  1306→          "Analytics cookies — Help us understand how visitors interact with our website",
+  1307→          "Preference cookies — Remember your settings and preferences",
+  1308→          "Marketing cookies — Used to deliver relevant content and advertisements",
+  1309→        ],
+  1310→      },
+  1311→      {
+  1312→        title: "Managing Cookies",
+  1313→        paragraphs: [
+  1314→          "You can control and manage cookies in your browser settings. Most browsers allow you to refuse or accept cookies, delete existing cookies, and set preferences for certain websites. Please note that disabling certain cookies may affect the functionality of our website.",
+  1315→        ],
+  1316→      },
+  1317→      {
+  1318→        title: "Third-Party Cookies",
+  1319→        paragraphs: [
+  1320→          "Some cookies are placed by third-party services that appear on our pages. We do not control these cookies and recommend reviewing the privacy policies of these third-party providers for more information about their use of cookies.",
+  1321→        ],
+  1322→      },
+  1323→    ],
+  1324→    next_step: {
+  1325→      title: "Have Questions About Cookies?",
+  1326→      description: "If you'd like to learn more about how we use cookies, please reach out.",
+  1327→      primary_action: { label: "Contact Us", href: "/contact" },
+  1328→      secondary_action: { label: "View Privacy Policy", href: "/privacy" },
+  1329→    },
+  1330→  },
+  1331→};
+  1332→
+  1333→export const fallbackDataRightsPage: PageRecord<InfoPageContent> = {
+  1334→  id: 12,
+  1335→  title: "Your Data Rights",
+  1336→  slug: "data-rights",
+  1337→  isPublished: true,
+  1338→  createdAt: "2025-01-01T00:00:00Z",
+  1339→  updatedAt: "2025-01-01T00:00:00Z",
+  1340→  content: {
+  1341→    hero: {
+  1342→      eyebrow: "Legal",
+  1343→      title: "Your Data Rights",
+  1344→      description: "Understand your rights regarding the personal data we hold about you and how to exercise them.",
+  1345→    },
+  1346→    sections: [
+  1347→      {
+  1348→        title: "Your Rights",
+  1349→        paragraphs: [
+  1350→          "You have the following rights regarding your personal data:",
+  1351→        ],
+  1352→        bullets: [
+  1353→          "Right to access — Request a copy of the personal data we hold about you",
+  1354→          "Right to rectification — Request correction of inaccurate or incomplete data",
+  1355→          "Right to erasure — Request deletion of your personal data in certain circumstances",
+  1356→          "Right to restriction — Request that we restrict processing of your data",
+  1357→          "Right to data portability — Request your data in a structured, machine-readable format",
+  1358→          "Right to object — Object to processing of your data for certain purposes",
+  1359→          "Right to withdraw consent — Withdraw consent where processing is based on consent",
+  1360→        ],
+  1361→      },
+  1362→      {
+  1363→        title: "How to Exercise Your Rights",
+  1364→        paragraphs: [
+  1365→          "To exercise any of these rights, please contact us using the details provided on our contact page. We will respond to your request within 30 days. We may need to verify your identity before processing your request.",
+  1366→        ],
+  1367→      },
+  1368→      {
+  1369→        title: "Complaints",
+  1370→        paragraphs: [
+  1371→          "If you believe that your data rights have been violated, you have the right to lodge a complaint with the relevant data protection authority. In Tanzania, this would be the applicable regulatory body overseeing data protection matters.",
+  1372→        ],
+  1373→      },
+  1374→    ],
+  1375→    next_step: {
+  1376→      title: "Need Help Exercising Your Rights?",
+  1377→      description: "Our team is ready to assist you with any data-related requests or concerns.",
+  1378→      primary_action: { label: "Contact Us", href: "/contact" },
+  1379→      secondary_action: { label: "View Privacy Policy", href: "/privacy" },
+  1380→    },
+  1381→  },
+  1382→};
+  1383→
+  1384→export const fallbackTermsPage: PageRecord<InfoPageContent> = {
+  1385→  id: 13,
+  1386→  title: "Terms of Service",
+  1387→  slug: "terms",
+  1388→  isPublished: true,
+  1389→  createdAt: "2025-01-01T00:00:00Z",
+  1390→  updatedAt: "2025-01-01T00:00:00Z",
+  1391→  content: {
+  1392→    hero: {
+  1393→      eyebrow: "Legal",
+  1394→      title: "Terms of Service",
+  1395→      description: "These terms govern your use of Exxonim Advisory's website and services. Please read them carefully.",
+  1396→    },
+  1397→    sections: [
+  1398→      {
+  1399→        title: "Acceptance of Terms",
+  1400→        paragraphs: [
+  1401→          "By accessing our website or engaging our services, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you should not use our website or services.",
+  1402→        ],
+  1403→      },
+  1404→      {
+  1405→        title: "Services",
+  1406→        paragraphs: [
+  1407→          "Exxonim Advisory provides business advisory, registration, licensing, and compliance services as described on our website and in individual service agreements. The specific scope, deliverables, and fees for each engagement will be outlined in a separate service agreement or proposal.",
+  1408→        ],
+  1409→      },
+  1410→      {
+  1411→        title: "Client Responsibilities",
+  1412→        paragraphs: [
+  1413→          "As a client, you are responsible for:",
+  1414→        ],
+  1415→        bullets: [
+  1416→          "Providing accurate and complete information required for our services",
+  1417→          "Responding to requests for information or approval in a timely manner",
+  1418→          "Paying all fees as agreed in your service agreement",
+  1419→          "Informing us of any changes that may affect the services being provided",
+  1420→          "Complying with all applicable laws and regulations relevant to your business",
+  1421→        ],
+  1422→      },
+  1423→      {
+  1424→        title: "Limitation of Liability",
+  1425→        paragraphs: [
+  1426→          "Exxonim Advisory provides advisory and filing services based on the information provided by clients and current regulatory requirements. While we strive for accuracy and completeness, we cannot guarantee specific outcomes from regulatory authorities. Our liability is limited to the fees paid for the specific service in question.",
+  1427→        ],
+  1428→      },
+  1429→      {
+  1430→        title: "Confidentiality",
+  1431→        paragraphs: [
+  1432→          "We maintain strict confidentiality regarding all client information and business matters. We will not disclose any confidential information to third parties without your prior written consent, except as required by law or regulation.",
+  1433→        ],
+  1434→      },
+  1435→      {
+  1436→        title: "Intellectual Property",
+  1437→        paragraphs: [
+  1438→          "All content on this website, including text, graphics, logos, and images, is the property of Exxonim Advisory or its content suppliers and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.",
+  1439→        ],
+  1440→      },
+  1441→      {
+  1442→        title: "Governing Law",
+  1443→        paragraphs: [
+  1444→          "These Terms of Service are governed by and construed in accordance with the laws of the United Republic of Tanzania. Any disputes arising from these terms or our services shall be resolved through the courts of Tanzania.",
+  1445→        ],
+  1446→      },
+  1447→    ],
+  1448→    next_step: {
+  1449→      title: "Questions About Our Terms?",
+  1450→      description: "If you have questions about these terms or need clarification, please get in touch.",
+  1451→      primary_action: { label: "Contact Us", href: "/contact" },
+  1452→      secondary_action: { label: "View Privacy Policy", href: "/privacy" },
+  1453→    },
+  1454→  },
+  1455→};
+  1456→

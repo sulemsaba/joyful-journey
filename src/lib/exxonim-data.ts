@@ -239,7 +239,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = {
           ctaHref: "/services",
           windowTitle: "Company Registration",
           windowTag: "Formation",
-          videoSrc: "",
+          videoSources: [],
         },
         {
           title: "Business Licensing",
@@ -250,7 +250,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = {
           ctaHref: "/services",
           windowTitle: "Business Licensing",
           windowTag: "Compliance",
-          videoSrc: "",
+          videoSources: [],
         },
         {
           title: "Tax & Compliance",
@@ -261,7 +261,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = {
           ctaHref: "/services",
           windowTitle: "Tax & Compliance",
           windowTag: "Advisory",
-          videoSrc: "",
+          videoSources: [],
         },
         {
           title: "Track every consultation — automatically",
