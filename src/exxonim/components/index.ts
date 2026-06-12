@@ -6,6 +6,7 @@ export { ErrorMessage } from "./ErrorMessage";
 export { Footer } from "./Footer";
 export { InsightsSection } from "./InsightsSection";
 export { LoadBoundary } from "./LoadBoundary";
+export { LoaderOverlay } from "./LoaderOverlay";
 export { Navigation } from "./Navigation";
 export { PrivacyConsentBanner } from "./PrivacyConsentBanner";
 export { ProviderSection } from "./ProviderSection";

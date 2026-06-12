@@ -158,9 +158,7 @@ export function ServiceCardSkeleton() {
     <div
       className={cn(
         'flex flex-col rounded-2xl',
-        'p-5 md:p-6',
-        'bg-surface',
-        'border border-border-soft'
+        'p-5 md:p-6'
       )}
       aria-hidden="true"
     >

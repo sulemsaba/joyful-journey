@@ -590,23 +590,23 @@ function TrackingNotFound({
  * ───────────────────────────────────────────────────────── */
 function TrackingSkeleton() {
   return (
-    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
-      <div className="h-1.5 bg-surface-soft">
+    <div className="rounded-[1.35rem] overflow-hidden">
+      <div className="h-1.5 bg-accent-soft/30">
         <div className="h-full w-1/2 bg-accent/20 animate-shimmer rounded-r-full" />
       </div>
       <div className="p-6 md:p-8 grid gap-5">
         <div className="flex items-center justify-between gap-3">
           <div className="grid gap-2">
-            <div className="h-3 w-24 rounded bg-surface-soft animate-shimmer" />
-            <div className="h-8 w-40 rounded bg-surface-soft animate-shimmer" />
+            <div className="h-3 w-24 rounded bg-accent-soft/50 animate-shimmer" />
+            <div className="h-8 w-40 rounded bg-accent-soft/50 animate-shimmer" />
           </div>
-          <div className="h-8 w-28 rounded-full bg-surface-soft animate-shimmer" />
+          <div className="h-8 w-28 rounded-full bg-accent-soft/50 animate-shimmer" />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-border-soft">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="grid gap-2">
-              <div className="h-3 w-16 rounded bg-surface-soft animate-shimmer" />
-              <div className="h-4 w-24 rounded bg-surface-soft animate-shimmer" />
+              <div className="h-3 w-16 rounded bg-accent-soft/50 animate-shimmer" />
+              <div className="h-4 w-24 rounded bg-accent-soft/50 animate-shimmer" />
             </div>
           ))}
         </div>

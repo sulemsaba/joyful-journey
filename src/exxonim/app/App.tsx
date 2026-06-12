@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import { LoaderOverlay } from "@/exxonim/components/LoaderOverlay";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
 import { PrivacyConsentBanner } from "@/exxonim/components/PrivacyConsentBanner";
@@ -106,63 +107,10 @@ type IdleWindow = typeof window & {
 };
 
 /* ── Page-level Suspense fallback ──────────────────────
- * Rendered inside <main> so the shell (nav + footer) stays
- * visible while a lazy page chunk loads.
- *
- * Shows skeleton shapes with a centered faded favicon pulse +
- * animated dots overlay — same visual pattern as HomePageSkeleton
- * and ContentSkeleton. */
+ * Uses LoaderOverlay — the single source of truth for
+ * all loading states across the app. */
 function PageSuspenseFallback() {
-  return (
-    <div
-      className="relative isolate overflow-hidden flex items-center min-h-[clamp(24rem,48vh,34rem)] w-full"
-      role="status"
-      aria-live="polite"
-    >
-      {/* Skeleton shapes */}
-      <div className="w-[min(1180px,calc(100%-2rem))] mx-auto mt-6 p-8" aria-hidden="true">
-        <div className="grid gap-3">
-          <div className="h-4 w-28 rounded-full bg-accent-soft animate-pulse" />
-          <div className="h-11 w-[min(30rem,88%)] rounded-full bg-accent-soft animate-pulse" />
-          <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft animate-pulse" />
-          <div className="h-4 w-[min(36rem,100%)] rounded-full bg-accent-soft animate-pulse" />
-        </div>
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
-          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
-          <div className="min-h-[9rem] rounded-[1.25rem] bg-accent-soft/70 border border-accent-soft/50 animate-pulse" />
-        </div>
-      </div>
-
-      {/* Centered favicon pulse + animated dots overlay */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative animate-[loader-pulse_2s_ease-in-out_infinite]">
-            <img
-              src="/branding/exxonim-favicon-light.png"
-              alt=""
-              width="48"
-              height="48"
-              className="logo-light block w-12 h-12 object-contain opacity-40"
-            />
-            <img
-              src="/branding/exxonim-favicon-dark.png"
-              alt=""
-              width="48"
-              height="48"
-              className="logo-dark w-12 h-12 object-contain opacity-40"
-            />
-          </div>
-          <div className="flex items-center opacity-30">
-            <span className="font-sans text-sm font-medium text-text-muted tracking-[0.08em] uppercase">Loading</span>
-            <span className="loader-dots font-sans text-sm font-medium text-text-muted" aria-hidden="true">
-              <span>.</span><span>.</span><span>.</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <LoaderOverlay variant="page" />;
 }
 
 /* ── ScrollToTop on route change ──────────────────── */
