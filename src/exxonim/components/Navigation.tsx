@@ -188,15 +188,19 @@ export function Navigation({
       {/* ═══════════════════════════════════════════════════════
        * MOBILE: Traditional full-width bar (< xl)
        * ───────────────────────────────────────────────────────
-       * Single consistent bar with solid bg at all times.
+       * Transparent when over hero (homepage, scroll top),
+       * solid bg + blur when scrolled — same as desktop.
        * Logo left, theme toggle + hamburger right.
        * Menu expands below the bar naturally.
        * Click outside closes the menu. */}
       <header
+        data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
           "xl:hidden fixed z-50 top-0 inset-x-0 h-[60px]",
-          "bg-page/95 backdrop-blur-xl border-b border-border-soft",
-          "transition-[background-color,backdrop-filter] duration-300"
+          "transition-[background-color,backdrop-filter,border-color] duration-300",
+          headerOverHero
+            ? "bg-transparent border-b border-transparent"
+            : "bg-page/95 backdrop-blur-xl border-b border-border-soft"
         )}
       >
         <div className="h-full px-4 flex items-center justify-between">

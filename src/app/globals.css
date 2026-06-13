@@ -744,9 +744,8 @@ header .logo-dark { mix-blend-mode: screen; }
 
 /* ── Hamburger morph icon colors ───────────────────────
  * Light mode: dark lines. Dark mode: light lines.
- * Mobile header always has solid bg, so default colors work.
- * Desktop header can be transparent over hero, but lines follow
- * the same theme-based rules regardless. */
+ * When header is transparent over hero (mobile & desktop),
+ * the same theme-based rules apply. */
 .nav-hamburger-line {
   background-color: #102529;
 }
