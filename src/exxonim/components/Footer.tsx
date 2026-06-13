@@ -112,11 +112,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
       <Container className="py-8 pb-20 md:py-14 md:pb-12">
-        {/* ── 2-col on mobile, 2-col on tablet, 4-col on desktop ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 lg:gap-8 mb-8 pb-8 border-b border-footer-border">
+        {/* ── 2-col on mobile, 4-col on tablet+ ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8 md:gap-8 mb-8 pb-8 border-b border-footer-border">
 
           {/* Brand Panel — full width on 2-col to give breathing room */}
-          <section className="col-span-2 lg:col-span-1 grid gap-3 content-start">
+          <section className="col-span-2 md:col-span-1 grid gap-3 content-start">
             <a
               href={routes.home}
               aria-label={`${brand.name} home`}
@@ -184,13 +184,13 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
           </section>
 
           {/* Contact Us — mobile: address + emails/phones side by side | desktop: original stacked layout */}
-          <section className="col-span-2 lg:col-span-1">
+          <section className="col-span-2 md:col-span-1">
             <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Contact Us
             </h4>
 
-            {/* ── Mobile only (below lg): compact layout ── */}
-            <div className="grid gap-2 lg:hidden">
+            {/* ── Mobile only (below md): compact layout ── */}
+            <div className="grid gap-2 md:hidden">
               {/* Address — full width */}
               <div className="flex items-start gap-2.5">
                 <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -235,8 +235,8 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               </div>
             </div>
 
-            {/* ── Desktop only (lg+): original stacked layout ── */}
-            <ul className="hidden lg:grid gap-3">
+            {/* ── Tablet+ (md+): original stacked layout ── */}
+            <ul className="hidden md:grid gap-3">
               {/* Location */}
               <li className="flex items-start gap-3">
                 <svg className="w-[1.125rem] h-[1.125rem] mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
