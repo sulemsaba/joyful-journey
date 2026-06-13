@@ -266,3 +266,44 @@ Stage Summary:
 - Visual group boundaries: when "All Services" tab is active, services are grouped by category with subtle headers (accent dot + uppercase label + divider line)
 - Single category tab shows flat grid without group headers
 - All existing functionality preserved (loading/error/empty states, trust footer, category tabs with counts)
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: Simplify services page — reduce sections and text ("too many words many sections")
+
+Work Log:
+- Read current ServicesPage.tsx (4 sections: Overview → Catalog → Packages → CTA)
+- Read ServicesOverviewSection.tsx (hero with stats panel, search bar, badge, description)
+- Read ServiceCatalogSection.tsx (redundant "Our Services" header, trust footer)
+- Read ServiceCard.tsx (title + short_description + deliverables + CTA)
+- User clarified: FAQ and Plans data will come from DB/admin — keep those sections, trim everything else
+- Merged ServicesOverviewSection INTO ServiceCatalogSection:
+  - Removed separate overview section entirely from ServicesPage.tsx
+  - Added heroEyebrow + heroTitle props to ServiceCatalogSection
+  - Compact hero header: eyebrow + title + CTA button in one block (flex row on desktop, column on mobile)
+  - Removed: trust stats panel, search bar, "No office visits" badge, Google review footer, description paragraph
+  - Removed trust footer at bottom of catalog
+  - Removed redundant "Our Services" h1 + description from catalog header
+- Simplified ServiceCard:
+  - Removed short_description paragraph entirely (was the biggest source of wordiness per card)
+  - Cards now show: badge/category → title → deliverables → CTA (no prose description)
+- Simplified CTA section:
+  - Removed description prop ("Book a free consultation and get a tracking code to stay informed.")
+  - Just heading "Ready to get started?" + two action buttons
+- ServicesPage.tsx restructured from 4 sections to 3:
+  1. Compact hero + Catalog (merged)
+  2. Packages (DB-driven)
+  3. CTA (minimal)
+- Built and deployed: vite build + mini-server restart
+- Agent Browser verification: page loads cleanly, no errors
+- VLM analysis confirms: "concise", "clean and well-structured", "text is not excessive"
+- Mobile responsive verified: clean stacked layout, scannable bullet points
+
+Stage Summary:
+- Services page reduced from 4 sections to 3 (merged Overview into Catalog)
+- Removed: search bar, trust stats panel, trust footer, "No office visits" badge, Google review footer, card descriptions
+- ServiceCard simplified: title + deliverables + CTA only (no description paragraph)
+- CTA section minimal: heading + buttons only
+- Page is now concise and scannable — VLM confirmed "not overly wordy"
+- DB-driven sections (Packages, FAQ via admin) preserved intact

@@ -4,7 +4,6 @@ import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { ServicePackagesSection } from "@/exxonim/components/ServicePlansSection";
-import { ServicesOverviewSection } from "@/exxonim/components/ServicesOverviewSection";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
@@ -12,13 +11,10 @@ import type { ServicesPageContent } from '@/exxonim/types';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 
 /**
- * Services page — the primary service listing and conversion page for Exxonim.
- *
- * PAGE STRUCTURE (4-section conversion flow):
- *   1. Hero — benefit headline + trust panel + CTA
- *   2. Service Catalog — category-filtered cards with deliverables
- *   3. Packages — testimonials + comparison plans
- *   4. Final CTA — one strong action
+ * Services page — concise 3-section layout:
+ *   1. Compact hero + Service Catalog (merged)
+ *   2. Packages (admin/DB-driven)
+ *   3. Final CTA
  */
 export function ServicesPage() {
   const { data: page, isPending, error } = usePage<ServicesPageContent>("services");
@@ -36,20 +32,18 @@ export function ServicesPage() {
       {() => { if (!page) return null; return (
         <>
           <StructuredData heroTitle={page.content.overview.title} heroDescription={page.content.overview.description} breadcrumbs={[{ name: 'Services', path: routes.services }]} />
-          {/* 1. Hero — benefit headline + trust panel */}
-          <ServicesOverviewSection content={page.content.overview} />
 
-          {/* 2. Service Catalog — category-filtered cards with deliverables */}
-          <ServiceCatalogSection />
+          {/* 1. Compact hero + Catalog */}
+          <ServiceCatalogSection
+            heroEyebrow={page.content.overview.eyebrow}
+            heroTitle={page.content.overview.title}
+          />
 
-          {/* 3. Packages — testimonials + comparison plans */}
+          {/* 2. Packages — admin/DB-driven */}
           <ServicePackagesSection variant="page" />
 
-          {/* 4. Final CTA — one strong action */}
-          <UnifiedCtaSection
-            heading="Ready to get started?"
-            description="Book a free consultation and get a tracking code to stay informed."
-          >
+          {/* 3. Final CTA */}
+          <UnifiedCtaSection heading="Ready to get started?">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button size="standard" variant="primary" href={routes.contact}>
                 Book a Free Consultation

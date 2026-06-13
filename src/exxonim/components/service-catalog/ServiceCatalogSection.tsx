@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
-import { AlertCircle, RefreshCw, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
+import { ArrowRight, AlertCircle, RefreshCw, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
 import { ServiceCard, ServiceCardSkeleton } from './ServiceCard';
+import { Button } from '@/exxonim/components/primitives/Button';
+import { routes } from '@/exxonim/routes';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 
 /** Category tab definition with icon */
@@ -16,7 +18,14 @@ const categoryTabs = [
 
 type CategoryKey = (typeof categoryTabs)[number]['key'];
 
-export function ServiceCatalogSection() {
+interface ServiceCatalogSectionProps {
+  /** Eyebrow text for the compact hero header */
+  heroEyebrow?: string;
+  /** Title for the compact hero header */
+  heroTitle?: string;
+}
+
+export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalogSectionProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const { data, isLoading, isError, refetch } = useServiceCatalog('all');
 
@@ -67,20 +76,33 @@ export function ServiceCatalogSection() {
   }, [allServices]);
 
   return (
-    <section id="service-catalog" className={cn('py-6 md:py-16')}>
+    <section id="service-catalog" className={cn('pt-4 pb-6 md:pt-8 md:pb-16')}>
       <Container>
-        {/* Page Header */}
+        {/* Compact hero header — eyebrow + title + CTA in one block */}
         <div className="mb-6 md:mb-8">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-text mb-2">
-            Our Services
-          </h1>
-          <p className="text-sm md:text-base max-w-xl text-text-muted">
-            Registration, compliance, work permits &amp; NGO advisory.
-          </p>
+          {heroEyebrow && (
+            <p className="m-0 mb-1.5 text-[0.72rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
+              {heroEyebrow}
+            </p>
+          )}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <h1 className="m-0 text-[clamp(1.6rem,3.5vw,2.5rem)] leading-[1.05] tracking-[-0.02em] text-text font-semibold max-w-xl">
+              {heroTitle ?? 'Our Services'}
+            </h1>
+            <Button
+              size="standard"
+              variant="primary"
+              href={routes.contact}
+              className="shrink-0"
+            >
+              Book a Free Consultation
+              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+            </Button>
+          </div>
         </div>
 
         {/* Category Tabs */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex gap-1 overflow-x-auto scrollbar-none pb-1 border-b border-border-soft">
             {categoryTabs.map((tab) => {
               const isActive = activeCategory === tab.key;
@@ -237,13 +259,6 @@ export function ServiceCatalogSection() {
             )}
           </>
         )}
-
-        {/* Trust Footer */}
-        <div className="mt-10 pt-6 border-t border-border-soft text-center">
-          <p className="text-xs text-text-soft">
-            No hidden prices — tailored consultation &bull; Trusted by businesses across Tanzania
-          </p>
-        </div>
       </Container>
     </section>
   );

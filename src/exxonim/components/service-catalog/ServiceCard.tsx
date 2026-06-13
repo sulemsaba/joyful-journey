@@ -51,14 +51,9 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
       </div>
 
       {/* Title */}
-      <h3 className="text-lg font-bold text-text leading-snug mb-2">
+      <h3 className="text-lg font-bold text-text leading-snug mb-3">
         {service.title}
       </h3>
-
-      {/* Description */}
-      <p className="text-sm text-text-muted leading-relaxed mb-4 flex-1">
-        {service.short_description}
-      </p>
 
       {/* Deliverables list */}
       <ul className="list-none m-0 p-0 mb-3" role="list">

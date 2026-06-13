@@ -1,0 +1,707 @@
+     1→
+     2→/**
+     3→ * ServicePackagesSection — Segment-filtered plan tiers.
+     4→ *
+     5→ * Redesigned with a card-deck carousel on mobile:
+     6→ *   - 4 segment filter buttons at top (Local Entrepreneurs, Foreign Investors, Enterprises, NGOs)
+     7→ *   - 3 tier cards per segment (Starter, Growth, Premium)
+     8→ *   - NO prices — CTA drives to consultation instead
+     9→ *   - Mobile (< lg): Card deck carousel with peek/triangle-fan effect
+    10→ *   - Desktop (≥ lg): 3-column grid layout
+    11→ *
+    12→ * DESIGN CONSTRAINTS (for admin-managed content):
+    13→ * ─────────────────────────────────────────────
+    14→ * - Card width is fixed at 280px in the carousel (portrait rectangle).
+    15→ * - Max 8 features recommended per card for visual balance.
+    16→ * - Description recommended max ~120 chars for clean card layout.
+    17→ * - Badge text recommended max ~15 chars to fit the pill.
+    18→ * - CTA text recommended max ~20 chars to fit the button.
+    19→ * - When data comes from the admin API, these limits should be
+    20→ *   enforced server-side AND gracefully handled in the UI (text
+    21→ *   truncation with ellipsis for overflow).
+    22→ *
+    23→ * Also includes the testimonial marquee (unchanged).
+    24→ */
+    25→
+    26→import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+    27→import { Check, ChevronLeft, ChevronRight, Star, X, Users, Globe, Building2, Heart } from "lucide-react";
+    28→import { LoadBoundary } from "./LoadBoundary";
+    29→import { Container } from "./primitives/Container";
+    30→import { Button } from "./primitives/Button";
+    31→import { CardDeckCarousel } from "./CardDeckCarousel";
+    32→import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
+    33→import { useTestimonials } from "@/exxonim/hooks/useTestimonials";
+    34→import { routes } from "@/exxonim/routes";
+    35→import { cn } from "@/exxonim/utils/cn";
+    36→import type { PricingPlan, Testimonial } from '@/exxonim/types';
+    37→
+    38→type ServicePackagesSectionProps = {
+    39→  variant?: "home" | "page";
+    40→};
+    41→
+    42→/* ── Segment definitions ────────────────────────────────────── */
+    43→type SegmentKey = 'local-entrepreneurs' | 'foreign-investors' | 'enterprises' | 'ngos';
+    44→
+    45→const segments: { key: SegmentKey; label: string; shortLabel: string; icon: React.ComponentType<{ className?: string }> }[] = [
+    46→  { key: 'local-entrepreneurs', label: 'Local Entrepreneurs', shortLabel: 'Local', icon: Users },
+    47→  { key: 'foreign-investors', label: 'Foreign Investors', shortLabel: 'Foreign', icon: Globe },
+    48→  { key: 'enterprises', label: 'Enterprises', shortLabel: 'Enterprise', icon: Building2 },
+    49→  { key: 'ngos', label: 'NGOs & Non-Profits', shortLabel: 'NGO', icon: Heart },
+    50→];
+    51→
+    52→/* ── Plan data per segment (static, no prices) ──────────────── */
+    53→interface SegmentPlan {
+    54→  name: string;
+    55→  badge: string | null;
+    56→  description: string;
+    57→  features: { label: string; included: boolean }[];
+    58→  cta: string;
+    59→}
+    60→
+    61→const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
+    62→  'local-entrepreneurs': [
+    63→    {
+    64→      name: 'Starter',
+    65→      badge: null,
+    66→      description: 'Essential registration and compliance to get your business legally operating.',
+    67→      features: [
+    68→        { label: 'Business Name Registration', included: true },
+    69→        { label: 'TIN Application', included: true },
+    70→        { label: 'Business License (1 sector)', included: true },
+    71→        { label: 'Annual Returns Filing', included: true },
+    72→        { label: 'Statutory Filings (PAYE/SDL)', included: false },
+    73→        { label: 'Dedicated Compliance Advisor', included: false },
+    74→      ],
+    75→      cta: 'Get Started',
+    76→    },
+    77→    {
+    78→      name: 'Growth',
+    79→      badge: 'Most Popular',
+    80→      description: 'Full registration, ongoing compliance, and filing support for growing businesses.',
+    81→      features: [
+    82→        { label: 'Company Registration (COI)', included: true },
+    83→        { label: 'TIN + Business License', included: true },
+    84→        { label: 'Annual Returns + Beneficial Ownership', included: true },
+    85→        { label: 'Statutory Filings (PAYE/SDL/WCF)', included: true },
+    86→        { label: 'Regulatory Renewals Tracking', included: true },
+    87→        { label: 'Dedicated Compliance Advisor', included: false },
+    88→      ],
+    89→      cta: 'Get Started',
+    90→    },
+    91→    {
+    92→      name: 'Premium',
+    93→      badge: null,
+    94→      description: 'Complete compliance management with a dedicated advisor and proactive tracking.',
+    95→      features: [
+    96→        { label: 'Everything in Growth', included: true },
+    97→        { label: 'Trademark Registration', included: true },
+    98→        { label: 'Statutory Filings (all obligations)', included: true },
+    99→        { label: 'Regulatory Renewals + Reminders', included: true },
+   100→        { label: 'Dedicated Compliance Advisor', included: true },
+   101→        { label: 'Quarterly Compliance Review', included: true },
+   102→      ],
+   103→      cta: 'Book Consultation',
+   104→    },
+   105→  ],
+   106→  'foreign-investors': [
+   107→    {
+   108→      name: 'Starter',
+   109→      badge: null,
+   110→      description: 'Essential registration and work permit support to enter the Tanzanian market.',
+   111→      features: [
+   112→        { label: 'Company Registration (COI)', included: true },
+   113→        { label: 'TIN Application', included: true },
+   114→        { label: 'Work Permit (Class A or B)', included: true },
+   115→        { label: 'TIC/TISEZA Registration', included: false },
+   116→        { label: 'Regulatory Renewals Tracking', included: false },
+   117→        { label: 'Cross-border Document Support', included: false },
+   118→      ],
+   119→      cta: 'Get Started',
+   120→    },
+   121→    {
+   122→      name: 'Growth',
+   123→      badge: 'Most Popular',
+   124→      description: 'Full registration, work permits, and investment centre compliance.',
+   125→      features: [
+   126→        { label: 'Company Registration (COI)', included: true },
+   127→        { label: 'TIN + Business License', included: true },
+   128→        { label: 'Work Permit Application', included: true },
+   129→        { label: 'TIC/TISEZA Registration', included: true },
+   130→        { label: 'Annual Returns + Renewals', included: true },
+   131→        { label: 'Cross-border Document Support', included: false },
+   132→      ],
+   133→      cta: 'Get Started',
+   134→    },
+   135→    {
+   136→      name: 'Premium',
+   137→      badge: null,
+   138→      description: 'End-to-end foreign investment setup with ongoing compliance management.',
+   139→      features: [
+   140→        { label: 'Everything in Growth', included: true },
+   141→        { label: 'Foreign Company Registration', included: true },
+   142→        { label: 'Cross-border Document Legalisation', included: true },
+   143→        { label: 'Regulatory Renewals + Reminders', included: true },
+   144→        { label: 'Dedicated Compliance Advisor', included: true },
+   145→        { label: 'Quarterly Compliance Review', included: true },
+   146→      ],
+   147→      cta: 'Book Consultation',
+   148→    },
+   149→  ],
+   150→  'enterprises': [
+   151→    {
+   152→      name: 'Starter',
+   153→      badge: null,
+   154→      description: 'Core registration and statutory filings for established businesses.',
+   155→      features: [
+   156→        { label: 'Company Registration', included: true },
+   157→        { label: 'TIN + Business License', included: true },
+   158→        { label: 'Annual Returns Filing', included: true },
+   159→        { label: 'Statutory Filings (PAYE/SDL/WCF)', included: true },
+   160→        { label: 'Operational Advisory', included: false },
+   161→        { label: 'Dedicated Compliance Advisor', included: false },
+   162→      ],
+   163→      cta: 'Get Started',
+   164→    },
+   165→    {
+   166→      name: 'Growth',
+   167→      badge: 'Most Popular',
+   168→      description: 'Comprehensive compliance management with proactive tracking and filing support.',
+   169→      features: [
+   170→        { label: 'Full Registration Suite', included: true },
+   171→        { label: 'All Statutory Filings', included: true },
+   172→        { label: 'Annual Returns + Beneficial Ownership', included: true },
+   173→        { label: 'Regulatory Renewals Tracking', included: true },
+   174→        { label: 'Trademark Protection', included: true },
+   175→        { label: 'Dedicated Compliance Advisor', included: false },
+   176→      ],
+   177→      cta: 'Get Started',
+   178→    },
+   179→    {
+   180→      name: 'Premium',
+   181→      badge: null,
+   182→      description: 'Full-scale compliance operations with dedicated advisor and strategic guidance.',
+   183→      features: [
+   184→        { label: 'Everything in Growth', included: true },
+   185→        { label: 'Operational Advisory', included: true },
+   186→        { label: 'Dedicated Compliance Advisor', included: true },
+   187→        { label: 'Document Management System', included: true },
+   188→        { label: 'Quarterly Compliance Review', included: true },
+   189→        { label: 'Forward-looking Strategy', included: true },
+   190→      ],
+   191→      cta: 'Book Consultation',
+   192→    },
+   193→  ],
+   194→  'ngos': [
+   195→    {
+   196→      name: 'Starter',
+   197→      badge: null,
+   198→      description: 'Essential NGO registration and initial compliance for new non-profits.',
+   199→      features: [
+   200→        { label: 'NGO Registration', included: true },
+   201→        { label: 'Constitution Drafting', included: true },
+   202→        { label: 'Initial Governance Roadmap', included: true },
+   203→        { label: 'Donor-readiness Pack', included: false },
+   204→        { label: 'Tax Exemption Guidance', included: false },
+   205→        { label: 'Annual Compliance Reporting', included: false },
+   206→      ],
+   207→      cta: 'Get Started',
+   208→    },
+   209→    {
+   210→      name: 'Growth',
+   211→      badge: 'Donor-Ready',
+   212→      description: 'Complete NGO setup with donor compliance and governance documentation.',
+   213→      features: [
+   214→        { label: 'NGO Registration (Enhanced)', included: true },
+   215→        { label: 'Constitution + Governance Framework', included: true },
+   216→        { label: 'Tax Exemption Certificate Guidance', included: true },
+   217→        { label: 'Donor-readiness Pack', included: true },
+   218→        { label: 'Annual Compliance Reporting', included: true },
+   219→        { label: 'Board Meeting Templates', included: false },
+   220→      ],
+   221→      cta: 'Get Started',
+   222→    },
+   223→    {
+   224→      name: 'Premium',
+   225→      badge: null,
+   226→      description: 'Full NGO compliance management with ongoing reporting and governance support.',
+   227→      features: [
+   228→        { label: 'Everything in Growth', included: true },
+   229→        { label: 'Annual Activity & Financial Reports', included: true },
+   230→        { label: 'Donor Compliance Attestation', included: true },
+   231→        { label: 'Board Minutes & Governance File', included: true },
+   232→        { label: 'Tax Exemption Renewal Support', included: true },
+   233→        { label: 'Dedicated NGO Compliance Advisor', included: true },
+   234→      ],
+   235→      cta: 'Book Consultation',
+   236→    },
+   237→  ],
+   238→};
+   239→
+   240→/* ═══════════════════════════════════════════════════════════════
+   241→ * TestimonialCard
+   242→ * ═══════════════════════════════════════════════════════════════ */
+   243→const TestimonialCard = memo(function TestimonialCard({
+   244→  testimonial,
+   245→}: {
+   246→  testimonial: Testimonial;
+   247→}) {
+   248→  return (
+   249→    <article
+   250→      className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1"
+   251→      aria-label={`Testimonial from ${testimonial.name}`}
+   252→    >
+   253→      <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
+   254→        {[...Array(5)].map((_, i) => (
+   255→          <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+   256→        ))}
+   257→      </p>
+   258→      <p className="text-sm leading-relaxed text-text-muted flex-1">
+   259→        &ldquo;{testimonial.quote}&rdquo;
+   260→      </p>
+   261→      <div className="mt-auto flex items-center gap-2.5">
+   262→        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
+   263→          {testimonial.initials}
+   264→        </div>
+   265→        <div>
+   266→          <p className="text-sm font-semibold text-text">{testimonial.name}</p>
+   267→          <p className="text-xs text-text-muted">{testimonial.role}</p>
+   268→        </div>
+   269→      </div>
+   270→    </article>
+   271→  );
+   272→});
+   273→
+   274→/* ═══════════════════════════════════════════════════════════════
+   275→ * TestimonialMarquee — unchanged from original
+   276→ * ═══════════════════════════════════════════════════════════════ */
+   277→function TestimonialMarquee({
+   278→  testimonials,
+   279→}: {
+   280→  testimonials: Testimonial[];
+   281→}) {
+   282→  const scrollerRef = useRef<HTMLDivElement>(null);
+   283→  const wrapperRef = useRef<HTMLDivElement>(null);
+   284→  const [isSliding, setIsSliding] = useState(false);
+   285→  const [showArrows, setShowArrows] = useState(false);
+   286→  const [isDraggingState, setIsDraggingState] = useState(false);
+   287→
+   288→  const isPaused = useRef(false);
+   289→  const isDragging = useRef(false);
+   290→  const isVisible = useRef(false);
+   291→  const hasStarted = useRef(false);
+   292→  const startX = useRef(0);
+   293→  const scrollStart = useRef(0);
+   294→  const rafRef = useRef<number>(0);
+   295→  const startTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   296→  const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   297→  const tickRef = useRef(0);
+   298→  const scrollDelta = useRef(0);
+   299→  const scrollingUntilRef = useRef(0);
+   300→
+   301→  const items = [...testimonials, ...testimonials, ...testimonials];
+   302→  const CARD_WIDTH = 320;
+   303→  const BASE_SPEED = 0.3;
+   304→  const SPEED_AMPLITUDE = 0.12;
+   305→  const SPEED_PERIOD = 480;
+   306→
+   307→  useEffect(() => {
+   308→    const wrapper = wrapperRef.current;
+   309→    if (!wrapper) return;
+   310→    const observer = new IntersectionObserver(
+   311→      ([entry]) => {
+   312→        isVisible.current = entry.isIntersecting;
+   313→        if (entry.isIntersecting && !hasStarted.current && !startTimerRef.current) {
+   314→          startTimerRef.current = setTimeout(() => {
+   315→            hasStarted.current = true;
+   316→            startTimerRef.current = null;
+   317→            setIsSliding(true);
+   318→          }, 1200);
+   319→        }
+   320→        if (!entry.isIntersecting && !hasStarted.current && startTimerRef.current) {
+   321→          clearTimeout(startTimerRef.current);
+   322→          startTimerRef.current = null;
+   323→        }
+   324→      },
+   325→      { threshold: 0.1 }
+   326→    );
+   327→    observer.observe(wrapper);
+   328→    return () => {
+   329→      observer.disconnect();
+   330→      if (startTimerRef.current) {
+   331→        clearTimeout(startTimerRef.current);
+   332→        startTimerRef.current = null;
+   333→      }
+   334→    };
+   335→  }, []);
+   336→
+   337→  useEffect(() => {
+   338→    const handleScroll = () => { scrollingUntilRef.current = performance.now() + 180; };
+   339→    window.addEventListener("scroll", handleScroll, { passive: true });
+   340→    return () => window.removeEventListener("scroll", handleScroll);
+   341→  }, []);
+   342→
+   343→  useEffect(() => {
+   344→    if (!isSliding) return;
+   345→    const el = scrollerRef.current;
+   346→    if (!el) return;
+   347→    const getSetWidth = () => el.scrollWidth / 3;
+   348→    let lastFrame = 0;
+   349→    const FRAME_INTERVAL = 33;
+   350→    const step = (timestamp: number) => {
+   351→      if (isVisible.current && !document.hidden && timestamp - lastFrame >= FRAME_INTERVAL && timestamp >= scrollingUntilRef.current) {
+   352→        lastFrame = timestamp;
+   353→        if (!isPaused.current && !isDragging.current) {
+   354→          tickRef.current += 1;
+   355→          const speed = BASE_SPEED + SPEED_AMPLITUDE * Math.sin((2 * Math.PI * tickRef.current) / SPEED_PERIOD);
+   356→          scrollDelta.current += speed;
+   357→          const wholePixels = Math.floor(scrollDelta.current);
+   358→          if (wholePixels >= 1) {
+   359→            el.scrollLeft += wholePixels;
+   360→            scrollDelta.current -= wholePixels;
+   361→          }
+   362→          const setWidth = getSetWidth();
+   363→          if (el.scrollLeft >= setWidth) { el.scrollLeft -= setWidth; }
+   364→        }
+   365→      }
+   366→      rafRef.current = requestAnimationFrame(step);
+   367→    };
+   368→    rafRef.current = requestAnimationFrame(step);
+   369→    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+   370→  }, [isSliding]);
+   371→
+   372→  const pauseAndResume = useCallback(() => {
+   373→    isPaused.current = true;
+   374→    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+   375→    pauseTimerRef.current = setTimeout(() => { isPaused.current = false; }, 3000);
+   376→  }, []);
+   377→
+   378→  const handleArrowClick = useCallback((direction: "left" | "right") => {
+   379→    const el = scrollerRef.current;
+   380→    if (!el) return;
+   381→    el.scrollBy({ left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH, behavior: "smooth" });
+   382→    pauseAndResume();
+   383→  }, [pauseAndResume]);
+   384→
+   385→  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+   386→    const el = scrollerRef.current;
+   387→    if (!el) return;
+   388→    isDragging.current = true;
+   389→    setIsDraggingState(true);
+   390→    startX.current = e.clientX;
+   391→    scrollStart.current = el.scrollLeft;
+   392→    el.setPointerCapture(e.pointerId);
+   393→    isPaused.current = true;
+   394→    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+   395→  }, []);
+   396→
+   397→  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+   398→    const el = scrollerRef.current;
+   399→    if (!el || !isDragging.current) return;
+   400→    el.scrollLeft = scrollStart.current - (e.clientX - startX.current);
+   401→  }, []);
+   402→
+   403→  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+   404→    const el = scrollerRef.current;
+   405→    if (!el) return;
+   406→    isDragging.current = false;
+   407→    setIsDraggingState(false);
+   408→    el.releasePointerCapture(e.pointerId);
+   409→    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+   410→    pauseTimerRef.current = setTimeout(() => { isPaused.current = false; }, 3000);
+   411→  }, []);
+   412→
+   413→  const handleMouseEnter = useCallback(() => {
+   414→    setShowArrows(true);
+   415→    isPaused.current = true;
+   416→    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+   417→  }, []);
+   418→
+   419→  const handleMouseLeave = useCallback(() => {
+   420→    setShowArrows(false);
+   421→    if (!isDragging.current) {
+   422→      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+   423→      pauseTimerRef.current = setTimeout(() => { isPaused.current = false; }, 3000);
+   424→    }
+   425→  }, []);
+   426→
+   427→  useEffect(() => {
+   428→    return () => {
+   429→      if (startTimerRef.current) clearTimeout(startTimerRef.current);
+   430→      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+   431→    };
+   432→  }, []);
+   433→
+   434→  return (
+   435→    <div
+   436→      ref={wrapperRef}
+   437→      className="full-bleed group relative overflow-hidden [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+   438→      aria-label="Client testimonials"
+   439→    >
+   440→      <div
+   441→        ref={scrollerRef}
+   442→        onPointerDown={handlePointerDown}
+   443→        onPointerMove={handlePointerMove}
+   444→        onPointerUp={handlePointerUp}
+   445→        onPointerCancel={handlePointerUp}
+   446→        onMouseEnter={handleMouseEnter}
+   447→        onMouseLeave={handleMouseLeave}
+   448→        className="flex overflow-x-auto scrollbar-none select-none touch-pan-y"
+   449→        style={{ WebkitOverflowScrolling: "touch", cursor: isDraggingState ? "grabbing" : "grab" }}
+   450→      >
+   451→        {items.map((testimonial, index) => (
+   452→          <div key={`${testimonial.id}-${index}`} className="flex-none w-[280px] md:w-80">
+   453→            <TestimonialCard testimonial={testimonial} />
+   454→          </div>
+   455→        ))}
+   456→      </div>
+   457→      <Button size="icon" variant="secondary"
+   458→        className={cn("shadow-md backdrop-blur-sm", "absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10", "hidden md:flex", "opacity-0 pointer-events-none", showArrows && "md:opacity-100 md:pointer-events-auto")}
+   459→        onClick={() => handleArrowClick("left")} aria-label="Previous testimonials"
+   460→      >
+   461→        <ChevronLeft className="h-5 w-5" />
+   462→      </Button>
+   463→      <Button size="icon" variant="secondary"
+   464→        className={cn("shadow-md backdrop-blur-sm", "absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-10", "hidden md:flex", "opacity-0 pointer-events-none", showArrows && "md:opacity-100 md:pointer-events-auto")}
+   465→        onClick={() => handleArrowClick("right")} aria-label="Next testimonials"
+   466→      >
+   467→        <ChevronRight className="h-5 w-5" />
+   468→      </Button>
+   469→    </div>
+   470→  );
+   471→}
+   472→
+   473→/* ═══════════════════════════════════════════════════════════════
+   474→ * SegmentPlanCard — Portrait pricing card
+   475→ *
+   476→ * DESIGN NOTES (for admin-managed content):
+   477→ * - Card is designed as a vertical rectangle (portrait orientation).
+   478→ * - In the mobile carousel, width is 280px; in desktop grid, max 360px.
+   479→ * - Featured card has a full-width accent banner at top for the badge.
+   480→ * - Features list uses flex-1 to push CTA button to the bottom.
+   481→ * - Max 8 features recommended. More features = taller card.
+   482→ * - Description max ~120 chars recommended for clean layout.
+   483→ * - Badge text max ~20 chars recommended to fit the banner.
+   484→ * ═══════════════════════════════════════════════════════════════ */
+   485→function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featured: boolean; compact?: boolean }) {
+   486→  return (
+   487→    <article
+   488→      className={cn(
+   489→        "flex h-full w-full flex-col rounded-2xl border transition-all overflow-hidden",
+   490→        compact ? "p-5" : "p-5 md:p-6 lg:p-7",
+   491→        featured
+   492→          ? "border-accent/40 bg-surface"
+   493→          : "border-border-soft bg-surface"
+   494→      )}
+   495→      aria-label={`${plan.name} service package`}
+   496→    >
+   497→      {/* ── Featured badge banner (full-width strip at top) ── */}
+   498→      {plan.badge ? (
+   499→        <div className={cn(
+   500→          "-mx-5 -mt-5 mb-3 px-5 py-2 text-center",
+   501→          compact ? "-mx-5 -mt-5" : "md:-mx-6 md:-mt-6 lg:-mx-7 lg:-mt-7",
+   502→          featured
+   503→            ? "bg-accent text-accent-contrast"
+   504→            : "bg-accent-soft text-accent"
+   505→        )}>
+   506→          <span className="text-xs font-extrabold uppercase tracking-wider">
+   507→            {plan.badge}
+   508→          </span>
+   509→        </div>
+   510→      ) : null}
+   511→
+   512→      {/* Plan name */}
+   513→      <h3 className={cn("font-bold mb-2", compact ? "text-base" : "text-lg", featured ? "text-accent" : "text-text")}>
+   514→        {plan.name}
+   515→      </h3>
+   516→
+   517→      {/* Description — clamp to 2 lines for admin content safety */}
+   518→      <p className={cn(
+   519→        "text-sm leading-relaxed mb-3 line-clamp-2",
+   520→        featured ? "text-text" : "text-text-muted"
+   521→      )}>
+   522→        {plan.description}
+   523→      </p>
+   524→
+   525→      <div className={cn("h-px mb-3", featured ? "bg-accent/20" : "bg-border-soft")} />
+   526→
+   527→      {/* Features list — flex-1 pushes CTA to bottom */}
+   528→      <ul className="flex flex-1 flex-col gap-2">
+   529→        {plan.features.map((feature) => (
+   530→          <li
+   531→            key={feature.label}
+   532→            className={cn(
+   533→              "flex items-start gap-2 text-xs leading-snug",
+   534→              !feature.included && "opacity-40"
+   535→            )}
+   536→          >
+   537→            <span className={cn(
+   538→              "mt-0.5 flex h-4.5 w-4.5 flex-none items-center justify-center rounded-full",
+   539→              feature.included
+   540→                ? (featured ? "bg-accent text-accent-contrast" : "bg-accent-soft text-accent")
+   541→                : (featured ? "bg-accent/10 text-accent/40" : "bg-border-soft text-text-muted")
+   542→            )}>
+   543→              {feature.included ? <Check className="h-2.5 w-2.5" /> : <X className="h-2.5 w-2.5" />}
+   544→            </span>
+   545→            <span className="text-text">{feature.label}</span>
+   546→          </li>
+   547→        ))}
+   548→      </ul>
+   549→
+   550→      {/* CTA button */}
+   551→      <Button
+   552→        size="standard"
+   553→        variant={featured ? "primary" : "outline"}
+   554→        href={routes.contact}
+   555→        className="mt-4 w-full"
+   556→      >
+   557→        {plan.cta}
+   558→      </Button>
+   559→    </article>
+   560→  );
+   561→}
+   562→
+   563→/* ═══════════════════════════════════════════════════════════════
+   564→ * ServicePackagesSection — main export
+   565→ * ═══════════════════════════════════════════════════════════════ */
+   566→export function ServicePackagesSection({
+   567→  variant = "home",
+   568→}: ServicePackagesSectionProps) {
+   569→  const [activeSegment, setActiveSegment] = useState<SegmentKey>('local-entrepreneurs');
+   570→  const {
+   571→    data: testimonials = [],
+   572→    isPending: testimonialsPending,
+   573→    error: testimonialsError,
+   574→  } = useTestimonials();
+   575→  const {
+   576→    data: plans = [],
+   577→    isPending: plansPending,
+   578→    error: plansError,
+   579→  } = usePricingPlans();
+   580→
+   581→  const currentPlans = segmentPlans[activeSegment];
+   582→
+   583→  /* ── Card deck data (for mobile carousel) ── */
+   584→  const carouselCards = useMemo(
+   585→    () =>
+   586→      currentPlans.map((plan, index) => ({
+   587→        key: `${activeSegment}-${plan.name}`,
+   588→        content: (
+   589→          <SegmentPlanCard
+   590→            plan={plan}
+   591→            featured={plan.badge !== null}
+   592→            compact
+   593→          />
+   594→        ),
+   595→      })),
+   596→    [currentPlans, activeSegment]
+   597→  );
+   598→
+   599→  /* ── Default to middle card (Growth / "Most Popular") ── */
+   600→  const defaultCarouselIndex = useMemo(() => {
+   601→    const idx = currentPlans.findIndex((p) => p.badge !== null);
+   602→    return idx >= 0 ? idx : Math.floor(currentPlans.length / 2);
+   603→  }, [currentPlans]);
+   604→
+   605→  return (
+   606→    <LoadBoundary
+   607→      error={testimonialsError || plansError}
+   608→      errorDetail="Service plans could not be loaded right now."
+   609→      errorTitle="Unable to load plans."
+   610→      isPending={testimonialsPending || plansPending}
+   611→      isReady={testimonials.length > 0}
+   612→      loadingLabel="Loading package plans..."
+   613→      variant="section"
+   614→    >
+   615→      <section
+   616→        id={variant === "page" ? "packages" : undefined}
+   617→        aria-label="Service packages and client testimonials"
+   618→        className="py-16 md:py-24"
+   619→      >
+   620→        <Container>
+   621→          {/* ─── Social Proof ─── */}
+   622→          {testimonials.length > 0 && (
+   623→            <div className="mb-8 md:mb-12">
+   624→              <div className="mb-6 md:mb-8" data-reveal>
+   625→                <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text">
+   626→                  What our clients say
+   627→                </h2>
+   628→              </div>
+   629→              <TestimonialMarquee testimonials={testimonials} />
+   630→            </div>
+   631→          )}
+   632→
+   633→          {/* ─── Package Plans ─── */}
+   634→          <div>
+   635→            <div className="mb-5 md:mb-6" data-reveal>
+   636→              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
+   637→                Service packages
+   638→              </p>
+   639→              <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-semibold leading-tight tracking-tight text-text">
+   640→                Choose the right level of support
+   641→              </h2>
+   642→            </div>
+   643→
+   644→            {/* Segment filter buttons — compact icon+short label on mobile, full label on desktop */}
+   645→            <div className="flex gap-1.5 sm:gap-2 justify-center mb-6 md:mb-8">
+   646→              {segments.map((seg) => {
+   647→                const isActive = activeSegment === seg.key;
+   648→                const Icon = seg.icon;
+   649→                return (
+   650→                  <button
+   651→                    key={seg.key}
+   652→                    type="button"
+   653→                    onClick={() => setActiveSegment(seg.key)}
+   654→                    className={cn(
+   655→                      'flex-shrink-0 rounded-full min-h-[40px] font-medium',
+   656→                      'transition-all duration-200 ease-out',
+   657→                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+   658→                      'flex flex-col items-center justify-center gap-0.5',
+   659→                      'sm:flex-row sm:gap-2 sm:px-4 sm:py-2',
+   660→                      'px-3 py-1.5',
+   661→                      isActive
+   662→                        ? 'bg-accent text-accent-contrast shadow-sm'
+   663→                        : 'bg-surface text-text-muted border border-border-soft hover:bg-accent-soft hover:text-accent hover:border-accent/30'
+   664→                    )}
+   665→                    aria-pressed={isActive}
+   666→                    aria-label={`Show packages for ${seg.label}`}
+   667→                  >
+   668→                    <Icon className="w-4 h-4" aria-hidden="true" />
+   669→                    {/* Short label on mobile, full label on desktop */}
+   670→                    <span className="text-[11px] leading-none sm:text-sm sm:leading-normal">
+   671→                      <span className="sm:hidden">{seg.shortLabel}</span>
+   672→                      <span className="hidden sm:inline">{seg.label}</span>
+   673→                    </span>
+   674→                  </button>
+   675→                );
+   676→              })}
+   677→            </div>
+   678→
+   679→            {/* ─── MOBILE: Card deck carousel ─── */}
+   680→            <CardDeckCarousel
+   681→              cards={carouselCards}
+   682→              defaultIndex={defaultCarouselIndex}
+   683→            />
+   684→
+   685→            {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
+   686→            <div className="hidden lg:grid gap-5 lg:grid-cols-3 lg:max-w-[1160px] lg:mx-auto">
+   687→              {currentPlans.map((plan) => (
+   688→                <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
+   689→                  <div className="w-full max-w-[360px]">
+   690→                    <SegmentPlanCard
+   691→                      plan={plan}
+   692→                      featured={plan.badge !== null}
+   693→                    />
+   694→                  </div>
+   695→                </div>
+   696→              ))}
+   697→            </div>
+   698→          </div>
+   699→        </Container>
+   700→      </section>
+   701→    </LoadBoundary>
+   702→  );
+   703→}
+   704→
+   705→// Alias for backward compatibility
+   706→export { ServicePackagesSection as ServicePlansSection };
+   707→
