@@ -480,7 +480,7 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = {
       eyebrow: "Our Services",
       title: "Comprehensive Business Solutions for Tanzania",
       description:
-        "From company formation to ongoing compliance, Exxonim provides a full spectrum of business advisory services designed to help you operate with confidence in Tanzania's regulatory environment.",
+        "Registration, compliance, work permits — handled end to end, no office visits required.",
       features: [
         {
           icon: "building",

@@ -1,11 +1,9 @@
 import { ArrowRight, Phone } from "lucide-react";
 import { ServiceCatalogSection } from "@/exxonim/components/service-catalog";
-import { ExxonimApartSection } from "@/exxonim/components/ExxonimApartSection";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { ServicePackagesSection } from "@/exxonim/components/ServicePlansSection";
-import { ServicesFaqSection } from "@/exxonim/components/ServicesFaqSection";
 import { ServicesOverviewSection } from "@/exxonim/components/ServicesOverviewSection";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
@@ -16,13 +14,11 @@ import { StructuredData } from '@/exxonim/components/StructuredData';
 /**
  * Services page — the primary service listing and conversion page for Exxonim.
  *
- * PAGE STRUCTURE (streamlined 6-section B2B conversion flow):
- *   1. Hero — benefit headline + trust panel + single CTA
- *   2. Service Catalog — segment-filtered cards with deliverables
- *   3. What Sets Us Apart — differentiators
- *   4. FAQ — objection handling before pricing
- *   5. Packages — testimonials + comparison plans
- *   6. Final CTA — one strong action
+ * PAGE STRUCTURE (4-section conversion flow):
+ *   1. Hero — benefit headline + trust panel + CTA
+ *   2. Service Catalog — category-filtered cards with deliverables
+ *   3. Packages — testimonials + comparison plans
+ *   4. Final CTA — one strong action
  */
 export function ServicesPage() {
   const { data: page, isPending, error } = usePage<ServicesPageContent>("services");
@@ -43,24 +39,16 @@ export function ServicesPage() {
           {/* 1. Hero — benefit headline + trust panel */}
           <ServicesOverviewSection content={page.content.overview} />
 
-          {/* 2. Service Catalog — segment-filtered cards with deliverables */}
+          {/* 2. Service Catalog — category-filtered cards with deliverables */}
           <ServiceCatalogSection />
 
-          {/* 3. What Sets Us Apart — differentiators */}
-          <ExxonimApartSection />
-
-          {/* 4. FAQ — objection handling before pricing */}
-          {page.content.faq && page.content.faq.length > 0 && (
-            <ServicesFaqSection items={page.content.faq} />
-          )}
-
-          {/* 5. Packages — testimonials + comparison plans */}
+          {/* 3. Packages — testimonials + comparison plans */}
           <ServicePackagesSection variant="page" />
 
-          {/* 6. Final CTA — one strong action */}
+          {/* 4. Final CTA — one strong action */}
           <UnifiedCtaSection
             heading="Ready to get started?"
-            description="Book a free consultation and receive a tracking code that keeps you informed at every step."
+            description="Book a free consultation and get a tracking code to stay informed."
           >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button size="standard" variant="primary" href={routes.contact}>

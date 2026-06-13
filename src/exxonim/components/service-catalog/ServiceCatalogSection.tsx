@@ -75,7 +75,7 @@ export function ServiceCatalogSection() {
             Our Services
           </h1>
           <p className="text-sm md:text-base max-w-xl text-text-muted">
-            Registration, compliance, work permits &amp; NGO advisory. Browse by category to find what you need.
+            Registration, compliance, work permits &amp; NGO advisory.
           </p>
         </div>
 
