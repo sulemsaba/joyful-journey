@@ -22,6 +22,14 @@ function GoogleLogo({ className }: { className?: string }) {
   );
 }
 
+/* ── Trust stats data ────────────────────────────────────────── */
+const TRUST_STATS = [
+  { value: '120+', label: 'Companies Registered' },
+  { value: '100%', label: 'Tracked & Updated' },
+  { value: '4.9★', label: 'Google Rating' },
+  { value: '58+', label: 'Client Reviews' },
+] as const;
+
 export function ServicesOverviewSection({
   content,
 }: ServicesOverviewSectionProps) {
@@ -116,13 +124,13 @@ export function ServicesOverviewSection({
 
   return (
     <section
-      className="relative overflow-hidden pt-4 pb-12 md:pt-6 md:pb-20"
+      className="relative pt-4 pb-12 md:pt-6 md:pb-20"
       aria-labelledby="services-overview-title"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
-        {/* Hero grid — left: headline + CTA, right: search + Google review */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-4 md:gap-5 items-start">
-          {/* ── Left column — benefit headline + single CTA ── */}
+        {/* ── Hero grid — left: headline + CTA, right: stats panel ── */}
+        <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:gap-12 items-start">
+          {/* ── Left column — benefit headline + CTA ── */}
           <article
             className="rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-border-soft bg-surface"
             data-reveal
@@ -152,150 +160,128 @@ export function ServicesOverviewSection({
               </Button>
             </div>
 
-            {/* "No office visits" trust signal under CTA */}
-            <div className="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full bg-accent-soft/60 text-accent text-xs font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
+            {/* "No office visits" trust signal — prominent pill badge */}
+            <div className="inline-flex items-center gap-2.5 mt-4 px-4 py-2 rounded-full bg-accent-soft text-accent text-sm font-semibold ring-1 ring-accent/25">
+              <span className="relative flex h-5 w-5 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent/30" />
+                <ShieldCheck className="relative h-5 w-5" aria-hidden="true" />
+              </span>
               No office visits required
             </div>
           </article>
 
-          {/* ── Right column — service search + Google review panel ── */}
-          <div className="grid gap-4 md:gap-5">
-            {/* Service search box */}
+          {/* ── Right column — trust stats panel ── */}
+          <div
+            className="rounded-2xl md:rounded-[2rem] p-5 md:p-6 bg-surface/80 backdrop-blur-xl border border-border-soft shadow-card relative overflow-hidden"
+            data-reveal
+          >
+            {/* Subtle gradient accent line at top */}
             <div
-              ref={searchContainerRef}
-              className="relative rounded-2xl md:rounded-[1.5rem] p-4 md:p-6 border border-border-soft bg-surface"
-              data-reveal
-            >
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-soft" />
-                <input
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  onFocus={() => setIsDropdownOpen(true)}
-                  placeholder="Search for a service..."
-                  aria-label="Search services"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-soft bg-page/60 text-text text-sm placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/25 focus:border-accent/40 transition-all"
-                />
-              </div>
+              className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent via-accent/60 to-transparent rounded-t-2xl md:rounded-t-[2rem]"
+              aria-hidden="true"
+            />
 
-              {/* Search results dropdown */}
-              {showDropdown && (
-                <div id="services-search-dropdown" className="mt-3">
-                  {hasResults && (
-                    <ul className="grid gap-1">
-                      {filteredServices.slice(0, 6).map((service) => (
-                        <li key={service.name}>
-                          <a
-                            href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
-                            onClick={(e) => handleResultClick(e, service.name)}
-                            className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors group"
-                          >
-                            <span className="flex items-center gap-2">
-                              <Search className="w-3 h-3 text-text-soft group-hover:text-accent" aria-hidden="true" />
-                              <span className="font-medium">{service.name}</span>
-                            </span>
-                            <span className="text-xs text-text-soft">{service.group}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {noResults && (
-                    <p className="px-3 py-2 text-sm text-text-muted">
-                      No services found for &ldquo;{searchQuery}&rdquo;
-                    </p>
-                  )}
-                  {searchQuery.trim().length === 0 && (
-                    <div className="grid gap-1">
-                      <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-text-soft">
-                        Popular services
-                      </p>
-                      {allServices.slice(0, 4).map((service) => (
-                        <a
-                          key={service.name}
-                          href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          onClick={(e) => handleResultClick(e, service.name)}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors"
-                        >
-                          <Search className="w-3 h-3 text-text-soft" aria-hidden="true" />
-                          <span>{service.name}</span>
-                        </a>
-                      ))}
-                    </div>
-                  )}
+            {/* 2×2 stats grid */}
+            <div className="grid grid-cols-2 gap-5 mt-2">
+              {TRUST_STATS.map((stat) => (
+                <div key={stat.label}>
+                  <p className="text-2xl md:text-3xl font-bold text-accent leading-none">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs md:text-sm text-text-muted mt-1 leading-snug">
+                    {stat.label}
+                  </p>
                 </div>
-              )}
+              ))}
             </div>
 
-            {/* Google review trust panel */}
-            <aside
-              className="rounded-2xl md:rounded-[1.5rem] p-5 md:p-6 border border-border-soft bg-surface"
-              data-reveal
-            >
-              {/* Google branding row */}
-              <div className="flex items-center gap-2.5 mb-3">
-                <GoogleLogo className="h-5 w-5 flex-shrink-0" />
-                <span className="text-sm font-semibold text-text">
-                  Google Reviews
+            {/* Google review footer */}
+            <div className="mt-5 pt-4 border-t border-border-soft flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <GoogleLogo className="h-4 w-4 shrink-0" />
+                <span className="text-xs text-text-muted truncate">
+                  Trusted by businesses across Tanzania
                 </span>
               </div>
-
-              {/* Rating + stars + count */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-2xl font-bold text-text leading-none">
-                  {GOOGLE_REVIEW_RATING}
-                </span>
-                <div className="flex flex-col gap-0.5">
-                  <span className="flex items-center gap-0.5 text-star leading-none">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
-                    ))}
-                  </span>
-                  {/* REVIEW_COUNT: This "+N" display is sourced from the hardcoded
-                      REVIEW_COUNT constant above. When integrating with Google
-                      Business Profile API, this will auto-update from the live data.
-                      API suggestion: GET /api/v1/google-reviews/stats → { review_count } */}
-                  <span className="text-xs text-text-muted">
-                    {REVIEW_COUNT}+ reviews
-                  </span>
-                </div>
-              </div>
-
-              {/* Selling word — trust headline */}
-              <p className="text-sm font-semibold text-text leading-snug">
-                Trusted by businesses across Tanzania
-              </p>
-              <p className="text-xs text-text-muted mt-1 leading-relaxed">
-                Real reviews from real clients on Google
-              </p>
-
-              {/* Trust signal badges */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {content.service_signals.slice(0, 2).map((signal) => (
-                  <span
-                    key={signal.label}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-accent-soft/50 text-accent text-xs font-semibold"
-                  >
-                    <span className="font-extrabold">{signal.value}</span>
-                    {signal.label}
-                  </span>
-                ))}
-              </div>
-
-              {/* CTA to see reviews */}
               <a
                 href="https://www.google.com/search?q=Exxonim+Consult+reviews"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
+                className="inline-flex items-center gap-0.5 text-xs font-semibold text-accent shrink-0 transition-colors hover:text-accent-hover"
               >
-                See all reviews
-                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                See all
+                <ArrowRight className="w-3 h-3" aria-hidden="true" />
               </a>
-            </aside>
+            </div>
           </div>
+        </div>
+
+        {/* ── Service search bar — full width below hero ── */}
+        <div
+          ref={searchContainerRef}
+          className="mt-5 relative rounded-2xl md:rounded-[1.5rem] p-4 md:p-6 border border-border-soft bg-surface"
+          data-reveal
+        >
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-soft" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onFocus={() => setIsDropdownOpen(true)}
+              placeholder="Search for a service..."
+              aria-label="Search services"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-soft bg-page/60 text-text text-sm placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/25 focus:border-accent/40 transition-all"
+            />
+          </div>
+
+          {/* Search results dropdown */}
+          {showDropdown && (
+            <div id="services-search-dropdown" className="mt-3">
+              {hasResults && (
+                <ul className="grid gap-1">
+                  {filteredServices.slice(0, 6).map((service) => (
+                    <li key={service.name}>
+                      <a
+                        href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        onClick={(e) => handleResultClick(e, service.name)}
+                        className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Search className="w-3 h-3 text-text-soft group-hover:text-accent" aria-hidden="true" />
+                          <span className="font-medium">{service.name}</span>
+                        </span>
+                        <span className="text-xs text-text-soft">{service.group}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {noResults && (
+                <p className="px-3 py-2 text-sm text-text-muted">
+                  No services found for &ldquo;{searchQuery}&rdquo;
+                </p>
+              )}
+              {searchQuery.trim().length === 0 && (
+                <div className="grid gap-1">
+                  <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-text-soft">
+                    Popular services
+                  </p>
+                  {allServices.slice(0, 4).map((service) => (
+                    <a
+                      key={service.name}
+                      href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      onClick={(e) => handleResultClick(e, service.name)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors"
+                    >
+                      <Search className="w-3 h-3 text-text-soft" aria-hidden="true" />
+                      <span>{service.name}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>

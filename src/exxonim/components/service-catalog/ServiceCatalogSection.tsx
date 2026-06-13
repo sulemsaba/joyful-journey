@@ -1,11 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AlertCircle, RefreshCw, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
-import { SegmentFilterBar } from './SegmentFilterBar';
 import { ServiceCard, ServiceCardSkeleton } from './ServiceCard';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
-import type { SegmentFilter } from '@/exxonim/types/service-catalog';
 
 /** Category tab definition with icon */
 const categoryTabs = [
@@ -19,16 +17,44 @@ const categoryTabs = [
 type CategoryKey = (typeof categoryTabs)[number]['key'];
 
 export function ServiceCatalogSection() {
-  const [activeSegment, setActiveSegment] = useState<SegmentFilter>('all');
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
-  const { data, isLoading, isError, refetch } = useServiceCatalog(activeSegment);
+  const { data, isLoading, isError, refetch } = useServiceCatalog('all');
 
-  // Filter services by both segment and category
+  // Progressive disclosure: show only 6 cards on mobile unless expanded
+  const [showAll, setShowAll] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 640px)');
+    setIsDesktop(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  // Filter services by category only
   const filteredServices = useMemo(() => {
     const services = data?.data?.services ?? [];
     if (activeCategory === 'all') return services;
     return services.filter((s) => s.category === activeCategory);
   }, [data, activeCategory]);
+
+  // Visible services: limit on mobile unless expanded
+  const visibleServices = (isDesktop || showAll)
+    ? filteredServices
+    : filteredServices.slice(0, 6);
+  const hasMore = !isDesktop && !showAll && filteredServices.length > 6;
+
+  // Group services by category when "All Services" is selected
+  const groupedServices = useMemo(() => {
+    if (activeCategory !== 'all') return null;
+    const groups: Record<string, typeof filteredServices> = {};
+    for (const s of visibleServices) {
+      if (!groups[s.category]) groups[s.category] = [];
+      groups[s.category].push(s);
+    }
+    return groups;
+  }, [visibleServices, activeCategory]);
 
   // Count services per category for the tab badges
   const allServices = data?.data?.services ?? [];
@@ -49,16 +75,8 @@ export function ServiceCatalogSection() {
             Our Services
           </h1>
           <p className="text-sm md:text-base max-w-xl text-text-muted">
-            Registration, compliance, work permits &amp; NGO advisory. Browse by category or filter by who you are.
+            Registration, compliance, work permits &amp; NGO advisory. Browse by category to find what you need.
           </p>
-        </div>
-
-        {/* Segment Filter Bar */}
-        <div className="mb-6">
-          <SegmentFilterBar
-            activeSegment={activeSegment}
-            onSegmentChange={setActiveSegment}
-          />
         </div>
 
         {/* Category Tabs */}
@@ -155,7 +173,7 @@ export function ServiceCatalogSection() {
             </p>
             <button
               type="button"
-              onClick={() => { setActiveSegment('all'); setActiveCategory('all'); }}
+              onClick={() => { setActiveCategory('all'); }}
               className={cn(
                 'inline-flex items-center justify-center gap-2 rounded-full',
                 'min-h-[44px] px-5 py-2.5',
@@ -172,11 +190,52 @@ export function ServiceCatalogSection() {
 
         {/* Service Cards Grid */}
         {!isLoading && !isError && filteredServices.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {filteredServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
-          </div>
+          <>
+            {groupedServices ? (
+              /* Grouped layout: one section per category */
+              Object.entries(groupedServices).map(([categoryName, services]) => (
+                <div key={categoryName} className="mt-8 first:mt-0">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-2 w-2 rounded-full bg-accent" />
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-text-soft">{categoryName}</h2>
+                    <div className="flex-1 h-px bg-border-soft" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                    {services.map((service) => (
+                      <ServiceCard key={service.id} service={service} />
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              /* Flat grid: single category selected */
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                {visibleServices.map((service) => (
+                  <ServiceCard key={service.id} service={service} />
+                ))}
+              </div>
+            )}
+
+            {/* Show More Button (mobile progressive disclosure) */}
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  type="button"
+                  onClick={() => setShowAll(true)}
+                  className={cn(
+                    'inline-flex items-center justify-center gap-2 rounded-full',
+                    'min-h-[44px] px-6 py-2.5',
+                    'bg-accent text-accent-contrast text-sm font-semibold',
+                    'transition-all duration-200 ease-out',
+                    'hover:bg-accent-hover',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+                  )}
+                >
+                  Show more services
+                </button>
+              </div>
+            )}
+          </>
         )}
 
         {/* Trust Footer */}

@@ -145,3 +145,124 @@ Stage Summary:
 - Fix: Rebuilt the Vite app and copied video files to `dist/`
 - Video now plays correctly with 2 sources (webm + mp4), cache-busting, and 0.7x playback rate
 - All design changes (floating pill navbar, etc.) are working correctly
+
+---
+Task ID: 6
+Agent: Sub Agent
+Task: Merge two competing filter rows in ServiceCatalogSection into one unified category filter bar
+
+Work Log:
+- Read worklog.md, ServiceCatalogSection.tsx, index.ts, useServiceCatalog.ts
+- Identified the problem: two filter bars (SegmentFilterBar for audience + Category tabs for service type) creating confusion
+- ServiceCatalogSection.tsx changes:
+  - Removed `SegmentFilterBar` import
+  - Removed `SegmentFilter` type import from service-catalog types
+  - Removed `activeSegment` state variable
+  - Changed `useServiceCatalog(activeSegment)` to `useServiceCatalog('all')` — always loads all services, no segment filtering
+  - Removed SegmentFilterBar JSX block (the entire `<div className="mb-6">` containing `<SegmentFilterBar>`)
+  - Updated comment from "Filter services by both segment and category" to "Filter services by category only"
+  - Updated subtitle from "Browse by category or filter by who you are" to "Browse by category to find what you need"
+  - Updated empty state "Show all services" button: removed `setActiveSegment('all')`, kept only `setActiveCategory('all')`
+- index.ts changes:
+  - Removed `SegmentFilterBar` export line
+- Build verified: `vite build` succeeds cleanly
+- No other files reference SegmentFilterBar (only its own file, which was not modified per instructions)
+- Category tabs remain as the sole filter mechanism with icons and count badges
+
+Stage Summary:
+- SegmentFilterBar completely removed from ServiceCatalogSection — no more competing filter rows
+- Single unified category filter bar (All Services, Business Setup, Compliance, Work Permits, NGOs & Non-Profits)
+- useServiceCatalog hook kept but always called with 'all' to load all services
+- All existing functionality preserved: loading states, error states, empty states, trust footer, category tabs with counts
+
+---
+Task ID: 2
+Agent: Sub Agent
+Task: Reorder ServicesPage sections — remove Breadcrumb, ProblemFramingSection, ComplianceCalendarSection; move FAQ before Packages
+
+Work Log:
+- Read worklog.md and ServicesPage.tsx
+- Removed 5 unused imports: `Home` (lucide-react), `Breadcrumb`, `Container`, `ComplianceCalendarSection`, `ProblemFramingSection`
+- Removed Breadcrumb JSX block (`<Container><Breadcrumb .../></Container>`)
+- Removed ProblemFramingSection conditional JSX block
+- Removed ComplianceCalendarSection JSX
+- Reordered sections: FAQ (ServicesFaqSection) now renders BEFORE Packages (ServicePackagesSection) to handle objections before pricing
+- Updated page structure comment from "10-section B2B conversion flow" to "streamlined 6-section B2B conversion flow" with correct numbering
+- Preserved: LoadBoundary wrapper, StructuredData component, all remaining section JSX exactly as-is
+- Build verified: `npx vite build` succeeds with no errors
+
+Stage Summary:
+- Services page reduced from 8+ sections to 6 clean sections
+- New order: Hero → Catalog → Differentiators → FAQ → Packages → CTA
+- Removed: Breadcrumb (unnecessary on top-level page), ProblemFramingSection (lengthy emotional detour), ComplianceCalendarSection (no conversion value)
+- FAQ moved before Packages to handle objections before showing pricing
+- All imports cleaned up — no unused imports remain
+
+---
+Task ID: 3
+Agent: Sub Agent
+Task: Enhance ServicesOverviewSection hero — fix empty desktop right side, make badge more prominent
+
+Work Log:
+- Read worklog.md and ServicesOverviewSection.tsx
+- Identified two audit issues: (1) Desktop right side had search+Google review but no visual impact, (2) "No office visits required" badge was too subtle (text-xs, bg-accent-soft/60)
+- Restructured hero layout from `lg:grid-cols-[1.15fr_0.85fr]` to `lg:grid-cols-[1fr_380px]` with `lg:gap-12 items-start`
+- Added trust stats panel (right column on desktop, below hero on mobile):
+  - Frosted glass card: `bg-surface/80 backdrop-blur-xl border border-border-soft shadow-card rounded-2xl`
+  - Gradient accent line at top: `bg-gradient-to-r from-accent via-accent/60 to-transparent`
+  - 2×2 grid of 4 stats: "120+" Companies Registered, "100%" Tracked & Updated, "4.9★" Google Rating, "58+" Client Reviews
+  - Each stat: large number in accent color + small label in text-muted
+  - Footer with Google logo + "Trusted by businesses across Tanzania" + "See all reviews" link
+- Replaced old Google review panel (its data merged into stats panel)
+- Moved search box below the hero grid as full-width bar (accessible on both mobile and desktop)
+- Made "No office visits required" badge more prominent:
+  - Changed from `bg-accent-soft/60 text-xs px-3 py-1.5` to `bg-accent-soft text-sm px-4 py-2`
+  - Added `ring-1 ring-accent/25` for subtle accent ring
+  - Added `animate-ping` pulsing effect on ShieldCheck icon for attention-drawing animation
+  - Increased icon size from `w-3.5 h-3.5` to `w-5 h-5`
+- Removed `overflow-hidden` from section (was clipping search dropdown)
+- Build verified: `vite build` succeeds
+- VLM verification confirmed:
+  - Desktop: two-column layout with hero text left, stats panel right
+  - Mobile: stacked layout (hero text → stats panel → search bar)
+  - Badge is visible and prominent on both breakpoints
+  - All 4 stats displayed correctly
+  - Search bar accessible on both desktop and mobile
+
+Stage Summary:
+- Desktop right side no longer empty — frosted glass stats panel with 4 key metrics fills the space
+- "No office visits required" badge upgraded from subtle text-xs to prominent text-sm pill with ring accent and ping animation on icon
+- Search bar moved to full-width position below hero grid for clean layout
+- Google review data merged into stats panel (no redundant panels)
+- Mobile layout preserved: stacked vertical flow
+
+---
+Task ID: 4-5
+Agent: Sub Agent
+Task: Progressive disclosure on mobile + visual group boundaries for ServiceCatalogSection
+
+Work Log:
+- Read worklog.md and ServiceCatalogSection.tsx
+- Change 1: Progressive disclosure on mobile
+  - Added `showAll` (useState, default false) and `isDesktop` (useState, default false) state variables
+  - Added useEffect with `window.matchMedia('(min-width: 640px)')` to detect desktop, with change listener and cleanup
+  - Computed `visibleServices`: on desktop or when `showAll` is true, show all; otherwise slice to first 6
+  - Computed `hasMore`: true when not desktop, not showAll, and more than 6 filtered services
+  - Added "Show more services" button below the grid when `hasMore` is true, with accent styling (bg-accent text-accent-contrast rounded-full)
+  - Button sets `showAll = true` on click, revealing all cards
+- Change 2: Visual boundaries for catalog groups
+  - Added `groupedServices` useMemo that groups `visibleServices` by `s.category` when `activeCategory === 'all'`, returns null otherwise
+  - When `groupedServices` is non-null (All Services tab), renders each group with:
+    - Group header: accent dot + uppercase category name + horizontal rule (h-px bg-border-soft)
+    - Grid of cards for that group
+    - `mt-8 first:mt-0` spacing between groups
+  - When a specific category is selected, renders flat grid as before (no group headers)
+- Fixed JSX syntax: missing `}` in closing of conditional expression (`)} instead of `)`)
+- Build verified: `npx vite build` succeeds
+
+Stage Summary:
+- Mobile progressive disclosure: only 6 cards shown initially, "Show more services" button to reveal all
+- Desktop always shows all cards (matchMedia detects 640px+ breakpoint)
+- Visual group boundaries: when "All Services" tab is active, services are grouped by category with subtle headers (accent dot + uppercase label + divider line)
+- Single category tab shows flat grid without group headers
+- All existing functionality preserved (loading/error/empty states, trust footer, category tabs with counts)
