@@ -19,8 +19,8 @@ import { routes } from "@/exxonim/routes";
  */
 const lightLogo = "/branding/exxonimLogoLight.webp";
 const darkLogo = "/branding/logo-dark.png";
-const faviconLight = "/branding/exxonim-favicon-light.svg";
-const faviconDark = "/branding/exxonim-favicon-dark.svg";
+const faviconLight = "/branding/exxonim-favicon-light.png";
+const faviconDark = "/branding/exxonim-favicon-dark.png";
 
 /**
  * Shell-level fallback data for navigation, branding, company contact details, and footer links.
