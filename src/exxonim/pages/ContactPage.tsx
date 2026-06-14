@@ -502,7 +502,7 @@ export function ContactPage() {
                       disabled={isSubmitting}
                       isLoading={isSubmitting}
                     >
-                      Submit request
+                      {isSubmitting ? "Sending..." : "Submit request"}
                     </Button>
 
                     {/* Disclaimer */}

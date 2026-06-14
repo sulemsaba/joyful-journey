@@ -1,4 +1,5 @@
 import { routes } from '@/exxonim/routes';
+import { Button } from '@/exxonim/components/primitives/Button';
 import type { ServiceFlowItem } from '@/exxonim/types';
 
 /* ── Inline SVG icons for each step ──────────────────────── */
@@ -110,18 +111,20 @@ export function HowItWorksSection({ flow }: HowItWorksSectionProps) {
 
         {/* CTA — action-oriented (CRO audit Problem 1) */}
         <div className="mt-10 md:mt-14 text-center flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a
+          <Button
+            size="hero"
+            variant="primary"
             href={`${routes.contact}#inquiry`}
-            className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
           >
             Ask a Question — Free
-          </a>
-          <a
+          </Button>
+          <Button
+            size="hero"
+            variant="secondary"
             href="#packages"
-            className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface text-text transition-all hover:bg-surface hover:-translate-y-0.5"
           >
             See Package Plans
-          </a>
+          </Button>
         </div>
       </div>
     </section>

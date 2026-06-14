@@ -863,7 +863,7 @@ export function TrackConsultationPage() {
                   disabled={isSearching || !canSearch}
                   isLoading={isSearching}
                 >
-                  Check Status
+                  {isSearching ? "Searching..." : "Check Status"}
                 </Button>
               </form>
               <a
@@ -944,14 +944,30 @@ export function TrackConsultationPage() {
 
       {/* ── Tracking result ── */}
       <div ref={resultRef}>
-        {/* DISABLED: TrackingSkeleton (loader extermination) */}
-        {/* {isSearching && (
+        {/* Inline search indicator — subtle, in the result area only.
+         * NOT a full-page loader. Shows a minimal "Searching..." message
+         * inside the result panel so users know the lookup is in progress. */}
+        {isSearching && (
           <section className="pb-16 md:pb-20">
             <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
-              <TrackingSkeleton />
+              <div className="rounded-2xl border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8">
+                <div className="flex items-center justify-center gap-3 py-8 text-text-muted">
+                  <svg
+                    className="animate-spin h-5 w-5 text-accent"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span className="text-sm font-medium">Searching for your consultation...</span>
+                </div>
+              </div>
             </div>
           </section>
-        )} */}
+        )}
 
         {!isSearching && (lookupResult || notFound) && (
           <section className="pb-16 md:pb-20">

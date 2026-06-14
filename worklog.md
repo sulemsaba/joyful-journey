@@ -742,3 +742,40 @@ Stage Summary:
 - KEY INSIGHT: Every route-changing element now has consistent preloading behavior,
   not just the navbar. Desktop: hover → preload. Mobile: touchStart → preload.
   Keyboard: focus → preload.
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Phase 2 — Audit all route-changing elements, create SmartLink, optimize forms and tracking UX, add viewport preloading
+
+Work Log:
+- Complete audit of ALL route-changing elements across the entire codebase
+- Found 7 files with plain `<a>` tags for internal routes that bypassed SmartLink/Button preloading
+- Fixed ServiceSearchSection.tsx: replaced plain `<a>` with SmartLink (Ask a Question) and Button (bottom CTAs)
+- Fixed ResourcesPage.tsx: replaced plain `<a>` with SmartLink (blog card "Learn more", quick-access cards, trending hero post)
+- Fixed ResourceArticlePage.tsx: replaced RelatedArticleCard plain `<a>` with SmartLink
+- Fixed AboutPage.tsx: replaced profile "Learn more" plain `<a>` with SmartLink
+- Fixed HowItWorksSection.tsx: replaced CTAs with Button primitive (Ask a Question, See Package Plans)
+- Fixed ExxonimApartSection.tsx: replaced "Learn more" plain `<a>` with SmartLink
+- Fixed ServicesOverviewSection.tsx: replaced search result and popular services `<a>` with SmartLink
+- Fixed MenuColumns.tsx: replaced navigation dropdown `<a>` with SmartLink
+- Fixed preloadRoute() to handle dynamic article paths (/resources/<slug>) — previously these were silently ignored
+- Re-enabled Button isLoading spinner for form submit buttons (was disabled during loader extermination)
+- Updated ContactPage submit button: "Submit request" → "Sending..." while loading
+- Updated CareerPage submit button: "Submit Application" → "Uploading..." while loading
+- Updated TrackConsultationPage submit button: "Check Status" → "Searching..." while loading
+- Added inline search indicator to TrackConsultationPage result area (subtle spinner + "Searching for your consultation...")
+- Created useViewportPreload hook with IntersectionObserver for mobile-friendly chunk preloading
+- Applied viewport preloading to InsightsSection (homepage blog rail)
+- Applied viewport preloading to ServiceSearchSection (services page cards)
+- Applied viewport preloading to ResourcesPage (articles grid section)
+- All pages verified with Agent Browser: no errors, all interactive elements work correctly
+
+Stage Summary:
+- ALL internal route-changing elements now go through SmartLink or Button with preloading
+- Form submit buttons now show inline loading states (spinner + descriptive text)
+- Tracking lookup has inline search indicator in result area (no full-page loader)
+- Dynamic article paths (/resources/<slug>) now correctly preload the ResourceArticlePage chunk
+- Viewport-based preloading added for blog and service card sections (mobile optimization)
+- Zero browser errors on all tested pages
+- Lint check passes cleanly

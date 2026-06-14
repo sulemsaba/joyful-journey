@@ -2,6 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import { routes } from '@/exxonim/routes';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
+import { Button } from '@/exxonim/components/primitives/Button';
+import { useViewportPreloadMany } from '@/exxonim/hooks/useViewportPreload';
 import type { ServicesCatalogContent } from '@/exxonim/types';
 
 /* ── Inline SVG icons ──────────────────────────────────────── */
@@ -78,6 +81,10 @@ interface ServiceSearchSectionProps {
 export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
   const serviceGroups = content.service_groups;
 
+  // Viewport-based preloading: when the service search section becomes
+  // visible, preload the contact page chunk (the most common CTA target).
+  const sectionRef = useViewportPreloadMany(["/contact"]);
+
   // Build flat list of all services with their group info
   const allServices = useMemo(() => {
     return serviceGroups.flatMap((group) =>
@@ -140,6 +147,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
 
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       id="services"
       className="py-16 md:py-24 bg-page-strong"
       aria-labelledby="service-search-title"
@@ -265,14 +273,14 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
                         </p>
 
                         {/* CTA — always visible on mobile */}
-                        <a
+                        <SmartLink
                           href={`${routes.contact}#inquiry`}
                           className="inline-flex items-center gap-1.5 mt-1 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
                           aria-label={`Ask about ${service.label}`}
                         >
                           Ask a Question
                           <span aria-hidden="true" className="text-base leading-none">→</span>
-                        </a>
+                        </SmartLink>
                       </article>
                     ))}
                   </div>
@@ -284,18 +292,20 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
 
         {/* Bottom CTA */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
-          <a
+          <Button
+            size="hero"
+            variant="primary"
             href={routes.contact}
-            className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold bg-accent text-accent-contrast transition-all hover:bg-accent-hover hover:-translate-y-0.5"
           >
             Ask a Question — Free
-          </a>
-          <a
+          </Button>
+          <Button
+            size="hero"
+            variant="secondary"
             href="#packages"
-            className="inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-extrabold border border-border-soft bg-surface/80 text-text transition-all hover:bg-surface hover:-translate-y-0.5"
           >
             See package plans
-          </a>
+          </Button>
         </div>
       </div>
     </section>

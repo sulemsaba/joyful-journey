@@ -1,4 +1,5 @@
 import { cn } from "@/exxonim/utils/cn";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import type { MenuColumn } from "./types";
 
 interface MenuColumnsProps {
@@ -23,13 +24,13 @@ export function MenuColumns({ columns, onNavigate }: MenuColumnsProps) {
           <ul className="grid gap-2.5">
             {column.items.map((item, itemIndex) => (
               <li key={`${column.title}-${item.href}-${itemIndex}`}>
-                <a
+                <SmartLink
                   className="text-sm text-text-muted hover:text-accent transition-colors"
                   href={item.href}
                   onClick={onNavigate}
                 >
                   {item.label}
-                </a>
+                </SmartLink>
               </li>
             ))}
           </ul>

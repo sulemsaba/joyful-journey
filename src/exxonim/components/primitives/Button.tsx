@@ -188,18 +188,21 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
       className,
     )
 
-    /* DISABLED: isLoading spinner (loader extermination)
-     * Button always shows children, no spinner overlay.
-     * Re-enable the isLoading ternary to test if this was the chronic loader. */
-    const content = children
-    // const content = isLoading ? (
-    //   <span className="inline-flex items-center gap-2">
-    //     <Spinner />
-    //     {children}
-    //   </span>
-    // ) : (
-    //   children
-    // )
+    /* RE-ENABLED: isLoading spinner for form submit buttons.
+     * Route buttons (with href) never pass isLoading=true,
+     * so this spinner only appears on form submit buttons:
+     *   - Contact Form: "Sending..."
+     *   - Career Application: "Uploading..."
+     *   - Tracking Lookup: "Searching..."
+     * This is the CORRECT use of inline loading — NOT a full-page loader. */
+    const content = isLoading ? (
+      <span className="inline-flex items-center gap-2">
+        <Spinner />
+        {children}
+      </span>
+    ) : (
+      children
+    )
 
     if (href && !isDisabled) {
       // Internal links (no protocol prefix) use React Router <Link>

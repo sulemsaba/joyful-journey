@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Search, ArrowRight, ShieldCheck, Star } from 'lucide-react';
 import { routes } from '@/exxonim/routes';
 import { Button } from '@/exxonim/components/primitives/Button';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 import type { ServicesOverviewContent } from '@/exxonim/types';
 
 interface ServicesOverviewSectionProps {
@@ -242,7 +243,7 @@ export function ServicesOverviewSection({
                 <ul className="grid gap-1">
                   {filteredServices.slice(0, 6).map((service) => (
                     <li key={service.name}>
-                      <a
+                      <SmartLink
                         href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
                         onClick={(e) => handleResultClick(e, service.name)}
                         className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-text hover:bg-accent-soft/50 transition-colors group"
@@ -252,7 +253,7 @@ export function ServicesOverviewSection({
                           <span className="font-medium">{service.name}</span>
                         </span>
                         <span className="text-xs text-text-soft">{service.group}</span>
-                      </a>
+                      </SmartLink>
                     </li>
                   ))}
                 </ul>
@@ -268,7 +269,7 @@ export function ServicesOverviewSection({
                     Popular services
                   </p>
                   {allServices.slice(0, 4).map((service) => (
-                    <a
+                    <SmartLink
                       key={service.name}
                       href={`${service.href}#${service.name.toLowerCase().replace(/\s+/g, '-')}`}
                       onClick={(e) => handleResultClick(e, service.name)}
@@ -276,7 +277,7 @@ export function ServicesOverviewSection({
                     >
                       <Search className="w-3 h-3 text-text-soft" aria-hidden="true" />
                       <span>{service.name}</span>
-                    </a>
+                    </SmartLink>
                   ))}
                 </div>
               )}

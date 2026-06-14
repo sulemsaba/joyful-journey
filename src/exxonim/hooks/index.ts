@@ -11,3 +11,4 @@ export { useRevealOnScroll } from "./useRevealOnScroll";
 export { useSiteSetting } from "./useSiteSetting";
 export { useTestimonials } from "./useTestimonials";
 export { useTheme } from "./useTheme";
+export { useViewportPreload, useViewportPreloadMany } from "./useViewportPreload";

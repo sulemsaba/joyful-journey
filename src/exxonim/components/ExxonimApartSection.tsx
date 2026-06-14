@@ -2,6 +2,7 @@
 
 import { CheckCircle, Bell, ShieldCheck, ClipboardCheck, Globe } from 'lucide-react';
 import { routes } from '@/exxonim/routes';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ExxonimApartSection — "What sets Exxonim apart" differentiator grid
@@ -107,7 +108,7 @@ export function ExxonimApartSection() {
 
               {/* Optional "Learn more" link */}
               {card.link && (
-                <a
+                <SmartLink
                   href={card.link}
                   className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
                 >
@@ -115,7 +116,7 @@ export function ExxonimApartSection() {
                   <span aria-hidden="true" className="text-base leading-none">
                     &rarr;
                   </span>
-                </a>
+                </SmartLink>
               )}
             </article>
           ))}

@@ -29,6 +29,7 @@ import { formatBlogDate, getAuthorInitials } from "@/exxonim/utils/blog";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
 import { SmartLink } from "./primitives/SmartLink";
+import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
 
 /**
  * Homepage "Latest insights" section — up to 4 featured blog cards in a
@@ -155,8 +156,15 @@ export function InsightsSection({
   onPrev,
   onNext,
 }: InsightsSectionProps) {
+  // Viewport-based preloading: when the blog section becomes visible,
+  // preload the article page chunk so mobile taps are instant.
+  // All article slugs share the same ResourceArticlePage chunk,
+  // so we only need to preload it once.
+  const sectionRef = useViewportPreloadMany(["/resources"]);
+
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       id="resources"
       aria-label="Latest insights and articles"
       className="relative overflow-clip py-16 md:py-24"

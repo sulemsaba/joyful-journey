@@ -605,7 +605,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
               disabled={!name.trim() || !email.trim() || !cvFile}
               className="rounded-xl w-full"
             >
-              Submit Application
+              {isSubmitting ? "Uploading..." : "Submit Application"}
             </Button>
           </form>
         )}

@@ -99,12 +99,26 @@ export const routePreloadMap: Record<string, () => Promise<unknown>> = {
 /**
  * Preload a route chunk by path. Safe to call multiple times.
  * Returns void — errors are silently caught (chunk will load on navigation instead).
+ *
+ * Handles both static routes ("/about", "/services") and dynamic article
+ * routes ("/resources/my-article-slug", "/blog/my-article-slug").
+ * Dynamic article paths all preload the same ResourceArticlePage chunk.
  */
 export function preloadRoute(path: string) {
+  // Direct lookup for static routes
   const fn = routePreloadMap[path];
   if (fn) {
-    void fn().catch(() => {
-      // Silently ignore — the chunk will be fetched on navigation
-    });
+    void fn().catch(() => {});
+    return;
+  }
+
+  // Dynamic article paths: /resources/<slug> or /blog/<slug>
+  // These all map to loadResourceArticlePage (same chunk)
+  const segments = path.split("/").filter(Boolean);
+  if (
+    segments.length === 2 &&
+    (segments[0] === "resources" || segments[0] === "blog")
+  ) {
+    void loadResourceArticlePage().catch(() => {});
   }
 }

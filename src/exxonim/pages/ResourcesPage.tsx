@@ -81,6 +81,7 @@ import type {
 import { StructuredData } from '@/exxonim/components/StructuredData';
 import { buildResourcesBlogLayout, formatBlogDate, getAuthorInitials, getVisibleBlogPosts } from "@/exxonim/utils/blog";
 import { Button } from "@/exxonim/components/primitives/Button";
+import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
 
 const INITIAL_VISIBLE_COUNT = 6;
 type ActiveCategory = BlogCategoryId | "all";
@@ -232,7 +233,7 @@ function renderGridCard(post: BlogPost) {
         </p>
         <div className="mt-auto flex items-center justify-between gap-3 pt-4 max-md:flex-col max-md:items-start max-md:gap-3">
           {renderAuthor(post)}
-          <a
+          <SmartLink
             href={articleLink}
             className="inline-flex items-center gap-1.5 whitespace-nowrap text-[0.85rem] font-bold text-accent transition-colors hover:text-accent-hover"
           >
@@ -240,7 +241,7 @@ function renderGridCard(post: BlogPost) {
             <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[2px]">
               &rarr;
             </span>
-          </a>
+          </SmartLink>
         </div>
       </div>
     </article>
@@ -449,6 +450,10 @@ export function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
+  // Viewport-based preloading: when the articles grid section becomes
+  // visible, preload the article page chunk for instant mobile taps.
+  const articlesSectionRef = useViewportPreloadMany(["/resources"]);
+
   const { data: posts = [] } = useBlogPosts();
   const { data: categories = [] } = useBlogCategories();
   const { data: page } = usePage<ResourcesPageContent>("resources");
@@ -557,7 +562,7 @@ export function ResourcesPage() {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {RESOURCE_CARDS.map((card) => (
-                  <a
+                  <SmartLink
                     key={card.title}
                     href={card.href}
                     className="group p-5 rounded-[1.35rem] border border-accent/10 bg-accent/[0.04] text-center transition-all duration-300 hover:bg-accent/[0.12] hover:border-accent/25 hover:-translate-y-0.5 flex flex-col items-center gap-2.5"
@@ -572,7 +577,7 @@ export function ResourcesPage() {
                     <span className="inline-flex items-center gap-1 text-accent text-sm font-bold group-hover:gap-2 transition-all">
                       Go <span aria-hidden="true">&rarr;</span>
                     </span>
-                  </a>
+                  </SmartLink>
                 ))}
               </div>
             </section>
@@ -588,7 +593,7 @@ export function ResourcesPage() {
                 </div>
                 <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 lg:gap-8 items-start">
                   {/* Hero post */}
-                  <a
+                  <SmartLink
                     href={resourceArticlePath(heroPost!.slug)}
                     className="group block rounded-[24px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1"
                   >
@@ -608,7 +613,7 @@ export function ResourcesPage() {
                       </p>
                       {renderTopHeroByline(heroPost!)}
                     </div>
-                  </a>
+                  </SmartLink>
 
                   {/* Trending rail */}
                   <aside className="space-y-3" aria-label={page.content.trending_label ?? "Trending articles"}>
@@ -623,7 +628,7 @@ export function ResourcesPage() {
             ) : null}
 
             {/* ── Articles section with filter + sort ── */}
-            <section id="articles" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
+            <section id="articles" ref={articlesSectionRef as React.RefObject<HTMLElement>} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
               <div className="flex flex-col gap-4 mb-8">
                 <div className="flex items-center gap-3">
                   <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-tight text-text">

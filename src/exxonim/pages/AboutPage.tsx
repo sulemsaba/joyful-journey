@@ -3,6 +3,7 @@
 import { Home, ArrowRight, CheckCircle, Clock, ShieldCheck, Target, Users, Eye, Star } from 'lucide-react';
 import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 import { routes } from '@/exxonim/routes';
 import { usePage } from '@/exxonim/hooks/usePage';
 import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
@@ -311,13 +312,13 @@ export function AboutPage() {
                         <p className="mt-2.5 text-sm text-text-muted leading-relaxed">
                           {profile.description}
                         </p>
-                        <a
+                        <SmartLink
                           href={routes.services}
                           className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
                         >
                           Learn more
                           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                        </a>
+                        </SmartLink>
                       </article>
                     ))}
                   </div>

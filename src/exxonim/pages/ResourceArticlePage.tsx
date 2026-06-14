@@ -104,6 +104,7 @@ import { resourceArticlePath, routes } from "@/exxonim/routes";
 import type { BlogPost, ResourcesPageContent } from '@/exxonim/types';
 import { siteOrigin } from "@/exxonim/seo/constants";
 import { Button } from "@/exxonim/components/primitives/Button";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 
 /** Renders BlogPosting JSON-LD structured data for Google rich results. */
 function ArticleStructuredData({ post }: { post: BlogPost }) {
@@ -301,7 +302,7 @@ function SocialShareButtons() {
  */
 function RelatedArticleCard({ post: relatedPost }: { post: BlogPost }) {
   return (
-    <a
+    <SmartLink
       href={resourceArticlePath(relatedPost.slug)}
       className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50
                  hover:bg-surface-elevated hover:border-accent/30
@@ -340,7 +341,7 @@ function RelatedArticleCard({ post: relatedPost }: { post: BlogPost }) {
           {relatedPost.readTimeMinutes ? ` · ${relatedPost.readTimeMinutes} min` : ""}
         </span>
       </div>
-    </a>
+    </SmartLink>
   );
 }
 
