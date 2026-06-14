@@ -130,7 +130,16 @@ export function App({ onReady }: { onReady?: () => void }) {
   /* ── Enable scroll-reveal system ────────────────────
    * Adding .js to <html> activates the CSS transition
    * system for [data-reveal] elements. Without .js, text
-   * is always visible (progressive enhancement for no-JS). */
+   * is always visible (progressive enhancement for no-JS).
+   *
+   * TIMING: This MUST run AFTER useRevealOnScroll has
+   * synchronously revealed all in-viewport elements.
+   * Since useRevealOnScroll is called BEFORE this effect,
+   * and its scanAndObserve() runs synchronously with
+   * .revealed class additions, by the time this effect
+   * fires, all in-viewport elements already have .revealed
+   * and will stay visible when html.js activates opacity:0
+   * on unrevealed (below-fold) elements. */
   useEffect(() => {
     document.documentElement.classList.add("js");
   }, []);

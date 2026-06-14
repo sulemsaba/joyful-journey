@@ -73,11 +73,12 @@ export function useRevealOnScroll(pathname?: string) {
         }
       });
 
-      // Batch all immediate reveals in a single rAF
+      // SYNCHRONOUS reveal: Must happen in the SAME frame as the
+      // useRevealOnScroll setup, BEFORE App adds html.js class.
+      // If we defer to rAF, the .js class activates opacity:0 on
+      // unrevealed elements first, causing a flash of invisible content.
       if (toReveal.length > 0) {
-        requestAnimationFrame(() => {
-          toReveal.forEach((el) => el.classList.add("revealed"));
-        });
+        toReveal.forEach((el) => el.classList.add("revealed"));
       }
     };
     scanAndObserveRef.current = scanAndObserve;

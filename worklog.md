@@ -863,3 +863,23 @@ Stage Summary:
 - ✅ Favicon pulse animation smoother (smaller scale, consistent size)
 - ✅ Favicon preloaded for instant appearance
 - ✅ Smooth 250ms fade-out transition when boot loader dismisses
+
+---
+Task ID: 6
+Agent: Main
+Task: Fix three visual issues: data-reveal flash, boot loader favicon sizing, lines on homepage
+
+Work Log:
+- Diagnosed the data-reveal flash: CSS `[data-reveal] { opacity: 0 }` applied unconditionally, so content was invisible when boot loader dismissed before useRevealOnScroll could process
+- Fixed data-reveal CSS: Changed from `[data-reveal]` to `html.js [data-reveal]:not(.revealed)` — content is now visible before JS loads (progressive enhancement)
+- Fixed useRevealOnScroll: Changed from rAF-batched reveals to synchronous reveals, ensuring in-viewport elements get `.revealed` class BEFORE `html.js` class activates opacity:0
+- Updated App.tsx comments: documented the timing dependency between useRevealOnScroll and html.js class
+- Fixed boot loader favicon: Removed scale pulse animation (was causing "favicon appears large then shrinks"), replaced with simple opacity pulse. Reduced size from 3rem to 2.5rem
+- Fixed HeroAurora lines: Reduced intensity from 46→28, coverage from 75→60, spacing from 2.5→3.5, disabled depth sub-lines (showDepth: false), reduced line opacity by ~65%, made lines thicker for smoother glow effect
+- Verified with Agent Browser: all 7 data-reveal elements revealed, html.js class properly set, boot loader properly removed from DOM, no console errors, page loads in 45ms
+
+Stage Summary:
+- ✅ data-reveal flash FIXED: Content visible before JS, html.js gate prevents invisible content
+- ✅ Boot loader favicon FIXED: No more scale pulse, just gentle opacity fade
+- ✅ HeroAurora lines FIXED: Now a smooth subtle glow instead of sharp diagonal lines
+- ✅ All visual verification passed via VLM + Agent Browser

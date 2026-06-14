@@ -354,20 +354,22 @@ html, body {
   }
 }
 
-/* ── Scroll-reveal: start hidden, animate on first intersection ──
- * iOS SAFETY: Elements with [data-reveal] start at opacity:0.
- * If IntersectionObserver fails (rare on iOS with overflow-x:clip),
- * the useRevealOnScroll hook has a 5s safety fallback that reveals
- * all remaining elements. Additionally, when the page first loads,
- * we briefly show all content then hide data-reveal elements only
- * after JS loads — this prevents a flash of invisible content.
+/* ── Scroll-reveal: progressive enhancement with html.js gate ──
+ * PROGRESSIVE ENHANCEMENT: Before JS loads, all content is VISIBLE.
+ * When JS loads, it adds .js to <html> AND synchronously reveals
+ * all in-viewport elements BEFORE the CSS opacity:0 takes effect.
+ * This eliminates the flash-of-invisible-content that occurred when
+ * the boot loader dismissed before useRevealOnScroll could process.
  *
- * ROUTE NAVIGATION FIX: html.reveal-instant disables the transition
- * so that in-viewport elements appear instantly on route change
- * (no 0.7s fade-in delay). The class is added briefly during
- * route transitions by useRevealOnScroll.
+ * FLOW: No-JS → content visible. JS loads → reveal in-viewport →
+ * add .js → in-viewport stays visible (has .revealed),
+ * below-fold hidden until scroll triggers intersection.
+ *
+ * ROUTE NAVIGATION: html.reveal-instant skips the transition
+ * so in-viewport elements appear instantly on route change.
+ * The class is added briefly during route transitions.
  */
-[data-reveal] {
+html.js [data-reveal]:not(.revealed) {
   opacity: 0;
   -webkit-transform: translateY(24px);
   transform: translateY(24px);
@@ -375,13 +377,13 @@ html, body {
   transition: opacity 0.7s ease-out, transform 0.7s ease-out;
   will-change: opacity, transform;
 }
-[data-reveal].revealed {
+html.js [data-reveal].revealed {
   opacity: 1;
   -webkit-transform: translateY(0);
   transform: translateY(0);
   will-change: auto;
 }
-/* Instant reveal: skip animation during route transitions */
+/* Instant reveal: skip animation during route transitions and initial load */
 html.reveal-instant [data-reveal] {
   -webkit-transition: none !important;
   transition: none !important;

@@ -37,11 +37,11 @@ interface AuroraConfig {
 }
 
 const DEFAULT_CONFIG: AuroraConfig = {
-  speed: 0.7,
-  spacing: 2.5,
-  coverage: 75,
-  intensity: 46,
-  showDepth: true,
+  speed: 0.5,
+  spacing: 3.5,
+  coverage: 60,
+  intensity: 28,
+  showDepth: false,
 };
 
 /**
@@ -100,8 +100,8 @@ function draw(
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
     const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
 
-    // Brand-colored lines with depth variation
-    const baseAlpha = isDark ? 0.08 + dF * 0.35 : 0.04 + dF * 0.2;
+    // Brand-colored lines — very subtle, soft glow effect
+    const baseAlpha = isDark ? 0.03 + dF * 0.12 : 0.02 + dF * 0.06;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
@@ -115,7 +115,7 @@ function draw(
       ctx.globalAlpha = subAlpha;
       // Use brand accent color directly — slight opacity variation per sub-line
       ctx.strokeStyle = withAlpha(accentColor, 0.5 + sub * 0.15 + dF * 0.2);
-      ctx.lineWidth = cfg.showDepth ? 1 + dF * 3 : 2;
+      ctx.lineWidth = 2 + dF * 4;
 
       ctx.beginPath();
       for (let s = 0; s <= steps; s++) {

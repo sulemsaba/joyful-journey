@@ -84,8 +84,8 @@
        * Timeout: After 8s, fades to subtle "Taking longer than expected" message
        */
       @keyframes boot-pulse {
-        0%, 100% { transform: scale(1); opacity: 0.6; }
-        50% { transform: scale(1.08); opacity: 0.9; }
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 0.9; }
       }
       @keyframes boot-dot {
         0%, 20% { opacity: 0; }
@@ -116,8 +116,8 @@
       }
       .boot-loader__favicon {
         position: relative;
-        width: 3rem;
-        height: 3rem;
+        width: 2.5rem;
+        height: 2.5rem;
         animation: boot-pulse 2s ease-in-out infinite;
       }
       .boot-loader__favicon img {
