@@ -605,3 +605,29 @@ Stage Summary:
   3. Framer Motion chunk split: smaller main bundle = faster initial parse
 - Loader catalog (L1-L11) status unchanged — all disabled
 - No new loaders introduced
+
+---
+Task ID: production-audit
+Agent: Main
+Task: Production build + honest measurement of route navigation after fixes
+
+Work Log:
+- Fixed production build: manualChunks must be a function (Vite 8/rolldown requirement)
+- Fixed production build: export all loadXxxPage functions from preloadRoutes.ts
+- Production build succeeds: main bundle 409KB (was 559KB), Framer Motion 119KB separate
+- Verified reveal-instant CSS: normal transition 0.7s → instant transition 0s (confirmed via getComputedStyle)
+- Dev server measurements (React render time only, no network latency):
+  - Home → Services: 4.6ms
+  - Services → About: 3.9ms
+  - About → Contact: 3.7ms
+  - COLD Home → Career: 4.6ms
+- These numbers are NOT production measurements — dev server serves chunks from memory
+- Could not measure true production timing because agent-browser can't reach production server through gateway
+
+Stage Summary:
+- Production build compiles and chunks correctly
+- Main bundle reduced: 559KB → 409KB (Framer Motion separated)
+- reveal-instant CSS confirmed working: 0.7s → 0s transition
+- Dev server React render time: ~4ms per route (no network)
+- PRODUCTION TIMING STILL UNKNOWN — cannot measure without real network deployment
+- Honest assessment: the improvement is real but the exact number requires a real deployment measurement

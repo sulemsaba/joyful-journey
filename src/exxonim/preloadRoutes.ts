@@ -12,35 +12,35 @@
  *     because Vite caches the module after the first import()
  */
 
-const loadAboutPage = () =>
+export const loadAboutPage = () =>
   import("@/exxonim/pages/AboutPage").then((m) => ({ default: m.AboutPage }));
-const loadCareerPage = () =>
+export const loadCareerPage = () =>
   import("@/exxonim/pages/CareerPage").then((m) => ({ default: m.CareerPage }));
-const loadContactPage = () =>
+export const loadContactPage = () =>
   import("@/exxonim/pages/ContactPage").then((m) => ({ default: m.ContactPage }));
-const loadFaqPage = () =>
+export const loadFaqPage = () =>
   import("@/exxonim/pages/FaqPage").then((m) => ({ default: m.FaqPage }));
-const loadNotFoundPage = () =>
+export const loadNotFoundPage = () =>
   import("@/exxonim/pages/NotFoundPage").then((m) => ({ default: m.NotFoundPage }));
-const loadResourceArticlePage = () =>
+export const loadResourceArticlePage = () =>
   import("@/exxonim/pages/ResourceArticlePage").then((m) => ({
     default: m.ResourceArticlePage,
   }));
-const loadResourcesPage = () =>
+export const loadResourcesPage = () =>
   import("@/exxonim/pages/ResourcesPage").then((m) => ({ default: m.ResourcesPage }));
-const loadServicesPage = () =>
+export const loadServicesPage = () =>
   import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }));
-const loadSupportPage = () =>
+export const loadSupportPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }));
-const loadTermsPage = () =>
+export const loadTermsPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.TermsPage }));
-const loadPrivacyPage = () =>
+export const loadPrivacyPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.PrivacyPage }));
-const loadCookiePage = () =>
+export const loadCookiePage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.CookiePage }));
-const loadDataRightsPage = () =>
+export const loadDataRightsPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.DataRightsPage }));
-const loadTrackConsultationPage = () =>
+export const loadTrackConsultationPage = () =>
   import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }));
 
 /**
