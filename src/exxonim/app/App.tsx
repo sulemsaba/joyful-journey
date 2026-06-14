@@ -132,16 +132,18 @@ export function App({ onReady }: { onReady?: () => void }) {
   const readyFired = useRef(false);
 
   /* ── Page transition animation ─────────────────────────
-   * On route change, trigger a subtle fade+slide-up on
+   * On route change, trigger a subtle opacity dip on
    * the <main> element. This is purely CSS — no layout
    * thrashing, no JS-driven animations, no Framer Motion.
-   * The animation re-triggers by toggling a class.
    *
-   * PERFORMANCE: This is a single CSS animation on one
-   * element. It uses transform + opacity (GPU-composited),
-   * so it doesn't trigger layout or paint. Zero impact on
-   * Core Web Vitals. The animation is 0.4s — fast enough
-   * to feel snappy, slow enough to feel polished. */
+   * DESIGN DECISION: We use a very short (120ms) opacity
+   * dip (1 → 0.92 → 1) instead of a slide or fade.
+   * Slides and longer fades add perceived delay, which
+   * we spent effort eliminating. This gives polish
+   * without feeling slow.
+   *
+   * PERFORMANCE: Single CSS animation, opacity only
+   * (GPU-composited). Zero impact on Core Web Vitals. */
   const [pageAnimating, setPageAnimating] = useState(false);
   const prevPathname = useRef(location.pathname);
 
@@ -151,7 +153,7 @@ export function App({ onReady }: { onReady?: () => void }) {
     prevPathname.current = location.pathname;
 
     setPageAnimating(true);
-    const timer = setTimeout(() => setPageAnimating(false), 450);
+    const timer = setTimeout(() => setPageAnimating(false), 150);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 

@@ -82,9 +82,9 @@ export function useTheme() {
 
     if (faviconLight && faviconDark) {
       // Restore original favicon config so browser media-query handles it
-      faviconLight.href = "/branding/exxonim-favicon-light.png";
+      faviconLight.href = "/branding/exxonim-favicon-light.svg";
       faviconLight.media = "";
-      faviconDark.href = "/branding/exxonim-favicon-dark.png";
+      faviconDark.href = "/branding/exxonim-favicon-dark.svg";
       faviconDark.media = "(prefers-color-scheme: dark)";
     }
   }, [theme]);

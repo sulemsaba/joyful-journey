@@ -30,13 +30,16 @@
     <link rel="preload" as="image" href="/branding/exxonimLogoLight.webp" fetchPriority="high" />
     <link rel="preload" as="image" href="/branding/logo-dark.png" fetchPriority="high" />
 
-    <!-- Preload favicon images for the boot loader (must appear instantly) -->
-    <link rel="preload" as="image" href="/branding/exxonim-favicon-light.png" />
-    <link rel="preload" as="image" href="/branding/exxonim-favicon-dark.png" />
+    <!-- Preload favicon SVGs for the boot loader (crisp at any size, tiny file) -->
+    <link rel="preload" as="image" href="/branding/exxonim-favicon-light.svg" />
+    <link rel="preload" as="image" href="/branding/exxonim-favicon-dark.svg" />
 
-    <!-- Appearance-aware favicons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/branding/exxonim-favicon-light.png" id="favicon-light" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
+    <!-- Appearance-aware favicons: SVG for sharp rendering, PNG fallback -->
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/branding/exxonim-favicon-light.svg" id="favicon-light" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/branding/exxonim-favicon-dark.svg" media="(prefers-color-scheme: dark)" id="favicon-dark" />
+    <!-- PNG fallback for browsers without SVG favicon support -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/branding/exxonim-favicon-light.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" />
 
     <!-- RSS auto-discovery -->
     <link rel="alternate" type="application/rss+xml" title="Exxonim Consult Blog" href="/blog/rss.xml" />
@@ -169,8 +172,8 @@
          Fades out smoothly when React signals readiness. -->
     <div class="boot-loader" id="boot-loader">
       <div class="boot-loader__favicon">
-        <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" />
-        <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" />
+        <img src="/branding/exxonim-favicon-light.svg" alt="" class="sk-logo-light" />
+        <img src="/branding/exxonim-favicon-dark.svg" alt="" class="sk-logo-dark" />
       </div>
       <div class="boot-loader__text">
         <span>Loading</span>
