@@ -24,13 +24,12 @@ interface CatchAllPageProps {
 export default function CatchAllPage({ params }: CatchAllPageProps) {
   // In Next.js 16, params is a Promise — we read it via React.use()
   // during the server render. On the client, window.location is the
-  // source of truth, so initialPathname is only used for SSR.
-  const { slug } = React.use(params);
-  const initialPathname = slug ? `/${slug.join("/")}` : "/";
+  // source of truth — React Router handles routing internally.
+  React.use(params);
 
   return (
     <AppProviders>
-      <App initialPathname={initialPathname} />
+      <App />
     </AppProviders>
   );
 }

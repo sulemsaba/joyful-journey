@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
@@ -75,15 +75,10 @@ type IdleWindow = typeof window & {
 };
 
 /* ── Page-level Suspense fallback ──────────────────────
- * L11: SUSPENSE_FALLBACK
- * LABEL:    SUSPENSE_FALLBACK
- * POSITION: <main> area — shown during lazy-loaded chunk download
- * APPEARANCE: Nothing (renders null). The bg-page background color
- *             provides the correct theme color via inline styles
- *             in index.html. No flash, no flicker.
- * STATUS:   active — renders null (no visual loader)
- * CSS REQUIRED: None (relies on bg-page background from index.html)
- * RE-ENABLE: Replace `fallback={null}` with a loader component
+ * The boot loader overlay stays visible until actual page
+ * content renders (see PageReady component below). So the
+ * Suspense fallback can safely be null — the boot loader
+ * covers the gap during lazy chunk download.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── ScrollToTop on route change ──────────────────── */
@@ -92,6 +87,27 @@ function ScrollToTop() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+  return null;
+}
+
+/* ── Page content readiness signal ────────────────────
+ * Rendered INSIDE <Routes> so it only fires after the
+ * route chunk has loaded and the page component has
+ * mounted. This keeps the boot loader visible during
+ * the gap between shell render and page content render.
+ *
+ * For eager-loaded pages (HomePage), this fires in the
+ * same render cycle as the shell — no perceptible delay.
+ * For lazy-loaded pages, this fires after the chunk
+ * downloads and the component mounts. */
+function PageReady({ onReady }: { onReady: () => void }) {
+  const called = useRef(false);
+  useLayoutEffect(() => {
+    if (!called.current) {
+      called.current = true;
+      onReady();
+    }
+  }, [onReady]);
   return null;
 }
 
@@ -115,12 +131,38 @@ export function App({ onReady }: { onReady?: () => void }) {
   const location = useLocation();
   const readyFired = useRef(false);
 
+  /* ── Page transition animation ─────────────────────────
+   * On route change, trigger a subtle fade+slide-up on
+   * the <main> element. This is purely CSS — no layout
+   * thrashing, no JS-driven animations, no Framer Motion.
+   * The animation re-triggers by toggling a class.
+   *
+   * PERFORMANCE: This is a single CSS animation on one
+   * element. It uses transform + opacity (GPU-composited),
+   * so it doesn't trigger layout or paint. Zero impact on
+   * Core Web Vitals. The animation is 0.4s — fast enough
+   * to feel snappy, slow enough to feel polished. */
+  const [pageAnimating, setPageAnimating] = useState(false);
+  const prevPathname = useRef(location.pathname);
+
+  useEffect(() => {
+    // Skip animation on initial load (boot loader handles that)
+    if (prevPathname.current === location.pathname) return;
+    prevPathname.current = location.pathname;
+
+    setPageAnimating(true);
+    const timer = setTimeout(() => setPageAnimating(false), 450);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   useRevealOnScroll(location.pathname);
 
-  // Dismiss the boot loader overlay after the first render completes.
-  // This ensures the boot loader covers the gap between HTML parse
-  // and React mounting + page content rendering.
-  useEffect(() => {
+  /* ── Signal page readiness ─────────────────────────────
+   * Called by <PageReady> which lives INSIDE <Routes>.
+   * This guarantees the boot loader stays visible until
+   * the actual page component has rendered — not just
+   * the nav + footer shell. */
+  const handlePageReady = useCallback(() => {
     if (!readyFired.current && onReady) {
       readyFired.current = true;
       onReady();
@@ -192,28 +234,28 @@ export function App({ onReady }: { onReady?: () => void }) {
           Suspense only wraps <main> so the nav + footer shell
           stays mounted during chunk loading.
         */}
-        <main id="top" className="relative isolate overflow-x-clip flex-1 pt-[60px] xl:pt-[68px]">
+        <main id="top" className={`relative isolate overflow-x-clip flex-1 pt-[60px] xl:pt-[68px]${pageAnimating ? " page-transition-enter" : ""}`}>
           <ScrollToTop />
           <ErrorBoundary>
             <Suspense fallback={null}>
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/faq" element={<FaqPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/resources" element={<ResourcesPage />} />
-                <Route path="/blog" element={<ResourcesPage />} />
-                <Route path="/resources/:slug" element={<ResourceArticleRoute />} />
-                <Route path="/blog/:slug" element={<ResourceArticleRoute />} />
-                <Route path="/career" element={<CareerPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/support" element={<SupportPage />} />
-                <Route path="/terms" element={<TermsPage />} />
-                <Route path="/privacy" element={<PrivacyPage />} />
-                <Route path="/cookies" element={<CookiePage />} />
-                <Route path="/data-rights" element={<DataRightsPage />} />
-                <Route path="/track-consultation" element={<TrackConsultationPage />} />
-                <Route path="*" element={<NotFoundPage pathname={location.pathname} />} />
+                <Route path="/" element={<><PageReady onReady={handlePageReady} /><HomePage /></>} />
+                <Route path="/about" element={<><PageReady onReady={handlePageReady} /><AboutPage /></>} />
+                <Route path="/faq" element={<><PageReady onReady={handlePageReady} /><FaqPage /></>} />
+                <Route path="/services" element={<><PageReady onReady={handlePageReady} /><ServicesPage /></>} />
+                <Route path="/resources" element={<><PageReady onReady={handlePageReady} /><ResourcesPage /></>} />
+                <Route path="/blog" element={<><PageReady onReady={handlePageReady} /><ResourcesPage /></>} />
+                <Route path="/resources/:slug" element={<><PageReady onReady={handlePageReady} /><ResourceArticleRoute /></>} />
+                <Route path="/blog/:slug" element={<><PageReady onReady={handlePageReady} /><ResourceArticleRoute /></>} />
+                <Route path="/career" element={<><PageReady onReady={handlePageReady} /><CareerPage /></>} />
+                <Route path="/contact" element={<><PageReady onReady={handlePageReady} /><ContactPage /></>} />
+                <Route path="/support" element={<><PageReady onReady={handlePageReady} /><SupportPage /></>} />
+                <Route path="/terms" element={<><PageReady onReady={handlePageReady} /><TermsPage /></>} />
+                <Route path="/privacy" element={<><PageReady onReady={handlePageReady} /><PrivacyPage /></>} />
+                <Route path="/cookies" element={<><PageReady onReady={handlePageReady} /><CookiePage /></>} />
+                <Route path="/data-rights" element={<><PageReady onReady={handlePageReady} /><DataRightsPage /></>} />
+                <Route path="/track-consultation" element={<><PageReady onReady={handlePageReady} /><TrackConsultationPage /></>} />
+                <Route path="*" element={<><PageReady onReady={handlePageReady} /><NotFoundPage pathname={location.pathname} /></>} />
               </Routes>
             </Suspense>
           </ErrorBoundary>

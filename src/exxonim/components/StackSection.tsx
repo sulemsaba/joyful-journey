@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import type { StackItem } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
@@ -12,62 +12,39 @@ const EASE = [0.25, 0.4, 0.25, 1] as const;
 const DURATION = 0.6;
 const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
 
-/* ── Lazy video: only loads when scrolled into view ──── *
- * Prevents videos from being fetched during page load.  *
- * Uses IntersectionObserver to start loading only when  *
- * the video container becomes visible.                  *
- * Supports multiple sources (webm + mp4) and playback   *
- * rate control for cinematic feel.                      *
+/* ── Smart video: pre-loads early, plays on visibility ── *
  *                                                       *
- * AUTOPLAY FIX: After sources are injected, we listen   *
- * for 'canplay' and explicitly call video.play().       *
- * Browsers often don't honor the autoPlay attribute     *
- * when <source> elements are added dynamically — the    *
- * video element was already in the DOM with no src, so  *
- * autoplay policy was already evaluated and rejected.   *
- * By calling play() after canplay, we guarantee the     *
- * video starts as soon as it's buffered enough.         *
- * If play() fails (e.g. user hasn't interacted), we     *
- * retry on the first user interaction.                  */
+ * STRATEGY:                                             *
+ * 1. Sources are always present in the DOM (no gate)    *
+ * 2. preload="auto" tells the browser to buffer early   *
+ * 3. IntersectionObserver controls PLAY/PAUSE:          *
+ *    - In viewport → play (already buffered = instant)  *
+ *    - Out of viewport → pause (saves CPU/battery)      *
+ *    - Re-enters → resume from where it left off        *
+ *                                                       *
+ * WHY THIS IS BETTER:                                   *
+ * - Old: Wait for scroll → start loading → wait for     *
+ *   buffer → play = 3-5 second delay                    *
+ * - New: Pre-loaded in background → scroll to it →      *
+ *   already playing / instant start                     *
+ *                                                       *
+ * AUTOPLAY: We call video.play() when the video enters  *
+ * the viewport. Since it's muted + playsInline, browsers*
+ * allow autoplay. If blocked, we retry on interaction.  *
+ *                                                       *
+ * PLAYBACK RATE: 0.7x gives a cinematic slow-motion     *
+ * feel — purely aesthetic, no performance impact.        */
 function LazyVideo({ sources, poster, playbackRate, className, style }: { sources: { src: string; type: string }[]; poster?: string; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
+  const isVisible = useRef(false);
+  const hasPlayed = useRef(false);
 
-  /* Step 1: Detect when video scrolls near viewport */
+  /* Step 1: Play/pause based on viewport visibility.
+   * When the video scrolls into view, we play it.
+   * When it scrolls out, we pause it.
+   * This means the video is already playing (or instantly
+   * starts) when the user scrolls to it. */
   useEffect(() => {
-    const el = ref.current?.parentElement;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setShouldLoad(true); observer.disconnect(); } },
-      { rootMargin: "200px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  /* Step 2b: After sources are injected, call video.load() to explicitly
-   * start buffering. With preload="none", the browser won't load until
-   * we call load(). This is critical because:
-   * - The <video> was mounted with no sources (preload evaluated as "nothing to load")
-   * - When sources are injected, the browser doesn't auto-reload
-   * - We must call load() to kick off the buffering pipeline
-   * - Then canplaythrough fires, and tryPlay() starts playback */
-  useEffect(() => {
-    if (!shouldLoad) return;
-    const video = ref.current;
-    if (!video) return;
-    // Small delay to let React inject the <source> elements into the DOM
-    const timer = requestAnimationFrame(() => {
-      video.load();
-    });
-    return () => cancelAnimationFrame(timer);
-  }, [shouldLoad]);
-
-  /* Step 3: Wait for enough data, then play.
-   * This is necessary because autoPlay doesn't work when <source>
-   * elements are added after the <video> element was already mounted. */
-  useEffect(() => {
-    if (!shouldLoad) return;
     const video = ref.current;
     if (!video) return;
 
@@ -75,7 +52,7 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
     let cancelled = false;
 
     const tryPlay = () => {
-      if (cancelled) return;
+      if (cancelled || !video) return;
       video.play().catch(() => {
         // Autoplay blocked — retry on first user interaction
         if (cancelled) return;
@@ -88,56 +65,71 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
       });
     };
 
-    // Wait for enough data, then play. Use 'canplaythrough' as primary
-    // trigger (more reliable than 'canplay') with a fallback timeout.
-    const onReady = () => {
+    const handleVisibility = (entry: IntersectionObserverEntry) => {
       if (cancelled) return;
-      tryPlay();
-      cleanup();
+
+      if (entry.isIntersecting) {
+        isVisible.current = true;
+        // If video has buffered enough, play immediately
+        if (video.readyState >= 3) {
+          tryPlay();
+        } else {
+          // Wait for enough data then play
+          const onReady = () => {
+            if (!cancelled && isVisible.current) tryPlay();
+            video.removeEventListener("canplaythrough", onReady);
+            video.removeEventListener("loadeddata", onReady);
+          };
+          video.addEventListener("canplaythrough", onReady);
+          video.addEventListener("loadeddata", onReady);
+        }
+      } else {
+        isVisible.current = false;
+        // Pause when out of view to save CPU/battery
+        if (!video.paused) {
+          video.pause();
+          hasPlayed.current = true;
+        }
+      }
     };
 
-    const cleanup = () => {
+    const observer = new IntersectionObserver(
+      ([entry]) => handleVisibility(entry),
+      { rootMargin: "100px", threshold: 0.05 }
+    );
+    observer.observe(video);
+
+    // Also try to play on canplaythrough if already visible
+    // (handles the case where video finishes loading after
+    // the user has already scrolled to it)
+    const onCanPlay = () => {
+      if (!cancelled && isVisible.current) tryPlay();
+    };
+    video.addEventListener("canplaythrough", onCanPlay);
+
+    // Apply playback rate
+    if (playbackRate) {
+      const applyRate = () => { video.playbackRate = playbackRate; };
+      video.addEventListener("loadedmetadata", applyRate);
+      if (video.readyState >= 1) applyRate();
+    }
+
+    // Safety: if video is in viewport on mount and ready, play
+    if (video.readyState >= 3 && isVisible.current) {
+      tryPlay();
+    }
+
+    return () => {
       cancelled = true;
-      video.removeEventListener("canplaythrough", onReady);
-      video.removeEventListener("loadeddata", onReady);
+      observer.disconnect();
+      video.removeEventListener("canplaythrough", onCanPlay);
       if (interactionHandler) {
         document.removeEventListener("click", interactionHandler);
         document.removeEventListener("touchstart", interactionHandler);
         document.removeEventListener("keydown", interactionHandler);
-        interactionHandler = null;
       }
     };
-
-    // If video already has enough data, play immediately
-    if (video.readyState >= 3) {
-      tryPlay();
-      return cleanup;
-    }
-
-    // Otherwise, listen for ready events
-    video.addEventListener("canplaythrough", onReady);
-    video.addEventListener("loadeddata", onReady);
-
-    // Safety: try after 2s even if events didn't fire
-    const safetyTimer = setTimeout(() => {
-      if (!cancelled && video.readyState >= 1) tryPlay();
-    }, 2000);
-
-    return () => {
-      clearTimeout(safetyTimer);
-      cleanup();
-    };
-  }, [shouldLoad]);
-
-  /* Step 3: Apply playback rate once the video element is ready */
-  useEffect(() => {
-    const video = ref.current;
-    if (!video || !playbackRate) return;
-    const apply = () => { video.playbackRate = playbackRate; };
-    video.addEventListener("loadedmetadata", apply);
-    if (video.readyState >= 1) apply();
-    return () => video.removeEventListener("loadedmetadata", apply);
-  }, [shouldLoad, playbackRate]);
+  }, [playbackRate]);
 
   return (
     <video
@@ -146,14 +138,15 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
       muted
       loop
       playsInline
+      autoPlay
       disablePictureInPicture
       disableRemotePlayback
-      preload="none"
+      preload="auto"
       aria-hidden="true"
       className={className}
       style={style}
     >
-      {shouldLoad && sources.map((s) => <source key={s.src} src={s.src} type={s.type} />)}
+      {sources.map((s) => <source key={s.src} src={s.src} type={s.type} />)}
     </video>
   );
 }
