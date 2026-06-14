@@ -451,8 +451,10 @@ export function ResourcesPage() {
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
   // Viewport-based preloading: when the articles grid section becomes
-  // visible, preload the article page chunk for instant mobile taps.
-  const articlesSectionRef = useViewportPreloadMany(["/resources"]);
+  // visible, preload the ResourceArticlePage chunk for instant mobile taps.
+  // Using a 2-segment path triggers preloadRoute()'s dynamic article
+  // detection, which loads loadResourceArticlePage (not loadResourcesPage).
+  const articlesSectionRef = useViewportPreloadMany(["/resources/_article"]);
 
   const { data: posts = [] } = useBlogPosts();
   const { data: categories = [] } = useBlogCategories();

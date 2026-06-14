@@ -593,7 +593,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
 
             {/* Error */}
             {submitError && (
-              <p className="text-sm text-accent-hover text-center">{submitError}</p>
+              <p role="alert" className="text-sm text-accent-hover text-center">{submitError}</p>
             )}
 
             {/* Submit */}
@@ -602,7 +602,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
               variant="primary"
               type="submit"
               isLoading={isSubmitting}
-              disabled={!name.trim() || !email.trim() || !cvFile}
+              disabled={!name.trim() || !email.trim() || !cvFile || isSubmitting}
               className="rounded-xl w-full"
             >
               {isSubmitting ? "Uploading..." : "Submit Application"}

@@ -9,20 +9,48 @@ import { Button } from './primitives/Button';
  *
  * MOBILE: Single row — inline input + small subscribe button.
  * DESKTOP: Wider inline — input + button in a centered row.
+ *
+ * UX PATTERN:
+ *   Idle → Submitting... (button disabled + spinner) → Subscribed! (inline)
+ *   Error → Inline error message, user can retry
  */
 export function NewsletterForm() {
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setSubmitted(true);
+    if (!email.trim() || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      // TODO: Replace with actual API call when newsletter backend is ready
+      // const response = await fetch('/api/v1/newsletter/subscribe', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email: email.trim() }),
+      // });
+      // if (!response.ok) throw new Error('Subscription failed');
+
+      // Simulated delay — remove when backend is wired
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      setSubmitted(true);
+    } catch {
+      setSubmitError('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
     setEmail('');
     setSubmitted(false);
+    setSubmitError('');
   };
 
   if (submitted) {
@@ -46,7 +74,7 @@ export function NewsletterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full max-w-md mx-auto items-center gap-2 sm:gap-3"
+      className="flex flex-wrap w-full max-w-md mx-auto items-center gap-2 sm:gap-3"
     >
       <label htmlFor="newsletter-email" className="sr-only">
         Email address
@@ -61,21 +89,31 @@ export function NewsletterForm() {
           type="email"
           required
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setSubmitError(''); }}
+          disabled={isSubmitting}
           placeholder="your@email.com"
-          className="h-10 sm:h-12 w-full rounded-full border border-border-soft bg-surface pl-9 pr-3 text-sm text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40"
+          className="h-10 sm:h-12 w-full rounded-full border border-border-soft bg-surface pl-9 pr-3 text-sm text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40 disabled:opacity-50"
         />
       </div>
       <Button
         size="standard"
         variant="primary"
         type="submit"
+        isLoading={isSubmitting}
+        disabled={isSubmitting}
         aria-label="Subscribe to newsletter"
         className="shrink-0"
       >
-        Subscribe
-        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+        {!isSubmitting && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
       </Button>
+
+      {/* Inline error — shown below the form row */}
+      {submitError && (
+        <p role="alert" className="w-full text-center text-xs text-accent-hover mt-1">
+          {submitError}
+        </p>
+      )}
     </form>
   );
 }

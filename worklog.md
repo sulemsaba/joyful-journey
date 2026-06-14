@@ -779,3 +779,30 @@ Stage Summary:
 - Viewport-based preloading added for blog and service card sections (mobile optimization)
 - Zero browser errors on all tested pages
 - Lint check passes cleanly
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Mutation UX audit + SmartLink consistency audit + viewport preload bug fix
+
+Work Log:
+- Performed comprehensive audit of all 6 mutation forms (Contact, Career, Tracking, NewsletterForm, NewsletterSection, Privacy Banner)
+- Found critical bug: NewsletterForm.tsx sets submitError on catch but NEVER renders it — users see silent failure
+- Found a11y gap: CareerPage.tsx error message missing role="alert"
+- Found viewport preload bug: InsightsSection and ResourcesPage were preloading ResourcesPage chunk instead of ResourceArticlePage chunk
+- Found dead code: Navbar.tsx (uses next/link, not imported anywhere) and NewsletterSection.tsx (not imported anywhere)
+- Fixed NewsletterForm.tsx: added error rendering with role="alert", added flex-wrap to form container so error wraps below input row
+- Fixed CareerPage.tsx: added role="alert" to error paragraph
+- Fixed InsightsSection.tsx: changed viewport preload from "/resources" to "/resources/_article" to correctly preload ResourceArticlePage chunk
+- Fixed ResourcesPage.tsx: same viewport preload fix
+- Deleted dead files: Navbar.tsx, NewsletterSection.tsx
+- Performed SmartLink consistency audit: all 79 internal navigation elements use SmartLink or Button with href (both include preloading)
+- Verified lint passes with no errors
+
+Stage Summary:
+- 🔴 Critical bug fixed: NewsletterForm now renders error messages (was silently failing before)
+- 🟡 A11y fixed: Career form error now has role="alert"
+- 🔴 Viewport preload bug fixed: Blog cards now correctly preload ResourceArticlePage chunk instead of ResourcesPage chunk
+- 🗑️ Dead code removed: Navbar.tsx and NewsletterSection.tsx deleted
+- ✅ SmartLink consistency: 100% — all 79 internal navigation elements have preloading
+- ✅ All mutations: double-click protection, button-level loading, inline success, inline error — consistent across all forms

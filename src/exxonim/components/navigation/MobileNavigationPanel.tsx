@@ -271,14 +271,14 @@ export function MobileNavigationPanel({
             </Button>
 
             {/* Call Now CTA */}
-            <a
+            <SmartLink
               href={callHref}
               onClick={onClose}
               className="flex items-center justify-center gap-2 h-11 rounded-xl bg-accent-soft/20 text-accent hover:bg-accent-soft/30 transition-colors duration-200 text-[15px] font-semibold"
             >
               <Phone className="w-4 h-4 shrink-0" aria-hidden="true" />
               <span>Call {primaryPhone || brandName}</span>
-            </a>
+            </SmartLink>
           </div>
         </div>
       </div>

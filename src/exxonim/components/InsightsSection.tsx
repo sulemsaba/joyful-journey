@@ -157,10 +157,12 @@ export function InsightsSection({
   onNext,
 }: InsightsSectionProps) {
   // Viewport-based preloading: when the blog section becomes visible,
-  // preload the article page chunk so mobile taps are instant.
-  // All article slugs share the same ResourceArticlePage chunk,
-  // so we only need to preload it once.
-  const sectionRef = useViewportPreloadMany(["/resources"]);
+  // preload the ResourceArticlePage chunk so mobile taps are instant.
+  // All article slugs share the same chunk, so we only need one preload.
+  // Using a 2-segment path triggers preloadRoute()'s dynamic article
+  // detection, which loads loadResourceArticlePage (not loadResourcesPage).
+  const sectionRef = useViewportPreloadMany(["/resources/_article"]);
+
 
   return (
     <section

@@ -46,6 +46,8 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
     return null;
   }
 
+  const hasConsentError = consentMutation.isError;
+
   return (
     <>
       <aside
@@ -69,6 +71,12 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
           </div>
         </div>
 
+        {hasConsentError && (
+          <p className="text-sm text-accent-hover m-0" role="alert">
+            Could not save your preference. Please try again.
+          </p>
+        )}
+
         <div className="flex flex-wrap gap-3 justify-end">
           <Button
             size="standard"
@@ -81,6 +89,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
               });
             }}
             disabled={consentMutation.isPending}
+            isLoading={consentMutation.isPending}
           >
             Necessary only
           </Button>
@@ -95,6 +104,7 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
               });
             }}
             disabled={consentMutation.isPending}
+            isLoading={consentMutation.isPending}
           >
             Allow preferences
           </Button>
