@@ -908,3 +908,27 @@ Stage Summary:
 - ✅ Video autoplay: Added video.load() + explicit play() + poster + interaction retry
 - ✅ About page: No visual bugs found (issue was the data-reveal flash, already fixed)
 - ✅ All pages verified working
+---
+Task ID: 1
+Agent: main
+Task: Upgrade favicons to high-quality multi-size PNGs preserving original design
+
+Work Log:
+- Restored original 32x32 PNG favicons from git (previous session had incorrectly replaced them with SVGs showing "z" logo)
+- Analyzed original 32x32 favicons pixel-by-pixel to understand exact design (rounded rectangle with "E" as negative space)
+- Used potrace library to vectorize the 32x32 binary mask into SVG paths
+- Converted vector paths to high-quality PNGs at 4 sizes (192x192, 180x180, 64x64, 32x32) using cairosvg
+- Created apple-touch-icon.png (180x180 with white background)
+- Updated index.html with multi-size favicon links (8 icon links + 1 apple-touch-icon)
+- Updated boot loader to use 192x192 favicons for retina-crisp display
+- Updated useTheme.ts to handle all favicon IDs (light/dark × 4 sizes)
+- Rebuilt Vite dist to propagate changes to mini-server
+- Verified all favicons accessible via HTTP (200 status)
+- Verified browser receives all 9 favicon link elements
+- Pushed changes with one-sentence commit
+
+Stage Summary:
+- 7 new high-quality favicon PNGs created via potrace vectorization from original design
+- 1 apple-touch-icon created
+- Original 32x32 PNGs preserved (they were hand-crafted at that resolution)
+- All multi-size favicons maintain the authentic Exxonim "E" mark design
