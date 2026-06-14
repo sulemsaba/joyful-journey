@@ -1,5 +1,6 @@
 import { ChevronRight, Home } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 
 /**
  * Breadcrumb navigation component.
@@ -67,14 +68,14 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                   {content}
                 </span>
               ) : (
-                <a
+                <SmartLink
                   href={item.href}
                   className="text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1"
                   aria-label={Icon ? item.label : undefined}
                   title={Icon ? item.label : undefined}
                 >
                   {content}
-                </a>
+                </SmartLink>
               )}
             </li>
           );

@@ -1,6 +1,8 @@
 import { cn } from '@/exxonim/utils/cn'
-import { forwardRef, type ReactNode } from 'react'
+import { forwardRef, type ReactNode, type TouchEventHandler } from 'react'
 import { Link } from 'react-router-dom'
+import { preloadRoute } from '@/exxonim/preloadRoutes'
+import { normalizePathname } from '@/exxonim/routes'
 
 /* ═══════════════════════════════════════════════════════════════
  * Button — Exxonim Design System Primitive
@@ -204,6 +206,23 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
       // External links (tel:, mailto:, https://, http://) use plain <a>
       const isExternal = /^(tel:|mailto:|https?:\/\/)/.test(href);
 
+      // ── Route preloading ──────────────────────────────────
+      // Extract route path (strip hash/query) and preload the chunk.
+      // This makes ALL Button-based CTAs behave like the navbar:
+      //   hover → preload, focus → preload, touchStart → preload.
+      const preloadPath = isExternal ? null : (() => {
+        const p = href.split('#')[0].split('?')[0];
+        return p && p !== '/' ? normalizePathname(p) : null;
+      })();
+
+      const handlePreload = () => {
+        if (preloadPath) preloadRoute(preloadPath);
+      };
+
+      const handleMouseEnter = () => handlePreload();
+      const handleFocus = () => handlePreload();
+      const handleTouchStart: TouchEventHandler<HTMLElement> = () => handlePreload();
+
       if (isExternal) {
         return (
           <a
@@ -214,6 +233,9 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
             rel={rel}
             aria-label={ariaLabel}
             onClick={onClick}
+            onMouseEnter={handleMouseEnter}
+            onFocus={handleFocus}
+            onTouchStart={handleTouchStart}
             {...rest}
           >
             {content}
@@ -229,6 +251,9 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
           rel={rel}
           aria-label={ariaLabel}
           onClick={onClick}
+          onMouseEnter={handleMouseEnter}
+          onFocus={handleFocus}
+          onTouchStart={handleTouchStart}
           {...rest}
         >
           {content}

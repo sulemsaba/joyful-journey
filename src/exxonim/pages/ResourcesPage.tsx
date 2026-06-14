@@ -71,6 +71,7 @@ import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { resourceArticlePath, routes } from "@/exxonim/routes";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import type {
   BlogCategoryId,
   BlogFeaturedSlot,
@@ -281,7 +282,7 @@ function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min`);
 
   return (
-    <a href={articleLink} className="group flex gap-3.5 p-3 rounded-xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-0.5">
+    <SmartLink href={articleLink} className="group flex gap-3.5 p-3 rounded-xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-0.5">
       <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0">
         <img className="w-full h-full object-cover" src={thumbnailSrc} alt={post.coverAlt ?? post.title} loading="lazy" />
       </div>
@@ -294,7 +295,7 @@ function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[
           ) : null}
         </div>
       </div>
-    </a>
+    </SmartLink>
   );
 }
 

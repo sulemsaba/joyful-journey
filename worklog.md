@@ -661,3 +661,84 @@ Stage Summary:
 - NEXT STEP: Post-deployment measurement of Home→Services, Home→About, About→Contact
   under cold cache, warm cache, Fast 4G, Slow 3G
   Metric: click → first visible content (not animation finished)
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Replace internal `<a href>` links with SmartLink component
+
+Work Log:
+- Read worklog.md for context
+- Read all three target files (ContactPage.tsx, TrackConsultationPage.tsx, ResourcesPage.tsx)
+- Used grep to locate exact `<a>` tags referencing internal routes (routes.trackConsultation, routes.privacy, routes.contact, articleLink)
+- Verified SmartLink component exists at src/exxonim/components/primitives/SmartLink.tsx
+- ContactPage.tsx: Added SmartLink import, replaced 2 `<a>` tags (trackConsultation + privacy) with `<SmartLink>` and matching closing tags
+- TrackConsultationPage.tsx: Added SmartLink import, replaced 1 `<a>` tag (routes.contact) with `<SmartLink>` and matching closing tag
+- ResourcesPage.tsx: Added SmartLink import, replaced 1 `<a>` tag (articleLink) with `<SmartLink>` and matching closing tag
+- Verified external links (tel:, mailto:, https://) were NOT touched
+- Lint passes cleanly
+
+Stage Summary:
+- All 4 internal route `<a>` tags replaced with `<SmartLink>` across 3 files
+- External links (tel:, mailto:, https://) left untouched
+- All SmartLink imports added
+- No lint errors
+
+---
+Task ID: 5
+Agent: Main
+Task: Universal route preloading — SmartLink component + coverage audit
+
+Work Log:
+- Created SmartLink component (src/exxonim/components/primitives/SmartLink.tsx)
+  - Preloads route chunks on 3 events: onMouseEnter, onFocus, onTouchStart
+  - Automatically detects internal vs external links
+  - Uses React Router <Link> for internal, plain <a> for external
+  - Calls preloadRoute() from shared preloadRoutes.ts
+- Integrated preloading into Button primitive (highest impact — used by most CTAs)
+  - Added onMouseEnter + onFocus + onTouchStart to internal Link renders
+  - External links (tel:, mailto:) unaffected
+- Replaced all route-changing elements across 14 files:
+  1. Breadcrumb.tsx — <a> → <SmartLink>
+  2. Footer.tsx — <Link> → <SmartLink> (3 links)
+  3. StickyMobileCta.tsx — <a> → <SmartLink> (2 links)
+  4. ReferenceHero.tsx — <a> → <SmartLink> (secondary CTA)
+  5. InsightsSection.tsx — <a> → <SmartLink> (blog card "Learn more")
+  6. EngineSection.tsx — <a> → <SmartLink> ("Get Started →" per service)
+  7. Navigation.tsx — <Link> → <SmartLink> (2 logo links)
+  8. DesktopNavigation.tsx — <Link> → <SmartLink> (5 nav links + footer link)
+  9. MobileNavigationPanel.tsx — <Link> → <SmartLink> (3 link sets)
+  10. MegaMenuColumns.tsx — <Link> → <SmartLink> (item links + feature box CTA)
+  11. ContactPage.tsx — <a> → <SmartLink> (2 links)
+  12. TrackConsultationPage.tsx — <a> → <SmartLink> (1 link)
+  13. ResourcesPage.tsx — <a> → <SmartLink> (1 link)
+  14. PrivacyConsentBanner.tsx — <a> → <SmartLink> (3 links)
+- Removed redundant onMouseEnter={preloadRoute()} handlers from DesktopNavigation and MegaMenuColumns
+  (SmartLink now handles this automatically)
+- Production build succeeds (416KB main bundle, 121KB Framer Motion)
+- Browser verification: all 6 pages render correctly, navigation works, zero console errors
+
+Stage Summary:
+- PRELOADING COVERAGE AUDIT:
+  | Navigation Type        | Before | After |
+  |------------------------|--------|-------|
+  | Main navbar (desktop)  | ✅ hover | ✅ hover + focus + touch |
+  | Mobile menu links      | ❌ none | ✅ hover + focus + touch |
+  | Hero CTA (Button)      | ❌ none | ✅ hover + focus + touch |
+  | Hero secondary CTA     | ❌ none | ✅ hover + focus + touch |
+  | Footer links           | ❌ none | ✅ hover + focus + touch |
+  | Service cards (Button) | ❌ none | ✅ hover + focus + touch |
+  | Blog cards             | ❌ none | ✅ hover + focus + touch |
+  | Pricing buttons        | ❌ none | ✅ hover + focus + touch |
+  | Breadcrumbs            | ❌ none | ✅ hover + focus + touch |
+  | Privacy consent links  | ❌ none | ✅ hover + focus + touch |
+  | Mobile sticky CTA      | ❌ none | ✅ hover + focus + touch |
+  | "Get Started" links    | ❌ none | ✅ hover + focus + touch |
+  | Track Consultation CTA | ❌ none | ✅ hover + focus + touch |
+  | Mega menu items        | ✅ hover | ✅ hover + focus + touch |
+
+- MOBILE IMPROVEMENT: onTouchStart gives ~300ms head start on mobile tap
+  (mouseenter doesn't exist on touch devices — this was a critical gap)
+- KEY INSIGHT: Every route-changing element now has consistent preloading behavior,
+  not just the navbar. Desktop: hover → preload. Mobile: touchStart → preload.
+  Keyboard: focus → preload.

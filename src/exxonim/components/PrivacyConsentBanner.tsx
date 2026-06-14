@@ -20,6 +20,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPrivacyConsent, updatePrivacyConsent } from "@/exxonim/services/privacyService";
 import { Button } from "./primitives/Button";
+import { SmartLink } from "./primitives/SmartLink";
 
 
 interface PrivacyConsentBannerProps {
@@ -62,9 +63,9 @@ export function PrivacyConsentBanner({ pathname }: PrivacyConsentBannerProps) {
             Business records such as customer history, service history, notes, and documents stay in the database. You can keep only necessary storage or allow preference storage too.
           </p>
           <div className="flex flex-wrap gap-3 text-sm">
-            <a href="/privacy/" className="text-accent no-underline">Privacy policy</a>
-            <a href="/cookies/" className="text-accent no-underline">Cookie notice</a>
-            <a href="/data-rights/" className="text-accent no-underline">Data rights</a>
+            <SmartLink href="/privacy/" className="text-accent no-underline">Privacy policy</SmartLink>
+            <SmartLink href="/cookies/" className="text-accent no-underline">Cookie notice</SmartLink>
+            <SmartLink href="/data-rights/" className="text-accent no-underline">Data rights</SmartLink>
           </div>
         </div>
 

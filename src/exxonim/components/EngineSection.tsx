@@ -1,6 +1,7 @@
 import { CheckCircle } from 'lucide-react';
 import { Container } from './primitives/Container';
 import { Button } from './primitives/Button';
+import { SmartLink } from './primitives/SmartLink';
 import { routes } from '@/exxonim/routes';
 import type { ServicesCatalogContent } from '@/exxonim/types';
 
@@ -115,13 +116,13 @@ export function EngineSection({ content }: EngineSectionProps) {
                       <strong className="text-text font-medium">
                         {service.label}
                       </strong>
-                      <a
+                      <SmartLink
                         href={`${routes.contact}#inquiry`}
                         className="flex-shrink-0 mt-0.5 text-accent text-xs font-bold whitespace-nowrap"
                         aria-label={`Get started with ${service.label}`}
                       >
                         Get Started →
-                      </a>
+                      </SmartLink>
                     </div>
                     <p className="text-text-muted text-sm leading-relaxed">
                       {service.detail}

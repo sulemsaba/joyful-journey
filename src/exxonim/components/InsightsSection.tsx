@@ -28,6 +28,7 @@ import type { BlogPost, HomeInsightsContent } from '@/exxonim/types';
 import { formatBlogDate, getAuthorInitials } from "@/exxonim/utils/blog";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
+import { SmartLink } from "./primitives/SmartLink";
 
 /**
  * Homepage "Latest insights" section — up to 4 featured blog cards in a
@@ -230,7 +231,7 @@ export function InsightsSection({
                         </div>
                       ) : null}
 
-                      <a
+                      <SmartLink
                         href={resourceArticlePath(post.slug)}
                         className="inline-flex items-center gap-2 min-h-10 py-1.5 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 whitespace-nowrap text-sm font-bold text-accent transition-colors hover:text-accent-hover"
                       >
@@ -238,7 +239,7 @@ export function InsightsSection({
                         <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[3px]">
                           &rarr;
                         </span>
-                      </a>
+                      </SmartLink>
                     </div>
                   </div>
                 </article>

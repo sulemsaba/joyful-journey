@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { routes } from '@/exxonim/routes';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 
 /**
  * StickyMobileCta — fixed bottom bar on mobile with "Ask a Question — Free" CTA.
@@ -39,18 +40,18 @@ export function StickyMobileCta() {
     >
       <div className="px-4 pb-safe bg-surface/95 backdrop-blur-md border-t border-border-soft">
         <div className="py-3 flex gap-3">
-          <a
+          <SmartLink
             href={`${routes.contact}#inquiry`}
             className="flex-1 inline-flex h-12 items-center justify-center rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover active:scale-[0.98]"
           >
             Ask a Question — Free
-          </a>
-          <a
+          </SmartLink>
+          <SmartLink
             href={routes.trackConsultation}
             className="inline-flex h-12 items-center justify-center rounded-full border border-border-soft bg-surface text-text text-sm font-semibold px-4 transition-all hover:bg-surface-soft active:scale-[0.98]"
           >
             Track
-          </a>
+          </SmartLink>
         </div>
       </div>
     </div>

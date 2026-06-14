@@ -43,7 +43,7 @@
  */
 
 import { useEffect, useRef, useState, type FocusEvent } from "react";
-import { Link } from "react-router-dom";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuColumns } from "@/exxonim/components/navigation/MegaMenuColumns";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -139,16 +139,15 @@ export function DesktopNavigation({
       >
         {/* Left links (Home, About) */}
         {leftLinks.map((link) => (
-          <Link
+          <SmartLink
             key={link.href}
-            to={link.href}
+            href={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={closeAllMenus}
-            onMouseEnter={() => preloadRoute(normalizePathname(link.href))}
             className={cn(navLinkBase, isActive(link.href) && navLinkActive)}
           >
             {link.label}
-          </Link>
+          </SmartLink>
         ))}
 
         {/* ═══════════════════════════════════════════════════════
@@ -164,13 +163,12 @@ export function DesktopNavigation({
           }}
           onFocusCapture={() => setDesktopMenu("services")}
         >
-          <Link
-            to={routes.services}
+          <SmartLink
+            href={routes.services}
             aria-expanded={desktopMenu === "services"}
             aria-controls={servicesMenuId}
             aria-current={servicesActive ? "page" : undefined}
             onClick={closeAllMenus}
-            onMouseEnter={() => preloadRoute(normalizePathname(routes.services))}
             className={cn(navLinkBase, servicesActive && navLinkActive)}
           >
             Services
@@ -181,7 +179,7 @@ export function DesktopNavigation({
               )}
               aria-hidden="true"
             />
-          </Link>
+          </SmartLink>
         </div>
 
         {/* ═══════════════════════════════════════════════════════
@@ -195,13 +193,12 @@ export function DesktopNavigation({
           }}
           onFocusCapture={() => setDesktopMenu("resources")}
         >
-          <Link
-            to={routes.resources}
+          <SmartLink
+            href={routes.resources}
             aria-expanded={desktopMenu === "resources"}
             aria-controls={resourcesMenuId}
             aria-current={resourcesActive ? "page" : undefined}
             onClick={closeAllMenus}
-            onMouseEnter={() => preloadRoute(normalizePathname(routes.resources))}
             className={cn(navLinkBase, resourcesActive && navLinkActive)}
           >
             Resources
@@ -212,21 +209,20 @@ export function DesktopNavigation({
               )}
               aria-hidden="true"
             />
-          </Link>
+          </SmartLink>
         </div>
 
         {/* Right links (Career, Contact) */}
         {rightLinks.map((link) => (
-          <Link
+          <SmartLink
             key={link.href}
-            to={link.href}
+            href={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={closeAllMenus}
-            onMouseEnter={() => preloadRoute(normalizePathname(link.href))}
             className={cn(navLinkBase, isActive(link.href) && navLinkActive)}
           >
             {link.label}
-          </Link>
+          </SmartLink>
         ))}
 
         {/* Highlight link — Track Consultation (differentiator) */}
@@ -294,13 +290,13 @@ export function DesktopNavigation({
 
             {/* Footer CTA row — text link left, button right edge */}
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-border-soft">
-              <Link
-                to={routes.contact}
+              <SmartLink
+                href={routes.contact}
                 onClick={closeAllMenus}
                 className="text-xs font-medium text-text-muted hover:text-accent transition-colors"
               >
                 Contact {brandName}
-              </Link>
+              </SmartLink>
               <Button
                 size="compact"
                 variant="primary"

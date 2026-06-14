@@ -76,6 +76,7 @@ import {
 } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { routes } from "@/exxonim/routes";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { applyResolvedSeo, createFallbackSeo } from "@/exxonim/seo";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { lookupTrackingCode } from "@/exxonim/services/consultationService";
@@ -1021,7 +1022,7 @@ export function TrackConsultationPage() {
               <strong className="text-text text-sm">Lost your code?</strong>
               <p className="m-0 text-text-muted text-xs leading-relaxed">
                 Check your WhatsApp — we send it when your consultation starts. Or{" "}
-                <a href={routes.contact} className="text-accent hover:text-accent-hover font-semibold transition-colors">contact us</a> and we&rsquo;ll look it up.
+                <SmartLink href={routes.contact} className="text-accent hover:text-accent-hover font-semibold transition-colors">contact us</SmartLink> and we&rsquo;ll look it up.
               </p>
             </div>
           </div>

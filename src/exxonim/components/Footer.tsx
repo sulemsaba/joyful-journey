@@ -1,5 +1,5 @@
 import { Container } from './primitives/Container'
-import { Link } from 'react-router-dom'
+import { SmartLink } from './primitives/SmartLink'
 import { routes } from '@/exxonim/routes'
 import { fallbackBrand } from '@/exxonim/content/fallbackShell'
 import type { BrandAssets, CompanyInfo } from '@/exxonim/types'
@@ -78,13 +78,13 @@ function SocialCircleLink({ platform, url }: { platform: string; url: string }) 
 /* ── Link item with hover dot animation ── */
 function FooterLink({ label, href }: { label: string; href: string }) {
   return (
-    <Link
-      to={href}
+    <SmartLink
+      href={href}
       className="inline-flex items-center py-1 text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
     >
       <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-all duration-200" />
       {label}
-    </Link>
+    </SmartLink>
   );
 }
 
@@ -118,8 +118,8 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Brand Panel — full width on 2-col to give breathing room */}
           <section className="col-span-2 md:col-span-1 grid gap-3 content-start">
-            <Link
-              to={routes.home}
+            <SmartLink
+              href={routes.home}
               aria-label={`${brand.name} home`}
               className="inline-flex items-center"
             >
@@ -137,7 +137,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                 }}
                 className="block h-8 sm:h-11 w-auto"
               />
-            </Link>
+            </SmartLink>
 
             <p
               className="text-footer-text-muted text-xs sm:text-sm leading-relaxed italic max-w-xs"

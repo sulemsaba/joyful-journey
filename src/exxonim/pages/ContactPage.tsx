@@ -41,6 +41,7 @@ import { usePage } from "@/exxonim/hooks/usePage";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { submitPublicConsultation } from "@/exxonim/services/consultationService";
 import type {
   ApiPublicConsultationSubmissionResponse,
@@ -348,9 +349,9 @@ export function ContactPage() {
                     </code>
                     <p className="text-text-muted text-sm mt-3">
                       Use this code to check your status at any time on our{" "}
-                      <a href={routes.trackConsultation} className="text-accent hover:underline font-medium">
+                      <SmartLink href={routes.trackConsultation} className="text-accent hover:underline font-medium">
                         tracking page
-                      </a>. No login required.
+                      </SmartLink>. No login required.
                     </p>
                     <p className="text-text-soft text-xs mt-1">
                       We&apos;ve also sent this code to your WhatsApp.
@@ -507,7 +508,7 @@ export function ContactPage() {
                     {/* Disclaimer */}
                     <p className="text-xs text-text-soft text-center">
                       By submitting this form you agree to Exxonim&rsquo;s{" "}
-                      <a href={routes.privacy} className="text-accent hover:underline">privacy policy</a>.
+                      <SmartLink href={routes.privacy} className="text-accent hover:underline">privacy policy</SmartLink>.
                     </p>
                   </form>
                 )}

@@ -4,6 +4,7 @@ import { ArrowRight, Star, ChevronDown } from "lucide-react";
 import type { HomeHeroContent } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { HeroAurora } from "@/exxonim/components/HeroAurora";
 
 interface ReferenceHeroProps {
@@ -140,13 +141,13 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                   <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
                 {hasSecondaryCta ? (
-                  <a
+                  <SmartLink
                     href={content.secondary_cta.href}
                     className="inline-flex items-center gap-1.5 min-h-12 px-3 py-2 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 text-sm font-medium text-text-muted hover:text-accent transition-colors"
                   >
                     {content.secondary_cta.label}
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </a>
+                  </SmartLink>
                 ) : null}
               </div>
 

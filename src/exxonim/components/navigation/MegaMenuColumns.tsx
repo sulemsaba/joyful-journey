@@ -36,7 +36,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import type { FeatureBox, HoverFeatureMap, MegaMenuLayout, MenuColumn, MenuFooterCta, NavIcon } from "./types";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { preloadRoute } from "@/exxonim/preloadRoutes";
@@ -158,11 +158,10 @@ function MegaMenuItem({
   onItemHover?: (href: string) => void;
 }) {
   return (
-    <Link
-      to={item.href}
+    <SmartLink
+      href={item.href}
       onClick={onNavigate}
       onMouseEnter={() => {
-        preloadRoute(normalizePathname(item.href));
         onItemHover?.(item.href);
       }}
       className="group/item flex items-start gap-3 px-3 py-2 rounded-lg
@@ -191,7 +190,7 @@ function MegaMenuItem({
           </p>
         ) : null}
       </div>
-    </Link>
+    </SmartLink>
   );
 }
 
@@ -258,10 +257,9 @@ function MegaMenuFeatureBox({
             {featureBox.description}
           </p>
         </div>
-        <Link
-          to={featureBox.ctaHref}
+        <SmartLink
+          href={featureBox.ctaHref}
           onClick={onNavigate}
-          onMouseEnter={() => preloadRoute(normalizePathname(featureBox.ctaHref))}
           className="mt-1 inline-flex items-center gap-1.5 px-4 py-2 rounded-full
                      bg-accent text-accent-contrast text-xs font-bold
                      hover:bg-accent-hover transition-colors duration-150"
@@ -270,7 +268,7 @@ function MegaMenuFeatureBox({
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </Link>
+        </SmartLink>
       </div>
     </div>
   );
