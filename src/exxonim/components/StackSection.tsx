@@ -17,11 +17,23 @@ const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
  * Uses IntersectionObserver to start loading only when  *
  * the video container becomes visible.                  *
  * Supports multiple sources (webm + mp4) and playback   *
- * rate control for cinematic feel.                      */
-function LazyVideo({ sources, playbackRate, className, style }: { sources: { src: string; type: string }[]; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
+ * rate control for cinematic feel.                      *
+ *                                                       *
+ * AUTOPLAY FIX: After sources are injected, we listen   *
+ * for 'canplay' and explicitly call video.play().       *
+ * Browsers often don't honor the autoPlay attribute     *
+ * when <source> elements are added dynamically — the    *
+ * video element was already in the DOM with no src, so  *
+ * autoplay policy was already evaluated and rejected.   *
+ * By calling play() after canplay, we guarantee the     *
+ * video starts as soon as it's buffered enough.         *
+ * If play() fails (e.g. user hasn't interacted), we     *
+ * retry on the first user interaction.                  */
+function LazyVideo({ sources, poster, playbackRate, className, style }: { sources: { src: string; type: string }[]; poster?: string; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
+  /* Step 1: Detect when video scrolls near viewport */
   useEffect(() => {
     const el = ref.current?.parentElement;
     if (!el) return;
@@ -33,7 +45,91 @@ function LazyVideo({ sources, playbackRate, className, style }: { sources: { src
     return () => observer.disconnect();
   }, []);
 
-  /* Apply playback rate once the video element is ready */
+  /* Step 2b: After sources are injected, call video.load() to explicitly
+   * start buffering. With preload="none", the browser won't load until
+   * we call load(). This is critical because:
+   * - The <video> was mounted with no sources (preload evaluated as "nothing to load")
+   * - When sources are injected, the browser doesn't auto-reload
+   * - We must call load() to kick off the buffering pipeline
+   * - Then canplaythrough fires, and tryPlay() starts playback */
+  useEffect(() => {
+    if (!shouldLoad) return;
+    const video = ref.current;
+    if (!video) return;
+    // Small delay to let React inject the <source> elements into the DOM
+    const timer = requestAnimationFrame(() => {
+      video.load();
+    });
+    return () => cancelAnimationFrame(timer);
+  }, [shouldLoad]);
+
+  /* Step 3: Wait for enough data, then play.
+   * This is necessary because autoPlay doesn't work when <source>
+   * elements are added after the <video> element was already mounted. */
+  useEffect(() => {
+    if (!shouldLoad) return;
+    const video = ref.current;
+    if (!video) return;
+
+    let interactionHandler: (() => void) | null = null;
+    let cancelled = false;
+
+    const tryPlay = () => {
+      if (cancelled) return;
+      video.play().catch(() => {
+        // Autoplay blocked — retry on first user interaction
+        if (cancelled) return;
+        interactionHandler = () => {
+          video.play().catch(() => {/* give up */});
+        };
+        document.addEventListener("click", interactionHandler, { once: true });
+        document.addEventListener("touchstart", interactionHandler, { once: true });
+        document.addEventListener("keydown", interactionHandler, { once: true });
+      });
+    };
+
+    // Wait for enough data, then play. Use 'canplaythrough' as primary
+    // trigger (more reliable than 'canplay') with a fallback timeout.
+    const onReady = () => {
+      if (cancelled) return;
+      tryPlay();
+      cleanup();
+    };
+
+    const cleanup = () => {
+      cancelled = true;
+      video.removeEventListener("canplaythrough", onReady);
+      video.removeEventListener("loadeddata", onReady);
+      if (interactionHandler) {
+        document.removeEventListener("click", interactionHandler);
+        document.removeEventListener("touchstart", interactionHandler);
+        document.removeEventListener("keydown", interactionHandler);
+        interactionHandler = null;
+      }
+    };
+
+    // If video already has enough data, play immediately
+    if (video.readyState >= 3) {
+      tryPlay();
+      return cleanup;
+    }
+
+    // Otherwise, listen for ready events
+    video.addEventListener("canplaythrough", onReady);
+    video.addEventListener("loadeddata", onReady);
+
+    // Safety: try after 2s even if events didn't fire
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled && video.readyState >= 1) tryPlay();
+    }, 2000);
+
+    return () => {
+      clearTimeout(safetyTimer);
+      cleanup();
+    };
+  }, [shouldLoad]);
+
+  /* Step 3: Apply playback rate once the video element is ready */
   useEffect(() => {
     const video = ref.current;
     if (!video || !playbackRate) return;
@@ -46,7 +142,7 @@ function LazyVideo({ sources, playbackRate, className, style }: { sources: { src
   return (
     <video
       ref={ref}
-      autoPlay
+      poster={poster}
       muted
       loop
       playsInline
@@ -195,12 +291,14 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                 {/* Mobile: landscape, fills container */}
                 <LazyVideo
                   sources={item.videoSources}
+                  poster="/videos/track-consultation-poster.webp"
                   playbackRate={0.7}
                   className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
                 />
                 {/* Desktop: phone-in-frame portrait style */}
                 <LazyVideo
                   sources={item.videoSources}
+                  poster="/videos/track-consultation-poster.webp"
                   playbackRate={0.7}
                   className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
                   style={{

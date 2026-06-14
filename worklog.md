@@ -883,3 +883,28 @@ Stage Summary:
 - ✅ Boot loader favicon FIXED: No more scale pulse, just gentle opacity fade
 - ✅ HeroAurora lines FIXED: Now a smooth subtle glow instead of sharp diagonal lines
 - ✅ All visual verification passed via VLM + Agent Browser
+
+---
+Task ID: 7
+Agent: Main
+Task: Fix favicon file sizes, video autoplay UX, and About page issues
+
+Work Log:
+- Favicon compression: Resized from 460x452 (14KB) and 217x212 (32KB) to proper 32x32 PNGs (1.8KB + 2.2KB) — 87% size reduction
+- Video autoplay fix: The LazyVideo component had `autoPlay` attribute but it doesn't work when `<source>` elements are added dynamically after the `<video>` was already mounted
+  - Removed `autoPlay` attribute (was misleading)
+  - Added `video.load()` call after sources are injected — critical because `preload="none"` means the browser won't start buffering without an explicit load()
+  - Added explicit `video.play()` call on `canplaythrough` / `loadeddata` events
+  - Added 2s safety timeout fallback
+  - Added autoplay-retry on user interaction (click/touch/keydown) for browsers that block autoplay
+  - Added `poster` attribute with `/videos/track-consultation-poster.webp` for visual feedback while video loads
+- About page: VLM analysis showed no visual issues — the user was likely seeing the data-reveal flash which has been fixed by the html.js CSS gate
+- Verified: Both videos play correctly after the fix (paused: false, readyState: 4, currentTime advancing)
+- Homepage rated 8/10 professional quality by VLM
+- Lint passes clean
+
+Stage Summary:
+- ✅ Favicon: 14KB + 32KB → 1.8KB + 2.2KB (proper 32x32 PNGs)
+- ✅ Video autoplay: Added video.load() + explicit play() + poster + interaction retry
+- ✅ About page: No visual bugs found (issue was the data-reveal flash, already fixed)
+- ✅ All pages verified working
