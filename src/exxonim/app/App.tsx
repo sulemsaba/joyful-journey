@@ -10,6 +10,7 @@ import { ErrorBoundary } from "@/exxonim/components/ErrorBoundary";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useRevealOnScroll } from "@/exxonim/hooks/useRevealOnScroll";
 import { useTheme } from "@/exxonim/hooks/useTheme";
+import { publicPagePreloaders, highPriorityPreloaders } from "@/exxonim/preloadRoutes";
 
 /* ── EAGER-LOADED: HomePage (LCP-critical) ──────────
  * The homepage is the LARGEST CONTENTFUL PAINT element.
@@ -26,41 +27,27 @@ import { HomePage } from "@/exxonim/pages/HomePage";
  * code-split them into separate chunks. A page chunk is only
  * fetched when the user navigates to that route.
  *
- * To hide the chunk-load delay, we also preload pages during
- * browser idle time (see requestIdleCallback below).
+ * Preload functions are defined in preloadRoutes.ts (shared
+ * with Navigation.tsx for hover-based preloading).
  */
 
-// ── Lazy loader functions ──────────────────────────────
-const loadAboutPage = () =>
-  import("@/exxonim/pages/AboutPage").then((m) => ({ default: m.AboutPage }));
-const loadCareerPage = () =>
-  import("@/exxonim/pages/CareerPage").then((m) => ({ default: m.CareerPage }));
-const loadContactPage = () =>
-  import("@/exxonim/pages/ContactPage").then((m) => ({ default: m.ContactPage }));
-const loadFaqPage = () =>
-  import("@/exxonim/pages/FaqPage").then((m) => ({ default: m.FaqPage }));
-const loadNotFoundPage = () =>
-  import("@/exxonim/pages/NotFoundPage").then((m) => ({ default: m.NotFoundPage }));
-const loadResourceArticlePage = () =>
-  import("@/exxonim/pages/ResourceArticlePage").then((m) => ({
-    default: m.ResourceArticlePage,
-  }));
-const loadResourcesPage = () =>
-  import("@/exxonim/pages/ResourcesPage").then((m) => ({ default: m.ResourcesPage }));
-const loadServicesPage = () =>
-  import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }));
-const loadSupportPage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }));
-const loadTermsPage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.TermsPage }));
-const loadPrivacyPage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.PrivacyPage }));
-const loadCookiePage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.CookiePage }));
-const loadDataRightsPage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.DataRightsPage }));
-const loadTrackConsultationPage = () =>
-  import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }));
+// ── Lazy loader functions (imported from shared registry) ─────
+import {
+  loadAboutPage,
+  loadCareerPage,
+  loadContactPage,
+  loadFaqPage,
+  loadNotFoundPage,
+  loadResourceArticlePage,
+  loadResourcesPage,
+  loadServicesPage,
+  loadSupportPage,
+  loadTermsPage,
+  loadPrivacyPage,
+  loadCookiePage,
+  loadDataRightsPage,
+  loadTrackConsultationPage,
+} from "@/exxonim/preloadRoutes";
 
 // ── Lazy components ────────────────────────────────────
 const AboutPage = lazy(loadAboutPage);
@@ -77,24 +64,6 @@ const PrivacyPage = lazy(loadPrivacyPage);
 const CookiePage = lazy(loadCookiePage);
 const DataRightsPage = lazy(loadDataRightsPage);
 const TrackConsultationPage = lazy(loadTrackConsultationPage);
-
-// ── Preloader registry ─────────────────────────────────
-const publicPagePreloaders = [
-  loadAboutPage,
-  loadCareerPage,
-  loadContactPage,
-  loadFaqPage,
-  loadNotFoundPage,
-  loadResourceArticlePage,
-  loadResourcesPage,
-  loadServicesPage,
-  loadSupportPage,
-  loadTermsPage,
-  loadPrivacyPage,
-  loadCookiePage,
-  loadDataRightsPage,
-  loadTrackConsultationPage,
-];
 
 // ── Type helper for requestIdleCallback ────────────────
 type IdleWindow = typeof window & {
@@ -162,12 +131,11 @@ export function App() {
    *   - Subsequent pages are INSTANT (chunk already cached) */
   useEffect(() => {
     const preloadPages = () => {
-      const highPriority = [loadAboutPage, loadServicesPage, loadContactPage];
       const lowPriority = publicPagePreloaders.filter(
-        (p) => !highPriority.includes(p)
+        (p) => !highPriorityPreloaders.includes(p)
       );
 
-      void Promise.allSettled(highPriority.map((fn) => fn()));
+      void Promise.allSettled(highPriorityPreloaders.map((fn) => fn()));
 
       lowPriority.forEach((fn, i) => {
         setTimeout(() => { void fn(); }, 500 * (i + 1));

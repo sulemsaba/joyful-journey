@@ -49,7 +49,9 @@ import { MegaMenuColumns } from "@/exxonim/components/navigation/MegaMenuColumns
 import { Button } from "@/exxonim/components/primitives/Button";
 import type { FeatureBox, HoverFeatureMap, MegaMenuLayout, MenuColumn, MenuFooterCta, MenuKey, MenuItem } from "@/exxonim/components/navigation/types";
 import { routes } from "@/exxonim/routes";
+import { normalizePathname } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
+import { preloadRoute } from "@/exxonim/preloadRoutes";
 
 interface DesktopNavigationProps {
   brandName: string;
@@ -142,6 +144,7 @@ export function DesktopNavigation({
             to={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={closeAllMenus}
+            onMouseEnter={() => preloadRoute(normalizePathname(link.href))}
             className={cn(navLinkBase, isActive(link.href) && navLinkActive)}
           >
             {link.label}
@@ -155,7 +158,10 @@ export function DesktopNavigation({
          * rendered as a direct child of <nav> for centering. */}
         <div
           ref={servicesTriggerRef}
-          onMouseEnter={() => setDesktopMenu("services")}
+          onMouseEnter={() => {
+            setDesktopMenu("services");
+            preloadRoute(normalizePathname(routes.services));
+          }}
           onFocusCapture={() => setDesktopMenu("services")}
         >
           <Link
@@ -164,6 +170,7 @@ export function DesktopNavigation({
             aria-controls={servicesMenuId}
             aria-current={servicesActive ? "page" : undefined}
             onClick={closeAllMenus}
+            onMouseEnter={() => preloadRoute(normalizePathname(routes.services))}
             className={cn(navLinkBase, servicesActive && navLinkActive)}
           >
             Services
@@ -182,7 +189,10 @@ export function DesktopNavigation({
          * ═══════════════════════════════════════════════════════ */}
         <div
           ref={resourcesTriggerRef}
-          onMouseEnter={() => setDesktopMenu("resources")}
+          onMouseEnter={() => {
+            setDesktopMenu("resources");
+            preloadRoute(normalizePathname(routes.resources));
+          }}
           onFocusCapture={() => setDesktopMenu("resources")}
         >
           <Link
@@ -191,6 +201,7 @@ export function DesktopNavigation({
             aria-controls={resourcesMenuId}
             aria-current={resourcesActive ? "page" : undefined}
             onClick={closeAllMenus}
+            onMouseEnter={() => preloadRoute(normalizePathname(routes.resources))}
             className={cn(navLinkBase, resourcesActive && navLinkActive)}
           >
             Resources
@@ -211,6 +222,7 @@ export function DesktopNavigation({
             to={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={closeAllMenus}
+            onMouseEnter={() => preloadRoute(normalizePathname(link.href))}
             className={cn(navLinkBase, isActive(link.href) && navLinkActive)}
           >
             {link.label}
@@ -223,6 +235,7 @@ export function DesktopNavigation({
           variant="primary"
           href={highlightLink.href}
           onClick={closeAllMenus}
+          onMouseEnter={() => preloadRoute(normalizePathname(highlightLink.href))}
           aria-current={isActive(highlightLink.href) ? "page" : undefined}
           className={cn(
             "gap-2",

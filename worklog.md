@@ -561,3 +561,47 @@ Stage Summary:
 - Root cause was full page reloads on every nav click
 - All internal links now use React Router <Link> for SPA navigation
 - External links (tel:, mailto:, https://) correctly use plain <a>
+
+---
+Task ID: route-nav-optimization
+Agent: Main
+Task: Optimize route navigation — eliminate data-reveal animation delay, add hover preloading, split Framer Motion chunk
+
+Work Log:
+- Identified 3 root causes of route navigation delay:
+  1. [data-reveal] CSS: All page content starts at opacity:0 + translateY(24px) with 0.7s transition — every route change shows invisible content for 0.7s
+  2. No hover preloading: Route chunks only load on click, not on hover — chunk download adds to perceived delay
+  3. Framer Motion in main bundle: 559KB main bundle slows initial JS parse
+- Fix 1: Instant scroll-reveal on route navigation
+  - Added `html.reveal-instant [data-reveal] { transition: none !important; }` CSS rule
+  - Modified useRevealOnScroll route-change effect to add `reveal-instant` class to <html>, then scan+reveal in-viewport elements, then remove the class after 1 rAF
+  - In-viewport elements now appear instantly on route change (no 0.7s fade-in)
+  - Below-fold elements still animate on scroll (normal behavior preserved)
+- Fix 2: Hover-based route chunk preloading
+  - Created /src/exxonim/preloadRoutes.ts — shared module with all lazy loader functions
+  - Exports: publicPagePreloaders, highPriorityPreloaders, routePreloadMap, preloadRoute()
+  - Updated App.tsx to import from shared module instead of inline definitions
+  - Added onMouseEnter handlers to all navigation links in DesktopNavigation.tsx
+  - Added onMouseEnter handlers to MegaMenuColumns.tsx dropdown items and feature box CTA
+  - Added onMouseEnter to Track Consultation highlight button
+  - When user hovers a nav link, the target route chunk starts downloading — by click time, chunk is cached
+- Fix 3: Framer Motion separate chunk
+  - Added rollupOptions.output.manualChunks to vite.config.ts
+  - Split framer-motion into "vendor-framer-motion" chunk (~130KB)
+  - Reduces main bundle size, allows critical path (nav + routes) to parse faster
+  - Framer Motion only loaded when JobApplyModal or StackSection renders
+
+Verified:
+- All pages render correctly (Home, About, Services, Contact, Career, Resources)
+- Zero console errors, zero page errors
+- All data-reveal elements revealed on every page (100% on scroll)
+- Lint passes clean
+- Preload module compiles and is imported correctly by Navigation, DesktopNavigation, MegaMenuColumns, and App
+
+Stage Summary:
+- Route navigation delay significantly reduced by 3 complementary fixes:
+  1. reveal-instant CSS: eliminates 0.7s animation delay on route changes
+  2. Hover preloading: chunks download on mouse hover, not on click
+  3. Framer Motion chunk split: smaller main bundle = faster initial parse
+- Loader catalog (L1-L11) status unchanged — all disabled
+- No new loaders introduced

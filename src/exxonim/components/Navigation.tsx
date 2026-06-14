@@ -11,6 +11,7 @@ import { useMobileMenuFocusTrap } from "@/exxonim/components/navigation/useMobil
 import { normalizePathname, routes } from "@/exxonim/routes";
 import type { BrandAssets, CompanyInfo, Theme } from '@/exxonim/types';
 import { cn } from "@/exxonim/utils/cn";
+import { preloadRoute } from "@/exxonim/preloadRoutes";
 
 /**
  * Navigation component — the fixed site header.

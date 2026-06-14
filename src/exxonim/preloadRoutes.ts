@@ -1,0 +1,110 @@
+/**
+ * Route preloader registry — shared between App.tsx and Navigation.tsx.
+ *
+ * Each lazy page has a preload function that triggers the Vite chunk
+ * download without mounting the component. Navigation links call these
+ * on mouseenter (hover), so the chunk is already cached by click time.
+ *
+ * ARCHITECTURE:
+ *   - App.tsx imports these for idle-time preloading (requestIdleCallback)
+ *   - Navigation.tsx imports routePreloadMap for hover-based preloading
+ *   - Each function is idempotent — calling it multiple times is safe
+ *     because Vite caches the module after the first import()
+ */
+
+const loadAboutPage = () =>
+  import("@/exxonim/pages/AboutPage").then((m) => ({ default: m.AboutPage }));
+const loadCareerPage = () =>
+  import("@/exxonim/pages/CareerPage").then((m) => ({ default: m.CareerPage }));
+const loadContactPage = () =>
+  import("@/exxonim/pages/ContactPage").then((m) => ({ default: m.ContactPage }));
+const loadFaqPage = () =>
+  import("@/exxonim/pages/FaqPage").then((m) => ({ default: m.FaqPage }));
+const loadNotFoundPage = () =>
+  import("@/exxonim/pages/NotFoundPage").then((m) => ({ default: m.NotFoundPage }));
+const loadResourceArticlePage = () =>
+  import("@/exxonim/pages/ResourceArticlePage").then((m) => ({
+    default: m.ResourceArticlePage,
+  }));
+const loadResourcesPage = () =>
+  import("@/exxonim/pages/ResourcesPage").then((m) => ({ default: m.ResourcesPage }));
+const loadServicesPage = () =>
+  import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }));
+const loadSupportPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }));
+const loadTermsPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.TermsPage }));
+const loadPrivacyPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.PrivacyPage }));
+const loadCookiePage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.CookiePage }));
+const loadDataRightsPage = () =>
+  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.DataRightsPage }));
+const loadTrackConsultationPage = () =>
+  import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }));
+
+/**
+ * All preload functions for idle-time preloading in App.tsx.
+ * Order matters: high-priority pages first.
+ */
+export const publicPagePreloaders = [
+  loadAboutPage,
+  loadCareerPage,
+  loadContactPage,
+  loadFaqPage,
+  loadNotFoundPage,
+  loadResourceArticlePage,
+  loadResourcesPage,
+  loadServicesPage,
+  loadSupportPage,
+  loadTermsPage,
+  loadPrivacyPage,
+  loadCookiePage,
+  loadDataRightsPage,
+  loadTrackConsultationPage,
+];
+
+/**
+ * High-priority preloaders — loaded first during idle time.
+ * These are the most likely navigation targets.
+ */
+export const highPriorityPreloaders = [
+  loadAboutPage,
+  loadServicesPage,
+  loadContactPage,
+];
+
+/**
+ * Map from normalized route path to preload function.
+ * Used by Navigation.tsx for hover-based preloading.
+ *
+ * Trailing slashes are stripped to match normalizePathname() behavior.
+ */
+export const routePreloadMap: Record<string, () => Promise<unknown>> = {
+  "/about": loadAboutPage,
+  "/career": loadCareerPage,
+  "/contact": loadContactPage,
+  "/faq": loadFaqPage,
+  "/services": loadServicesPage,
+  "/resources": loadResourcesPage,
+  "/blog": loadResourcesPage,
+  "/support": loadSupportPage,
+  "/terms": loadTermsPage,
+  "/privacy": loadPrivacyPage,
+  "/cookies": loadCookiePage,
+  "/data-rights": loadDataRightsPage,
+  "/track-consultation": loadTrackConsultationPage,
+};
+
+/**
+ * Preload a route chunk by path. Safe to call multiple times.
+ * Returns void — errors are silently caught (chunk will load on navigation instead).
+ */
+export function preloadRoute(path: string) {
+  const fn = routePreloadMap[path];
+  if (fn) {
+    void fn().catch(() => {
+      // Silently ignore — the chunk will be fetched on navigation
+    });
+  }
+}

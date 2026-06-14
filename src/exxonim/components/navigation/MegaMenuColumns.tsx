@@ -39,6 +39,8 @@ import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { FeatureBox, HoverFeatureMap, MegaMenuLayout, MenuColumn, MenuFooterCta, NavIcon } from "./types";
 import { Button } from "@/exxonim/components/primitives/Button";
+import { preloadRoute } from "@/exxonim/preloadRoutes";
+import { normalizePathname } from "@/exxonim/routes";
 
 /* ── Unified Icon Renderer ── */
 
@@ -159,7 +161,10 @@ function MegaMenuItem({
     <Link
       to={item.href}
       onClick={onNavigate}
-      onMouseEnter={onItemHover ? () => onItemHover(item.href) : undefined}
+      onMouseEnter={() => {
+        preloadRoute(normalizePathname(item.href));
+        onItemHover?.(item.href);
+      }}
       className="group/item flex items-start gap-3 px-3 py-2 rounded-lg
                  hover:bg-accent-soft
                  transition-colors duration-150"
@@ -256,6 +261,7 @@ function MegaMenuFeatureBox({
         <Link
           to={featureBox.ctaHref}
           onClick={onNavigate}
+          onMouseEnter={() => preloadRoute(normalizePathname(featureBox.ctaHref))}
           className="mt-1 inline-flex items-center gap-1.5 px-4 py-2 rounded-full
                      bg-accent text-accent-contrast text-xs font-bold
                      hover:bg-accent-hover transition-colors duration-150"

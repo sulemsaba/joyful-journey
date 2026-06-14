@@ -360,6 +360,11 @@ html, body {
  * all remaining elements. Additionally, when the page first loads,
  * we briefly show all content then hide data-reveal elements only
  * after JS loads — this prevents a flash of invisible content.
+ *
+ * ROUTE NAVIGATION FIX: html.reveal-instant disables the transition
+ * so that in-viewport elements appear instantly on route change
+ * (no 0.7s fade-in delay). The class is added briefly during
+ * route transitions by useRevealOnScroll.
  */
 [data-reveal] {
   opacity: 0;
@@ -374,6 +379,11 @@ html, body {
   -webkit-transform: translateY(0);
   transform: translateY(0);
   will-change: auto;
+}
+/* Instant reveal: skip animation during route transitions */
+html.reveal-instant [data-reveal] {
+  -webkit-transition: none !important;
+  transition: none !important;
 }
 
 /* ── Runtime theme variables ───────────────────────── */

@@ -137,12 +137,31 @@ export function useRevealOnScroll(pathname?: string) {
   // it auto-disconnected after 15s, or if the DOM mutation
   // coalescing skipped the route-change batch). This effect
   // triggers an immediate scan after each route change.
+  //
+  // INSTANT REVEAL: We add `reveal-instant` to <html> which
+  // disables the 0.7s CSS transition, so in-viewport elements
+  // appear instantly on route navigation (no perceived delay).
+  // Below-fold elements still animate on scroll as normal.
   useEffect(() => {
     if (!pathname || !scanAndObserveRef.current) return;
+
+    // Add reveal-instant class to skip animation on route change
+    const html = document.documentElement;
+    html.classList.add("reveal-instant");
+
     // Delay slightly so React has finished rendering the new page
     const handle = requestAnimationFrame(() => {
       scanAndObserveRef.current?.();
+
+      // Remove reveal-instant after a frame so below-fold elements
+      // still get the normal scroll-reveal animation
+      requestAnimationFrame(() => {
+        html.classList.remove("reveal-instant");
+      });
     });
-    return () => cancelAnimationFrame(handle);
+    return () => {
+      cancelAnimationFrame(handle);
+      html.classList.remove("reveal-instant");
+    };
   }, [pathname]);
 }

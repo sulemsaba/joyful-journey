@@ -56,5 +56,16 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split Framer Motion into its own chunk — it's ~130KB
+          // and only needed by JobApplyModal + StackSection.
+          // This reduces the main bundle and allows the critical
+          // path (nav + routes) to parse faster.
+          "vendor-framer-motion": ["framer-motion"],
+        },
+      },
+    },
   },
 });
