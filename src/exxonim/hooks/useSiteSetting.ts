@@ -1,29 +1,43 @@
 /**
- * FASTAPI ENDPOINT DEPENDENCY:
- * ─────────────────────────────
- * GET /api/v1/site-settings/{key} — Get single site setting by key (public)
+ * Generic site setting hook.
  *
- * Known keys: brand, company_info, footer, seo_defaults, office_hours,
- * social_links, policy_versions, contact_map
+ * ARCHITECTURE:
+ *   Layer 0: Memory cache (current session)
+ *   Layer 1: persistQueryClient (localStorage) — returning visitors see cache instantly
+ *   Layer 2: Live API → JSON fallback (if API fails)
+ *   Layer 3: Hardcoded fallback (always available, built into JS bundle)
  *
- * See: src/exxonim/services/siteSettingsService.ts for full endpoint documentation.
+ * FALLBACK GUARANTEE:
+ *   Always returns hardcoded fallback as `data` when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
-import { getCachedSiteSetting, getSiteSetting } from "@/exxonim/services/siteSettingsService";
+import { getSiteSetting } from "@/exxonim/services/siteSettingsService";
+import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { getFallbackSiteSetting } from "@/exxonim/content/fallbackPublicContent";
+import type { SiteSetting } from '@/exxonim/types';
 
 export function useSiteSetting<TValue = unknown>(key: string) {
-  return useQuery({
+  const fallback = getFallbackSiteSetting(key) as SiteSetting<TValue> | undefined;
+
+  const query = useQuery({
     queryKey: ["site-settings", key],
-    queryFn: () => getSiteSetting<TValue>(key),
-    initialData: () => getCachedSiteSetting<TValue>(key),
-    refetchOnMount: "always",
-    refetchOnReconnect: "always",
+    queryFn: () =>
+      fetchWithJsonFallback(
+        () => getSiteSetting<TValue>(key),
+        `site-settings-${key}`
+      ),
+    placeholderData: fallback,
+    staleTime: 1000 * 60 * 60 * 4,
     retry: (failureCount, error) => {
       const status = (error as { response?: { status?: number } } | null)?.response?.status;
-      if (status === 404) {
-        return false;
-      }
+      if (status === 404) return false;
       return failureCount < 2;
     },
   });
+
+  return {
+    ...query,
+    data: query.data ?? fallback,
+    isPending: query.isPending && !fallback,
+  };
 }

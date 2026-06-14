@@ -585,34 +585,42 @@ function TrackingNotFound({
   );
 }
 
-/* ─────────────────────────────────────────────────────────
- * SKELETON LOADING CARD
+/* ─── L9: TRACKING_SKELETON ────────────────────────────────────────────
+ * LABEL:    TRACKING_SKELETON
+ * POSITION: Track Consultation page — replaces tracking result card during loading
+ * APPEARANCE: Shimmer-animated card with progress bar, header row,
+ *             and 4-column stats grid
+ * STATUS:   disabled — returns null
+ * CSS REQUIRED: .animate-shimmer + @keyframes shimmer (add to globals.css)
+ * USED BY:  TrackConsultationPage (lines ~940-944, also disabled)
+ * RE-ENABLE: Uncomment JSX below + add .animate-shimmer CSS to globals.css
  * ───────────────────────────────────────────────────────── */
 function TrackingSkeleton() {
-  return (
-    <div className="rounded-[1.35rem] overflow-hidden">
-      <div className="h-1.5 bg-accent-soft/30">
-        <div className="h-full w-1/2 bg-accent/20 animate-shimmer rounded-r-full" />
-      </div>
-      <div className="p-6 md:p-8 grid gap-5">
-        <div className="flex items-center justify-between gap-3">
-          <div className="grid gap-2">
-            <div className="h-3 w-24 rounded bg-accent-soft/50 animate-shimmer" />
-            <div className="h-8 w-40 rounded bg-accent-soft/50 animate-shimmer" />
-          </div>
-          <div className="h-8 w-28 rounded-full bg-accent-soft/50 animate-shimmer" />
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="grid gap-2">
-              <div className="h-3 w-16 rounded bg-accent-soft/50 animate-shimmer" />
-              <div className="h-4 w-24 rounded bg-accent-soft/50 animate-shimmer" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return null;
+  // return (
+  //   <div className="rounded-[1.35rem] overflow-hidden">
+  //     <div className="h-1.5 bg-accent-soft/30">
+  //       <div className="h-full w-1/2 bg-accent/20 animate-shimmer rounded-r-full" />
+  //     </div>
+  //     <div className="p-6 md:p-8 grid gap-5">
+  //       <div className="flex items-center justify-between gap-3">
+  //         <div className="grid gap-2">
+  //           <div className="h-3 w-24 rounded bg-accent-soft/50 animate-shimmer" />
+  //           <div className="h-8 w-40 rounded bg-accent-soft/50 animate-shimmer" />
+  //         </div>
+  //         <div className="h-8 w-28 rounded-full bg-accent-soft/50 animate-shimmer" />
+  //       </div>
+  //       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
+  //         {Array.from({ length: 4 }).map((_, i) => (
+  //           <div key={i} className="grid gap-2">
+  //             <div className="h-3 w-16 rounded bg-accent-soft/50 animate-shimmer" />
+  //             <div className="h-4 w-24 rounded bg-accent-soft/50 animate-shimmer" />
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -935,13 +943,14 @@ export function TrackConsultationPage() {
 
       {/* ── Tracking result ── */}
       <div ref={resultRef}>
-        {isSearching && (
+        {/* DISABLED: TrackingSkeleton (loader extermination) */}
+        {/* {isSearching && (
           <section className="pb-16 md:pb-20">
             <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
               <TrackingSkeleton />
             </div>
           </section>
-        )}
+        )} */}
 
         {!isSearching && (lookupResult || notFound) && (
           <section className="pb-16 md:pb-20">

@@ -147,32 +147,42 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
   );
 }
 
-/** Skeleton card used during loading state */
+/* ─── L8: SERVICE_CARD_SKELETON ────────────────────────────────────────
+ * LABEL:    SERVICE_CARD_SKELETON
+ * POSITION: Service catalog grid — replaces each ServiceCard during loading
+ * APPEARANCE: Shimmer-animated card with badge, title, description,
+ *             deliverables, and CTA button placeholders
+ * STATUS:   disabled — returns null
+ * CSS REQUIRED: .animate-shimmer + @keyframes shimmer (add to globals.css)
+ * USED BY:  ServiceCatalogSection.tsx (lines 150-159, also disabled)
+ * RE-ENABLE: Uncomment JSX below + add .animate-shimmer CSS to globals.css
+ * ═══════════════════════════════════════════════════════════════════════════ */
 export function ServiceCardSkeleton() {
-  return (
-    <div
-      className={cn(
-        'flex flex-col rounded-2xl',
-        'p-5 md:p-6'
-      )}
-      aria-hidden="true"
-    >
-      {/* Badge skeleton */}
-      <div className="h-5 w-24 rounded-full animate-shimmer mb-3" />
-      {/* Title skeleton */}
-      <div className="h-5 w-3/4 rounded-md animate-shimmer mb-2" />
-      {/* Description skeleton */}
-      <div className="h-4 w-full rounded-md animate-shimmer mb-1.5" />
-      <div className="h-4 w-5/6 rounded-md animate-shimmer mb-4" />
-      {/* Deliverables skeleton */}
-      <div className="space-y-2 mb-4">
-        <div className="h-4 w-full rounded-md animate-shimmer" />
-        <div className="h-4 w-11/12 rounded-md animate-shimmer" />
-        <div className="h-4 w-4/5 rounded-md animate-shimmer" />
-        <div className="h-4 w-10/12 rounded-md animate-shimmer" />
-      </div>
-      {/* CTA skeleton */}
-      <div className="mt-auto h-12 w-full rounded-full animate-shimmer" />
-    </div>
-  );
+  return null;
+  // return (
+  //   <div
+  //     className={cn(
+  //       'flex flex-col rounded-2xl',
+  //       'p-5 md:p-6'
+  //     )}
+  //     aria-hidden="true"
+  //   >
+  //     {/* Badge skeleton */}
+  //     <div className="h-5 w-24 rounded-full animate-shimmer mb-3" />
+  //     {/* Title skeleton */}
+  //     <div className="h-5 w-3/4 rounded-md animate-shimmer mb-2" />
+  //     {/* Description skeleton */}
+  //     <div className="h-4 w-full rounded-md animate-shimmer mb-1.5" />
+  //     <div className="h-4 w-5/6 rounded-md animate-shimmer mb-4" />
+  //     {/* Deliverables skeleton */}
+  //     <div className="space-y-2 mb-4">
+  //       <div className="h-4 w-full rounded-md animate-shimmer" />
+  //       <div className="h-4 w-11/12 rounded-md animate-shimmer" />
+  //       <div className="h-4 w-4/5 rounded-md animate-shimmer" />
+  //       <div className="h-4 w-10/12 rounded-md animate-shimmer" />
+  //     </div>
+  //     {/* CTA skeleton */}
+  //     <div className="mt-auto h-12 w-full rounded-full animate-shimmer" />
+  //   </div>
+  // );
 }

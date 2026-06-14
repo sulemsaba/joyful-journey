@@ -4,7 +4,6 @@ import { Home, ArrowRight, CheckCircle, Clock, ShieldCheck, Target, Users, Eye, 
 import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { routes } from '@/exxonim/routes';
-import { LoadBoundary } from '@/exxonim/components/LoadBoundary';
 import { usePage } from '@/exxonim/hooks/usePage';
 import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
 import { StructuredData } from '@/exxonim/components/StructuredData';
@@ -29,8 +28,12 @@ const profileIcons: Record<string, React.ReactNode> = {
   'Consultation tracking': <Eye className="h-5 w-5" />,
 };
 
+/**
+ * About page — instant rendering, no full-page loader.
+ * usePage guarantees fallback data (data: query.data ?? fallback).
+ */
 export function AboutPage() {
-  const { data: page, isPending, error } = usePage<AboutPageContent>('about');
+  const { data: page } = usePage<AboutPageContent>('about');
   useResolvedPageSeo(page, routes.about);
   const content = page?.content;
 
@@ -49,19 +52,10 @@ export function AboutPage() {
   // Example: const REVIEW_COUNT = googleReviewData?.review_count ?? 58;
   const REVIEW_COUNT = 58;
 
+  if (!content) return null;
+
   return (
-    <LoadBoundary
-      error={error}
-      errorDetail="The about page content could not be loaded right now."
-      errorTitle="Unable to load the about page."
-      isPending={isPending}
-      isReady={Boolean(content)}
-      loadingLabel="Loading about page..."
-    >
-      {() => {
-        if (!content) return null;
-        return (
-          <>
+    <>
             <StructuredData
               heroTitle={content.hero.title}
               heroDescription={content.hero.description}
@@ -516,9 +510,6 @@ export function AboutPage() {
                 </div>
               </div>
             </section>
-          </>
-        );
-      }}
-    </LoadBoundary>
+    </>
   );
 }

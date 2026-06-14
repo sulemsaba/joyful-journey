@@ -1,18 +1,22 @@
 /**
- * FASTAPI ENDPOINT DEPENDENCY:
- * ─────────────────────────────
- * GET /api/v1/faq — List all active FAQ items (public)
+ * FAQ items hook.
  *
- * PostgreSQL Tables:
- *   faq_items — id, question, answer, category, sort_order, is_active
+ * ARCHITECTURE:
+ *   Layer 0: Memory cache (current session)
+ *   Layer 1: persistQueryClient (localStorage) — returning visitors see cache instantly
+ *   Layer 2: Live API → JSON fallback (if API fails)
+ *   Layer 3: Hardcoded fallback (empty items, always available)
  *
- * Response Schema:
- *   { items: [{ id: str, question: str, answer: str, category: str,
- *               sort_order: int, is_active: bool }], total: int }
+ * FAQ page uses usePage for full fallback content; this hook
+ * provides the structured FAQ items separately.
+ *
+ * FALLBACK GUARANTEE:
+ *   Always returns empty FAQ items as `data` when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
+import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
 
 interface FaqItemFromApi {
   id: string;
@@ -28,13 +32,24 @@ interface FaqApiResponse {
   total: number;
 }
 
+const EMPTY_FAQ: FaqApiResponse = { items: [], total: 0 };
+
+async function fetchFaqItems(): Promise<FaqApiResponse> {
+  const response = await api.get<FaqApiResponse>(apiRoutes.public.faq.list);
+  return response.data;
+}
+
 export function useFaqItems() {
-  return useQuery({
+  const query = useQuery({
     queryKey: ["faq-items"],
-    queryFn: async () => {
-      const response = await api.get<FaqApiResponse>(apiRoutes.public.faq.list);
-      return response.data;
-    },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    queryFn: () => fetchWithJsonFallback(fetchFaqItems, "faq-items"),
+    placeholderData: EMPTY_FAQ,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
   });
+
+  return {
+    ...query,
+    data: query.data ?? EMPTY_FAQ,
+  };
 }

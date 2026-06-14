@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://tkdodo.eu/blog/placeholder-and-initial-data-in-react-query",
+    "name": "Placeholder and Initial Data in React Query - TkDodo's blog",
+    "snippet": "React Query already gives us the tools to get rid of them in many situations. We get stale data from the cache while background updates are ...",
+    "host_name": "tkdodo.eu",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/tannerlinsley/react-query/issues/1859",
+    "name": "Change of behaviour with `keepPreviousData` and `initialData",
+    "snippet": "The thing is: initialData is persisted to the cache, so it is treated \"like data that is returned from the api\". if you change your v3 example ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/reactjs/comments/10i49j0/reactquery_with_localstorage_persistqueryclient",
+    "name": "ReactQuery with localStorage (persistQueryClient) doesn't work?",
+    "snippet": "Your issue is with the staleTime query option. ReactQuery will refetch from the network if the stale time of a query has passed.",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.bitsrc.io/use-swr-to-fetch-and-display-323f5278ecba",
+    "name": "Use SWR to fetch — what is the stale data? | by Fang Jin | Medium",
+    "snippet": "There's a interesting flag revalidateIfStale , by default it's true, but if you turn this flag to false, it'll skip revalidation if the data has ...",
+    "host_name": "blog.bitsrc.io",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/78961961/reactquery-v4-local-storage-persistance",
+    "name": "ReactQuery v4 local storage persistance - reactjs - Stack Overflow",
+    "snippet": "It appears React Query cannot differentiate between instances of arrays, causing issues with cache invalidation and persistence. The solution is ...",
+    "host_name": "stackoverflow.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tanstack.com/query/v4/docs/framework/react/guides/initial-query-data",
+    "name": "Initial Query Data | TanStack Query React Docs",
+    "snippet": "Getting initial data from the cache means the source query you're using to look up the initial data from is likely old, but initialData. Instead of using an ...",
+    "host_name": "tanstack.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.apollographql.com/t/emulating-stale-while-revalidate-pattern-with-apollo-client/2336",
+    "name": "Emulating \"stale-while-revalidate\" pattern with Apollo Client",
+    "snippet": "I'm looking for some feedback on the idea to recreate the SWR (stale while revalidate) pattern, that Vercel is currently popularizing, on top of ...",
+    "host_name": "community.apollographql.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=LpbEdr_CCgM",
+    "name": "React-query Cache in Local Storage with persistQueryClient",
+    "snippet": "Increaser: https://increaser.org Twitter: https://twitter.com/radzionchachura.",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@ignatovich.dm/using-swr-and-react-query-for-efficient-data-fetching-in-react-87f4256910f0",
+    "name": "Using SWR and React Query for Efficient Data Fetching in React",
+    "snippet": "SWR follows the Stale-While-Revalidate pattern, where it shows stale data and revalidates it in the background. This is great for scenarios ...",
+    "host_name": "medium.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tigerabrodi.blog/initialdata-vs-placeholderdata-in-react-query",
+    "name": "InitialData vs PlaceholderData in React Query - Tiger's Place",
+    "snippet": "The main difference is: initialData acts like real data, while placeholderData is clearly fake. This impacts caching, loading states, and ...",
+    "host_name": "tigerabrodi.blog",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

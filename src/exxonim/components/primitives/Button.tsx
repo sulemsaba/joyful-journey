@@ -1,5 +1,6 @@
 import { cn } from '@/exxonim/utils/cn'
 import { forwardRef, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 
 /* ═══════════════════════════════════════════════════════════════
  * Button — Exxonim Design System Primitive
@@ -123,7 +124,17 @@ const baseStyles = cn(
   'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0',
 )
 
-/* ── Loading spinner ─────────────────────────────────────────── */
+/* ─── L10: BUTTON_SPINNER ──────────────────────────────────────────────
+ * LABEL:    BUTTON_SPINNER
+ * POSITION: Inside Button component — replaces button content during isLoading
+ * APPEARANCE: SVG circle with rotating arc (animate-spin) + button children
+ * STATUS:   disabled — Spinner component exists but never rendered
+ * CSS REQUIRED: animate-spin (built-in Tailwind — always available)
+ * TRIGGERED BY: TrackConsultationPage (isLoading={isSearching}),
+ *               ContactPage (isLoading={isSubmitting}),
+ *               CareerPage (isLoading={isSubmitting})
+ * RE-ENABLE: Uncomment the isLoading ternary in `content` below
+ * ═══════════════════════════════════════════════════════════════════════════ */
 function Spinner() {
   return (
     <svg
@@ -175,20 +186,44 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
       className,
     )
 
-    const content = isLoading ? (
-      <span className="inline-flex items-center gap-2">
-        <Spinner />
-        {children}
-      </span>
-    ) : (
-      children
-    )
+    /* DISABLED: isLoading spinner (loader extermination)
+     * Button always shows children, no spinner overlay.
+     * Re-enable the isLoading ternary to test if this was the chronic loader. */
+    const content = children
+    // const content = isLoading ? (
+    //   <span className="inline-flex items-center gap-2">
+    //     <Spinner />
+    //     {children}
+    //   </span>
+    // ) : (
+    //   children
+    // )
 
     if (href && !isDisabled) {
+      // Internal links (no protocol prefix) use React Router <Link>
+      // External links (tel:, mailto:, https://, http://) use plain <a>
+      const isExternal = /^(tel:|mailto:|https?:\/\/)/.test(href);
+
+      if (isExternal) {
+        return (
+          <a
+            ref={ref as React.Ref<HTMLAnchorElement>}
+            href={href}
+            className={classes}
+            target={target}
+            rel={rel}
+            aria-label={ariaLabel}
+            onClick={onClick}
+            {...rest}
+          >
+            {content}
+          </a>
+        );
+      }
+
       return (
-        <a
-          ref={ref as React.Ref<HTMLAnchorElement>}
-          href={href}
+        <Link
+          to={href}
           className={classes}
           target={target}
           rel={rel}
@@ -197,8 +232,8 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
           {...rest}
         >
           {content}
-        </a>
-      )
+        </Link>
+      );
     }
 
     return (

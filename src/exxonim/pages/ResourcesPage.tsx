@@ -64,7 +64,6 @@
 import { useMemo, useState } from "react";
 import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
-import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { useBlogCategories } from "@/exxonim/hooks/useBlogCategories";
@@ -449,21 +448,9 @@ export function ResourcesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
-  const {
-    data: posts = [],
-    isPending: postsPending,
-    error: postsError,
-  } = useBlogPosts();
-  const {
-    data: categories = [],
-    isPending: categoriesPending,
-    error: categoriesError,
-  } = useBlogCategories();
-  const {
-    data: page,
-    isPending: pagePending,
-    error: pageError,
-  } = usePage<ResourcesPageContent>("resources");
+  const { data: posts = [] } = useBlogPosts();
+  const { data: categories = [] } = useBlogCategories();
+  const { data: page } = usePage<ResourcesPageContent>("resources");
 
   useResolvedPageSeo(page, routes.resources);
 
@@ -536,19 +523,10 @@ export function ResourcesPage() {
     setVisibleCount(INITIAL_VISIBLE_COUNT);
   };
 
+  if (!page) return null;
+
   return (
-    <LoadBoundary
-      error={postsError || categoriesError || pageError}
-      errorDetail="The resources content could not be loaded right now."
-      errorTitle="Unable to load resources."
-      isPending={postsPending || categoriesPending || pagePending}
-      isReady={Boolean(page)}
-      loadingLabel="Loading resources..."
-    >
-      {() => {
-        if (!page) return null;
-        return (
-          <div>
+    <div>
             <StructuredData heroTitle="Resources & Insights" heroDescription="Practical guidance for registration, compliance, and operational planning." breadcrumbs={[{ name: 'Resources', path: routes.resources }]} pageType="CollectionPage" />
             {/* ── Breadcrumb ── */}
             <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -748,8 +726,5 @@ export function ResourcesPage() {
               </div>
             </section>
           </div>
-        );
-      }}
-    </LoadBoundary>
   );
 }

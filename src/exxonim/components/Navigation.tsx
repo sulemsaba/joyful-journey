@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
+import { Link } from "react-router-dom";
 import { Phone } from "lucide-react";
 import { DesktopNavigation } from "@/exxonim/components/navigation/DesktopNavigation";
 import { MobileNavigationPanel } from "@/exxonim/components/navigation/MobileNavigationPanel";
@@ -205,8 +206,8 @@ export function Navigation({
       >
         <div className="h-full px-4 flex items-center justify-between">
           {/* Logo — matches footer size: h-8 sm:h-11 */}
-          <a
-            href={routes.home}
+          <Link
+            to={routes.home}
             onClick={closeAllMenus}
             aria-label={`${brand.name} home`}
             className="relative flex items-center min-w-0"
@@ -238,7 +239,7 @@ export function Navigation({
               }}
               className="logo-dark h-8 sm:h-11 w-auto"
             />
-          </a>
+          </Link>
 
           {/* Right: Theme toggle + Hamburger */}
           <div className="flex items-center gap-0.5">
@@ -311,8 +312,8 @@ export function Navigation({
       >
         <div className="h-full w-full px-[clamp(12px,2vw,24px)] grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between xl:justify-center gap-4">
           {/* Left: Brand logo */}
-          <a
-            href={routes.home}
+          <Link
+            to={routes.home}
             onClick={closeAllMenus}
             aria-label={`${brand.name} home`}
             className="relative flex items-center min-w-0"
@@ -344,7 +345,7 @@ export function Navigation({
               }}
               className="logo-dark h-11 w-auto"
             />
-          </a>
+          </Link>
 
           {/* Center: Desktop navigation */}
           <DesktopNavigation

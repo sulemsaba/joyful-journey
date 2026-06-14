@@ -93,7 +93,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { ErrorMessage } from "@/exxonim/components/ErrorMessage";
-import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { ReadingProgressBar } from "@/exxonim/components/ReadingProgressBar";
@@ -382,7 +381,7 @@ interface ResourceArticlePageProps {
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════ */
 export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
-  const { data: post, isPending, error } = useBlogPost(slug);
+  const { data: post } = useBlogPost(slug);
   const { data: posts = [] } = useBlogPosts();
   const { data: resourcesPage } = usePage<ResourcesPageContent>("resources");
   useResolvedBlogSeo(post);
@@ -457,17 +456,8 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
   }, []);
 
   return (
-    <LoadBoundary
-      error={error}
-      errorDetail="This article could not be loaded right now."
-      errorTitle="Unable to load the article."
-      isPending={isPending}
-      isReady={Boolean(post)}
-      loadingLabel="Loading article..."
-    >
-      {() => {
-        if (!post) return null;
-        return hasArticleBody ? (
+    <>
+        {!post ? null : hasArticleBody ? (
           (() => {
           const article = post.content;
           if (!article) return null;
@@ -800,8 +790,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
             detail="This article is missing its published body content."
             title="Article content is unavailable."
           />
-        );
-      }}
-    </LoadBoundary>
+        )}
+    </>
   );
 }

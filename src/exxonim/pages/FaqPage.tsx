@@ -2,7 +2,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
-import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { Sparkles, Home, Search, Plus, X, MessageCircle } from "lucide-react";
@@ -197,7 +196,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  * Keep this even after DB migration — it helps search ranking.
  * ═══════════════════════════════════════════════════════════════ */
 export function FaqPage() {
-  const { data: page, isPending, error } = usePage<FaqPageContent>("faq");
+  const { data: page } = usePage<FaqPageContent>("faq");
   useResolvedPageSeo(page, routes.faq);
 
   const content = page?.content;
@@ -228,19 +227,10 @@ export function FaqPage() {
     setOpenIndex(null);
   }, []);
 
+  if (!content) return null;
+
   return (
-    <LoadBoundary
-      error={error}
-      errorDetail="The FAQ content could not be loaded right now."
-      errorTitle="Unable to load the FAQ."
-      isPending={isPending}
-      isReady={Boolean(content)}
-      loadingLabel="Loading FAQ..."
-    >
-      {() => {
-        if (!content) return null;
-        return (
-          <>
+    <>
             <FaqStructuredData items={content.items} />
             <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'FAQ', path: routes.faq }]} pageType="FAQPage" />
 
@@ -369,9 +359,6 @@ export function FaqPage() {
             >
               <NewsletterForm />
             </UnifiedCtaSection>
-          </>
-        );
-      }}
-    </LoadBoundary>
+    </>
   );
 }

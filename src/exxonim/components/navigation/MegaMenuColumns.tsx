@@ -36,6 +36,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { FeatureBox, HoverFeatureMap, MegaMenuLayout, MenuColumn, MenuFooterCta, NavIcon } from "./types";
 import { Button } from "@/exxonim/components/primitives/Button";
 
@@ -155,8 +156,8 @@ function MegaMenuItem({
   onItemHover?: (href: string) => void;
 }) {
   return (
-    <a
-      href={item.href}
+    <Link
+      to={item.href}
       onClick={onNavigate}
       onMouseEnter={onItemHover ? () => onItemHover(item.href) : undefined}
       className="group/item flex items-start gap-3 px-3 py-2 rounded-lg
@@ -185,7 +186,7 @@ function MegaMenuItem({
           </p>
         ) : null}
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -252,8 +253,8 @@ function MegaMenuFeatureBox({
             {featureBox.description}
           </p>
         </div>
-        <a
-          href={featureBox.ctaHref}
+        <Link
+          to={featureBox.ctaHref}
           onClick={onNavigate}
           className="mt-1 inline-flex items-center gap-1.5 px-4 py-2 rounded-full
                      bg-accent text-accent-contrast text-xs font-bold
@@ -263,7 +264,7 @@ function MegaMenuFeatureBox({
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </a>
+        </Link>
       </div>
     </div>
   );

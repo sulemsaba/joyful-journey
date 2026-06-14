@@ -25,7 +25,6 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Star, X, Users, Globe, Building2, Heart } from "lucide-react";
-import { LoadBoundary } from "./LoadBoundary";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
 import { CardDeckCarousel } from "./CardDeckCarousel";
@@ -569,13 +568,9 @@ export function ServicePackagesSection({
   const [activeSegment, setActiveSegment] = useState<SegmentKey>('local-entrepreneurs');
   const {
     data: testimonials = [],
-    isPending: testimonialsPending,
-    error: testimonialsError,
   } = useTestimonials();
   const {
     data: plans = [],
-    isPending: plansPending,
-    error: plansError,
   } = usePricingPlans();
 
   const currentPlans = segmentPlans[activeSegment];
@@ -603,20 +598,11 @@ export function ServicePackagesSection({
   }, [currentPlans]);
 
   return (
-    <LoadBoundary
-      error={testimonialsError || plansError}
-      errorDetail="Service plans could not be loaded right now."
-      errorTitle="Unable to load plans."
-      isPending={testimonialsPending || plansPending}
-      isReady={testimonials.length > 0}
-      loadingLabel="Loading package plans..."
-      variant="section"
+    <section
+      id={variant === "page" ? "packages" : undefined}
+      aria-label="Service packages and client testimonials"
+      className="py-16 md:py-24"
     >
-      <section
-        id={variant === "page" ? "packages" : undefined}
-        aria-label="Service packages and client testimonials"
-        className="py-16 md:py-24"
-      >
         <Container>
           {/* ─── Social Proof ─── */}
           {testimonials.length > 0 && (
@@ -698,7 +684,6 @@ export function ServicePackagesSection({
           </div>
         </Container>
       </section>
-    </LoadBoundary>
   );
 }
 

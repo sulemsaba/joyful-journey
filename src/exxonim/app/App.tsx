@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
-import { LoaderOverlay } from "@/exxonim/components/LoaderOverlay";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
 import { PrivacyConsentBanner } from "@/exxonim/components/PrivacyConsentBanner";
@@ -107,13 +106,16 @@ type IdleWindow = typeof window & {
 };
 
 /* ── Page-level Suspense fallback ──────────────────────
- * Shown briefly while a lazy page chunk downloads.
- * Uses compact variant (favicon + dots only) because the
- * page's own LoadBoundary will show the full skeleton once
- * the component mounts — avoids double skeleton flash. */
-function PageSuspenseFallback() {
-  return <LoaderOverlay variant="compact" />;
-}
+ * L11: SUSPENSE_FALLBACK
+ * LABEL:    SUSPENSE_FALLBACK
+ * POSITION: <main> area — shown during lazy-loaded chunk download
+ * APPEARANCE: Nothing (renders null). The bg-page background color
+ *             provides the correct theme color via inline styles
+ *             in index.html. No flash, no flicker.
+ * STATUS:   active — renders null (no visual loader)
+ * CSS REQUIRED: None (relies on bg-page background from index.html)
+ * RE-ENABLE: Replace `fallback={null}` with a loader component
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── ScrollToTop on route change ──────────────────── */
 function ScrollToTop() {
@@ -143,7 +145,7 @@ export function App() {
   const shell = usePublicShell();
   const location = useLocation();
 
-  useRevealOnScroll();
+  useRevealOnScroll(location.pathname);
 
   /* ── Enable scroll-reveal system ────────────────────
    * Adding .js to <html> activates the CSS transition
@@ -205,7 +207,7 @@ export function App() {
         <main id="top" className="relative isolate overflow-x-clip flex-1 pt-[60px] xl:pt-[68px]">
           <ScrollToTop />
           <ErrorBoundary>
-            <Suspense fallback={<PageSuspenseFallback />}>
+            <Suspense fallback={null}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />

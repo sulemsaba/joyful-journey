@@ -16,11 +16,24 @@
  *     firing on iOS Safari when combined with overflow-x:clip on body
  *   - Added 5s safety fallback: any unrevealed elements get revealed automatically
  *   - Use simpler threshold (0.05) for more reliable iOS triggering
+ *
+ * ROUTE-CHANGE FIX (v4):
+ *   - Accepts `pathname` parameter to re-scan on SPA route changes
+ *   - On route change, immediately calls scanAndObserve() to find new
+ *     data-reveal elements without recreating observers
+ *   - Fixes bug where MutationObserver missed new elements after
+ *     React Router replaced <Routes> content
  */
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export function useRevealOnScroll() {
+export function useRevealOnScroll(pathname?: string) {
+  // Stable refs to observers and scanAndObserve so the pathname
+  // effect can call scan without recreating observers.
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const scanAndObserveRef = useRef<(() => void) | null>(null);
+
+  // ── Main effect: set up observers once ──────────────────────
   useEffect(() => {
     if (!("IntersectionObserver" in window)) {
       document.querySelectorAll("[data-reveal]").forEach((el) => {
@@ -42,6 +55,7 @@ export function useRevealOnScroll() {
       // negative rootMargin can fail on iOS Safari with overflow-x:clip
       { threshold: 0.05 }
     );
+    observerRef.current = observer;
 
     // Batch reveal elements that are already in viewport
     const scanAndObserve = () => {
@@ -66,6 +80,7 @@ export function useRevealOnScroll() {
         });
       }
     };
+    scanAndObserveRef.current = scanAndObserve;
 
     scanAndObserve();
 
@@ -108,9 +123,26 @@ export function useRevealOnScroll() {
     return () => {
       mutationObserver.disconnect();
       observer.disconnect();
+      observerRef.current = null;
+      scanAndObserveRef.current = null;
       if (debounceTimer) clearTimeout(debounceTimer);
       if (autoDisconnectTimer) clearTimeout(autoDisconnectTimer);
       clearTimeout(safetyTimer);
     };
   }, []);
+
+  // ── Route-change effect: re-scan on SPA navigation ──────────
+  // When React Router swaps <Routes> content, new data-reveal
+  // elements appear that the MutationObserver may miss (e.g. if
+  // it auto-disconnected after 15s, or if the DOM mutation
+  // coalescing skipped the route-change batch). This effect
+  // triggers an immediate scan after each route change.
+  useEffect(() => {
+    if (!pathname || !scanAndObserveRef.current) return;
+    // Delay slightly so React has finished rendering the new page
+    const handle = requestAnimationFrame(() => {
+      scanAndObserveRef.current?.();
+    });
+    return () => cancelAnimationFrame(handle);
+  }, [pathname]);
 }

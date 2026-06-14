@@ -37,7 +37,6 @@ import { Home } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
-import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
@@ -132,7 +131,7 @@ function getBusinessHoursStatus(): BusinessHoursStatus {
    ──────────────────────────────────────────── */
 
 export function ContactPage() {
-  const { data: page, isPending, error } = usePage<ContactPageContent>("contact");
+  const { data: page } = usePage<ContactPageContent>("contact");
   const shell = usePublicShell();
   useResolvedPageSeo(page, routes.contact);
 
@@ -196,16 +195,7 @@ export function ContactPage() {
     `${inputCls} appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230f5c63%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat pr-10 sm:pr-10 cursor-pointer`;
 
   return (
-    <LoadBoundary
-      error={error}
-      errorDetail="The contact page content could not be loaded right now."
-      errorTitle="Unable to load the contact page."
-      isPending={isPending}
-      isReady={Boolean(page?.content)}
-      loadingLabel="Loading contact page..."
-    >
-      {() => (
-        <section className="bg-page">
+    <section className="bg-page">
           <StructuredData heroTitle="Contact Exxonim Consult" heroDescription="Reach Exxonim for registration, compliance, and advisory support." breadcrumbs={[{ name: 'Contact', path: routes.contact }]} />
           {/* Breadcrumb */}
           <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -540,7 +530,5 @@ export function ContactPage() {
             />
           </div>
         </section>
-      )}
-    </LoadBoundary>
   );
 }

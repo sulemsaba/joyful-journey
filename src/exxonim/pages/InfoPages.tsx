@@ -2,7 +2,6 @@ import { Home } from "lucide-react";
 import { routes } from "@/exxonim/routes";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { Breadcrumb, type BreadcrumbItem } from "@/exxonim/components/Breadcrumb";
-import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { StructuredData } from "@/exxonim/components/StructuredData";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
@@ -105,7 +104,6 @@ function ContentPage({
 interface InfoPageRouteProps {
   slug: string;
   canonicalPath: string;
-  loadingLabel: string;
   breadcrumbItems: BreadcrumbItem[];
   structuredBreadcrumbs: Array<{ name: string; path?: string }>;
 }
@@ -113,34 +111,24 @@ interface InfoPageRouteProps {
 function InfoPageRoute({
   slug,
   canonicalPath,
-  loadingLabel,
   breadcrumbItems,
   structuredBreadcrumbs,
-}: InfoPageRouteProps) {
-  const { data: page, isPending, error } = usePage<InfoPageContent>(slug);
+}: Omit<InfoPageRouteProps, 'loadingLabel'>) {
+  const { data: page } = usePage<InfoPageContent>(slug);
   useResolvedPageSeo(page, canonicalPath);
 
+  if (!page) return null;
+
   return (
-    <LoadBoundary
-      error={error}
-      errorDetail="This page could not be loaded right now."
-      errorTitle="Unable to load the page."
-      isPending={isPending}
-      isReady={Boolean(page)}
-      loadingLabel={loadingLabel}
-    >
-      {() => { if (!page) return null; return (
-        <ContentPage
-          eyebrow={page?.content.hero.eyebrow}
-          title={page?.content.hero.title}
-          description={page?.content.hero.description}
-          sections={page?.content.sections}
-          nextStep={page?.content.next_step}
-          breadcrumbItems={breadcrumbItems}
-          structuredBreadcrumbs={structuredBreadcrumbs}
-        />
-      );}}
-    </LoadBoundary>
+    <ContentPage
+      eyebrow={page.content.hero.eyebrow}
+      title={page.content.hero.title}
+      description={page.content.hero.description}
+      sections={page.content.sections}
+      nextStep={page.content.next_step}
+      breadcrumbItems={breadcrumbItems}
+      structuredBreadcrumbs={structuredBreadcrumbs}
+    />
   );
 }
 
@@ -149,7 +137,6 @@ export function SupportPage() {
     <InfoPageRoute
       slug="support"
       canonicalPath={routes.support}
-      loadingLabel="Loading support page..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Support" }]}
       structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Support", path: routes.support }]}
     />
@@ -161,7 +148,6 @@ export function TermsPage() {
     <InfoPageRoute
       slug="terms"
       canonicalPath={routes.terms}
-      loadingLabel="Loading terms..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Terms" }]}
       structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Terms", path: routes.terms }]}
     />
@@ -173,7 +159,6 @@ export function PrivacyPage() {
     <InfoPageRoute
       slug="privacy"
       canonicalPath={routes.privacy}
-      loadingLabel="Loading privacy policy..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Privacy" }]}
       structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Privacy", path: routes.privacy }]}
     />
@@ -185,7 +170,6 @@ export function CookiePage() {
     <InfoPageRoute
       slug="cookies"
       canonicalPath={routes.cookies}
-      loadingLabel="Loading cookie notice..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Cookie Notice" }]}
       structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Cookie Notice", path: routes.cookies }]}
     />
@@ -197,7 +181,6 @@ export function DataRightsPage() {
     <InfoPageRoute
       slug="data-rights"
       canonicalPath={routes.dataRights}
-      loadingLabel="Loading data rights..."
       breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Data Rights" }]}
       structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Data Rights", path: routes.dataRights }]}
     />

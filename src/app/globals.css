@@ -206,7 +206,7 @@ html, body {
   --animate-accent-pulse: accent-pulse 2.2s ease-in-out infinite;
   --animate-reveal-up: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   --animate-reveal-fade: reveal-fade 0.6s ease forwards;
-  --animate-shimmer: shimmer 2.5s ease-in-out infinite;
+  /* DELETED: --animate-shimmer (loader extermination — see LoaderOverlay.tsx for re-enablement) */
   --animate-dropdown-enter: dropdown-enter 200ms ease-out;
 
   --radius-2xl: 1.7rem;
@@ -295,10 +295,7 @@ html, body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
+/* DELETED: @keyframes shimmer (loader extermination — see LoaderOverlay.tsx for re-enablement) */
 @keyframes gradient-rotate {
   0% { --gradient-angle: 0deg; }
   100% { --gradient-angle: 360deg; }
@@ -307,30 +304,8 @@ html, body {
   from { transform: translateY(0); }
   to { transform: translateY(-18%); }
 }
-/* ── Favicon loader: smooth scale pulse in/out ──── */
-@keyframes loader-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.12); opacity: 0.8; }
-}
-@keyframes loader-fade {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-/* ── Loading dots animation: . → .. → ... → (reset) ──
- * Each dot fades in with a staggered delay so they
- * appear one by one, then all reset together.
- */
-.loader-dots span {
-  opacity: 0;
-  animation: loader-dot 1.4s ease-in-out infinite;
-}
-.loader-dots span:nth-child(1) { animation-delay: 0.0s; }
-.loader-dots span:nth-child(2) { animation-delay: 0.2s; }
-.loader-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes loader-dot {
-  0%, 20%  { opacity: 0; }
-  40%, 100% { opacity: 1; }
-}
+/* DELETED: @keyframes loader-pulse, loader-fade, .loader-dots, @keyframes loader-dot */
+/* (loader extermination — see LoaderOverlay.tsx for re-enablement) */
 
 /* ── Hero section — responsive height (no CLS) ──── */
 .hero-section {
@@ -862,12 +837,7 @@ html.theme-transition .hero-aurora-canvas {
   animation-delay: 1.2s;
 }
 
-/* ── Shimmer loading effect ───────────────────────── */
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(127, 188, 193, 0.08), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2.5s ease-in-out infinite;
-}
+/* DELETED: .animate-shimmer (loader extermination — see LoaderOverlay.tsx for re-enablement) */
 
 /* ── Smooth page content entrance ─────────────────── */
 .animate-page-enter {

@@ -43,6 +43,7 @@
  */
 
 import { useEffect, useRef, useState, type FocusEvent } from "react";
+import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuColumns } from "@/exxonim/components/navigation/MegaMenuColumns";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -136,15 +137,15 @@ export function DesktopNavigation({
       >
         {/* Left links (Home, About) */}
         {leftLinks.map((link) => (
-          <a
+          <Link
             key={link.href}
-            href={link.href}
+            to={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={closeAllMenus}
             className={cn(navLinkBase, isActive(link.href) && navLinkActive)}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
 
         {/* ═══════════════════════════════════════════════════════
@@ -157,8 +158,8 @@ export function DesktopNavigation({
           onMouseEnter={() => setDesktopMenu("services")}
           onFocusCapture={() => setDesktopMenu("services")}
         >
-          <a
-            href={routes.services}
+          <Link
+            to={routes.services}
             aria-expanded={desktopMenu === "services"}
             aria-controls={servicesMenuId}
             aria-current={servicesActive ? "page" : undefined}
@@ -173,7 +174,7 @@ export function DesktopNavigation({
               )}
               aria-hidden="true"
             />
-          </a>
+          </Link>
         </div>
 
         {/* ═══════════════════════════════════════════════════════
@@ -184,8 +185,8 @@ export function DesktopNavigation({
           onMouseEnter={() => setDesktopMenu("resources")}
           onFocusCapture={() => setDesktopMenu("resources")}
         >
-          <a
-            href={routes.resources}
+          <Link
+            to={routes.resources}
             aria-expanded={desktopMenu === "resources"}
             aria-controls={resourcesMenuId}
             aria-current={resourcesActive ? "page" : undefined}
@@ -200,20 +201,20 @@ export function DesktopNavigation({
               )}
               aria-hidden="true"
             />
-          </a>
+          </Link>
         </div>
 
         {/* Right links (Career, Contact) */}
         {rightLinks.map((link) => (
-          <a
+          <Link
             key={link.href}
-            href={link.href}
+            to={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={closeAllMenus}
             className={cn(navLinkBase, isActive(link.href) && navLinkActive)}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
 
         {/* Highlight link — Track Consultation (differentiator) */}
@@ -280,13 +281,13 @@ export function DesktopNavigation({
 
             {/* Footer CTA row — text link left, button right edge */}
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-border-soft">
-              <a
-                href={routes.contact}
+              <Link
+                to={routes.contact}
                 onClick={closeAllMenus}
                 className="text-xs font-medium text-text-muted hover:text-accent transition-colors"
               >
                 Contact {brandName}
-              </a>
+              </Link>
               <Button
                 size="compact"
                 variant="primary"

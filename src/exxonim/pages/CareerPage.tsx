@@ -101,16 +101,13 @@ import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
-import { LoadBoundary } from "@/exxonim/components/LoadBoundary";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { routes } from "@/exxonim/routes";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
-import {
-  getCachedPublishedJobs,
-  getPublishedJobs,
-} from "@/exxonim/services/jobsService";
+import { getPublishedJobs } from "@/exxonim/services/jobsService";
+import { fallbackJobs } from "@/exxonim/content/fallbackPublicContent";
 import type { ApiCareerJob, CareerPageContent } from "@/exxonim/types";
 import { StructuredData } from "@/exxonim/components/StructuredData";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -621,14 +618,13 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
    MAIN COMPONENT
    ══════════════════════════════════════════════════════════════ */
 export function CareerPage() {
-  const { data: page, isPending, error } = usePage<CareerPageContent>("career");
+  const { data: page } = usePage<CareerPageContent>("career");
   const jobsQuery = useQuery({
     queryKey: ["career-jobs"],
     queryFn: getPublishedJobs,
-    initialData: getCachedPublishedJobs,
-    refetchOnMount: "always",
-    refetchOnReconnect: "always",
+    placeholderData: () => fallbackJobs,
     staleTime: 1000 * 60 * 30,
+    retry: 1,
   });
   useResolvedPageSeo(page, routes.career);
 
@@ -743,22 +739,12 @@ export function CareerPage() {
     setApplyJob(null);
   }, []);
 
+  if (!content) return null;
+
+  const bannerImage = content.hero.banner_image || FALLBACK_BANNER;
+
   return (
-    <LoadBoundary
-      error={error}
-      errorDetail="The careers page content could not be loaded right now."
-      errorTitle="Unable to load the career page."
-      isPending={isPending}
-      isReady={Boolean(content)}
-      loadingLabel="Loading career page..."
-    >
-      {() => {
-        if (!content) return null;
-
-        const bannerImage = content.hero.banner_image || FALLBACK_BANNER;
-
-        return (
-          <div className="min-h-screen overflow-x-hidden" onClick={() => setShowDeptDropdown(false)}>
+    <div className="min-h-screen overflow-x-hidden" onClick={() => setShowDeptDropdown(false)}>
             <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'Careers', path: routes.career }]} pageType="CollectionPage" />
             {/* ── Breadcrumb ── */}
             <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -941,14 +927,6 @@ export function CareerPage() {
 
             {/* ═══ 5. JOB LISTINGS — ONE HUGE CARD ═══ */}
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-6 mb-12">
-              <LoadBoundary
-                error={jobsQuery.error}
-                errorDetail="The careers page copy is available, but the job listing feed is not responding right now."
-                errorTitle="Unable to load current job openings."
-                isPending={jobsQuery.isPending}
-                loadingLabel="Loading open roles..."
-                variant="section"
-              >
                 {filteredJobs.length > 0 ? (
                   <div>
                     <div className="flex items-center justify-between mb-4">
@@ -1289,7 +1267,6 @@ export function CareerPage() {
                     )}
                   </div>
                 )}
-              </LoadBoundary>
             </div>
 
             {/* ── Newsletter Card ── */}
@@ -1307,8 +1284,5 @@ export function CareerPage() {
             {/* ── Apply Modal ── */}
             {applyJob && <ApplyModal job={applyJob} onClose={closeApplyModal} />}
           </div>
-        );
-      }}
-    </LoadBoundary>
   );
 }

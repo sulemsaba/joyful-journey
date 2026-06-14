@@ -60,3 +60,9 @@ package-lock.json
 
 # copied from other workspace
 home/
+
+# agent tool output (changes every session)
+tool-results/
+
+# dev server pid (changes every start)
+.zscripts/dev.pid

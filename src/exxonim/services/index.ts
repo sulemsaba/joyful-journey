@@ -11,45 +11,35 @@
  * pricingService       → /api/v1/pricing/plans
  * privacyService       → /api/v1/privacy/consent, /api/v1/privacy-requests
  * siteSettingsService  → /api/v1/site-settings
- * staticFallbackService → /fallback/*.json (no API, static assets)
+ * staticFallbackService → /fallback/*.json (server-side emergency content)
  * testimonialService   → /api/v1/testimonials
  *
- * See individual service files for detailed FastAPI endpoint documentation,
- * request/response schemas, and PostgreSQL table references.
+ * ARCHITECTURE:
+ *   All caching is handled by TanStack Query + persistQueryClient.
+ *   Hooks use placeholderData for instant rendering. No manual cache management.
+ *   JSON fallback (Layer 3) is handled by fetchWithJsonFallback in staticFallbackService.
  */
 export {
-  fetchFreshPublicBlogPosts,
-  getCachedPublicBlogCategories,
-  getCachedPublicBlogPostBySlug,
-  getCachedPublicBlogPosts,
   getPublicBlogPostBySlug,
   listFeaturedPublicBlogPosts,
   listPublicBlogCategories,
   listPublicBlogPosts,
 } from "./blogService";
 export { lookupTrackingCode, submitPublicConsultation } from "./consultationService";
-export { getCachedPublishedJobs, getPublishedJobs } from "./jobsService";
-export {
-  getCachedNavigation,
-  getCachedNavigationResource,
-  getNavigation,
-  getNavigationResource,
-} from "./navigationService";
-export { getCachedPageBySlug, getPageBySlug } from "./pageService";
-export { getCachedPricingPlans, getPricingPlans } from "./pricingService";
+export { getPublishedJobs } from "./jobsService";
+export { getNavigation } from "./navigationService";
+export { getPageBySlug } from "./pageService";
+export { getPricingPlans } from "./pricingService";
 export {
   PRIVACY_CONSENT_EVENT,
   getPrivacyConsent,
   updatePrivacyConsent,
 } from "./privacyService";
+export { getSiteSetting } from "./siteSettingsService";
 export {
-  getCachedSiteSetting,
-  getCachedSiteSettingResource,
-  getSiteSetting,
-  getSiteSettingResource,
-} from "./siteSettingsService";
-export {
+  fetchWithJsonFallback,
   getStaticFallback,
+  loadStaticFallback,
   preloadStaticFallback,
 } from "./staticFallbackService";
-export { getCachedTestimonials, getTestimonials } from "./testimonialService";
+export { getTestimonials } from "./testimonialService";

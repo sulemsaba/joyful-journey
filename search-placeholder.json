@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://tanstack.com/query/v4/docs/framework/react/guides/initial-query-data",
+    "name": "Initial Query Data | TanStack Query React Docs",
+    "snippet": "For a comparison between Initial Data and Placeholder Data, have a look at the Community Resources. Edit on GitHub · PreviousInfinite Queries · NextPlaceholder ...",
+    "host_name": "tanstack.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/TanStack/query/discussions/5753",
+    "name": "How to stop error from wiping data when using `placeholderData`.",
+    "snippet": "I know InitialData kind of does this, but it reverts data to that initial value when erroring, it doesn't keep its most recent data when erroring. I need to use ...",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tkdodo.eu/blog/placeholder-and-initial-data-in-react-query",
+    "name": "Placeholder and Initial Data in React Query - TkDodo's blog",
+    "snippet": "With placeholderData , you will always get a background refetch when you mount an observer for the first time. Because the data is “not real”, ...",
+    "host_name": "tkdodo.eu",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://stackoverflow.com/questions/78902552/what-is-the-difference-between-the-initialdata-and-placeholderdata-options-i",
+    "name": "What is the difference between the 'initialData' and 'placeholderData",
+    "snippet": "InitialData goes straight to the cache, while placeholderData is something that is only returned for the component instance using it.",
+    "host_name": "stackoverflow.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://tanstack.com/query/v5/docs/framework/react/guides/placeholder-query-data",
+    "name": "Placeholder Query Data | TanStack Query React Docs",
+    "snippet": "Placeholder data allows a query to behave as if it already has data, similar to the initialData option, but the data is not persisted ...",
+    "host_name": "tanstack.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

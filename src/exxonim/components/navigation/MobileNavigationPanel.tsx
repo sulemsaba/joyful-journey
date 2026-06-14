@@ -1,4 +1,5 @@
 import { useState, type RefObject } from "react";
+import { Link } from "react-router-dom";
 import { ChevronDown, Phone, ArrowRight } from "lucide-react";
 import type { MenuColumn, MenuItem } from "@/exxonim/components/navigation/types";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -111,8 +112,8 @@ function MobileAccordion({
                 <ul className="grid gap-1">
                   {column.items.map((item) => (
                     <li key={`${item.href}-${item.label}`}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href}
                         onClick={onClose}
                         className={cn(
                           "group flex items-center gap-3 px-3 py-2.5 rounded-lg",
@@ -123,7 +124,7 @@ function MobileAccordion({
                         <span className="w-1 h-1 rounded-full bg-accent/60 shrink-0 group-hover:bg-accent transition-colors" aria-hidden="true" />
                         <span className="flex-1">{item.label}</span>
                         <ArrowRight className="w-3 h-3 text-text-muted/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150" aria-hidden="true" />
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -138,13 +139,13 @@ function MobileAccordion({
               >
                 {ctaLabel}
               </Button>
-              <a
-                href={secondaryHref}
+              <Link
+                to={secondaryHref}
                 onClick={onClose}
                 className="text-[12px] font-medium text-accent hover:underline"
               >
                 {secondaryLabel}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -205,9 +206,9 @@ export function MobileNavigationPanel({
             {/* Regular links: Home, About, Career, Contact */}
             <div className="grid gap-0.5">
               {regularLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
+                  to={link.href}
                   onClick={onClose}
                   className={cn(
                     "flex items-center px-4 h-11 rounded-xl text-[15px] font-semibold transition-colors",
@@ -217,7 +218,7 @@ export function MobileNavigationPanel({
                   )}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
 

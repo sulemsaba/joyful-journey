@@ -27,7 +27,12 @@ interface ServiceCatalogSectionProps {
 
 export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalogSectionProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
-  const { data, isLoading, isError, refetch } = useServiceCatalog('all');
+  const { data, isPending, isError, refetch } = useServiceCatalog('all');
+
+  // With the fallback guarantee in useServiceCatalog, `data` always has
+  // fallback content. Only show the error state if there are truly no
+  // services to display (should never happen with hardcoded fallback).
+  const hasServices = (data?.data?.services?.length ?? 0) > 0;
 
   // Progressive disclosure: show only 6 cards on mobile unless expanded
   const [showAll, setShowAll] = useState(false);
@@ -142,17 +147,19 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </div>
         </div>
 
-        {/* Loading State */}
-        {isLoading && (
+        {/* Loading State — DISABLED (loader extermination).
+         * ServiceCardSkeleton returns null now anyway.
+         * isPending is always false with fallback data. */}
+        {/* {isPending && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <ServiceCardSkeleton key={`skeleton-${i}`} />
             ))}
           </div>
-        )}
+        )} */}
 
-        {/* Error State */}
-        {!isLoading && isError && (
+        {/* Error State — only shown when there is NO data at all (fallback exhausted) */}
+        {!isPending && isError && !hasServices && (
           <div className={cn(
             'flex flex-col items-center justify-center py-16 text-center',
             'bg-surface rounded-2xl',
@@ -184,7 +191,7 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
         )}
 
         {/* Empty State */}
-        {!isLoading && !isError && filteredServices.length === 0 && (
+        {!isPending && !isError && !hasServices && filteredServices.length === 0 && (
           <div className={cn(
             'flex flex-col items-center justify-center py-16 text-center',
             'bg-surface rounded-2xl',
@@ -210,8 +217,8 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </div>
         )}
 
-        {/* Service Cards Grid */}
-        {!isLoading && !isError && filteredServices.length > 0 && (
+        {/* Service Cards Grid — shown with fallback data even when API errors */}
+        {!isPending && filteredServices.length > 0 && (
           <>
             {groupedServices ? (
               /* Grouped layout: one section per category */
