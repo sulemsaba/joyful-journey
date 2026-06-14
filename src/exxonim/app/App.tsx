@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
@@ -109,12 +109,23 @@ function ResourceArticleRoute() {
  * provides the correct theme color instantly via the blocking
  * <script> in <head>. React renders content immediately.
  */
-export function App() {
+export function App({ onReady }: { onReady?: () => void }) {
   const { theme, toggleTheme } = useTheme();
   const shell = usePublicShell();
   const location = useLocation();
+  const readyFired = useRef(false);
 
   useRevealOnScroll(location.pathname);
+
+  // Dismiss the boot loader overlay after the first render completes.
+  // This ensures the boot loader covers the gap between HTML parse
+  // and React mounting + page content rendering.
+  useEffect(() => {
+    if (!readyFired.current && onReady) {
+      readyFired.current = true;
+      onReady();
+    }
+  }, [onReady]);
 
   /* ── Enable scroll-reveal system ────────────────────
    * Adding .js to <html> activates the CSS transition

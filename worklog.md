@@ -840,3 +840,26 @@ Stage Summary:
 - ✅ Dead loader components deleted (PageLoader, LoaderOverlay, LoadingSpinner)
 - ✅ Loader policy enforced: Button loaders ✅, Boot loader ✅, All others retired ❌
 - ✅ All pages verified working via browser automation
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Fix boot loader gap (nav+footer visible before content) and favicon size issue
+
+Work Log:
+- Identified the "gap" problem: boot loader was inside #root, so when React mounted it replaced the boot loader with nav+footer shell, but lazy page chunks weren't loaded yet → empty main area
+- Moved boot loader OUTSIDE #root as a fixed overlay (position:fixed, inset:0, z-index:9999) with background color
+- Now the boot loader covers EVERYTHING until React renders AND the first page content appears
+- Added onReady callback: App component calls onReady after first render, which fades out the overlay smoothly (0.25s opacity transition)
+- Fixed favicon size: reduced from 3.5rem to 3rem, reduced pulse scale from 1.12 to 1.08, added display:block to prevent inline spacing
+- Added favicon image preloading so boot loader images appear instantly
+- Added boot-loader--hidden CSS class for smooth fade-out
+- Updated dismissBootLoader() in main.tsx to use requestAnimationFrame + classList + setTimeout removal
+- Verified boot loader is properly removed from DOM after React renders
+
+Stage Summary:
+- ✅ Boot loader now covers the full gap: HTML parse → React mount → page content render
+- ✅ No more "nav+footer with empty content" flash on hard refresh
+- ✅ Favicon pulse animation smoother (smaller scale, consistent size)
+- ✅ Favicon preloaded for instant appearance
+- ✅ Smooth 250ms fade-out transition when boot loader dismisses
