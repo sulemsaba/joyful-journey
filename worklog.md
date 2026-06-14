@@ -631,3 +631,33 @@ Stage Summary:
 - Dev server React render time: ~4ms per route (no network)
 - PRODUCTION TIMING STILL UNKNOWN — cannot measure without real network deployment
 - Honest assessment: the improvement is real but the exact number requires a real deployment measurement
+
+---
+Task ID: conclusion
+Agent: Main
+Task: Final approved conclusion — performance investigation closure
+
+Work Log:
+- User reviewed all findings and approved the conclusion
+- Key correction: chunk download time is NOT determined by chunk size — dominated by RTT/TCP/TLS/latency
+- Key reframe: the problem was never loading latency — it was content visibility timing (CSS reveal animation)
+- User explicitly said: stop changing architecture, do not touch TanStack Query, localStorage, fallback JSON, route structure
+- Approved conclusion recorded verbatim
+
+Stage Summary:
+- APPROVED CONCLUSION:
+  "We have verified the animation delay was real and removed it.
+   We have reduced the critical bundle size.
+   We have implemented route preloading.
+   The exact production navigation improvement remains unmeasured
+   and should be validated after deployment."
+- Evidence classification:
+  ✓ MEASURED: reveal-instant CSS eliminates 0.7s transition (confirmed via getComputedStyle)
+  ✓ MEASURED: main bundle reduced 559KB → 409KB (production build)
+  ✓ MEASURED: dev React render time ~4ms per route (no network)
+  ✗ UNKNOWN: actual production navigation timing (requires real deployment)
+- DIAGNOSIS REFRAME: Problem = perceived latency from CSS visibility timing, NOT actual loading latency
+- ARCHITECTURE FREEZE: No more changes to TanStack Query, localStorage, fallbacks, or route structure
+- NEXT STEP: Post-deployment measurement of Home→Services, Home→About, About→Contact
+  under cold cache, warm cache, Fast 4G, Slow 3G
+  Metric: click → first visible content (not animation finished)
