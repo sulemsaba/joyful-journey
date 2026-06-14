@@ -806,3 +806,37 @@ Stage Summary:
 - 🗑️ Dead code removed: Navbar.tsx and NewsletterSection.tsx deleted
 - ✅ SmartLink consistency: 100% — all 79 internal navigation elements have preloading
 - ✅ All mutations: double-click protection, button-level loading, inline success, inline error — consistent across all forms
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Implement CSS-only boot/emergency loader + fix preview + clean up dead loader components
+
+Work Log:
+- Discovered the sandbox kills background processes — the Vite dev server kept dying within ~5 seconds
+- Found that the project uses a compiled C mini-server (mini-server.c) that daemonizes itself and serves the built Vite bundle from dist/
+- This is the production approach from .zscripts/dev.sh — builds bundle, then serves via mini-server
+- Rebuilt the Vite production bundle (bun run build → 930ms)
+- Restarted the mini-server daemon → preview working on port 3000 via Caddy on port 81
+- Implemented CSS-only boot/emergency loader in index.html:
+  - Pulsing Exxonim favicon (boot-pulse animation, 2s ease-in-out infinite)
+  - "Loading" text + 3 animated dots (boot-dot animation, staggered delays)
+  - "Taking longer than expected" timeout message after 8 seconds
+  - Uses existing sk-logo-light/sk-logo-dark classes for theme-aware favicon
+  - All keyframes are inline CSS in the <style> block — no external dependencies
+  - Auto-removed when React mounts (ReactDOM.createRoot replaces #root content)
+  - Timer cleared in main.tsx on React mount
+- Added TypeScript declaration for window.__bootLoaderTimer in vite-env.d.ts
+- Deleted dead loader components: PageLoader.tsx, LoaderOverlay.tsx, LoadingSpinner.tsx
+- Removed LoaderOverlay export from components/index.ts
+- Cleaned up LoadBoundary.tsx — removed LoaderOverlay references, updated comments with loader policy
+- Updated globals.css — changed "DELETED" markers to "Retired" with explanation
+- Verified with agent-browser: Home, Contact, Services, FAQ, Resources, Track pages all render correctly
+- Also started API service (services-api on port 3031)
+
+Stage Summary:
+- ✅ Preview working via mini-server + Caddy gateway
+- ✅ CSS-only boot/emergency loader implemented (favicon pulse + Loading... + animated dots)
+- ✅ Dead loader components deleted (PageLoader, LoaderOverlay, LoadingSpinner)
+- ✅ Loader policy enforced: Button loaders ✅, Boot loader ✅, All others retired ❌
+- ✅ All pages verified working via browser automation

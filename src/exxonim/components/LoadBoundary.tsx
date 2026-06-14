@@ -11,37 +11,22 @@ interface LoadBoundaryProps {
   errorTitle?: string;
   isPending: boolean;
   isReady?: boolean;
-  loadingLabel?: string;
   variant?: LoadBoundaryVariant;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * L7: HOME_PAGE_SKELETON — LoadBoundary.tsx
- * ═══════════════════════════════════════════════════════════════════════════
- * LABEL:    HOME_PAGE_SKELETON
- * POSITION: Full page (homepage only)
- * APPEARANCE: Full-page skeleton layout (original code in git history)
- * STATUS:   disabled — returns null
- * RE-ENABLE: Uncomment and restore skeleton JSX from git history
- * ═══════════════════════════════════════════════════════════════════════════ */
-export function HomePageSkeleton() {
-  return null;
-  // ── Re-enable: restore original skeleton code from git history ──
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * LoadBoundary — Pending/error state gate
  * ═══════════════════════════════════════════════════════════════════════════
- * When isPending && !isReady:
- *   - Previously showed <LoaderOverlay variant={variant} /> (L4/L5)
- *   - Now returns null (no loader)
+ * With the 5-layer resilience architecture (memory → localStorage → API →
+ * JSON fallback → hardcoded), isPending is almost never true when fallback
+ * data exists. When there IS genuinely no data yet (e.g. tracking lookup),
+ * the component using LoadBoundary handles loading in its own UI.
  *
- * With the 5-layer resilience architecture, isPending is always false
- * when fallback data exists, so this code path is rarely reached.
- *
- * RE-ENABLE: Replace `return null` with:
- *   return <LoaderOverlay variant={variant} />;
- * (Make sure L1/L4/L5 are also enabled in LoaderOverlay.tsx)
+ * LOADER POLICY:
+ *   ✅ Button loaders — for mutations (Sending..., Searching...)
+ *   ✅ Boot/emergency loader — CSS-only in index.html (favicon + dots)
+ *   ❌ Route-transition loaders — permanently retired
+ *   ❌ Skeleton loaders — permanently retired
  * ═══════════════════════════════════════════════════════════════════════════ */
 export function LoadBoundary({
   children,
@@ -50,12 +35,10 @@ export function LoadBoundary({
   errorTitle = "Unable to load content.",
   isPending,
   isReady = true,
-  loadingLabel: _loadingLabel = "Loading content...",
-  variant: _variant = "page",
+  variant = "page",
 }: LoadBoundaryProps) {
   if (isPending && !isReady) {
-    // DISABLED: return <LoaderOverlay variant={variant} />;
-    // See L4/L5 in LoaderOverlay.tsx — re-enable both together
+    // No loader — fallback data renders immediately via the resilience architecture
     return null;
   }
 
@@ -66,7 +49,7 @@ export function LoadBoundary({
   if (error || !isReady) {
     return (
       <ErrorMessage
-        compact={_variant === "section"}
+        compact={variant === "section"}
         detail={errorDetail}
         title={errorTitle}
       />

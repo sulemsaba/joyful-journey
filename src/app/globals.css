@@ -206,7 +206,7 @@ html, body {
   --animate-accent-pulse: accent-pulse 2.2s ease-in-out infinite;
   --animate-reveal-up: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   --animate-reveal-fade: reveal-fade 0.6s ease forwards;
-  /* DELETED: --animate-shimmer (loader extermination — see LoaderOverlay.tsx for re-enablement) */
+  /* Retired: --animate-shimmer — skeleton loaders permanently retired */
   --animate-dropdown-enter: dropdown-enter 200ms ease-out;
 
   --radius-2xl: 1.7rem;
@@ -295,7 +295,8 @@ html, body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-/* DELETED: @keyframes shimmer (loader extermination — see LoaderOverlay.tsx for re-enablement) */
+/* Retired: @keyframes shimmer — skeleton loaders permanently retired.
+   Boot/emergency loader is now CSS-only in index.html (boot-pulse/boot-dot keyframes). */
 @keyframes gradient-rotate {
   0% { --gradient-angle: 0deg; }
   100% { --gradient-angle: 360deg; }
@@ -304,8 +305,8 @@ html, body {
   from { transform: translateY(0); }
   to { transform: translateY(-18%); }
 }
-/* DELETED: @keyframes loader-pulse, loader-fade, .loader-dots, @keyframes loader-dot */
-/* (loader extermination — see LoaderOverlay.tsx for re-enablement) */
+/* Retired: @keyframes loader-pulse, loader-fade, .loader-dots, @keyframes loader-dot
+   Boot/emergency loader is now CSS-only in index.html (boot-pulse/boot-dot keyframes). */
 
 /* ── Hero section — responsive height (no CLS) ──── */
 .hero-section {
@@ -847,7 +848,7 @@ html.theme-transition .hero-aurora-canvas {
   animation-delay: 1.2s;
 }
 
-/* DELETED: .animate-shimmer (loader extermination — see LoaderOverlay.tsx for re-enablement) */
+/* Retired: .animate-shimmer — skeleton loaders permanently retired */
 
 /* ── Smooth page content entrance ─────────────────── */
 .animate-page-enter {
