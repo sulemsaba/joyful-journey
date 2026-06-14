@@ -31,12 +31,19 @@
     <link rel="preload" as="image" href="/branding/logo-dark.png" fetchPriority="high" />
 
     <!-- Preload favicon images for the boot loader (must appear instantly) -->
-    <link rel="preload" as="image" href="/branding/exxonim-favicon-light.png" />
-    <link rel="preload" as="image" href="/branding/exxonim-favicon-dark.png" />
+    <link rel="preload" as="image" href="/branding/exxonim-favicon-light-192x192.png" />
+    <link rel="preload" as="image" href="/branding/exxonim-favicon-dark-192x192.png" />
 
-    <!-- Appearance-aware favicons -->
+    <!-- Appearance-aware favicons (multiple sizes for high-quality display) -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/branding/exxonim-favicon-light-192x192.png" id="favicon-light-192" />
+    <link rel="icon" type="image/png" sizes="180x180" href="/branding/exxonim-favicon-light-180x180.png" id="favicon-light-180" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/branding/exxonim-favicon-light-64x64.png" id="favicon-light-64" />
     <link rel="icon" type="image/png" sizes="32x32" href="/branding/exxonim-favicon-light.png" id="favicon-light" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/branding/exxonim-favicon-dark-192x192.png" media="(prefers-color-scheme: dark)" id="favicon-dark-192" />
+    <link rel="icon" type="image/png" sizes="180x180" href="/branding/exxonim-favicon-dark-180x180.png" media="(prefers-color-scheme: dark)" id="favicon-dark-180" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/branding/exxonim-favicon-dark-64x64.png" media="(prefers-color-scheme: dark)" id="favicon-dark-64" />
     <link rel="icon" type="image/png" sizes="32x32" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/branding/apple-touch-icon.png" />
 
     <!-- RSS auto-discovery -->
     <link rel="alternate" type="application/rss+xml" title="Exxonim Consult Blog" href="/blog/rss.xml" />
@@ -169,8 +176,8 @@
          Fades out smoothly when React signals readiness. -->
     <div class="boot-loader" id="boot-loader">
       <div class="boot-loader__favicon">
-        <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" />
-        <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" />
+        <img src="/branding/exxonim-favicon-light-192x192.png" alt="" class="sk-logo-light" />
+        <img src="/branding/exxonim-favicon-dark-192x192.png" alt="" class="sk-logo-dark" />
       </div>
       <div class="boot-loader__text">
         <span>Loading</span>

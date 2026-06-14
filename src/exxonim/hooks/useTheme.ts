@@ -72,20 +72,39 @@ export function useTheme() {
     document.documentElement.dataset.theme = theme;
 
     // The favicon follows the system/browser theme (prefers-color-scheme),
-    // NOT the website's manual theme toggle. The <head> contains two <link>
-    // elements: #favicon-light (no media query) and #favicon-dark
-    // (media="(prefers-color-scheme: dark)"). The browser automatically picks
-    // the right one based on OS preference. We restore the original attributes
-    // so the media-query switching stays active.
-    const faviconLight = document.getElementById("favicon-light") as HTMLLinkElement | null;
-    const faviconDark = document.getElementById("favicon-dark") as HTMLLinkElement | null;
+    // NOT the website's manual theme toggle. The <head> contains multiple <link>
+    // elements per variant (192, 180, 64, 32) with IDs like #favicon-light,
+    // #favicon-light-192, #favicon-dark, #favicon-dark-192, etc.
+    // The browser automatically picks the right one based on OS preference.
+    // We restore the original attributes so the media-query switching stays active.
+    const lightIds = ["favicon-light-192", "favicon-light-180", "favicon-light-64", "favicon-light"];
+    const darkIds = ["favicon-dark-192", "favicon-dark-180", "favicon-dark-64", "favicon-dark"];
+    const lightHrefs: Record<string, string> = {
+      "favicon-light-192": "/branding/exxonim-favicon-light-192x192.png",
+      "favicon-light-180": "/branding/exxonim-favicon-light-180x180.png",
+      "favicon-light-64": "/branding/exxonim-favicon-light-64x64.png",
+      "favicon-light": "/branding/exxonim-favicon-light.png",
+    };
+    const darkHrefs: Record<string, string> = {
+      "favicon-dark-192": "/branding/exxonim-favicon-dark-192x192.png",
+      "favicon-dark-180": "/branding/exxonim-favicon-dark-180x180.png",
+      "favicon-dark-64": "/branding/exxonim-favicon-dark-64x64.png",
+      "favicon-dark": "/branding/exxonim-favicon-dark.png",
+    };
 
-    if (faviconLight && faviconDark) {
-      // Restore original favicon config so browser media-query handles it
-      faviconLight.href = "/branding/exxonim-favicon-light.png";
-      faviconLight.media = "";
-      faviconDark.href = "/branding/exxonim-favicon-dark.png";
-      faviconDark.media = "(prefers-color-scheme: dark)";
+    for (const id of lightIds) {
+      const el = document.getElementById(id) as HTMLLinkElement | null;
+      if (el) {
+        el.href = lightHrefs[id];
+        el.media = "";
+      }
+    }
+    for (const id of darkIds) {
+      const el = document.getElementById(id) as HTMLLinkElement | null;
+      if (el) {
+        el.href = darkHrefs[id];
+        el.media = "(prefers-color-scheme: dark)";
+      }
     }
   }, [theme]);
 
