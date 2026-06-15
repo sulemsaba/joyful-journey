@@ -78,8 +78,8 @@ export function HomePage() {
       ) : null}
       <UnifiedCtaSection
         eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
-        heading="Stay ahead on compliance"
-        description="Regulatory changes and practical guides for your business in Tanzania — delivered to your inbox. No spam, just what matters."
+        heading="Get business tips and deadline reminders"
+        description="Practical guides on registration, compliance, and running a business in Tanzania, delivered to your inbox. No spam."
       >
         <NewsletterForm />
       </UnifiedCtaSection>

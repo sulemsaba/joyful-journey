@@ -165,36 +165,36 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
   "Exxonim Consult | Business Registration & Compliance Tanzania",
   {
     hero: {
-      eyebrow: "Business consulting — Tanzania",
-      title: "Your obligations, handled and tracked.",
+      eyebrow: "Business Registration & Compliance, Tanzania",
+      title: "Register. Stay Compliant. Track Everything.",
       description:
-        "Exxonim guides you through registration, licensing, and compliance — with proactive updates at every milestone.",
+        "We handle company registration, tax setup, licensing, work permits, and NGO registration. We update you at every step, no office visits needed.",
       cta: {
-        label: "Get Started",
+        label: "Start Your Registration",
         href: routes.contact,
       },
       secondary_cta: {
-        label: "Explore Services",
+        label: "See All Services",
         href: routes.services,
       },
       highlights: [
         {
-          title: "Entity Setup",
-          detail: "Company, NGO, business name, and foreign investor registration",
+          title: "Business Setup",
+          detail: "Company, NGO, business name, trademark, and foreign investor registration",
         },
         {
           title: "Tax & Licensing",
-          detail: "TIN, VAT, business licences, and sector-specific permits",
+          detail: "TIN, VAT, business licences, work permits, and annual returns",
         },
         {
-          title: "Proactive Tracking",
-          detail: "Automated updates at every milestone — no need to call and ask",
+          title: "Live Tracking",
+          detail: "WhatsApp, email, or SMS updates at every step, no login needed",
         },
       ],
     },
     provider_section: {
-      kicker: "Trusted workflow references",
-      title: "Recognised by organisations and partners across the region.",
+      kicker: "Trusted by organisations across Tanzania",
+      title: "We work with businesses, NGOs, and institutions nationwide.",
       logos: [
         { alt: "Utec", src: utecLogo, opticalWeight: "solid" },
         { alt: "TRCS", src: trcsLogo, opticalWeight: "solid" },
@@ -233,10 +233,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           videoSources: [],
         },
         {
-          title: "Track every consultation — automatically",
-          subtitle: "Proactive updates at every milestone. You never need to call and ask what is happening.",
+          title: "Track every step automatically",
+          subtitle: "WhatsApp, email, or SMS updates at every milestone. You never have to call and ask.",
           description:
-            "Upon engagement, you receive a unique tracking number. At every key milestone — name clearance, document submission, approval, issuance — Exxonim sends you an update via WhatsApp, email, or SMS. You can also look up your status on the website anytime, no login required.",
+            "When you start with us, you get a tracking code. At every step, name clearance, submission, approval, certificate, we send you an update via WhatsApp, email, or SMS. You can also check your status online anytime, no login required.",
           ctaLabel: "Track a consultation",
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
@@ -249,18 +249,18 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
       ],
       default_feature_rows: [
         {
-          title: "Entity registration",
-          description: "Company, NGO, business name, and foreign investor setup.",
+          title: "Business registration",
+          description: "Company, NGO, business name, trademark, and foreign investor setup.",
           visualKey: "registration",
         },
         {
           title: "Tax & licensing",
-          description: "TIN, VAT, business licences, work permits, and sector approvals.",
+          description: "TIN, VAT, business licences, work permits, annual returns, and renewals.",
           visualKey: "tax",
         },
         {
-          title: "Proactive tracking",
-          description: "Automated milestone updates — WhatsApp, email, or SMS.",
+          title: "Live tracking",
+          description: "WhatsApp, email, or SMS updates at every step, no login needed.",
           visualKey: "institutional",
         },
       ],
@@ -268,49 +268,49 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
         registration: {
           workstreamValue: "Registration",
           counterpartLabel: "Client",
-          counterpartValue: "Organization setup",
+          counterpartValue: "Business setup",
           focusValue: "Setup path",
-          summaryTitle: "Clear process from start to submission.",
+          summaryTitle: "From first step to your certificate.",
           summaryBody:
-            "Exxonim provides structured guidance through entity registration, document preparation, and authority submissions — including TIC/TISEZA investment registration for foreign investors.",
+            "We guide you through company, NGO, business name, trademark, and foreign investor registration, including TIC/TISEZA for investors entering Tanzania.",
         },
         tax: {
           workstreamValue: "Compliance",
           counterpartLabel: "Client",
-          counterpartValue: "Ongoing obligations",
+          counterpartValue: "Ongoing requirements",
           focusValue: "Filings and renewals",
-          summaryTitle: "Stay ahead of filing deadlines.",
+          summaryTitle: "Never miss a deadline again.",
           summaryBody:
-            "A practical compliance framework covering TIN, VAT, business licences, work permits, and sector-specific permits — with renewal reminders built in.",
+            "We manage TIN, VAT, business licences, work permits, statutory filings, and annual returns, with reminders before every deadline so nothing lapses.",
         },
         institutional: {
           workstreamValue: "Operations",
           counterpartLabel: "Client",
           counterpartValue: "Always informed",
-          focusValue: "Proactive updates, compliance calendar, advisory",
-          summaryTitle: "Professional support when you need it.",
+          focusValue: "Live updates, compliance calendar, advisory",
+          summaryTitle: "Support when you need it.",
           summaryBody:
-            "Automated updates at every milestone, compliance calendar management, and operational advisory packages — monthly or quarterly retainer support available.",
+            "Automatic updates at every milestone, a compliance calendar to track deadlines, and advisory packages available monthly or quarterly.",
         },
         tracking: {
           workstreamValue: "Consultation tracking",
           counterpartLabel: "Reference",
           counterpartValue: "EXX-24091",
-          focusValue: "Status checkpoints, proactive updates, and next actions",
-          summaryTitle: "Know what is complete and what comes next — automatically.",
+          focusValue: "Status checkpoints, live updates, and next actions",
+          summaryTitle: "Know what is done and what comes next, automatically.",
           summaryBody:
-            "Every engagement gets a unique tracking number. You receive proactive updates via your preferred channel at every milestone, and can look up your status on the website anytime.",
+            "Every engagement gets a tracking code. You receive updates via WhatsApp, email, or SMS at every milestone, and can check your status online anytime, no login required.",
         },
       },
     },
     insights_section: {
       title: "Latest insights",
-      intro: "Practical guidance for registration, compliance, and operational planning.",
-      footer_copy: "Explore more practical articles from our resource library.",
+      intro: "Practical guides on registration, compliance, and running a business in Tanzania.",
+      footer_copy: "Read more articles from our resource library.",
     },
   },
   undefined,
-  "Exxonim Consult helps businesses, NGOs, and institutions with company registration, business name registration, trademark protection, licensing, tax compliance, annual returns, and proactive consultation tracking from intake to resolution."
+  "Exxonim Consult helps businesses, NGOs, and institutions with company registration, business name registration, trademark protection, licensing, tax compliance, work permits, annual returns, and live consultation tracking from start to certificate."
 );
 
 /* BACKEND / ADMIN INTEGRATION NOTES:
