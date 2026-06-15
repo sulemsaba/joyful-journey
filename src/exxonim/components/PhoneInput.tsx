@@ -537,13 +537,13 @@ export function PhoneInput({
   );
 
   return (
-    <div className={className}>
-      <label htmlFor={inputId} className="block text-sm font-semibold text-text mb-1.5">
+    <div className={cn("max-w-full", className)}>
+      <label htmlFor={inputId} className="block text-xs sm:text-sm font-semibold text-text mb-1.5">
         {label}{required && <span className="text-accent ml-0.5">*</span>}
       </label>
 
       <div className={cn(
-        "flex items-stretch rounded-xl border transition-all",
+        "flex items-stretch rounded-xl border transition-all max-w-full overflow-hidden",
         "bg-page-strong/40",
         validationState
           ? "border-border-soft focus-within:ring-2 focus-within:ring-accent/20 focus-within:border-accent/40"
@@ -557,7 +557,7 @@ export function PhoneInput({
             onClick={handleDropdownToggle}
             disabled={disabled}
             className={cn(
-              "flex items-center gap-1.5 pl-3 pr-2 border-r border-border-soft",
+              "flex items-center gap-1 sm:gap-1.5 pl-2.5 sm:pl-3 pr-1.5 sm:pr-2 border-r border-border-soft",
               "text-sm font-medium text-text whitespace-nowrap",
               "hover:bg-page-strong/40 transition-colors rounded-l-xl",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset",
@@ -566,7 +566,7 @@ export function PhoneInput({
             aria-label={`Select country, currently ${country.name}`}
             aria-expanded={dropdownOpen}
           >
-            <span className="text-lg leading-none" aria-hidden="true">{country.flag}</span>
+            <span className="text-base sm:text-lg leading-none" aria-hidden="true">{country.flag}</span>
             <span className="text-text-muted font-mono text-xs">{country.dialCode}</span>
             <ChevronDown className={cn(
               "w-3 h-3 text-text-soft transition-transform",

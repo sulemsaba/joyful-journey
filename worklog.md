@@ -1,4 +1,27 @@
 ---
+Task ID: contact-form-overflow-fix
+Agent: Main Agent
+Task: Fix contact form being cut off on the right side + investigate services page content visibility
+
+Work Log:
+- Identified contact form overflow at 360px viewport: form card was 337.97px while parent content area was 312px, causing ~26px overflow
+- Root cause: CSS Grid children with default `min-width: auto` can overflow their grid tracks
+- Added `min-w-0` to both grid children and the grid container in ContactPage.tsx
+- Added `overflow-hidden` to form card to prevent content from pushing it wider
+- Reduced form card padding from `px-4` to `px-3` on mobile, and `lg:px-10` to `lg:px-8` on desktop
+- Made PhoneInput more responsive: added `max-w-full` and `overflow-hidden` to wrapper and flex container
+- Made PhoneInput country selector more compact on mobile: reduced gap, padding, and flag emoji size
+- Verified fix: form card now fits perfectly at 360px (312px width, -24px overflow margin)
+- Investigated services page content: found extensive fallback data exists but is NOT rendered
+  - Fallback data includes: description, service_signals, service_nav_groups, service_flow, service_promises, problem_framing, faq, tracking_section
+  - ServicesPage only renders eyebrow and title from overview, ignoring all other content
+
+Stage Summary:
+- Contact form overflow fixed on all viewports (360px, 390px, 768px, 1024px, 1280px)
+- PhoneInput now responsive and compact on small screens
+- Services page has rich content in fallback data that is not being displayed (user confirmed: "some content was there but are not visible")
+
+---
 Task ID: 1
 Agent: Main Agent
 Task: Redesign service catalog — fix too many cards, wrong colors, emojis, poor UX
