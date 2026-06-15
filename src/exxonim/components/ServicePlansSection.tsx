@@ -28,9 +28,9 @@ import { Check, ChevronLeft, ChevronRight, Star, X, Users, Globe, Building2, Hea
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
 import { CardDeckCarousel } from "./CardDeckCarousel";
+import { PlanInquiryModal } from "./PlanInquiryModal";
 import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
 import { useTestimonials } from "@/exxonim/hooks/useTestimonials";
-import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
 import type { PricingPlan, Testimonial } from '@/exxonim/types';
 
@@ -487,14 +487,13 @@ function TestimonialMarquee({
  * - Description max ~120 chars recommended for clean layout.
  * - Badge text max ~20 chars recommended to fit the pill.
  * ═══════════════════════════════════════════════════════════════ */
-function SegmentPlanCard({ plan, featured, compact, segmentKey }: {
+function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
   plan: SegmentPlan;
   featured: boolean;
   compact?: boolean;
   segmentKey: SegmentKey;
+  onCtaClick: () => void;
 }) {
-  /* Build CTA URL with plan + segment for contact page pre-fill */
-  const ctaHref = `${routes.contact}?plan=${plan.name.toLowerCase()}-${segmentKey}`;
   return (
     <article
       className={cn(
@@ -579,11 +578,11 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey }: {
         ))}
       </ul>
 
-      {/* ── CTA button ── */}
+      {/* ── CTA button — opens inquiry modal instead of navigating ── */}
       <Button
         size="standard"
         variant={featured ? "primary" : "outline"}
-        href={ctaHref}
+        onClick={onCtaClick}
         className={cn(
           "mt-6 w-full",
           featured && "shadow-md shadow-accent/20"
@@ -609,6 +608,23 @@ export function ServicePackagesSection({
     data: plans = [],
   } = usePricingPlans();
 
+  /* ── Modal state ── */
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalPlanSlug, setModalPlanSlug] = useState<string | null>(null);
+  const [modalPlanName, setModalPlanName] = useState<string>("");
+  const [modalFeatured, setModalFeatured] = useState(false);
+
+  const openModal = useCallback((planName: string, segmentKey: SegmentKey, featured: boolean) => {
+    setModalPlanSlug(`${planName.toLowerCase()}-${segmentKey}`);
+    setModalPlanName(planName);
+    setModalFeatured(featured);
+    setModalOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
+  }, []);
+
   const currentPlans = segmentPlans[activeSegment];
 
   /* ── Card deck data (for mobile carousel) ── */
@@ -622,10 +638,11 @@ export function ServicePackagesSection({
             featured={plan.badge !== null}
             compact
             segmentKey={activeSegment}
+            onCtaClick={() => openModal(plan.name, activeSegment, plan.badge !== null)}
           />
         ),
       })),
-    [currentPlans, activeSegment]
+    [currentPlans, activeSegment, openModal]
   );
 
   /* ── Default to middle card (Growth / "Most Popular") ── */
@@ -714,6 +731,7 @@ export function ServicePackagesSection({
                       plan={plan}
                       featured={plan.badge !== null}
                       segmentKey={activeSegment}
+                      onCtaClick={() => openModal(plan.name, activeSegment, plan.badge !== null)}
                     />
                   </div>
                 </div>
@@ -721,6 +739,15 @@ export function ServicePackagesSection({
             </div>
           </div>
         </Container>
+
+        {/* ── Plan inquiry modal ── */}
+        <PlanInquiryModal
+          planSlug={modalPlanSlug}
+          planName={modalPlanName}
+          featured={modalFeatured}
+          open={modalOpen}
+          onClose={closeModal}
+        />
       </section>
   );
 }

@@ -222,17 +222,17 @@ export function ContactPage() {
 
   /* Shared input styling — using design tokens */
   const inputCls =
-    "w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm";
+    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm";
 
-  /* Select-specific: hide native arrow, add custom chevron */
+  /* Select-specific: hide native arrow, add custom chevron, style dropdown */
   const selectCls =
-    `${inputCls} appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230f5c63%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat pr-10 sm:pr-10 cursor-pointer`;
+    `${inputCls} appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230f5c63%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat pr-10 cursor-pointer`;
 
   return (
     <section className="bg-page">
           <StructuredData heroTitle="Contact Exxonim Consult" heroDescription="Reach Exxonim for registration, compliance, and advisory support." breadcrumbs={[{ name: 'Contact', path: routes.contact }]} />
           {/* Breadcrumb */}
-          <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <div className="max-w-[min(1240px,calc(100%-1.5rem))] mx-auto px-3 sm:px-6 lg:px-8 pt-4">
             <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Contact" }]} />
           </div>
 
@@ -242,7 +242,7 @@ export function ContactPage() {
            * Left side sits on page bg — no card/container.
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
-          <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
+          <div className="max-w-[min(1240px,calc(100%-1.5rem))] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-start">
 
               {/* ── Left column: Contact info on page bg ── */}
@@ -354,7 +354,7 @@ export function ContactPage() {
 
               {/* ── Right column: Form card ── */}
               <div
-                className="bg-surface border border-border-soft rounded-2xl px-5 py-4 sm:p-8 lg:p-10"
+                className="bg-surface border border-border-soft rounded-2xl px-5 py-5 sm:p-8 lg:p-10"
                 id="contact-form"
               >
                 {submissionResult ? (
@@ -508,7 +508,7 @@ export function ContactPage() {
                           className={selectCls}
                         >
                           {SERVICE_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value} className="bg-surface text-text">
+                            <option key={option.value} value={option.value} className="bg-surface text-text py-2">
                               {option.label}
                             </option>
                           ))}
