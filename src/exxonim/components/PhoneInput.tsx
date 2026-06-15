@@ -189,21 +189,36 @@ function stripNonDigits(value: string): string {
 }
 
 /**
+ * Result of smart-parsing a phone number input.
+ * `detectedCountryCode` is set when the input contains a dial code
+ * that belongs to a *different* country than the one currently selected.
+ */
+interface SmartParseResult {
+  localDigits: string;
+  /** ISO country code detected from the input, if different from the selected country */
+  detectedCountryCode?: string;
+}
+
+/**
  * Smart parse raw input into local digits for a given country.
  *
  * Handles:
- *   - "+255 768 944 888"  → strips "+255" dial code → "768944888"
- *   - "255768944888"       → strips "255" prefix    → "768944888"
+ *   - "+255 768 944 888"  → strips "+255" dial code → "768944888", detects TZ
+ *   - "255768944888"       → strips "255" prefix    → "768944888", detects TZ
  *   - "0734123456"         → removes leading "0"     → "734123456"
  *   - "734123456"          → keeps as-is              → "734123456"
+ *
+ * When a different country's dial code is detected, the function returns
+ * the local digits for that country AND signals which country was detected
+ * so the component can auto-switch.
  */
-function smartParse(rawInput: string, country: Country): string {
+function smartParse(rawInput: string, country: Country): SmartParseResult {
   let digits = stripNonDigits(rawInput);
 
   // 1. Try to strip the selected country's dial code
   const dialDigits = stripNonDigits(country.dialCode);
   if (digits.startsWith(dialDigits) && digits.length > dialDigits.length) {
-    return digits.slice(dialDigits.length).slice(0, country.localLength);
+    return { localDigits: digits.slice(dialDigits.length).slice(0, country.localLength) };
   }
 
   // 2. Try to detect any known country dial code and strip it
@@ -211,11 +226,16 @@ function smartParse(rawInput: string, country: Country): string {
   const sortedDialCodes = [...DIAL_CODE_LOOKUP.keys()].sort((a, b) => b.length - a.length);
   for (const dialCodeDigits of sortedDialCodes) {
     if (digits.startsWith(dialCodeDigits) && digits.length > dialCodeDigits.length) {
+      const detectedCode = DIAL_CODE_LOOKUP.get(dialCodeDigits)!;
+      const detectedCountry = COUNTRY_MAP.get(detectedCode)!;
       const remaining = digits.slice(dialCodeDigits.length);
       // Only strip if the remaining digits look like a valid local number
-      if (remaining.length <= COUNTRY_MAP.get(DIAL_CODE_LOOKUP.get(dialCodeDigits)!)!.localLength) {
-        // Switch country to the detected one
-        return remaining.slice(0, country.localLength);
+      if (remaining.length <= detectedCountry.localLength) {
+        return {
+          localDigits: remaining.slice(0, detectedCountry.localLength),
+          // Signal country switch if the detected country differs from current selection
+          detectedCountryCode: detectedCode !== country.code ? detectedCode : undefined,
+        };
       }
     }
   }
@@ -225,7 +245,7 @@ function smartParse(rawInput: string, country: Country): string {
     digits = digits.slice(1);
   }
 
-  return digits.slice(0, country.localLength);
+  return { localDigits: digits.slice(0, country.localLength) };
 }
 
 /**
@@ -379,19 +399,35 @@ export function PhoneInput({
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
-    const parsed = smartParse(raw, country);
-    setLocalDigits(parsed);
-    onChange(toE164(country, parsed));
-  }, [country, onChange]);
+    const result = smartParse(raw, country);
+    setLocalDigits(result.localDigits);
+    // Auto-switch country if a different dial code was detected
+    if (result.detectedCountryCode) {
+      const newCountry = COUNTRY_MAP.get(result.detectedCountryCode)!;
+      setCountryCode(newCountry.code);
+      onCountryChange?.(newCountry.code);
+      onChange(toE164(newCountry, result.localDigits));
+    } else {
+      onChange(toE164(country, result.localDigits));
+    }
+  }, [country, onChange, onCountryChange]);
 
-  /** Handle paste with smart parsing */
+  /** Handle paste with smart parsing — also auto-switches country */
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text/plain");
-    const parsed = smartParse(pastedText, country);
-    setLocalDigits(parsed);
-    onChange(toE164(country, parsed));
-  }, [country, onChange]);
+    const result = smartParse(pastedText, country);
+    setLocalDigits(result.localDigits);
+    // Auto-switch country if a different dial code was detected
+    if (result.detectedCountryCode) {
+      const newCountry = COUNTRY_MAP.get(result.detectedCountryCode)!;
+      setCountryCode(newCountry.code);
+      onCountryChange?.(newCountry.code);
+      onChange(toE164(newCountry, result.localDigits));
+    } else {
+      onChange(toE164(country, result.localDigits));
+    }
+  }, [country, onChange, onCountryChange]);
 
   const handleDropdownToggle = useCallback(() => {
     if (disabled) return;

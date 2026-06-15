@@ -961,3 +961,27 @@ Stage Summary:
 - Key design patterns applied: backdrop-blur-sm, shadow-card, border-l-accent, hover:shadow-accent-glow
 - Accent left borders added to scope cards and FAQ CTA for visual hierarchy
 - Stack section cards now have proper card wrappers instead of bare text placeholders
+---
+Task ID: 1
+Agent: main
+Task: Fix phone input auto-detect country and tablet UX issues
+
+Work Log:
+- Read PhoneInput.tsx, ContactPage.tsx to understand current implementation
+- Identified bug: smartParse() detected foreign dial codes but only returned local digits, not the detected country code
+- Refactored smartParse() to return SmartParseResult { localDigits, detectedCountryCode? }
+- Updated handleInputChange and handlePaste to auto-switch country when a different dial code is detected
+- Fixed tablet UX: Changed grid from lg:grid-cols-2 to md:grid-cols-2 for two-column layout at tablet breakpoint
+- Increased form spacing: space-y-4 → space-y-4 md:space-y-5, label mb-1 → mb-1.5
+- Improved contact info grid gaps for tablet: sm:gap-x-6 md:gap-x-8 md:gap-y-5
+- Verified with unit tests: All 5 smart parse scenarios pass
+- Verified with agent browser: Contact page renders correctly on desktop and tablet
+- Tested auto-switch: Kenya + 255768944888 → auto-switches to Tanzania ✅
+- Tested auto-switch: Kenya + +255 712 345 678 → auto-switches to Tanzania ✅
+- Tested local format: Kenya + 0712345678 → stays Kenya, strips leading 0 ✅
+
+Stage Summary:
+- PhoneInput now auto-detects and switches country when a different dial code is typed/pasted
+- Contact page two-column layout now activates at md (768px) instead of lg (1024px) for better tablet UX
+- Form spacing and label gaps improved for tablet screens
+- All changes pass lint checks
