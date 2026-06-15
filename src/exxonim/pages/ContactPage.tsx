@@ -242,8 +242,8 @@ export function ContactPage() {
            * Left side sits on page bg — no card/container.
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
-          <div className="max-w-[min(1240px,calc(100%-2.5rem))] mx-auto px-5 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+          <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-start">
 
               {/* ── Left column: Contact info on page bg ── */}
               <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8">
@@ -354,7 +354,7 @@ export function ContactPage() {
 
               {/* ── Right column: Form card ── */}
               <div
-                className="bg-surface border border-border-soft rounded-2xl p-5 px-6 sm:p-8 lg:p-10"
+                className="bg-surface border border-border-soft rounded-2xl px-5 py-4 sm:p-8 lg:p-10"
                 id="contact-form"
               >
                 {submissionResult ? (
