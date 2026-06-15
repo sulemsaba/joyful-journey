@@ -470,88 +470,108 @@ function TestimonialMarquee({
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * SegmentPlanCard — Portrait pricing card
+ * SegmentPlanCard — Modern portrait pricing card
  *
  * DESIGN NOTES (for admin-managed content):
  * - Card is designed as a vertical rectangle (portrait orientation).
- * - In the mobile carousel, width is 280px; in desktop grid, max 360px.
- * - Featured card has a full-width accent banner at top for the badge.
+ * - In the mobile carousel, width is 280px; in desktop grid, max 400px.
+ * - Featured card has a gradient accent banner + left accent border + elevated shadow.
  * - Features list uses flex-1 to push CTA button to the bottom.
  * - Max 8 features recommended. More features = taller card.
  * - Description max ~120 chars recommended for clean layout.
  * - Badge text max ~20 chars recommended to fit the banner.
+ * - Cards have subtle hover lift on desktop for interactivity.
  * ═══════════════════════════════════════════════════════════════ */
 function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featured: boolean; compact?: boolean }) {
   return (
     <article
       className={cn(
-        "flex h-full w-full flex-col rounded-2xl border transition-all overflow-hidden",
-        compact ? "p-5" : "p-5 md:p-6 lg:p-7",
+        "group flex h-full w-full flex-col rounded-2xl border transition-all duration-300 overflow-hidden",
+        /* ── Padding ── */
+        compact ? "p-6" : "p-6 md:p-7 lg:p-8",
+        /* ── Featured vs normal ── */
         featured
-          ? "border-accent/40 bg-surface"
-          : "border-border-soft bg-surface"
+          ? "border-accent/50 bg-surface shadow-lg shadow-accent/8 hover:shadow-xl hover:shadow-accent/12 hover:-translate-y-0.5"
+          : "border-border-soft bg-surface shadow-sm hover:shadow-md hover:-translate-y-0.5",
+        /* ── Hover only on non-touch ── */
+        "hover:border-accent/25",
       )}
       aria-label={`${plan.name} service package`}
     >
-      {/* ── Featured badge banner (full-width strip at top) ── */}
+      {/* ── Featured badge banner (gradient strip at top) ── */}
       {plan.badge ? (
         <div className={cn(
-          "-mx-5 -mt-5 mb-3 px-5 py-2 text-center",
-          compact ? "-mx-5 -mt-5" : "md:-mx-6 md:-mt-6 lg:-mx-7 lg:-mt-7",
+          "-mx-6 -mt-6 mb-4 px-6 py-2.5 text-center",
+          compact ? "-mx-6 -mt-6" : "md:-mx-7 md:-mt-7 lg:-mx-8 lg:-mt-8",
           featured
-            ? "bg-accent text-accent-contrast"
+            ? "bg-gradient-to-r from-accent via-accent/90 to-accent/80 text-accent-contrast"
             : "bg-accent-soft text-accent"
         )}>
-          <span className="text-xs font-extrabold uppercase tracking-wider">
+          <span className="text-[11px] font-extrabold uppercase tracking-[0.16em]">
             {plan.badge}
           </span>
         </div>
       ) : null}
 
-      {/* Plan name */}
-      <h3 className={cn("font-bold mb-2", compact ? "text-base" : "text-lg", featured ? "text-accent" : "text-text")}>
-        {plan.name}
-      </h3>
+      {/* ── Plan name + description ── */}
+      <div className={cn(plan.badge ? "" : "mt-1")}>
+        <h3 className={cn(
+          "font-bold tracking-tight",
+          compact ? "text-xl" : "text-xl md:text-2xl",
+          featured ? "text-accent" : "text-text"
+        )}>
+          {plan.name}
+        </h3>
 
-      {/* Description — clamp to 2 lines for admin content safety */}
-      <p className={cn(
-        "text-sm leading-relaxed mb-3 line-clamp-2",
-        featured ? "text-text" : "text-text-muted"
-      )}>
-        {plan.description}
-      </p>
+        {/* Description — clamp to 2 lines for admin content safety */}
+        <p className={cn(
+          "text-sm leading-relaxed mt-2 line-clamp-2",
+          featured ? "text-text/80" : "text-text-muted"
+        )}>
+          {plan.description}
+        </p>
+      </div>
 
-      <div className={cn("h-px mb-3", featured ? "bg-accent/20" : "bg-border-soft")} />
+      {/* ── Divider ── */}
+      <div className={cn("h-px my-4", featured ? "bg-accent/20" : "bg-border-soft")} />
 
-      {/* Features list — flex-1 pushes CTA to bottom */}
-      <ul className="flex flex-1 flex-col gap-2">
+      {/* ── Features list — flex-1 pushes CTA to bottom ── */}
+      <ul className="flex flex-1 flex-col gap-2.5">
         {plan.features.map((feature) => (
           <li
             key={feature.label}
             className={cn(
-              "flex items-start gap-2 text-xs leading-snug",
-              !feature.included && "opacity-40"
+              "flex items-start gap-2.5 text-sm leading-snug",
+              !feature.included && "opacity-35"
             )}
           >
             <span className={cn(
-              "mt-0.5 flex h-4.5 w-4.5 flex-none items-center justify-center rounded-full",
+              "mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full transition-colors",
               feature.included
                 ? (featured ? "bg-accent text-accent-contrast" : "bg-accent-soft text-accent")
                 : (featured ? "bg-accent/10 text-accent/40" : "bg-border-soft text-text-muted")
             )}>
-              {feature.included ? <Check className="h-2.5 w-2.5" /> : <X className="h-2.5 w-2.5" />}
+              {feature.included ? <Check className="h-3 w-3" strokeWidth={3} /> : <X className="h-2.5 w-2.5" />}
             </span>
-            <span className="text-text">{feature.label}</span>
+            <span className={cn(
+              "text-text",
+              feature.label.startsWith("Everything") && "font-semibold"
+            )}>
+              {feature.label}
+            </span>
           </li>
         ))}
       </ul>
 
-      {/* CTA button */}
+      {/* ── CTA button ── */}
       <Button
         size="standard"
         variant={featured ? "primary" : "outline"}
         href={routes.contact}
-        className="mt-4 w-full"
+        className={cn(
+          "mt-5 w-full",
+          featured && "shadow-md shadow-accent/20"
+        )}
       >
         {plan.cta}
       </Button>
@@ -669,10 +689,10 @@ export function ServicePackagesSection({
             />
 
             {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
-            <div className="hidden lg:grid gap-5 lg:grid-cols-3 lg:max-w-[1160px] lg:mx-auto">
+            <div className="hidden lg:grid gap-6 lg:grid-cols-3 lg:max-w-[1240px] lg:mx-auto">
               {currentPlans.map((plan) => (
                 <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
-                  <div className="w-full max-w-[360px]">
+                  <div className="w-full max-w-[400px]">
                     <SegmentPlanCard
                       plan={plan}
                       featured={plan.badge !== null}
