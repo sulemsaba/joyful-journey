@@ -932,3 +932,32 @@ Stage Summary:
 - 1 apple-touch-icon created
 - Original 32x32 PNGs preserved (they were hand-crafted at that resolution)
 - All multi-size favicons maintain the authentic Exxonim "E" mark design
+
+---
+Task ID: 3
+Agent: main
+Task: Redesign tiny card UIs with modern elevated look
+
+Work Log:
+- Audited all 37 card-like components across the codebase
+- Identified 10 cards that looked "tiny" — too small padding, no visual presence, cramped text
+- Searched online for modern card design trends (glassmorphism, bento grids, layered shadows, hover micro-interactions)
+- Redesigned all 10 card types with modern principles:
+  1. Card primitive — added backdrop-blur, shadow-card, subtler hover
+  2. TestimonialCard — removed fixed height, increased padding/stars/avatar
+  3. RelatedArticleCard — massively upgraded (was tiniest card: rounded-md, p-2.5, text-[10px])
+  4. About scope cards — added accent left border, shadow, larger padding
+  5. About expectation cards — upgraded from list-item look to real cards
+  6. Resource trending rail — more padding, larger thumbnails
+  7. StatementCard — added proper card wrapper (was bare text placeholder)
+  8. FeatureAccordionCard — added proper card wrapper (was bare text placeholder)
+  9. Career search card — increased padding
+  10. FAQ CTA card — increased padding, added accent border
+- Built and verified — lint clean, all pages render
+- Pushed with one-sentence commit
+
+Stage Summary:
+- 9 files changed, 117 insertions, 115 deletions
+- Key design patterns applied: backdrop-blur-sm, shadow-card, border-l-accent, hover:shadow-accent-glow
+- Accent left borders added to scope cards and FAQ CTA for visual hierarchy
+- Stack section cards now have proper card wrappers instead of bare text placeholders
