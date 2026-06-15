@@ -835,7 +835,7 @@ export function CareerPage() {
 
             {/* ═══ 3. SEARCH CARD ═══ */}
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-6">
-              <div className="bg-surface-elevated rounded-2xl p-3 sm:p-5 border border-border-soft">
+              <div className="bg-surface-elevated rounded-2xl p-4 sm:p-6 border border-border-soft shadow-card">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="flex-1 relative">
                     <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

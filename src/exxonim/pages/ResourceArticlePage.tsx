@@ -304,12 +304,12 @@ function RelatedArticleCard({ post: relatedPost }: { post: BlogPost }) {
   return (
     <SmartLink
       href={resourceArticlePath(relatedPost.slug)}
-      className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50
-                 hover:bg-surface-elevated hover:border-accent/30
+      className="group flex overflow-hidden rounded-2xl border border-border-soft border-l-2 border-l-accent/60 bg-surface/50 shadow-card
+                 hover:-translate-y-0.5 hover:border-accent/20 hover:shadow-accent-glow
                  transition-all duration-300"
     >
       {/* LEFT: Full-height image */}
-      <div className="w-[110px] sm:w-[130px] shrink-0 overflow-hidden bg-accent/5">
+      <div className="w-[120px] sm:w-[140px] shrink-0 overflow-hidden bg-accent/5">
         {relatedPost.coverImageSrc ? (
           <img
             src={relatedPost.coverImageSrc}
@@ -328,15 +328,15 @@ function RelatedArticleCard({ post: relatedPost }: { post: BlogPost }) {
       </div>
 
       {/* RIGHT: Content */}
-      <div className="flex flex-col justify-center min-w-0 flex-1 p-2.5 sm:p-3">
-        <h4 className="text-[0.8rem] sm:text-[0.85rem] font-semibold text-text leading-snug mb-1
+      <div className="flex flex-col justify-center min-w-0 flex-1 p-3.5 sm:p-4">
+        <h4 className="text-sm sm:text-[0.9375rem] font-semibold text-text leading-snug mb-1
                        group-hover:text-accent transition-colors line-clamp-2">
           {relatedPost.title}
         </h4>
-        <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-2 mb-1">
+        <p className="text-xs sm:text-sm text-text-muted leading-relaxed line-clamp-2 mb-1">
           {relatedPost.excerpt}
         </p>
-        <span className="text-[10px] text-text-muted mt-auto">
+        <span className="text-xs text-text-muted mt-auto">
           {formatBlogDate(relatedPost.publishedAt)}
           {relatedPost.readTimeMinutes ? ` · ${relatedPost.readTimeMinutes} min` : ""}
         </span>

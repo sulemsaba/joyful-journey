@@ -246,19 +246,19 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1"
+      className="flex min-h-[180px] flex-col rounded-2xl border border-border-soft bg-surface shadow-card backdrop-blur-sm p-5 md:p-6 hover:border-accent/20 hover:shadow-accent-glow transition-all duration-300"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
       <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
         {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+          <Star key={i} className="w-4 h-4 fill-current" aria-hidden="true" />
         ))}
       </p>
-      <p className="text-sm leading-relaxed text-text-muted flex-1">
+      <p className="text-[0.9375rem] leading-relaxed text-text-muted flex-1">
         &ldquo;{testimonial.quote}&rdquo;
       </p>
       <div className="mt-auto flex items-center gap-2.5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
           {testimonial.initials}
         </div>
         <div>

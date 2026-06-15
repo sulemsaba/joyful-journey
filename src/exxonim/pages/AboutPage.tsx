@@ -412,12 +412,12 @@ export function AboutPage() {
                     {content.service_scope.map((service) => (
                       <article
                         key={service.title}
-                        className="rounded-xl md:rounded-[1.35rem] border border-border-soft bg-surface p-4 md:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                        className="rounded-2xl md:rounded-[1.5rem] border border-border-soft border-l-4 border-l-accent bg-surface backdrop-blur-sm shadow-card p-5 md:p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-accent-glow"
                         data-reveal
                       >
                         <div className="flex items-center gap-2.5 mb-3">
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                          <h3 className="text-[0.9375rem] font-semibold text-text leading-tight">
+                          <span className="w-2 h-2 rounded-full bg-accent" />
+                          <h3 className="text-base font-semibold text-text leading-tight">
                             {service.title}
                           </h3>
                         </div>
@@ -462,9 +462,9 @@ export function AboutPage() {
                       {content.client_expectations.map((item) => (
                         <div
                           key={item}
-                          className="flex items-start gap-3 px-3 py-3 md:px-4 md:py-3.5 rounded-xl bg-surface border border-border-soft"
+                          className="flex items-start gap-3.5 px-4 py-3.5 md:px-5 md:py-4 rounded-2xl bg-surface border border-border-soft shadow-card hover:-translate-y-0.5 hover:border-accent/20 hover:shadow-accent-glow transition-all duration-300"
                         >
-                          <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <p className="text-sm text-text leading-relaxed font-medium">{item}</p>
                         </div>
                       ))}
