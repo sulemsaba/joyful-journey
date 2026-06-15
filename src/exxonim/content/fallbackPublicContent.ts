@@ -162,15 +162,15 @@ function getFallbackCategory(id: string) {
 
 export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
   "home",
-  "Exxonim Consult | Business Registration & Compliance Tanzania",
+  "Exxonim Consult | Business Setup, Compliance & Permits Tanzania",
   {
     hero: {
-      eyebrow: "Business Registration & Compliance, Tanzania",
-      title: "Register. Stay Compliant. Track Everything.",
+      eyebrow: "Business Setup, Compliance & Permits, Tanzania",
+      title: "Stop chasing offices. We handle it all from registration to compliance.",
       description:
-        "We handle company registration, tax setup, licensing, work permits, and NGO registration. We update you at every step, no office visits needed.",
+        "Company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns. We do everything for you and keep you updated by WhatsApp, email, SMS, or your choice.",
       cta: {
-        label: "Start Your Registration",
+        label: "Get Started",
         href: routes.contact,
       },
       secondary_cta: {
@@ -211,33 +211,33 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
     stack_section: {
       items: [
         {
-          title: "Start with the right entity setup",
-          subtitle: "Company, NGO, business name, or foreign investor registration — guided from start to certificate.",
+          title: "Everything you need to start operating in Tanzania",
+          subtitle: "From company registration and TIN to business licences, work permits, and NGO setup.",
           description:
-            "Every registration journey starts with the correct entity type, ownership structure, and document set. Exxonim guides you through the sequence so the process does not stall later.",
-          ctaLabel: "Discuss your case",
+            "We guide you through the full setup: pick the right business type, prepare all documents, and submit to BRELA, TRA, and local authorities. You get your certificates without office visits.",
+          ctaLabel: "Start Your Setup",
           ctaHref: routes.contact,
           windowTitle: "Setup",
           windowTag: "Guide",
           videoSources: [],
         },
         {
-          title: "Keep tax and licensing work on track",
-          subtitle: "TIN, VAT, business licences, sector permits, and work permits — managed through a clear workflow.",
+          title: "Focus on your business, not government offices",
+          subtitle: "We handle all from statutory filings, licence renewals, annual returns, to compliance deadlines for you.",
           description:
-            "A practical approach to tax registration, licensing applications, and regulatory follow-through — so your team can focus on operations instead of chasing approvals.",
-          ctaLabel: "Explore services",
+            "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks.",
+          ctaLabel: "See All Services",
           ctaHref: routes.services,
           windowTitle: "Compliance",
           windowTag: "Guide",
           videoSources: [],
         },
         {
-          title: "Track every step automatically",
-          subtitle: "WhatsApp, email, or SMS updates at every milestone. You never have to call and ask.",
+          title: "Never wonder what's happening with your case",
+          subtitle: "Get updates by WhatsApp, email, or SMS at every milestone.",
           description:
-            "When you start with us, you get a tracking code. At every step, name clearance, submission, approval, certificate, we send you an update via WhatsApp, email, or SMS. You can also check your status online anytime, no login required.",
-          ctaLabel: "Track a consultation",
+            "You get a tracking code. Every time something happens, name clearance, submission, approval, we send you a message. You can also check online anytime, no login needed, 99.99% fast & secure.",
+          ctaLabel: "Track a Consultation",
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
           windowTag: "Guide",

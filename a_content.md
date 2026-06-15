@@ -533,12 +533,40 @@ The most effective B2B service homepages follow this order:
 | Round 1 | Cards 1 & 2 | NOT yet decided | User wants broader options |
 | Round 1 | Hero | ALL 4 options DECLINED | Too narrow, focused only on registration |
 | Round 1 | Card 1 | ALL 4 options DECLINED | Too registration-focused |
-| Round 2 | Card 2 | User proposed content | Title: "Focus on your business, not government offices". Awaiting ESL refinement confirmation. |
-| Round 2 | Hero | New broader options E,F,G,H presented | Uses "From X to Y" pattern |
-| Round 2 | Card 1 | New broader options E,F,G,H presented | Covers full "starting" scope |
+| Round 2 | Hero | **DECIDED: Option H** (Problem-solution + breadth) | Applied to code |
+| Round 2 | Card 1 | **DECIDED: Option E** (Full-setup journey) | Applied to code |
+| Round 2 | Card 2 | **DECIDED: User's exact proposal** | Applied to code, user wanted original wording kept |
+| Round 2 | Card 3 | **DECIDED: Option C** (Never wonder) | Applied to code, user added "99.99% fast & secure" |
 | - | Homepage flow | NOT yet decided | May add How It Works, Testimonials, FAQ |
 | - | Services page | Will redesign later | After homepage is done |
 
+### Final Applied Content
+
+**Hero:**
+- Eyebrow: "Business Setup, Compliance & Permits, Tanzania"
+- Title: "Stop chasing offices. We handle it all from registration to compliance."
+- Description: "Company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns. We do everything for you and keep you updated by WhatsApp, email, SMS, or your choice."
+- CTA: "Get Started"
+- Secondary CTA: "See All Services"
+
+**Card 1:**
+- Title: "Everything you need to start operating in Tanzania"
+- Subtitle: "From company registration and TIN to business licences, work permits, and NGO setup."
+- Description: "We guide you through the full setup: pick the right business type, prepare all documents, and submit to BRELA, TRA, and local authorities. You get your certificates without office visits."
+- CTA: "Start Your Setup"
+
+**Card 2:**
+- Title: "Focus on your business, not government offices"
+- Subtitle: "We handle all from statutory filings, licence renewals, annual returns, to compliance deadlines for you."
+- Description: "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks."
+- CTA: "See All Services"
+
+**Card 3:**
+- Title: "Never wonder what's happening with your case"
+- Subtitle: "Get updates by WhatsApp, email, or SMS at every milestone."
+- Description: "You get a tracking code. Every time something happens, name clearance, submission, approval, we send you a message. You can also check online anytime, no login needed, 99.99% fast & secure."
+- CTA: "Track a Consultation"
+
 ---
 
-*Last updated: Round 2 research complete. New broader options for Hero and Card 1. Card 2 has user proposal pending ESL refinement. Card 3 still has options A/B/C.*
+*Last updated: All homepage content decisions made and applied. Hero, Card 1, Card 2, and Card 3 are finalized. Services page redesign pending.*
