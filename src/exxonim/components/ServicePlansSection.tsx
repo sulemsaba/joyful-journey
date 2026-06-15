@@ -472,89 +472,103 @@ function TestimonialMarquee({
 /* ═══════════════════════════════════════════════════════════════
  * SegmentPlanCard — Modern portrait pricing card
  *
+ * Design inspired by Linear / Vercel / Stripe pricing patterns:
+ *   - Floating pill badge (absolute, centered, overlaps top border)
+ *   - Featured card: left accent border + ring glow + elevated shadow
+ *   - Clear visual hierarchy: plan name → description → features → CTA
+ *   - Hover lift effect on all cards
+ *
  * DESIGN NOTES (for admin-managed content):
- * - Card is designed as a vertical rectangle (portrait orientation).
+ * - Card is a vertical rectangle (portrait orientation).
  * - In the mobile carousel, width is 280px; in desktop grid, max 400px.
- * - Featured card has a gradient accent banner + left accent border + elevated shadow.
+ * - Featured card has a floating pill badge + left accent border + glow.
  * - Features list uses flex-1 to push CTA button to the bottom.
  * - Max 8 features recommended. More features = taller card.
  * - Description max ~120 chars recommended for clean layout.
- * - Badge text max ~20 chars recommended to fit the banner.
- * - Cards have subtle hover lift on desktop for interactivity.
+ * - Badge text max ~20 chars recommended to fit the pill.
  * ═══════════════════════════════════════════════════════════════ */
 function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featured: boolean; compact?: boolean }) {
   return (
     <article
       className={cn(
-        "group flex h-full w-full flex-col rounded-2xl border transition-all duration-300 overflow-hidden",
-        /* ── Padding ── */
-        compact ? "p-6" : "p-6 md:p-7 lg:p-8",
+        "group relative flex h-full w-full flex-col rounded-2xl border transition-all duration-300",
+        /* ── Padding — extra top room for floating badge ── */
+        compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
         /* ── Featured vs normal ── */
         featured
-          ? "border-accent/50 bg-surface shadow-lg shadow-accent/8 hover:shadow-xl hover:shadow-accent/12 hover:-translate-y-0.5"
-          : "border-border-soft bg-surface shadow-sm hover:shadow-md hover:-translate-y-0.5",
-        /* ── Hover only on non-touch ── */
-        "hover:border-accent/25",
+          ? "border-accent/40 bg-surface shadow-lg shadow-accent/10 hover:shadow-xl hover:shadow-accent/15"
+          : "border-border-soft bg-surface shadow-sm hover:shadow-md",
+        /* ── Hover lift ── */
+        "hover:-translate-y-1",
       )}
       aria-label={`${plan.name} service package`}
     >
-      {/* ── Featured badge banner (gradient strip at top) ── */}
+      {/* ── Featured: left accent border (inner overlay) ── */}
+      {featured && (
+        <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-accent" aria-hidden="true" />
+      )}
+
+      {/* ── Floating pill badge — centered, overlaps top border ── */}
       {plan.badge ? (
-        <div className={cn(
-          "-mx-6 -mt-6 mb-4 px-6 py-2.5 text-center",
-          compact ? "-mx-6 -mt-6" : "md:-mx-7 md:-mt-7 lg:-mx-8 lg:-mt-8",
-          featured
-            ? "bg-gradient-to-r from-accent via-accent/90 to-accent/80 text-accent-contrast"
-            : "bg-accent-soft text-accent"
-        )}>
-          <span className="text-[11px] font-extrabold uppercase tracking-[0.16em]">
-            {plan.badge}
-          </span>
-        </div>
+        <span
+          className={cn(
+            "absolute -top-3 left-1/2 -translate-x-1/2 z-10",
+            "inline-flex items-center gap-1 rounded-full px-3.5 py-1",
+            "text-[11px] font-bold uppercase tracking-wider whitespace-nowrap",
+            "shadow-sm",
+            featured
+              ? "bg-accent text-accent-contrast shadow-accent/25"
+              : "bg-accent-soft text-accent"
+          )}
+        >
+          <Star className="h-3 w-3 fill-current" aria-hidden="true" />
+          {plan.badge}
+        </span>
       ) : null}
 
-      {/* ── Plan name + description ── */}
-      <div className={cn(plan.badge ? "" : "mt-1")}>
-        <h3 className={cn(
-          "font-bold tracking-tight",
-          compact ? "text-xl" : "text-xl md:text-2xl",
-          featured ? "text-accent" : "text-text"
-        )}>
-          {plan.name}
-        </h3>
+      {/* ── Plan name ── */}
+      <h3 className={cn(
+        "font-bold tracking-tight",
+        compact ? "text-xl" : "text-xl md:text-2xl",
+        featured ? "text-accent" : "text-text"
+      )}>
+        {plan.name}
+      </h3>
 
-        {/* Description — clamp to 2 lines for admin content safety */}
-        <p className={cn(
-          "text-sm leading-relaxed mt-2 line-clamp-2",
-          featured ? "text-text/80" : "text-text-muted"
-        )}>
-          {plan.description}
-        </p>
-      </div>
+      {/* ── Description ── */}
+      <p className={cn(
+        "text-sm leading-relaxed mt-2 line-clamp-2",
+        featured ? "text-text/80" : "text-text-muted"
+      )}>
+        {plan.description}
+      </p>
 
       {/* ── Divider ── */}
-      <div className={cn("h-px my-4", featured ? "bg-accent/20" : "bg-border-soft")} />
+      <div className={cn("h-px my-5", featured ? "bg-accent/15" : "bg-border-soft")} />
 
       {/* ── Features list — flex-1 pushes CTA to bottom ── */}
-      <ul className="flex flex-1 flex-col gap-2.5">
+      <ul className="flex flex-1 flex-col gap-3">
         {plan.features.map((feature) => (
           <li
             key={feature.label}
             className={cn(
-              "flex items-start gap-2.5 text-sm leading-snug",
-              !feature.included && "opacity-35"
+              "flex items-start gap-3 text-sm leading-snug",
+              !feature.included && "opacity-30"
             )}
           >
             <span className={cn(
-              "mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full transition-colors",
+              "mt-px flex h-5 w-5 flex-none items-center justify-center rounded-full",
               feature.included
                 ? (featured ? "bg-accent text-accent-contrast" : "bg-accent-soft text-accent")
-                : (featured ? "bg-accent/10 text-accent/40" : "bg-border-soft text-text-muted")
+                : (featured ? "bg-accent/10 text-accent/30" : "bg-border-soft text-text-muted")
             )}>
-              {feature.included ? <Check className="h-3 w-3" strokeWidth={3} /> : <X className="h-2.5 w-2.5" />}
+              {feature.included
+                ? <Check className="h-3 w-3" strokeWidth={3} />
+                : <X className="h-2.5 w-2.5" />
+              }
             </span>
             <span className={cn(
-              "text-text",
+              feature.included ? "text-text font-medium" : "text-text-muted",
               feature.label.startsWith("Everything") && "font-semibold"
             )}>
               {feature.label}
@@ -569,7 +583,7 @@ function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featu
         variant={featured ? "primary" : "outline"}
         href={routes.contact}
         className={cn(
-          "mt-5 w-full",
+          "mt-6 w-full",
           featured && "shadow-md shadow-accent/20"
         )}
       >
