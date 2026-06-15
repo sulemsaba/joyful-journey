@@ -116,8 +116,8 @@ export function CardDeckCarousel({
     >
       {/* ── Card deck area ── */}
       <div
-        className="relative flex items-center justify-center"
-        style={{ height: '520px' }}
+        className="relative flex items-center justify-center touch-pan-y"
+        style={{ height: '520px', touchAction: 'pan-y' }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

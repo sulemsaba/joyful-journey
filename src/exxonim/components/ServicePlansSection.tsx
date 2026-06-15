@@ -474,20 +474,27 @@ function TestimonialMarquee({
  *
  * Design inspired by Linear / Vercel / Stripe pricing patterns:
  *   - Floating pill badge (absolute, centered, overlaps top border)
- *   - Featured card: left accent border + ring glow + elevated shadow
+ *   - Featured card: elevated shadow + accent border + glow
  *   - Clear visual hierarchy: plan name → description → features → CTA
  *   - Hover lift effect on all cards
  *
  * DESIGN NOTES (for admin-managed content):
  * - Card is a vertical rectangle (portrait orientation).
- * - In the mobile carousel, width is 280px; in desktop grid, max 400px.
- * - Featured card has a floating pill badge + left accent border + glow.
+ * - In the mobile carousel, width is 280px; in desktop grid, max 320px.
+ * - Featured card has a floating pill badge + glow + elevated shadow.
  * - Features list uses flex-1 to push CTA button to the bottom.
  * - Max 8 features recommended. More features = taller card.
  * - Description max ~120 chars recommended for clean layout.
  * - Badge text max ~20 chars recommended to fit the pill.
  * ═══════════════════════════════════════════════════════════════ */
-function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featured: boolean; compact?: boolean }) {
+function SegmentPlanCard({ plan, featured, compact, segmentKey }: {
+  plan: SegmentPlan;
+  featured: boolean;
+  compact?: boolean;
+  segmentKey: SegmentKey;
+}) {
+  /* Build CTA URL with plan + segment for contact page pre-fill */
+  const ctaHref = `${routes.contact}?plan=${plan.name.toLowerCase()}-${segmentKey}`;
   return (
     <article
       className={cn(
@@ -503,11 +510,6 @@ function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featu
       )}
       aria-label={`${plan.name} service package`}
     >
-      {/* ── Featured: left accent border (inner overlay) ── */}
-      {featured && (
-        <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-accent" aria-hidden="true" />
-      )}
-
       {/* ── Floating pill badge — centered, overlaps top border ── */}
       {plan.badge ? (
         <span
@@ -581,7 +583,7 @@ function SegmentPlanCard({ plan, featured, compact }: { plan: SegmentPlan; featu
       <Button
         size="standard"
         variant={featured ? "primary" : "outline"}
-        href={routes.contact}
+        href={ctaHref}
         className={cn(
           "mt-6 w-full",
           featured && "shadow-md shadow-accent/20"
@@ -619,6 +621,7 @@ export function ServicePackagesSection({
             plan={plan}
             featured={plan.badge !== null}
             compact
+            segmentKey={activeSegment}
           />
         ),
       })),
@@ -703,13 +706,14 @@ export function ServicePackagesSection({
             />
 
             {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
-            <div className="hidden lg:grid gap-6 lg:grid-cols-3 lg:max-w-[1240px] lg:mx-auto">
+            <div className="hidden lg:grid gap-6 lg:grid-cols-3 lg:max-w-[1100px] lg:mx-auto">
               {currentPlans.map((plan) => (
                 <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
-                  <div className="w-full max-w-[400px]">
+                  <div className="w-full max-w-[320px]">
                     <SegmentPlanCard
                       plan={plan}
                       featured={plan.badge !== null}
+                      segmentKey={activeSegment}
                     />
                   </div>
                 </div>
