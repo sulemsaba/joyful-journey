@@ -985,3 +985,23 @@ Stage Summary:
 - Contact page two-column layout now activates at md (768px) instead of lg (1024px) for better tablet UX
 - Form spacing and label gaps improved for tablet screens
 - All changes pass lint checks
+---
+Task ID: 2
+Agent: main
+Task: Fix tablet layout (use mobile design), mobile form overflow, and mobile country selector bug
+
+Work Log:
+- Reverted grid from md:grid-cols-2 back to lg:grid-cols-2 (tablet now uses single-column mobile layout)
+- Changed contact info grid to grid-cols-1 on mobile, sm:grid-cols-2 on tablet
+- Fixed form card padding: px-4 on mobile, sm:px-6, lg:px-10
+- Fixed critical bug: mobile bottom sheet country selector was broken because the outside-click handler (mousedown) was closing the dropdown when tapping inside the portal-rendered bottom sheet
+- Added mobileSheetRef for the portal container and updated the outside-click handler to check both dropdownRef AND mobileSheetRef
+- Added touchstart event listener alongside mousedown for better mobile support
+- Verified all three viewports: mobile (390px) single-column ✅, tablet (768px) single-column ✅, desktop (1280px) two-column ✅
+- Verified Rwanda selection works on mobile ✅
+
+Stage Summary:
+- Tablet now uses mobile-style single-column layout (only desktop gets two-column)
+- Mobile form fits properly with no overflow/cut-off
+- Mobile country selector now works - selecting Rwanda/Uganda/etc actually switches the country
+- Root cause was the mousedown outside-click handler closing the portal-rendered mobile bottom sheet before the country click registered

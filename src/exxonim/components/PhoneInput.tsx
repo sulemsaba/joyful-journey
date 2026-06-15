@@ -364,17 +364,38 @@ export function PhoneInput({
     );
   }, [searchQuery]);
 
-  /* Close dropdown on outside click */
+  /* Ref for mobile bottom sheet portal (rendered outside dropdownRef) */
+  const mobileSheetRef = useRef<HTMLDivElement>(null);
+
+  /* Close dropdown on outside click
+   * Must check BOTH dropdownRef (desktop popover) AND mobileSheetRef (portal bottom sheet)
+   * because the mobile sheet is rendered via createPortal to document.body.
+   * Also listen for touchstart for mobile devices. */
   useEffect(() => {
     if (!dropdownOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+    const isInside = (target: Node) => {
+      const insideDesktop = dropdownRef.current?.contains(target);
+      const insideMobile = mobileSheetRef.current?.contains(target);
+      return insideDesktop || insideMobile;
+    };
+    const mouseHandler = (e: MouseEvent) => {
+      if (!isInside(e.target as Node)) {
         setDropdownOpen(false);
         setSearchQuery("");
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    const touchHandler = (e: TouchEvent) => {
+      if (!isInside(e.target as Node)) {
+        setDropdownOpen(false);
+        setSearchQuery("");
+      }
+    };
+    document.addEventListener("mousedown", mouseHandler);
+    document.addEventListener("touchstart", touchHandler, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", mouseHandler);
+      document.removeEventListener("touchstart", touchHandler);
+    };
   }, [dropdownOpen]);
 
   /* Focus search input when dropdown opens */
@@ -601,7 +622,7 @@ export function PhoneInput({
 
       {/* ── Mobile bottom sheet for country selection ── */}
       {dropdownOpen && createPortal(
-        <div className="sm:hidden fixed inset-0 z-[70] flex items-end">
+        <div className="sm:hidden fixed inset-0 z-[70] flex items-end" ref={mobileSheetRef}>
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"

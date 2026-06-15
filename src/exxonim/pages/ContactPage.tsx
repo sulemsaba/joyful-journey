@@ -246,10 +246,10 @@ export function ContactPage() {
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
           <div className="max-w-[min(1240px,calc(100%-1.5rem))] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
-            <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-16 items-start">
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-start">
 
               {/* ── Left column: Contact info on page bg ── */}
-              <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+              <div className="flex flex-col gap-4 sm:gap-5 lg:gap-8">
                 {/* Page header */}
                 <div>
                   <h1 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-bold tracking-tight text-text leading-tight">
@@ -261,7 +261,7 @@ export function ContactPage() {
                 </div>
 
                 {/* Contact info items — with icons */}
-                <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4 md:gap-x-8 md:gap-y-5 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4 lg:gap-x-8 lg:gap-y-5 text-sm">
                   {/* Email */}
                   <div className="flex items-start gap-2.5">
                     <svg className="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -357,7 +357,7 @@ export function ContactPage() {
 
               {/* ── Right column: Form card ── */}
               <div
-                className="bg-surface border border-border-soft rounded-2xl px-5 py-5 sm:p-6 md:p-8 lg:p-10"
+                className="bg-surface border border-border-soft rounded-2xl px-4 py-5 sm:px-6 sm:p-6 lg:px-10 lg:py-10"
                 id="contact-form"
               >
                 {submissionResult ? (
@@ -394,7 +394,7 @@ export function ContactPage() {
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
+                  <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
                     <h2 className="text-lg sm:text-xl font-bold text-text mb-0.5">Send us a message</h2>
                     <p className="text-text-muted text-sm mb-2">Fill out the form below and we&apos;ll get back to you.</p>
 
@@ -411,7 +411,7 @@ export function ContactPage() {
                     )}
 
                     {/* First name + Last name row */}
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                       <div>
                         <label htmlFor="contact-first-name" className="block text-xs sm:text-sm font-semibold text-text mb-1.5">
                           First name<span className="text-accent ml-0.5">*</span>
