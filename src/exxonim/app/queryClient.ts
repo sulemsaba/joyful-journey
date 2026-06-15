@@ -90,6 +90,16 @@ if (typeof window !== "undefined") {
       deserialize: JSON.parse,
     });
 
+    // Bust localStorage cache when content version changes.
+    // Increment CACHE_VERSION when fallback content is updated to force
+    // returning visitors to see the new content immediately.
+    const CACHE_VERSION = "2025-06-13-2";
+    const storedVersion = localStorage.getItem("exxonim-cache-version");
+    if (storedVersion !== CACHE_VERSION) {
+      localStorage.removeItem("exxonim-query-cache");
+      localStorage.setItem("exxonim-cache-version", CACHE_VERSION);
+    }
+
     persistQueryClient({
       queryClient,
       persister,
