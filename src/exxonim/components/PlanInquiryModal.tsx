@@ -152,7 +152,7 @@ export function PlanInquiryModal({
 
   /* ── Input styles ── */
   const inputCls =
-    "w-full px-4 py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm min-h-[44px]";
+    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm min-h-[44px]";
 
   /* Don't render if not open */
   if (!open) return null;
@@ -176,8 +176,8 @@ export function PlanInquiryModal({
           "relative z-20 w-full bg-surface border border-border-soft shadow-2xl",
           /* Mobile: bottom sheet */
           "rounded-t-2xl lg:rounded-2xl",
-          /* Mobile: max height with scroll */
-          "max-h-[90dvh] overflow-y-auto",
+          /* Mobile: max height — use flex so inner content scrolls, not the dialog itself */
+          "max-h-[92dvh] sm:max-h-[85dvh] lg:max-h-[80dvh] flex flex-col",
           /* Width */
           "lg:max-w-md",
           /* Animation */
@@ -204,7 +204,7 @@ export function PlanInquiryModal({
           <X className="w-4 h-4" />
         </button>
 
-        <div className="px-6 pb-8 pt-4 lg:px-8 lg:pb-10">
+        <div className="px-4 pb-6 pt-3 sm:px-6 sm:pb-8 sm:pt-4 lg:px-8 lg:pb-10 overflow-y-auto overscroll-contain">
           {submissionResult ? (
             /* ─── Success state ─── */
             <div className="text-center py-6">
@@ -244,13 +244,13 @@ export function PlanInquiryModal({
             </div>
           ) : (
             /* ─── Form state ─── */
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
               {/* ── Header ── */}
               <div>
-                <h2 className="text-lg font-bold text-text pr-8">
+                <h2 className="text-base sm:text-lg font-bold text-text pr-8">
                   Get started with {planInfo?.label ?? planName ?? "this plan"}
                 </h2>
-                <p className="text-sm text-text-muted mt-1">
+                <p className="text-xs sm:text-sm text-text-muted mt-1">
                   We&apos;ll reach out within 1 business day.
                 </p>
               </div>
@@ -276,7 +276,7 @@ export function PlanInquiryModal({
 
               {/* ── Name ── */}
               <div>
-                <label htmlFor={nameId} className="block text-sm font-semibold text-text mb-1.5">
+                <label htmlFor={nameId} className="block text-xs sm:text-sm font-semibold text-text mb-1.5">
                   Full name<span className="text-accent ml-0.5">*</span>
                 </label>
                 <input
@@ -293,7 +293,7 @@ export function PlanInquiryModal({
 
               {/* ── Email ── */}
               <div>
-                <label htmlFor={emailId} className="block text-sm font-semibold text-text mb-1.5">
+                <label htmlFor={emailId} className="block text-xs sm:text-sm font-semibold text-text mb-1.5">
                   Email<span className="text-accent ml-0.5">*</span>
                 </label>
                 <input
