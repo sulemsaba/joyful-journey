@@ -22,6 +22,8 @@ import { submitPublicConsultation } from "@/exxonim/services/consultationService
 import type { ApiPublicConsultationSubmissionResponse } from "@/exxonim/types/api";
 import { cn } from "@/exxonim/utils/cn";
 import { PhoneInput } from "./PhoneInput";
+import { SmartLink } from "./primitives/SmartLink";
+import { routes } from "@/exxonim/routes";
 
 /* ── Plan → service type mapping (mirrors ContactPage's PLAN_SERVICE_MAP) ── */
 const PLAN_SERVICE_MAP: Record<string, { serviceCode: string; label: string; segment: string }> = {
@@ -150,7 +152,7 @@ export function PlanInquiryModal({
 
   /* ── Input styles ── */
   const inputCls =
-    "w-full px-4 py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm";
+    "w-full px-4 py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm min-h-[44px]";
 
   /* Don't render if not open */
   if (!open) return null;
@@ -344,7 +346,8 @@ export function PlanInquiryModal({
 
               {/* ── Privacy note ── */}
               <p className="text-xs text-text-soft text-center">
-                By submitting this form you agree to Exxonim&apos;s privacy policy.
+                By submitting this form you agree to Exxonim&apos;s{" "}
+                <SmartLink href={routes.privacy} className="text-accent hover:underline">privacy policy</SmartLink>.
               </p>
             </form>
           )}
