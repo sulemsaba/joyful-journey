@@ -34,7 +34,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { Home } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { usePage } from "@/exxonim/hooks/usePage";
@@ -60,6 +60,26 @@ const SERVICE_OPTIONS = [
   { label: "Tax returns", value: "tax_returns" },
   { label: "Compliance support", value: "compliance" },
 ] as const;
+
+/* ── Plan param → service type mapping ──
+ * When user clicks CTA on pricing cards, URL becomes:
+ *   /contact/?plan=growth-local-entrepreneurs
+ * This maps the plan slug to a service type + human-readable name.
+ * ─────────────────────────────────────── */
+const PLAN_SERVICE_MAP: Record<string, { serviceCode: string; label: string; segment: string }> = {
+  "starter-local-entrepreneurs":   { serviceCode: "registration", label: "Starter", segment: "Local Entrepreneurs" },
+  "growth-local-entrepreneurs":    { serviceCode: "compliance",    label: "Growth", segment: "Local Entrepreneurs" },
+  "premium-local-entrepreneurs":   { serviceCode: "compliance",   label: "Premium", segment: "Local Entrepreneurs" },
+  "starter-foreign-investors":     { serviceCode: "registration",  label: "Starter", segment: "Foreign Investors" },
+  "growth-foreign-investors":      { serviceCode: "registration",  label: "Growth", segment: "Foreign Investors" },
+  "premium-foreign-investors":     { serviceCode: "compliance",   label: "Premium", segment: "Foreign Investors" },
+  "starter-enterprises":           { serviceCode: "registration",  label: "Starter", segment: "Enterprises" },
+  "growth-enterprises":            { serviceCode: "compliance",    label: "Growth", segment: "Enterprises" },
+  "premium-enterprises":           { serviceCode: "compliance",   label: "Premium", segment: "Enterprises" },
+  "starter-ngos":                  { serviceCode: "registration",  label: "Starter", segment: "NGOs & Non-Profits" },
+  "growth-ngos":                   { serviceCode: "compliance",    label: "Growth", segment: "NGOs & Non-Profits" },
+  "premium-ngos":                  { serviceCode: "compliance",   label: "Premium", segment: "NGOs & Non-Profits" },
+};
 
 function createSubmissionKey() {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -136,7 +156,20 @@ export function ContactPage() {
   const shell = usePublicShell();
   useResolvedPageSeo(page, routes.contact);
 
-  const [formValues, setFormValues] = useState(createInitialFormState);
+  const planParam = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    return new URLSearchParams(window.location.search).get("plan");
+  }, []);
+  const planInfo = planParam ? PLAN_SERVICE_MAP[planParam] : null;
+
+  const [formValues, setFormValues] = useState(() => {
+    const initial = createInitialFormState();
+    // Pre-fill service type from plan param
+    if (planInfo) {
+      initial.serviceTypeCode = planInfo.serviceCode;
+    }
+    return initial;
+  });
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submissionResult, setSubmissionResult] =
     useState<ApiPublicConsultationSubmissionResponse | null>(null);
@@ -173,7 +206,7 @@ export function ContactPage() {
         service_type_code: formValues.serviceTypeCode,
         message: formValues.message.trim(),
         idempotency_key: formValues.idempotencyKey,
-        source_channel: "public_contact_form",
+        source_channel: planInfo ? `pricing_page_${planParam}` : "public_contact_form",
       });
       setSubmissionResult(result);
       setFormValues(createInitialFormState());
@@ -209,7 +242,7 @@ export function ContactPage() {
            * Left side sits on page bg — no card/container.
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
-          <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
+          <div className="max-w-[min(1240px,calc(100%-2.5rem))] mx-auto px-5 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
 
               {/* ── Left column: Contact info on page bg ── */}
@@ -321,7 +354,7 @@ export function ContactPage() {
 
               {/* ── Right column: Form card ── */}
               <div
-                className="bg-surface border border-border-soft rounded-2xl p-5 sm:p-8 lg:p-10"
+                className="bg-surface border border-border-soft rounded-2xl p-5 px-6 sm:p-8 lg:p-10"
                 id="contact-form"
               >
                 {submissionResult ? (
@@ -361,6 +394,18 @@ export function ContactPage() {
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <h2 className="text-lg sm:text-xl font-bold text-text mb-0.5">Send us a message</h2>
                     <p className="text-text-muted text-sm mb-2">Fill out the form below and we&apos;ll get back to you.</p>
+
+                    {/* ── Selected Plan banner (from pricing page CTA) ── */}
+                    {planInfo && (
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-accent-soft border border-accent/20 mb-1">
+                        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 bg-accent text-accent-contrast text-[11px] font-bold uppercase tracking-wider">
+                          {planInfo.label}
+                        </span>
+                        <span className="text-sm text-text">
+                          {planInfo.segment}
+                        </span>
+                      </div>
+                    )}
 
                     {/* First name + Last name row */}
                     <div className="grid grid-cols-2 gap-2 sm:gap-3">
