@@ -276,9 +276,9 @@ export function FaqPage() {
 
                     {/* Contact CTA — left column (desktop) */}
                     <div className="mt-8 hidden lg:block">
-                      <div className="rounded-2xl border border-accent/12 border-l-4 border-l-accent bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent p-6 md:p-7 shadow-card">
+                      <div className="rounded-2xl border border-accent/12 bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent p-5">
                         <div className="flex items-start gap-3">
-                          <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent shrink-0">
+                          <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-accent/10 text-accent shrink-0">
                             <MessageCircle className="w-4.5 h-4.5" />
                           </span>
                           <div className="flex-1 min-w-0">
@@ -328,7 +328,7 @@ export function FaqPage() {
                     </div>
 
                     {/* Mobile: Contact CTA */}
-                    <div className="lg:hidden mt-6 p-6 md:p-7 rounded-2xl bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent border border-accent/12 border-l-4 border-l-accent shadow-card">
+                    <div className="lg:hidden mt-6 p-5 rounded-2xl bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent border border-accent/12">
                       <div className="flex items-start gap-4">
                         <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent shrink-0">
                           <MessageCircle className="w-5 h-5" />

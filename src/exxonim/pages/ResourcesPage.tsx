@@ -283,8 +283,8 @@ function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min`);
 
   return (
-    <SmartLink href={articleLink} className="group flex gap-4 p-3.5 md:p-4 rounded-2xl border border-border-soft bg-surface/60 backdrop-blur-sm shadow-card transition-all hover:-translate-y-0.5 hover:shadow-accent-glow">
-      <div className="w-[5.5rem] h-[4.5rem] rounded-xl overflow-hidden shrink-0">
+    <SmartLink href={articleLink} className="group flex gap-3.5 p-3 rounded-xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-0.5">
+      <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0">
         <img className="w-full h-full object-cover" src={thumbnailSrc} alt={post.coverAlt ?? post.title} loading="lazy" />
       </div>
       <div className="min-w-0 flex-1">
