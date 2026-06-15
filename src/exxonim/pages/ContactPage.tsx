@@ -37,6 +37,7 @@ import { Home } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
+import { PhoneInput } from "@/exxonim/components/PhoneInput";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
@@ -170,6 +171,7 @@ export function ContactPage() {
     }
     return initial;
   });
+  const [phoneValid, setPhoneValid] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submissionResult, setSubmissionResult] =
     useState<ApiPublicConsultationSubmissionResponse | null>(null);
@@ -183,6 +185,7 @@ export function ContactPage() {
   const canSubmit =
     formValues.fullName.trim().length > 1 &&
     formValues.email.trim().length > 3 &&
+    phoneValid &&
     formValues.message.trim().length > 12 &&
     !isSubmitting;
 
@@ -201,7 +204,7 @@ export function ContactPage() {
       const result = await submissionMutation.mutateAsync({
         full_name: formValues.fullName.trim(),
         email: formValues.email.trim(),
-        phone: formValues.phone.trim() || null,
+        phone: formValues.phone || null,  // E.164 format from PhoneInput
         company: formValues.company.trim() || null,
         service_type_code: formValues.serviceTypeCode,
         message: formValues.message.trim(),
@@ -463,37 +466,31 @@ export function ContactPage() {
                       />
                     </div>
 
-                    {/* Company + Phone row */}
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                      <div>
-                        <label htmlFor="contact-company" className="block text-xs sm:text-sm font-semibold text-text mb-1">
-                          Company name
-                        </label>
-                        <input
-                          id="contact-company"
-                          autoComplete="organization"
-                          value={formValues.company}
-                          onChange={(e) => handleFieldChange("company", e.target.value)}
-                          placeholder="e.g Acme Tanzania Ltd"
-                          className={inputCls}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="contact-phone" className="block text-xs sm:text-sm font-semibold text-text mb-1">
-                          Phone number
-                        </label>
-                        <input
-                          id="contact-phone"
-                          type="tel"
-                          inputMode="tel"
-                          autoComplete="tel"
-                          value={formValues.phone}
-                          onChange={(e) => handleFieldChange("phone", e.target.value)}
-                          placeholder="+255 794 689 099"
-                          className={inputCls}
-                        />
-                      </div>
+                    {/* Company */}
+                    <div>
+                      <label htmlFor="contact-company" className="block text-xs sm:text-sm font-semibold text-text mb-1">
+                        Company name
+                      </label>
+                      <input
+                        id="contact-company"
+                        autoComplete="organization"
+                        value={formValues.company}
+                        onChange={(e) => handleFieldChange("company", e.target.value)}
+                        placeholder="e.g Acme Tanzania Ltd"
+                        className={inputCls}
+                      />
                     </div>
+
+                    {/* Phone (with country picker) */}
+                    <PhoneInput
+                      value={formValues.phone}
+                      onChange={(e164) => {
+                        handleFieldChange("phone", e164);
+                        const digits = e164.replace(/\D/g, "");
+                        setPhoneValid(digits.length >= 10);
+                      }}
+                      required
+                    />
 
                     {/* Service type */}
                     <div>

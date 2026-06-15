@@ -21,6 +21,7 @@ import { X, Star, Check } from "lucide-react";
 import { submitPublicConsultation } from "@/exxonim/services/consultationService";
 import type { ApiPublicConsultationSubmissionResponse } from "@/exxonim/types/api";
 import { cn } from "@/exxonim/utils/cn";
+import { PhoneInput } from "./PhoneInput";
 
 /* ── Plan → service type mapping (mirrors ContactPage's PLAN_SERVICE_MAP) ── */
 const PLAN_SERVICE_MAP: Record<string, { serviceCode: string; label: string; segment: string }> = {
@@ -79,6 +80,7 @@ export function PlanInquiryModal({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneValid, setPhoneValid] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submissionResult, setSubmissionResult] =
     useState<ApiPublicConsultationSubmissionResponse | null>(null);
@@ -89,6 +91,7 @@ export function PlanInquiryModal({
       setFullName("");
       setEmail("");
       setPhone("");
+      setPhoneValid(false);
       setSubmitError(null);
       setSubmissionResult(null);
     }
@@ -121,6 +124,7 @@ export function PlanInquiryModal({
   const canSubmit =
     fullName.trim().length > 1 &&
     email.trim().length > 3 &&
+    phoneValid &&
     !isSubmitting;
 
   const handleSubmit = async (e: FormEvent) => {
@@ -131,7 +135,7 @@ export function PlanInquiryModal({
       const result = await submissionMutation.mutateAsync({
         full_name: fullName.trim(),
         email: email.trim(),
-        phone: phone.trim() || null,
+        phone: phone || null,  // E.164 format from PhoneInput
         company: null,
         service_type_code: planInfo?.serviceCode ?? "general_consultation",
         message: `Inquiry for ${planInfo?.label ?? planName ?? "service"} plan (${planInfo?.segment ?? "general"}). Please contact me to discuss further.`,
@@ -303,22 +307,18 @@ export function PlanInquiryModal({
                 />
               </div>
 
-              {/* ── Phone ── */}
-              <div>
-                <label htmlFor={phoneId} className="block text-sm font-semibold text-text mb-1.5">
-                  Phone number
-                </label>
-                <input
-                  id={phoneId}
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+255 794 689 099"
-                  className={inputCls}
-                />
-              </div>
+              {/* ── Phone (with country picker) ── */}
+              <PhoneInput
+                value={phone}
+                onChange={(e164) => {
+                  setPhone(e164);
+                  // Phone is valid when it has dial code + enough local digits
+                  // The PhoneInput component handles formatting; we check if it's complete
+                  const digits = e164.replace(/\D/g, "");
+                  setPhoneValid(digits.length >= 10);
+                }}
+                required
+              />
 
               {/* ── Error ── */}
               {submitError && (
