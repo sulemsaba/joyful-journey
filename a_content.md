@@ -5,6 +5,45 @@
 
 ---
 
+## 0. KEY INSIGHT: BREADTH MESSAGING (New Research, Round 2)
+
+### The Problem
+Previous hero options were too narrow. They focused on "registration" but Exxonim does 15 services across 4 categories. The hero must communicate the FULL scope, not just one category.
+
+### What Multi-Service Firms Say Globally (from web research)
+
+**The dominant pattern worldwide is "From X to Y":**
+- "From registration to compliance" (used by firms in India, Malaysia, Dubai, Romania, and Tanzania itself)
+- "From registration to compliance, all under one roof" (appears 20+ times in search results)
+- "From company registration to full business setup" (Zatra Consultants, Tanzania)
+
+**Common companion phrases:**
+- "All under one roof" (most popular, 15+ search results used this)
+- "One stop solutions" (GMRA International, Coast/One-Stop Business Centre in Tanzania)
+- "We handle everything so you can focus on growth" (universal formula)
+
+**What Tanzania competitors say in their messaging:**
+| Competitor | Their Messaging |
+|-----------|----------------|
+| Zatra Consultants | "From company registration to full business setup, your trusted partner" |
+| GMRA International | "ONE STOP SOLUTIONS: Company Registration, Tax Clearance, Business Visa, Permits" |
+| Coast/One-Stop Business Centre | "From company registration and business licensing to work permits and compliance support" |
+| NexTim Consulting | "START & GROW: Company Registration, Tax Compliance, Licences & Permits" |
+| TCI Consultants | "Company Registration, Market Research, Business Setup & Compliance, Work Permits & Immigration" |
+
+### Key Takeaway
+The global formula is: **"From [first service] to [outcome], [breadth claim]."**
+
+The TITLE should make the breadth claim. The DESCRIPTION should list specific services. The EYEBROW should name the categories.
+
+### The "From...to..." formula options for Exxonim
+- "From registration to compliance" (covers categories 1-2)
+- "From registration to work permits" (covers categories 1,3)
+- "From setup to compliance" (broader than "registration")
+- "From company registration to ongoing compliance" (most specific)
+
+---
+
 ## 1. HERO SECTION
 
 ### Research Findings
@@ -22,6 +61,7 @@
 - "Welcome to Our Website" or "We Help Businesses Grow" - too vague, converts nobody
 - Long sentences with jargon
 - Using "consulting" when people search "registration" or "company setup"
+- Focusing on just one service when you offer many (THIS WAS OUR MISTAKE IN ROUND 1)
 
 **What Tanzanians actually search** (from search data):
 - "Company registration Tanzania" (#1 search)
@@ -32,57 +72,74 @@
 - "NGO registration"
 - NOT "business consulting" or "entity setup"
 
-### Current Hero
+### Current Hero (applied in previous session)
 
 | Element | Current Words |
 |---------|-------------|
-| Eyebrow | "Business consulting - Tanzania" |
-| Title | "Your obligations, handled and tracked." |
-| Description | "Exxonim guides you through registration, licensing, and compliance - with proactive updates at every milestone." |
-| Primary CTA | "Get Started" |
-| Secondary CTA | "Explore Services" |
+| Eyebrow | "Business Registration & Compliance, Tanzania" |
+| Title | "Register. Stay Compliant. Track Everything." |
+| Description | "We handle company registration, tax setup, licensing, work permits, and NGO registration. We update you at every step, no office visits needed." |
+| Primary CTA | "Start Your Registration" |
+| Secondary CTA | "See All Services" |
 
-### Problems with Current Hero
+### Problems with Current Hero (user feedback)
+1. "Register" in the title is too narrow, Exxonim does more than registration
+2. "Business Registration & Compliance" eyebrow misses work permits and NGO
+3. "Start Your Registration" CTA is too narrow, what about people who need permits or compliance only?
+4. The title "Register. Stay Compliant. Track Everything." reads like registration is the main thing
 
-1. "Business consulting" - too vague, people search "registration"
-2. "Obligations" - hard word for ESL, sounds like a burden
-3. "Proactive updates" - corporate buzzword
-4. Description has em dash (we agreed: no em dashes)
-5. "Get Started" - generic, not specific enough
-6. Doesn't mention work permits, NGO, trademark, or the tracking feature
+### NEW Options (Round 2 - Broader Scope)
 
-### Options
+#### Option E: "From...to" breadth hero (global dominant pattern)
+- **Eyebrow**: "Business Setup, Compliance & Permits, Tanzania"
+- **Title**: "From registration to compliance. All under one roof."
+- **Description**: "Company registration, TIN and VAT, business licences, work permits, NGO setup, and annual returns. We handle everything and update you at every step via WhatsApp."
+- **CTA**: "Get Started"
+- **Secondary CTA**: "See All Services"
+- **Why**: Uses the #1 global pattern for multi-service firms. "All under one roof" tells them you do more than registration. Eyebrow names all 3 category areas.
 
-#### Option A: Action-verb hero (3 clear actions)
-- **Eyebrow**: "Business Registration & Compliance, Tanzania"
-- **Title**: "Register. Stay Compliant. Track Everything."
-- **Description**: "We handle company registration, tax setup, licensing, work permits, and NGO registration. We update you at every step, no office visits needed."
-- **CTA**: "Start Your Registration"
-- **Why**: 3 verbs tell the whole story. Each word is simple. Covers the full scope.
+#### Option F: Breadth + pain relief hero
+- **Eyebrow**: "Business Setup, Compliance & Permits, Tanzania"
+- **Title**: "Set up. Stay compliant. Track everything."
+- **Description**: "From company and NGO registration to tax setup, licensing, work permits, and annual returns. We handle it all and update you by WhatsApp, email, or SMS."
+- **CTA**: "Get Started"
+- **Secondary CTA**: "See All Services"
+- **Why**: "Set up" is broader than "Register" (includes permits, NGO, trademark). Same 3-verb rhythm but with wider first verb.
 
-#### Option B: Benefit-first hero (outcome focused)
-- **Eyebrow**: "Business Registration & Compliance, Tanzania"
-- **Title**: "Your certificate, delivered without the office visits."
-- **Description**: "From company and NGO registration to TIN, VAT, licences, and work permits. We handle BRELA for you and update you at every step via WhatsApp."
-- **CTA**: "Get Started Free"
-- **Why**: Leads with the outcome (certificate, no office visits). "BRELA" and "WhatsApp" are Tanzania-specific trust words.
+#### Option G: Outcome + breadth hero
+- **Eyebrow**: "Business Setup, Compliance & Permits, Tanzania"
+- **Title**: "Your business, handled from registration to compliance."
+- **Description**: "We handle company registration, TIN, VAT, business licences, work permits, NGO setup, and annual returns. Updated at every step, no office visits needed."
+- **CTA**: "Get Started"
+- **Secondary CTA**: "See All Services"
+- **Why**: "From registration to compliance" is the global dominant phrase. "Your business, handled" is personal and broad.
 
-#### Option C: Problem-solution hero (pain point first)
-- **Eyebrow**: "Business Registration & Compliance, Tanzania"
-- **Title**: "Stop chasing offices. Get it done from anywhere."
-- **Description**: "Company registration, tax setup, licences, work permits, and compliance. We handle everything and send you updates by WhatsApp, email, or SMS."
-- **CTA**: "Start Registration"
-- **Why**: Addresses the #1 pain point in Tanzania (office visits, chasing people). Conversational.
+#### Option H: Problem-solution + breadth hero
+- **Eyebrow**: "Business Setup, Compliance & Permits, Tanzania"
+- **Title**: "Stop chasing offices. We handle it all from registration to compliance."
+- **Description**: "Company registration, tax setup, licensing, work permits, NGO registration, and annual returns. We do everything for you and send updates by WhatsApp, email, or SMS."
+- **CTA**: "Get Started"
+- **Secondary CTA**: "See All Services"
+- **Why**: Addresses the #1 pain point (chasing offices) + communicates full breadth. "We handle it all" is simple and confident.
 
-#### Option D: Who-for hero (audience specific)
-- **Eyebrow**: "Business Registration & Compliance, Tanzania"
-- **Title**: "For companies, NGOs, and foreign investors starting in Tanzania."
-- **Description**: "We handle your registration, tax setup, licensing, and compliance from start to certificate. Updated at every step, no office visits needed."
-- **CTA**: "Start Your Registration"
-- **Why**: Speaks directly to the 3 main audiences. Feels personal.
+### Old Options (Round 1 - DECLINED, too narrow)
+
+#### Option A: Action-verb hero (3 clear actions) - DECLINED
+- **Title**: "Register. Stay Compliant. Track Everything." - Too narrow, "Register" implies only registration
+- User said: "we serve more services than these"
+
+#### Option B: Benefit-first hero - DECLINED
+- **Title**: "Your certificate, delivered without the office visits." - Only about certificates
+- User said: same concern, too registration-focused
+
+#### Option C: Problem-solution hero - DECLINED
+- **Title**: "Stop chasing offices. Get it done from anywhere." - Doesn't say what "it" is clearly enough
+
+#### Option D: Who-for hero - DECLINED
+- **Title**: "For companies, NGOs, and foreign investors starting in Tanzania." - Only about "starting", misses compliance and ongoing services
 
 ### Decision
-> **NOT YET DECIDED** - Discuss and pick an option, or combine elements.
+> **NOT YET DECIDED** - User to review new broader options E, F, G, H.
 
 ---
 
@@ -105,66 +162,73 @@
 | Element | Current Words |
 |---------|-------------|
 | Title | "Start with the right entity setup" |
-| Subtitle | "Company, NGO, business name, or foreign investor registration - guided from start to certificate." |
+| Subtitle | "Company, NGO, business name, or foreign investor registration — guided from start to certificate." |
 | Description | "Every registration journey starts with the correct entity type, ownership structure, and document set. Exxonim guides you through the sequence so the process does not stall later." |
 | CTA | "Discuss your case" |
 
 ### Problems
-
 1. "Entity setup" - jargon, people say "business registration" or "company setup"
-2. Only covers registration, but Exxonim does more
+2. Only covers registration, but Exxonim does more (this card should cover the FULL "starting" scope)
 3. "Ownership structure" and "document set" - too technical
 4. "The process does not stall later" - negative framing
 5. Has em dash in subtitle
 6. Description is 26 words, can be shorter
 
-### What This Card Could Cover
+### What This Card SHOULD Cover (broader than just registration)
 
-Exxonim's full "Business Setup" category includes:
+This card is about "everything you need to START operating in Tanzania":
 - Company Registration (Most Popular)
 - Business Name Registration
 - NGO Registration
 - Trademark Registration
 - TIN Application
 - Business License Applications
-
-Plus cross-category:
 - Work Permit Applications
 - Foreign Company Registration
 - TIC/TISEZA Registration
 
-### Options
+This is NOT just "registration." This is the full "get set up and operating" journey.
 
-#### Option A: Registration-focused (broader listing)
-- **Title**: "Register your business the right way"
-- **Subtitle**: "Company, NGO, business name, trademark, or foreign company. We handle BRELA for you."
-- **Description**: "We help you pick the right business type, prepare all documents, and submit to BRELA so you get your certificate without delays."
-- **CTA**: "Start Registration"
-- **Why**: Uses "BRELA" (searched term), lists all entity types, simple and concrete.
+### NEW Options (Round 2 - Broader Scope)
 
-#### Option B: Setup-journey (from idea to operating)
-- **Title**: "From business idea to operating legally"
-- **Subtitle**: "Registration, TIN, business licence, and bank account setup, all in one process."
-- **Description**: "We handle the full setup: register your company or NGO, get your TIN, apply for your business licence, and guide you on opening a bank account."
+#### Option E: Full-setup journey (from idea to operating)
+- **Title**: "Everything you need to start operating in Tanzania"
+- **Subtitle**: "From company registration and TIN to business licences, work permits, and NGO setup."
+- **Description**: "We guide you through the full setup: pick the right business type, prepare all documents, and submit to BRELA, TRA, and local authorities. You get your certificates without office visits."
+- **CTA**: "Start Your Setup"
+- **Why**: Covers the full scope, not just registration. "Start operating" is the real outcome people want.
+
+#### Option F: "From...to" breadth card
+- **Title**: "From business registration to your first licence"
+- **Subtitle**: "Company, NGO, business name, trademark, TIN, VAT, and work permits, all handled for you."
+- **Description**: "We handle the full setup journey. Choose your business type, we prepare and submit everything to BRELA, TRA, and the relevant authorities. No office visits needed."
 - **CTA**: "Start Setup"
-- **Why**: Covers the full journey, not just registration. "Legally" is a power word.
+- **Why**: "From...to" shows the journey. Lists specific services but frames them as a sequence.
 
-#### Option C: Audience-based (who it's for)
-- **Title**: "Setting up in Tanzania? We handle the paperwork."
+#### Option G: Audience-based (who it's for, broader)
+- **Title**: "Setting up in Tanzania? We handle the full process."
 - **Subtitle**: "For local businesses, foreign investors, NGOs, and companies entering Tanzania."
-- **Description**: "Company registration, business name, NGO setup, trademark protection, and foreign investor registration. We prepare everything and submit for you."
+- **Description**: "Company registration, NGO setup, business name, trademark, TIN, business licences, and work permits. We prepare everything and submit for you, no office visits."
 - **CTA**: "Discuss Your Case"
-- **Why**: Speaks to the person reading it. "Paperwork" is relatable (everyone hates it).
+- **Why**: Speaks directly to the person reading. "Full process" covers everything.
 
-#### Option D: Outcome-focused (what you get)
-- **Title**: "Get your registration certificate, fast"
-- **Subtitle**: "Company, NGO, or business name registration in 5-10 business days."
-- **Description**: "We confirm your business type, prepare documents, and submit to BRELA. You get your certificate without office visits or rejected applications."
-- **CTA**: "Start Registration"
-- **Why**: Leads with the outcome (certificate) and timeline (5-10 days). Concrete and specific.
+#### Option H: Outcome-focused (what you walk away with)
+- **Title**: "Get set up and operating, the right way"
+- **Subtitle**: "Registration, TIN, business licence, and work permits, all in one process."
+- **Description**: "We confirm the right business type for you, prepare all documents, and handle every submission. From BRELA to TRA to local authorities, we deal with it so you don't have to."
+- **CTA**: "Start Setup"
+- **Why**: "Set up and operating" is the real goal. "The right way" is confidence. "All in one process" shows breadth.
+
+### Old Options (Round 1 - too registration-focused)
+
+#### Option A: Registration-focused - TOO NARROW
+Only talked about registration. User said: "you also repeated the same problem in card 1 since you said [only company registration]"
+
+#### Options B, C, D - ALSO TOO NARROW
+All focused on registration as the main thing. Need to cover the full "starting" scope.
 
 ### Decision
-> **NOT YET DECIDED** - Discuss and pick an option.
+> **NOT YET DECIDED** - User to review new broader options E, F, G, H.
 
 ---
 
@@ -173,23 +237,22 @@ Plus cross-category:
 ### Research Findings
 
 **What should come second in the homepage flow?**
-After showing WHAT you do (registration), the next section should show:
+After showing WHAT you do (setup), the next section should show:
 - How you KEEP them compliant (ongoing relationship, not one-time)
 - OR the COMPLEMENTARY service (after setup comes compliance)
 
-**The natural flow**: Register first, then stay compliant. This is the customer journey.
+**The natural flow**: Set up first, then stay compliant. This is the customer journey.
 
 ### Current Second Card
 
 | Element | Current Words |
 |---------|-------------|
 | Title | "Keep tax and licensing work on track" |
-| Subtitle | "TIN, VAT, business licences, sector permits, and work permits - managed through a clear workflow." |
-| Description | "A practical approach to tax registration, licensing applications, and regulatory follow-through - so your team can focus on operations instead of chasing approvals." |
+| Subtitle | "TIN, VAT, business licences, sector permits, and work permits — managed through a clear workflow." |
+| Description | "A practical approach to tax registration, licensing applications, and regulatory follow-through — so your team can focus on operations instead of chasing approvals." |
 | CTA | "Explore services" |
 
 ### Problems
-
 1. "Tax and licensing work" - "work" is vague, sounds like a burden
 2. "Clear workflow" - abstract, not concrete
 3. "Regulatory follow-through" - jargon
@@ -197,51 +260,41 @@ After showing WHAT you do (registration), the next section should show:
 5. Has em dash
 6. Description is 21 words, could be shorter
 
-### What This Card Could Cover
+### User's Proposed Content
 
-Exxonim's "Compliance Support" category includes:
-- Annual Returns (Deadline-Driven)
-- Statutory Filings (PAYE, SDL, WCF, NSSF)
-- Regulatory Renewals (Proactive Tracking)
-- Operational Advisory (Enterprise Tier)
+The user proposed this mix (combining elements from previous options):
 
-Plus related:
-- TIN Application (also in Business Setup)
-- Business License Applications
-- Work Permit Applications
+| Element | User's Proposal |
+|---------|---------------|
+| Title | "Focus on your business, not government offices" |
+| Subtitle | "We handle all from statutory filings, licence renewals, annual returns, to compliance deadlines for you." |
+| Description | "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks." |
+| CTA | "See All Services" |
 
-### Options
+### ESL Notes on User's Proposal
 
-#### Option A: Compliance-focused (stay legal)
-- **Title**: "Stay legal. Never miss a deadline."
-- **Subtitle**: "Annual returns, tax filings, licence renewals, and work permit renewals, all managed for you."
-- **Description**: "We track every deadline, prepare filings, and submit on time so you never get a penalty or a lapsed licence."
-- **CTA**: "See All Services"
-- **Why**: "Stay legal" is simple and powerful. "Never miss a deadline" is a concrete benefit. "Penalty" and "lapsed" are fear words that convert.
+| Phrase | Issue | Suggestion |
+|--------|-------|-----------|
+| "We handle all from..." | Slightly awkward in ESL, "all from" is not standard English pattern | "We handle everything from..." OR "From statutory filings to compliance deadlines, we handle it all." |
+| "statutory filings" | Jargon, but it's a real Tanzania term (PAYE, SDL, WCF, NSSF are statutory) | Keep it if targeting business owners who know the term. Or say "tax and statutory filings" for clarity. |
+| "falls through the cracks" | English idiom, ESL readers may not understand | "so nothing is missed" OR "so you never miss a deadline" |
 
-#### Option B: After-setup (the ongoing relationship)
-- **Title**: "After setup, we keep you on track"
-- **Subtitle**: "Tax filings, licence renewals, annual returns, and statutory compliance, all handled for you."
-- **Description**: "Registration is just the start. We manage your ongoing requirements with reminders before every deadline so nothing lapses."
-- **CTA**: "See All Services"
-- **Why**: Shows Exxonim is not just a one-time service. "Reminders before every deadline" is the selling point.
+### Refined Version (ESL-optimized, keeping user's intent)
 
-#### Option C: Peace-of-mind (emotion-based)
-- **Title**: "Focus on your business, not government offices"
-- **Subtitle**: "We handle tax filings, licence renewals, annual returns, and compliance deadlines for you."
-- **Description**: "No more chasing approvals or missing deadlines. We manage everything and remind you before each due date."
-- **CTA**: "See All Services"
-- **Why**: "Focus on your business" is the #1 selling phrase for service businesses (from research). Relatable for Tanzania where office visits are a pain.
+| Element | Refined Words |
+|---------|-------------|
+| Title | "Focus on your business, not government offices" |
+| Subtitle | "From statutory filings to compliance deadlines, we handle it all for you." |
+| Description | "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each due date so nothing is missed." |
+| CTA | "See All Services" |
 
-#### Option D: List-based (what exactly we do)
-- **Title**: "Tax, licences, and filings, managed for you"
-- **Subtitle**: "TIN, VAT, annual returns, business licence renewals, statutory filings, and work permits."
-- **Description**: "We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks."
-- **CTA**: "See All Services"
-- **Why**: Direct and specific. Lists the exact services people search for.
+### Alternative: Even simpler subtitle
+If "statutory filings" feels too jargon-heavy:
+- "From tax filings to licence renewals, we handle it all for you."
+- "We handle annual returns, tax filings, licence renewals, and compliance deadlines for you."
 
 ### Decision
-> **NOT YET DECIDED** - Discuss and pick an option.
+> **USER PROPOSED** - User proposed the content above. Refined version addresses ESL concerns. Waiting for user to confirm final words.
 
 ---
 
@@ -290,7 +343,7 @@ Already applied. Simple, mentions WhatsApp, no em dashes.
 - **Why**: "Never wonder" addresses the anxiety directly. Very conversational.
 
 ### Decision
-> **NOT YET DECIDED** - Discuss and pick an option.
+> **NOT YET DECIDED** - Current words are applied but can be refined.
 
 ---
 
@@ -302,19 +355,22 @@ Already applied. Simple, mentions WhatsApp, no em dashes.
 - Register, Setup, Start, Get, Track, Manage, Handle, Prepare, Submit, Deliver
 
 **Outcome words** (what they get):
-- Certificate, Approved, Licensed, Compliant, On time, Done, Complete, Fast
+- Certificate, Approved, Licensed, Compliant, On time, Done, Complete, Fast, Operating
+
+**Breadth words** (communicate full scope):
+- All under one roof, Everything, Full setup, From X to Y, All in one process, We handle it all
 
 **Relief words** (pain removed):
 - No office visits, No login needed, Without delays, Never miss, Stop chasing, Focus on your business
 
 **Trust words** (for Tanzania):
-- BRELA, TIN, TRA, WhatsApp, Certificate, 5.0 Google Rating, 120+ companies
+- BRELA, TIN, TRA, TIC, WhatsApp, Certificate, 5.0 Google Rating, 120+ companies
 
 **Urgency words** (without being salesy):
 - Before your deadline, On time, Every step, At every milestone
 
 **Words to AVOID** (too formal, ESL-unfriendly):
-- Obligations, Entity, Proactive, Upon engagement, Regulatory, Statutory, Structured guidance, Facilitation, Resolved, Follow-through, Consultation (when "case" or "application" works better)
+- Obligations, Entity, Proactive, Upon engagement, Regulatory, Statutory (in hero; okay in card 2 for business audience), Structured guidance, Facilitation, Resolved, Follow-through, Consultation (when "case" or "application" works better)
 
 ### The "We handle, you focus" formula
 From research, the highest-converting phrase pattern for service businesses is:
@@ -325,6 +381,16 @@ Examples:
 - "We handle BRELA, so you can focus on your business."
 - "We handle tax filings, so you never miss a deadline."
 - "We handle the paperwork, so you don't have to visit offices."
+
+### The "From X to Y" formula (breadth communication)
+From global research, the dominant pattern for multi-service firms:
+
+> "From [first service] to [outcome], [breadth claim]."
+
+Examples:
+- "From registration to compliance, all under one roof."
+- "From company registration to your first licence, all handled for you."
+- "From setup to ongoing compliance, we handle it all."
 
 ### The "No X, no Y" formula (removes friction)
 - "No office visits needed"
@@ -453,6 +519,7 @@ The most effective B2B service homepages follow this order:
 6. **Tanzania-specific terms**: BRELA, TIN, WhatsApp, "no office visits"
 7. **Every word earns its place**. If it doesn't inform or persuade, cut it.
 8. **Fear + relief pattern**: Name the pain, then the solution
+9. **Breadth before depth**: Hero and card titles should communicate full scope, not just registration
 
 ---
 
@@ -460,14 +527,18 @@ The most effective B2B service homepages follow this order:
 
 | Date | Section | Decision | Notes |
 |------|---------|----------|-------|
-| Today | Em dashes | No em dashes in any copy | Agreed by user |
-| Today | Selling words | Use action verbs, outcome words, relief words | Agreed by user |
-| Today | Third card | About tracking/notifications, simpler words | Agreed by user |
-| Today | Cards 1 & 2 | NOT yet decided, need discussion | User wants to discuss |
-| Today | Hero | NOT yet decided, options presented | Need to pick option |
+| Round 1 | Em dashes | No em dashes in any copy | Agreed by user |
+| Round 1 | Selling words | Use action verbs, outcome words, relief words | Agreed by user |
+| Round 1 | Third card | About tracking/notifications, simpler words | Agreed by user |
+| Round 1 | Cards 1 & 2 | NOT yet decided | User wants broader options |
+| Round 1 | Hero | ALL 4 options DECLINED | Too narrow, focused only on registration |
+| Round 1 | Card 1 | ALL 4 options DECLINED | Too registration-focused |
+| Round 2 | Card 2 | User proposed content | Title: "Focus on your business, not government offices". Awaiting ESL refinement confirmation. |
+| Round 2 | Hero | New broader options E,F,G,H presented | Uses "From X to Y" pattern |
+| Round 2 | Card 1 | New broader options E,F,G,H presented | Covers full "starting" scope |
 | - | Homepage flow | NOT yet decided | May add How It Works, Testimonials, FAQ |
 | - | Services page | Will redesign later | After homepage is done |
 
 ---
 
-*Last updated: Research phase complete. Awaiting decisions on Hero, Card 1, Card 2, and Card 3 final words.*
+*Last updated: Round 2 research complete. New broader options for Hero and Card 1. Card 2 has user proposal pending ESL refinement. Card 3 still has options A/B/C.*
