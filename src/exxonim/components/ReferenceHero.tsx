@@ -169,7 +169,6 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
             className="hero-scroll-indicator absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 pointer-events-none select-none"
             aria-hidden="true"
           >
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted/60">Scroll</span>
             <ChevronDown className="h-5 w-5 text-text-muted/60 animate-bounce" />
           </div>
         </div>
