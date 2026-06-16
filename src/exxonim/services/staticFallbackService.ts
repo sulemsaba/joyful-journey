@@ -73,7 +73,7 @@ export function getStaticFallback<T>(key: string): T | undefined {
  */
 export async function loadStaticFallback<T>(
   key: string,
-  timeoutMs = 4_000
+  timeoutMs = 2_000
 ): Promise<T | undefined> {
   if (loaded.has(key)) {
     return loaded.get(key) as T;

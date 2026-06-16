@@ -3,7 +3,27 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      // Return a clean 404 JSON for any /api/* route that isn't handled by the
+      // proxy above. Without this, Vite's SPA fallback serves index.html (200)
+      // for unknown /api/* routes, which makes axios parse HTML as JSON and crash.
+      // Pre-hook (no return) so it runs AFTER the proxy but BEFORE Vite's SPA fallback.
+      name: "api-404-fallback",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url?.startsWith("/api/")) {
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 404;
+            res.end(JSON.stringify({ error: "Not found", path: req.url }));
+            return;
+          }
+          next();
+        });
+      },
+    },
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
