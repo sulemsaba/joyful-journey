@@ -310,19 +310,18 @@ html, body {
 
 /* ── Hero section — responsive height (no CLS) ──── */
 .hero-section {
-  /* Desktop: nearly full viewport */
-  height: 94.5svh;
-  height: 94.5dvh;
-  /* Mobile: leave room for Trusted By section to peek */
-  max-height: 600px;
+  /* Mobile: auto height so content never clips, with a min-height for visual impact */
+  height: auto;
+  min-height: 70svh;
+  min-height: 70dvh;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 @media (min-width: 768px) {
   .hero-section {
-    max-height: none;
     height: 94.5svh;
     height: 94.5dvh;
+    min-height: 500px;
   }
 }
 .hero-section.hero-shrunk {

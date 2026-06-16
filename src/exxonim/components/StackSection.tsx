@@ -222,7 +222,7 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         )}
 
         {/* Heading */}
-        <h2 className="text-3xl font-bold tracking-tight text-text sm:text-4xl">
+        <h2 className="text-2xl font-bold tracking-tight text-text sm:text-3xl md:text-4xl">
           {item.title}
         </h2>
 

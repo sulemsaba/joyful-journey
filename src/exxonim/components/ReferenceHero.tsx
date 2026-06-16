@@ -117,14 +117,14 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         {/* ── Content ────────────────────────────────────── */}
         <div className="mx-auto w-[min(1240px,calc(100%-2rem))] px-0">
           <div className="relative" data-reveal>
-            <div className="relative z-10 max-w-[640px]">
+            <div className="relative z-10 max-w-[640px] pt-2 md:pt-4">
               <p
                 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent"
               >
                 {content.eyebrow}
               </p>
               <h1
-                className="m-0 text-[clamp(2.8rem,6vw,5.5rem)] font-semibold leading-[0.98] tracking-tight text-text"
+                className="m-0 text-[clamp(2.2rem,5.5vw,5.5rem)] font-semibold leading-[1.05] tracking-tight text-text"
               >
                 {content.title}
               </h1>

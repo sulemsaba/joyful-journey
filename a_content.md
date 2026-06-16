@@ -544,7 +544,7 @@ The most effective B2B service homepages follow this order:
 
 **Hero:**
 - Eyebrow: "Business Setup, Compliance & Permits, Tanzania"
-- Title: "Stop chasing offices. We handle it all from registration to compliance."
+- Title: "Stop chasing offices. We handle it all." (shortened from "We handle it all from registration to compliance" for mobile)
 - Description: "Company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns. We do everything for you and keep you updated by WhatsApp, email, SMS, or your choice."
 - CTA: "Get Started"
 - Secondary CTA: "See All Services"
@@ -556,7 +556,7 @@ The most effective B2B service homepages follow this order:
 - CTA: "Start Your Setup"
 
 **Card 2:**
-- Title: "Focus on your business, not government offices"
+- Title: "We let you focus on your business" (changed from "Focus on your business, not government offices")
 - Subtitle: "We handle all from statutory filings, licence renewals, annual returns, to compliance deadlines for you."
 - Description: "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks."
 - CTA: "See All Services"

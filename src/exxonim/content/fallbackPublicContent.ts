@@ -166,7 +166,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
   {
     hero: {
       eyebrow: "Business Setup, Compliance & Permits, Tanzania",
-      title: "Stop chasing offices. We handle it all from registration to compliance.",
+      title: "Stop chasing offices. We handle it all.",
       description:
         "Company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns. We do everything for you and keep you updated by WhatsApp, email, SMS, or your choice.",
       cta: {
@@ -222,7 +222,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           videoSources: [],
         },
         {
-          title: "Focus on your business, not government offices",
+          title: "We let you focus on your business",
           subtitle: "We handle all from statutory filings, licence renewals, annual returns, to compliance deadlines for you.",
           description:
             "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks.",
