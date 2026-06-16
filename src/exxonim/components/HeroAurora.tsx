@@ -100,8 +100,8 @@ function draw(
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
     const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
 
-    // Brand-colored lines — very subtle, soft glow effect
-    const baseAlpha = isDark ? 0.03 + dF * 0.12 : 0.02 + dF * 0.06;
+    // Brand-colored lines — vivid glow effect (brightened for both themes)
+    const baseAlpha = isDark ? 0.06 + dF * 0.20 : 0.05 + dF * 0.12;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
@@ -109,12 +109,12 @@ function draw(
     const subLines = cfg.showDepth ? (isSmallCanvas ? 2 : 3) : 2;
 
     for (let sub = 0; sub < subLines; sub++) {
-      const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 1.5);
+      const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 0.8);
       if (subAlpha <= 0) continue;
 
       ctx.globalAlpha = subAlpha;
       // Use brand accent color directly — slight opacity variation per sub-line
-      ctx.strokeStyle = withAlpha(accentColor, 0.5 + sub * 0.15 + dF * 0.2);
+      ctx.strokeStyle = withAlpha(accentColor, 0.7 + sub * 0.15 + dF * 0.2);
       ctx.lineWidth = 2 + dF * 4;
 
       ctx.beginPath();
