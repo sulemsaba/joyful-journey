@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/exxonim/app/queryClient";
 import { App } from "@/exxonim/app/App";
-import "@/app/globals.css";
+import "@/styles/globals.css";
 
 /**
  * Dismiss the CSS-only boot loader.

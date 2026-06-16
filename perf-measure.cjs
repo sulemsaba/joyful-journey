@@ -345,7 +345,7 @@ async function measure() {
   console.log('\n=== STEP 5: Production Bundle Size Analysis ===\n');
 
   // Analyze dist directory
-  const distDir = '/home/z/my-project/dist';
+  const distDir = path.resolve(__dirname, 'dist');
   const assetsDir = path.join(distDir, 'assets');
 
   function getDirSize(dir) {

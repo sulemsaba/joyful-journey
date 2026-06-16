@@ -1,7 +1,7 @@
 #!/bin/bash
-# Keep-alive script for services-api
+# Keep-alive respawn loop for the services-api backend.
 LOG=/tmp/services-api.log
-cd /home/z/my-project/mini-services/services-api
+cd "$(dirname "$0")"
 
 echo "$(date): services-api keep-alive starting" >> "$LOG"
 

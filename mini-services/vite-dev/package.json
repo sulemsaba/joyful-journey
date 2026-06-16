@@ -1,6 +1,0 @@
-{
-  "name": "vite-dev",
-  "scripts": {
-    "dev": "bun --hot index.ts"
-  }
-}
