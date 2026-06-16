@@ -104,7 +104,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
 
       {/* Label — tiny, muted */}
       <p className="m-0 text-center text-xs font-extrabold uppercase tracking-[0.14em] text-accent pt-8 pb-3 md:pt-12 md:pb-4">
-        Trusted by
+        Trusted by 120+
       </p>
 
       {/* Logo marquee — full-bleed with 15% edge fades */}

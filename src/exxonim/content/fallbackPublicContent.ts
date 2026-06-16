@@ -166,9 +166,9 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
   {
     hero: {
       eyebrow: "Business Setup, Compliance & Permits, Tanzania",
-      title: "Stop chasing offices. We\u00A0handle it all from registration to compliance.",
+      title: "Stop chasing offices.\nWe handle it all\nfrom registration\nto compliance.",
       description:
-        "Company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns. We do everything for you and keep you updated by WhatsApp, email, SMS, or your choice.",
+        "Registration, licensing, permits, and compliance — all handled. Stay updated by WhatsApp, email, or SMS.",
       cta: {
         label: "Get Started",
         href: routes.contact,
@@ -332,7 +332,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       eyebrow: "About Exxonim Consult",
       title: "Many years of experience standing between organisations and government authorities.",
       description:
-        "Exxonim Consult is in the regulatory interface business. We handle registrations, filings, and compliance obligations on behalf of businesses, NGOs, and institutions \u2014 so they never have to chase an office, miss a deadline, or wonder what is happening with their case.",
+        "We handle registrations, filings, and compliance — so you never chase an office, miss a deadline, or wonder what's happening.",
     },
     company_profile: {
       eyebrow: "Who we are",
@@ -346,9 +346,9 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
     },
     mission_vision: {
       mission:
-        "To make business registration and compliance effortless for every organisation in Tanzania \u2014 by handling every filing, deadline, and authority interaction on our clients\u2019 behalf, with visibility at every step.",
+        "To make registration and compliance effortless for every organisation in Tanzania.",
       vision:
-        "To be Tanzania\u2019s most trusted compliance partner \u2014 where no business ever chases an office, misses a deadline, or wonders what is happening with their case.",
+        "To be Tanzania's most trusted compliance partner — no business ever chases an office.",
       global_mission:
         "To become the regulatory interface for businesses operating across East Africa and beyond \u2014 one trusted partner for every jurisdiction, every filing, every milestone.",
       global_vision:

@@ -112,7 +112,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
       id="site-footer"
       className="relative mt-auto border-t border-footer-border bg-footer-bg"
     >
-      <Container className="py-8 pb-20 md:py-14 md:pb-12">
+      <Container className="py-8 pb-8 md:py-14 md:pb-12">
         {/* ── 2-col on mobile, 4-col on tablet+ ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8 md:gap-8 mb-8 pb-8 border-b border-footer-border">
 

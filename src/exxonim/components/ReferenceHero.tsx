@@ -126,7 +126,12 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
               <h1
                 className="m-0 text-[clamp(2.2rem,5.5vw,5.5rem)] font-semibold leading-[1.05] tracking-tight text-text"
               >
-                {content.title}
+                {content.title.split("\n").map((line, i) => (
+                  <span key={i}>
+                    {i > 0 && <br />}
+                    {line}
+                  </span>
+                ))}
               </h1>
               <p
                 className="mt-6 max-w-[28rem] md:max-w-[34rem] text-[clamp(1.05rem,1.4vw,1.2rem)] leading-relaxed text-text-muted"

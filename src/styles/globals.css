@@ -336,12 +336,11 @@ section[aria-label="Service guidance overview"] h2 {
 }
 @media (min-width: 768px) {
   .hero-section {
-    /* Auto height with min-height so content never clips on desktop.
-     * Previous fixed 94.5svh caused text clipping when content was tall.
-     * The flex items-center still visually centers content. */
-    height: auto;
-    min-height: 80svh;
-    min-height: 80dvh;
+    /* Desktop/tablet: fixed 94.5svh so hero + review bar (5.5svh) = 100svh.
+     * Stays full-viewport even when the user zooms (svh scales with zoom).
+     * Content is centered via flex items-center and sized to fit. */
+    height: 94.5svh;
+    min-height: 0;
   }
 }
 .hero-section.hero-shrunk {

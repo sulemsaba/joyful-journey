@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, ArrowRight, Target, Eye, Globe, Compass } from 'lucide-react';
+import { Home, ArrowRight, Target, Eye } from 'lucide-react';
 import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { routes } from '@/exxonim/routes';
@@ -69,7 +69,7 @@ export function AboutPage() {
 
       {/* ──────────────────────────────────────────────────────────────
        *  SECTION 2: Mission & Vision
-       *  4 cards: Mission | Vision | Global Mission | Global Vision
+       *  2 cards: Mission | Vision
        *  Clean grid, minimal words, each card answers one question.
        * ────────────────────────────────────────────────────────────── */}
       {mv && (
@@ -91,11 +91,11 @@ export function AboutPage() {
               </h2>
             </div>
 
-            {/* 4 cards — 2x2 on tablet, 4-col on desktop, stacked on mobile */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            {/* 2 cards — stacked on mobile, 2-col on tablet+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
               {/* Mission */}
               <article
-                className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
                 data-reveal
               >
                 <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-4">
@@ -104,14 +104,14 @@ export function AboutPage() {
                 <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-text-soft mb-2">
                   Mission
                 </p>
-                <p className="text-sm text-text leading-relaxed">
+                <p className="text-sm md:text-base text-text leading-relaxed">
                   {mv.mission}
                 </p>
               </article>
 
               {/* Vision */}
               <article
-                className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
                 data-reveal
               >
                 <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-4">
@@ -120,40 +120,8 @@ export function AboutPage() {
                 <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-text-soft mb-2">
                   Vision
                 </p>
-                <p className="text-sm text-text leading-relaxed">
+                <p className="text-sm md:text-base text-text leading-relaxed">
                   {mv.vision}
-                </p>
-              </article>
-
-              {/* Global Mission */}
-              <article
-                className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
-                data-reveal
-              >
-                <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-4">
-                  <Compass className="h-5 w-5" aria-hidden="true" />
-                </div>
-                <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-text-soft mb-2">
-                  Global Mission
-                </p>
-                <p className="text-sm text-text leading-relaxed">
-                  {mv.global_mission}
-                </p>
-              </article>
-
-              {/* Global Vision */}
-              <article
-                className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
-                data-reveal
-              >
-                <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-4">
-                  <Globe className="h-5 w-5" aria-hidden="true" />
-                </div>
-                <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-text-soft mb-2">
-                  Global Vision
-                </p>
-                <p className="text-sm text-text leading-relaxed">
-                  {mv.global_vision}
                 </p>
               </article>
             </div>
