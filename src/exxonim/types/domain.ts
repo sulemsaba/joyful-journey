@@ -340,6 +340,12 @@ export interface AboutPageContent {
     description: string;
   };
   client_expectations: string[];
+  mission_vision?: {
+    mission: string;
+    vision: string;
+    global_mission: string;
+    global_vision: string;
+  };
   cta: {
     title: string;
     description: string;

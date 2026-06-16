@@ -249,6 +249,12 @@ export interface AboutPageContent {
   operating_model: OperatingModelItem[];
   client_expectations_section?: { title: string; description: string };
   client_expectations: string[];
+  mission_vision?: {
+    mission: string;
+    vision: string;
+    global_mission: string;
+    global_vision: string;
+  };
   cta: {
     title: string;
     description: string;

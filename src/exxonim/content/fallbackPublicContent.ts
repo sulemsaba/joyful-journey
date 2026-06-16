@@ -330,129 +330,44 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
   {
     hero: {
       eyebrow: "About Exxonim Consult",
-      title: "Your business obligations — handled, tracked, and delivered without the office visits.",
+      title: "Many years of experience standing between organisations and government authorities.",
       description:
-        "Founded in 2020, Exxonim Consult helps businesses, NGOs, and institutions move through registration, licensing, and regulatory compliance — with proactive tracking that keeps you informed at every milestone. No office visits required.",
+        "Exxonim Consult is in the regulatory interface business. We handle registrations, filings, and compliance obligations on behalf of businesses, NGOs, and institutions \u2014 so they never have to chase an office, miss a deadline, or wonder what is happening with their case.",
     },
     company_profile: {
       eyebrow: "Who we are",
-      title: "We built Exxonim so you never have to chase an office again.",
+      title: "We handle the authorities so you can handle your business.",
       paragraphs: [
-        "Exxonim was founded to address a specific gap: organisations in Tanzania often face unclear processes, missed deadlines, and avoidable delays when navigating registration, licensing, and compliance obligations.",
-        "The practice provides structured guidance through entity registration, document preparation, tax applications, licensing, and recurring regulatory follow-up — so teams can focus on operations instead of deadline recovery.",
-        "Every engagement is tracked from intake to resolution, and the next action stays visible at every stage.",
+        "With many years of experience in business registration, licensing, and regulatory compliance, Exxonim Consult stands between organisations and government authorities \u2014 handling every filing, deadline, and authority interaction on our clients\u2019 behalf.",
+        "We are not generalists. We are specialists in the regulatory interface \u2014 the space between an organisation and the authorities it must answer to. If the authority is the gate, we walk through it for you.",
       ],
-      working_style_label: "Working style",
+      working_style_label: "How we work",
       working_style: "Structured. Visible. Follow-through oriented.",
     },
-    support_profiles_section: {
-      title: "What we support",
-      description:
-        "Exxonim provides guidance across the main operational areas where organisations need reliable follow-through.",
+    mission_vision: {
+      mission:
+        "To make business registration and compliance effortless for every organisation in Tanzania \u2014 by handling every filing, deadline, and authority interaction on our clients\u2019 behalf, with visibility at every step.",
+      vision:
+        "To be Tanzania\u2019s most trusted compliance partner \u2014 where no business ever chases an office, misses a deadline, or wonders what is happening with their case.",
+      global_mission:
+        "To become the regulatory interface for businesses operating across East Africa and beyond \u2014 one trusted partner for every jurisdiction, every filing, every milestone.",
+      global_vision:
+        "A world where any business can operate in any country without regulatory friction \u2014 where compliance is invisible, tracked, and handled.",
     },
-    support_profiles: [
-      {
-        title: "Business setup",
-        description:
-          "Company, NGO, and business-name registration — from entity type selection through to certificate. Legally trade within 5–10 business days.",
-      },
-      {
-        title: "Compliance",
-        description:
-          "Licensing, renewals, and filing follow-up managed on your behalf. Never miss a deadline again — we send unlimited reminders.",
-      },
-      {
-        title: "Consultation tracking",
-        description:
-          "Every engagement gets a 6-character tracking code. Check your status anytime — no login required. Automatic updates via WhatsApp, email, or SMS.",
-      },
-    ],
-    service_scope_section: {
-      title: "Service scope",
-      description:
-        "The areas where Exxonim provides direct, structured support.",
-    },
-    service_scope: [
-      {
-        title: "Company registration",
-        description:
-          "Incorporation, entity type guidance, and first-step authority submissions for companies, NGOs, and business names.",
-      },
-      {
-        title: "TIN and tax registration",
-        description:
-          "Tax Identification Number applications and related account setup for new and existing entities.",
-      },
-      {
-        title: "Business licensing",
-        description:
-          "License applications, renewals, and regulatory approval support managed through a clear workflow.",
-      },
-      {
-        title: "Statutory filings",
-        description:
-          "Recurring filing obligations tracked, prepared, and submitted on schedule.",
-      },
-      {
-        title: "Regulatory renewals",
-        description:
-          "Proactive tracking and timely processing of renewals so obligations do not lapse.",
-      },
-      {
-        title: "Operational advisory",
-        description:
-          "Structured guidance on process, sequence, and follow-up for teams managing multiple obligations.",
-      },
-    ],
-    operating_model_section: {
-      title: "How we work",
-      description:
-        "A simple, repeatable approach that keeps every engagement visible and on track.",
-    },
-    operating_model: [
-      {
-        step: "01",
-        title: "Intake",
-        description:
-          "We gather the details, confirm the entity type, and identify the correct filing sequence for your case.",
-      },
-      {
-        step: "02",
-        title: "Preparation",
-        description:
-          "Documents are reviewed, requirements confirmed, and the submission path is mapped before anything is filed.",
-      },
-      {
-        step: "03",
-        title: "Submission",
-        description:
-          "Your application is submitted to the relevant authority with supporting documents prepared and attached.",
-      },
-      {
-        step: "04",
-        title: "Follow-through",
-        description:
-          "We track the status, follow up on queries, and confirm the outcome so you know where things stand.",
-      },
-    ],
-    client_expectations_section: {
-      title: "What to expect",
-      description:
-        "How working with Exxonim looks in practice.",
-    },
-    client_expectations: [
-      "A clear process from the first conversation to the final delivery.",
-      "A reference ID to track your consultation at every stage.",
-      "Proactive follow-up so deadlines do not become surprises.",
-      "Direct communication when you need to know what comes next.",
-      "Structured support that fits the way your team actually works.",
-    ],
+    support_profiles_section: undefined,
+    support_profiles: [],
+    service_scope_section: undefined,
+    service_scope: [],
+    operating_model_section: undefined,
+    operating_model: [],
+    client_expectations_section: undefined,
+    client_expectations: [],
     cta: {
-      title: "Ready to get started?",
+      title: "Ready to work with us?",
       description:
-        "Book a free consultation and receive a tracking code that keeps you informed at every step — from intake to resolution.",
+        "Get a tracking code on day one and stay informed at every milestone \u2014 from intake to resolution.",
       primary: {
-        label: "Contact Exxonim",
+        label: "Book a Free Consultation",
         href: routes.contact,
       },
       secondary: {
@@ -462,7 +377,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
     },
   },
   undefined,
-  "Founded in 2020, Exxonim Consult provides structured business registration, business name and trademark registration, licensing, compliance, and work permit advisory with proactive tracking at every milestone."
+  "Exxonim Consult is a Tanzania-based business registration and compliance firm with many years of experience handling filings, registrations, and regulatory obligations on behalf of businesses, NGOs, and institutions."
 );
 
 /* BACKEND / ADMIN INTEGRATION NOTES:

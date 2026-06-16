@@ -454,6 +454,16 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = {
       "Post-completion support and follow-up",
       "Complete confidentiality of all business information",
     ],
+    mission_vision: {
+      mission:
+        "To make business registration and compliance effortless for every organisation in Tanzania \u2014 by handling every filing, deadline, and authority interaction on our clients\u2019 behalf, with visibility at every step.",
+      vision:
+        "To be Tanzania\u2019s most trusted compliance partner \u2014 where no business ever chases an office, misses a deadline, or wonders what is happening with their case.",
+      global_mission:
+        "To become the regulatory interface for businesses operating across East Africa and beyond \u2014 one trusted partner for every jurisdiction, every filing, every milestone.",
+      global_vision:
+        "A world where any business can operate in any country without regulatory friction \u2014 where compliance is invisible, tracked, and handled.",
+    },
     cta: {
       title: "Ready to Get Started?",
       description:
