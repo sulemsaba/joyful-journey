@@ -183,7 +183,10 @@
       </div>
       <p class="boot-loader__timeout">Taking longer than expected</p>
     </div>
-    <!-- Timeout: show message after 8 seconds if React still hasn't mounted -->
+    <!-- Timeout: show message after 8 seconds if React still hasn't mounted.
+         Auto-reload after 12 seconds — recovers from dead HMR connections
+         that happen when the Vite dev server restarts. Only reloads once
+         (tracked via sessionStorage) to avoid infinite loops. -->
     <script>
       (function(){
         var t=setTimeout(function(){
@@ -191,6 +194,19 @@
           if(l)l.classList.add('boot-loader--timeout');
         },8000);
         window.__bootLoaderTimer=t;
+        // Self-heal: if React still hasn't dismissed the boot loader after 12s,
+        // the page is stuck (dead HMR, stale connection, etc.) — reload once.
+        setTimeout(function(){
+          if(document.getElementById('boot-loader')){
+            try{
+              var n=parseInt(sessionStorage.getItem('__bootReload')||'0',10);
+              if(n<1){
+                sessionStorage.setItem('__bootReload',String(n+1));
+                window.location.reload();
+              }
+            }catch(e){ window.location.reload(); }
+          }
+        },12000);
       })()
     </script>
     <script type="module" src="/src/main.tsx"></script>

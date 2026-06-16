@@ -20,6 +20,9 @@ function dismissBootLoader() {
   if (typeof window.__bootLoaderTimer !== "undefined") {
     clearTimeout(window.__bootLoaderTimer);
   }
+  // Reset the auto-reload counter — React mounted successfully, so the
+  // next stuck page (if any) is allowed to auto-reload again.
+  try { sessionStorage.removeItem("__bootReload"); } catch { /* ignore */ }
   // Wait one frame so the real content is painted, then fade out
   requestAnimationFrame(() => {
     const el = document.getElementById("boot-loader");
