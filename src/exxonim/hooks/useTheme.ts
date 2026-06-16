@@ -72,34 +72,26 @@ export function useTheme() {
     document.documentElement.dataset.theme = theme;
 
     // The favicon follows the system/browser theme (prefers-color-scheme),
-    // NOT the website's manual theme toggle. The <head> contains multiple <link>
-    // elements per variant (192, 180, 64, 32) with IDs like #favicon-light,
-    // #favicon-light-192, #favicon-dark, #favicon-dark-192, etc.
-    // The browser automatically picks the right one based on OS preference.
-    // We restore the original attributes so the media-query switching stays active.
-    const lightIds = ["favicon-light-192", "favicon-light-180", "favicon-light-64", "favicon-light"];
-    const darkIds = ["favicon-dark-192", "favicon-dark-180", "favicon-dark-64", "favicon-dark"];
+    // NOT the website's manual theme toggle. The <head> contains two <link>
+    // elements — #favicon-light and #favicon-dark — and the browser picks the
+    // right one based on OS preference via the media attribute.
+    // We restore the original attributes so the media-query switching stays active
+    // (in case anything rewrites them elsewhere).
     const lightHrefs: Record<string, string> = {
-      "favicon-light-192": "/branding/exxonim-favicon-light-192x192.png",
-      "favicon-light-180": "/branding/exxonim-favicon-light-180x180.png",
-      "favicon-light-64": "/branding/exxonim-favicon-light-64x64.png",
-      "favicon-light": "/branding/exxonim-favicon-light.png",
+      "favicon-light": "/branding/exxonimLogoLight.webp",
     };
     const darkHrefs: Record<string, string> = {
-      "favicon-dark-192": "/branding/exxonim-favicon-dark-192x192.png",
-      "favicon-dark-180": "/branding/exxonim-favicon-dark-180x180.png",
-      "favicon-dark-64": "/branding/exxonim-favicon-dark-64x64.png",
-      "favicon-dark": "/branding/exxonim-favicon-dark.png",
+      "favicon-dark": "/branding/logo-dark.png",
     };
 
-    for (const id of lightIds) {
+    for (const id of Object.keys(lightHrefs)) {
       const el = document.getElementById(id) as HTMLLinkElement | null;
       if (el) {
         el.href = lightHrefs[id];
         el.media = "";
       }
     }
-    for (const id of darkIds) {
+    for (const id of Object.keys(darkHrefs)) {
       const el = document.getElementById(id) as HTMLLinkElement | null;
       if (el) {
         el.href = darkHrefs[id];

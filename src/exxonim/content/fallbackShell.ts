@@ -19,8 +19,6 @@ import { routes } from "@/exxonim/routes";
  */
 const lightLogo = "/branding/exxonimLogoLight.webp";
 const darkLogo = "/branding/logo-dark.png";
-const faviconLight = "/branding/exxonim-favicon-light.png";
-const faviconDark = "/branding/exxonim-favicon-dark.png";
 
 /**
  * Shell-level fallback data for navigation, branding, company contact details, and footer links.
@@ -129,8 +127,10 @@ const resourcesNavigation = createNavigationItem(
  * (src/shared/contracts/site-settings.ts → SiteSettingBrandValue.favicon_url).
  * When the admin uploads a favicon, this should be served via CDN and the
  * useTheme hook should handle favicon swapping.
- * Currently faviconLight/faviconDark are declared above but not used here —
- * they're used in layout.tsx via <link> tags with prefers-color-scheme media.
+ * Currently favicons are wired in index.html via <link> tags with
+ * prefers-color-scheme media, pointing at the two surviving brand assets
+ * (exxonimLogoLight.webp / logo-dark.png). When admin uploads a real favicon,
+ * useTheme.ts will swap those <link> hrefs to the CDN URL.
  */
 export const fallbackBrand: BrandAssets = {
   name: "Exxonim Consult",
