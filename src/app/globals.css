@@ -7,6 +7,23 @@ html, body {
   overflow-x: clip;   /* modern: clips without creating a stacking context */
 }
 
+/* ── Prevent orphaned words in hero and section headings ──
+ * Widows (single word alone on last line) look like text
+ * was "cut in the middle of the screen". text-wrap: pretty
+ * avoids orphans; balance distributes words more evenly. */
+.hero-section h1 {
+  text-wrap: pretty;
+}
+@media (min-width: 768px) {
+  .hero-section h1 {
+    text-wrap: balance;
+  }
+}
+.hero-section p,
+section[aria-label="Service guidance overview"] h2 {
+  text-wrap: balance;
+}
+
 /* ── Full-bleed utility — safe for iOS Safari ────────────
  * Replaces w-screen / 100vw which includes scrollbar width
  * on iOS Safari, causing horizontal overflow.
@@ -319,9 +336,12 @@ html, body {
 }
 @media (min-width: 768px) {
   .hero-section {
-    height: 94.5svh;
-    height: 94.5dvh;
-    min-height: 500px;
+    /* Auto height with min-height so content never clips on desktop.
+     * Previous fixed 94.5svh caused text clipping when content was tall.
+     * The flex items-center still visually centers content. */
+    height: auto;
+    min-height: 80svh;
+    min-height: 80dvh;
   }
 }
 .hero-section.hero-shrunk {

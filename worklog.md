@@ -1056,3 +1056,28 @@ Stage Summary:
 - Mobile form fits properly with no overflow/cut-off
 - Mobile country selector now works - selecting Rwanda/Uganda/etc actually switches the country
 - Root cause was the mousedown outside-click handler closing the portal-rendered mobile bottom sheet before the country click registered
+---
+Task ID: hero-layout-fix
+Agent: Main
+Task: Fix desktop text clipping, eyebrow hidden under nav, and mobile text arrangement issues
+
+Work Log:
+- Reverted hero title from shortened "Stop chasing offices. We handle it all." back to full "Stop chasing offices. We handle it all from registration to compliance."
+- Kept Card 2 title as "We let you focus on your business" (user's previous explicit request)
+- Fixed desktop text clipping: Changed hero section overflow-hidden to overflow-x-clip (allows vertical overflow, prevents horizontal)
+- Fixed desktop container width: Increased max-w-[640px] to responsive breakpoints: max-w-[540px] sm:max-w-[600px] md:max-w-[700px] xl:max-w-[760px]
+- Fixed eyebrow visibility: Increased content top padding from pt-2 md:pt-4 to pt-4 md:pt-8 xl:pt-10
+- Fixed desktop hero height: Changed from fixed 94.5svh to auto with min-height 80svh so content never clips
+- Fixed mobile text arrangement: Added text-wrap:pretty for h1 (prevents orphans), text-wrap:balance for desktop h1
+- Added non-breaking spaces (\u00A0) between "We" and "handle"/"let" to prevent orphaned short words on mobile
+- Added text-wrap:balance for hero descriptions and card section headings
+- Updated description max-width from fixed max-w-[34rem] to responsive max-w-[28rem] md:max-w-[34rem]
+- Bumped cache version from 2025-06-13-2 to 2025-06-13-3 for cache busting
+- Verified all fixes: Desktop (1440x900, 1280x800) — eyebrow visible, no clipping, 3-4 line title. Mobile (360px, 390px) — no orphaned words, clean arrangement.
+
+Stage Summary:
+- Desktop: Text container wider (640px → 540-760px responsive), auto height with min-height, overflow-x-clip, more top padding
+- Mobile: text-wrap:pretty + non-breaking spaces prevent orphaned words like "We" alone on a line
+- Card 2 title: "We\u00A0let you focus on your business" (non-breaking space prevents orphan)
+- Hero title: "Stop chasing offices. We\u00A0handle it all from registration to compliance."
+- All viewports verified clean via VLM analysis

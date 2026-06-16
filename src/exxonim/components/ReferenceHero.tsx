@@ -82,7 +82,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         ref={sectionRef}
         aria-label="Hero introduction"
         className={cn(
-          "relative isolate overflow-hidden",
+          "relative isolate overflow-x-clip",
           "-mt-[60px] xl:-mt-[68px] pt-[60px] xl:pt-[68px]",
           "flex items-center",
           "origin-top",
@@ -117,7 +117,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         {/* ── Content ────────────────────────────────────── */}
         <div className="mx-auto w-[min(1240px,calc(100%-2rem))] px-0">
           <div className="relative" data-reveal>
-            <div className="relative z-10 max-w-[640px] pt-2 md:pt-4">
+            <div className="relative z-10 max-w-[540px] sm:max-w-[600px] md:max-w-[700px] xl:max-w-[760px] pt-4 md:pt-8 xl:pt-10">
               <p
                 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent"
               >
@@ -129,7 +129,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                 {content.title}
               </h1>
               <p
-                className="mt-6 max-w-[34rem] text-[clamp(1.05rem,1.4vw,1.2rem)] leading-relaxed text-text-muted"
+                className="mt-6 max-w-[28rem] md:max-w-[34rem] text-[clamp(1.05rem,1.4vw,1.2rem)] leading-relaxed text-text-muted"
               >
                 {content.description}
               </p>
