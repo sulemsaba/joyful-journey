@@ -78,10 +78,10 @@ export function useTheme() {
     // We restore the original attributes so the media-query switching stays active
     // (in case anything rewrites them elsewhere).
     const lightHrefs: Record<string, string> = {
-      "favicon-light": "/branding/exxonimLogoLight.webp",
+      "favicon-light": "/branding/exxonim-favicon-light.png",
     };
     const darkHrefs: Record<string, string> = {
-      "favicon-dark": "/branding/logo-dark.png",
+      "favicon-dark": "/branding/exxonim-favicon-dark.png",
     };
 
     for (const id of Object.keys(lightHrefs)) {

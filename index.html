@@ -30,10 +30,14 @@
     <link rel="preload" as="image" href="/branding/exxonimLogoLight.webp" fetchPriority="high" />
     <link rel="preload" as="image" href="/branding/logo-dark.png" fetchPriority="high" />
 
-    <!-- Favicons (light logo for light OS theme, dark logo for dark OS theme) -->
-    <link rel="icon" type="image/webp" href="/branding/exxonimLogoLight.webp" id="favicon-light" />
-    <link rel="icon" type="image/png" href="/branding/logo-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
-    <link rel="apple-touch-icon" href="/branding/logo-dark.png" />
+    <!-- Preload favicons for the boot loader (must appear instantly) -->
+    <link rel="preload" as="image" href="/branding/exxonim-favicon-light.png" />
+    <link rel="preload" as="image" href="/branding/exxonim-favicon-dark.png" />
+
+    <!-- Favicons (light for light OS theme, dark for dark OS theme) -->
+    <link rel="icon" type="image/png" href="/branding/exxonim-favicon-light.png" id="favicon-light" />
+    <link rel="icon" type="image/png" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
+    <link rel="apple-touch-icon" href="/branding/exxonim-favicon-light.png" />
 
     <!-- RSS auto-discovery -->
     <link rel="alternate" type="application/rss+xml" title="Exxonim Consult Blog" href="/blog/rss.xml" />
@@ -168,8 +172,8 @@
          Fades out smoothly when React signals readiness. -->
     <div class="boot-loader" id="boot-loader">
       <div class="boot-loader__favicon">
-        <img src="/branding/exxonimLogoLight.webp" alt="" class="sk-logo-light" />
-        <img src="/branding/logo-dark.png" alt="" class="sk-logo-dark" />
+        <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" />
+        <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" />
       </div>
       <div class="boot-loader__text">
         <span>Loading</span>
