@@ -92,6 +92,7 @@ mini-server
 # Preview / debug screenshots created during development
 preview-*.png
 boot-loader-*.png
+audit-*.png
 final-loaded.png
 
 # ─────────────────────────────────────────────────────────────
