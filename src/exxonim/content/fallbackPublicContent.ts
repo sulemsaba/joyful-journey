@@ -354,6 +354,18 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       global_vision:
         "A world where any business can operate in any country without regulatory friction \u2014 where compliance is invisible, tracked, and handled.",
     },
+    who_we_serve: [
+      { label: "Individuals", description: "Entrepreneurs and professionals starting their first business." },
+      { label: "Companies", description: "Local businesses managing registration, tax, and compliance." },
+      { label: "Foreign Businesses", description: "Investors entering Tanzania — permits, registration, setup." },
+      { label: "NGOs & Non-Profits", description: "Organisations handling registration and statutory obligations." },
+      { label: "Institutions", description: "Public and private institutions with regulatory obligations." },
+    ],
+    differentiators: [
+      { title: "Specialists, not generalists", description: "We focus on the regulatory interface — the space between you and the authorities." },
+      { title: "Visibility at every step", description: "WhatsApp, email, or SMS updates at every milestone. Never wonder what's happening." },
+      { title: "One partner, every filing", description: "Registration to compliance, all under one roof. No chasing multiple offices." },
+    ],
     support_profiles_section: undefined,
     support_profiles: [],
     service_scope_section: undefined,

@@ -346,6 +346,14 @@ export interface AboutPageContent {
     global_mission: string;
     global_vision: string;
   };
+  who_we_serve?: Array<{
+    label: string;
+    description: string;
+  }>;
+  differentiators?: Array<{
+    title: string;
+    description: string;
+  }>;
   cta: {
     title: string;
     description: string;
