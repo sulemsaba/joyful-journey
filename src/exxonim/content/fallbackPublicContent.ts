@@ -330,9 +330,9 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
   {
     hero: {
       eyebrow: "About Exxonim Consult",
-      title: "Many years of experience standing between organisations and government authorities.",
+      title: "We stand between you and the authorities.",
       description:
-        "We handle registrations, filings, and compliance — so you never chase an office, miss a deadline, or wonder what's happening.",
+        "Registrations, filings, and compliance — all handled.",
     },
     company_profile: {
       eyebrow: "Who we are",
