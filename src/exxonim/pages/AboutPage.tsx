@@ -37,30 +37,20 @@ export function AboutPage() {
       </div>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 1: Hero — tinted accent panel, not a card.
-       *  Subtle accent gradient background gives the hero visual weight
-       *  without boxing it in. Accent line at the bottom.
+       *  SECTION 1: Hero — centered, no shadow, no gradient panel.
+       *  Clean open text, centered to fill the width without empty space.
        * ────────────────────────────────────────────────────────────── */}
       <section
-        className="relative pt-8 pb-14 md:pt-14 md:pb-20"
+        className="relative pt-10 pb-14 md:pt-16 md:pb-20"
         aria-labelledby="about-hero-title"
       >
-        {/* Subtle accent gradient panel — tinted, not bordered */}
-        <div
-          className="absolute inset-x-0 top-0 bottom-0 -z-10"
-          style={{
-            background:
-              'radial-gradient(60% 80% at 20% 0%, var(--color-accent-gradient-subtle), transparent 70%)',
-          }}
-          aria-hidden="true"
-        />
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto" data-reveal>
+        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto text-center flex flex-col items-center" data-reveal>
           <p className="m-0 mb-5 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
             {content.hero.eyebrow}
           </p>
           <h1
             id="about-hero-title"
-            className="m-0 text-[clamp(1.9rem,4.5vw,3.6rem)] leading-[1.08] tracking-[-0.03em] text-text font-semibold max-w-[18ch]"
+            className="m-0 text-[clamp(1.9rem,4.5vw,3.6rem)] leading-[1.08] tracking-[-0.03em] text-text font-semibold max-w-[20ch]"
           >
             {content.hero.title}
           </h1>

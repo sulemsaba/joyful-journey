@@ -362,9 +362,10 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       { label: "Institutions", description: "Public and private institutions with regulatory obligations." },
     ],
     differentiators: [
-      { title: "Specialists, not generalists", description: "We focus on the regulatory interface — the space between you and the authorities." },
+      { title: "Specialists, not generalists", description: "We are experts in the regulatory interface — the space between you and the authorities." },
       { title: "Visibility at every step", description: "WhatsApp, email, or SMS updates at every milestone. Never wonder what's happening." },
       { title: "One partner, every filing", description: "Registration to compliance, all under one roof. No chasing multiple offices." },
+      { title: "A progressive partner", description: "We remind you of every deadline and obligation — so you never get fined for missing a filing." },
     ],
     support_profiles_section: undefined,
     support_profiles: [],
