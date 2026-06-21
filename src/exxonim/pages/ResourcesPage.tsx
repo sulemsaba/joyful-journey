@@ -370,79 +370,34 @@ function SortToggle({
   sortMode: SortMode;
   onChange: (mode: SortMode) => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Click-outside to close
-  useEffect(() => {
-    function handleMouseDown(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleMouseDown);
-    return () => document.removeEventListener('mousedown', handleMouseDown);
-  }, []);
-
-  const sortOptions: { value: SortMode; label: string }[] = [
-    { value: "latest", label: "Latest" },
-    { value: "popular", label: "Popular" },
-  ];
-  const currentLabel = sortOptions.find((o) => o.value === sortMode)?.label ?? "Sort";
-
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="inline-flex items-center rounded-full border border-border-soft bg-surface/60 p-0.5" role="radiogroup" aria-label="Sort articles">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-border-soft bg-surface/60 text-xs font-bold uppercase tracking-wider text-text-muted hover:text-text hover:bg-surface transition-all"
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        aria-label="Sort articles"
+        role="radio"
+        aria-checked={sortMode === "latest"}
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+          sortMode === "latest"
+            ? "bg-accent text-accent-contrast"
+            : "text-text-muted hover:text-text"
+        }`}
+        onClick={() => onChange("latest")}
       >
-        {/* Sort icon */}
-        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 6h18M6 12h12M10 18h4" />
-        </svg>
-        {currentLabel}
-        {/* Chevron */}
-        <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-          <path d="M6 9l6 6 6-6" />
-        </svg>
+        Latest
       </button>
-
-      {/* Dropdown menu */}
-      {isOpen && (
-        <div
-          className="absolute right-0 top-full mt-1 z-20 min-w-[140px] rounded-lg border border-border-soft bg-surface shadow-lg overflow-hidden"
-          role="listbox"
-        >
-          {sortOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="option"
-              aria-selected={sortMode === option.value}
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-              className={`flex items-center justify-between w-full px-3 py-2 text-xs font-semibold uppercase tracking-wider transition-all ${
-                sortMode === option.value
-                  ? "bg-accent-soft text-accent"
-                  : "text-text-muted hover:bg-surface-elevated hover:text-text"
-              }`}
-            >
-              {option.label}
-              {sortMode === option.value && (
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+      <button
+        type="button"
+        role="radio"
+        aria-checked={sortMode === "popular"}
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+          sortMode === "popular"
+            ? "bg-accent text-accent-contrast"
+            : "text-text-muted hover:text-text"
+        }`}
+        onClick={() => onChange("popular")}
+      >
+        Popular
+      </button>
     </div>
   );
 }
