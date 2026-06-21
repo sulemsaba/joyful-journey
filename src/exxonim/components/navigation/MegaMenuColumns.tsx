@@ -1,5 +1,5 @@
 /**
- * MegaMenuColumns — Premium opaque dropdown content renderer.
+ * MegaMenuColumns - Premium opaque dropdown content renderer.
  *
  * Supports two layout variants:
  *   - "split"   → 50/50 two-column grid, both sides contain link items
@@ -25,7 +25,7 @@
  * ITEM ICONS:
  * ───────────
  * Services items: WITH icons (building, receipt, passport, etc.)
- * Resources items: NO icons (clean, minimal — just text + description)
+ * Resources items: NO icons (clean, minimal - just text + description)
  *
  * BACKEND / ADMIN INTEGRATION NOTES:
  * ──────────────────────────────────
@@ -168,7 +168,7 @@ function MegaMenuItem({
                  hover:bg-accent-soft
                  transition-colors duration-150"
     >
-      {/* Icon — only shown if item has one (Services items) */}
+      {/* Icon - only shown if item has one (Services items) */}
       {item.icon ? (
         <div className="shrink-0 mt-0.5 text-text-soft
                         group-hover/item:text-accent
@@ -230,7 +230,7 @@ function MegaMenuColumn({
 /* ── Feature Box (right side of "feature" layout) ──
  *
  * Shows dynamic content based on which item is hovered.
- * Uses warm beige background (#ebe9e1) — CONSISTENT in both
+ * Uses warm beige background (#ebe9e1) - CONSISTENT in both
  * light and dark modes (does not change with theme).
  * Content fades in/out with smooth transition.
  */
@@ -298,7 +298,7 @@ export function MegaMenuColumns({ columns, layout, featureBox, hoverFeatureMap, 
   /* Resolve the current feature box content based on hover */
   const currentFeature = activeFeature || featureBox;
 
-  /* Handle item hover — fades feature box content in/out */
+  /* Handle item hover - fades feature box content in/out */
   const handleItemHover = useCallback((href: string) => {
     if (!hoverFeatureMap || !featureBox) return;
 

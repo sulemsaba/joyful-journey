@@ -14,7 +14,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
  *
  * Layer 1: persistQueryClient (localStorage)
  *   → Auto-saves every successful API response to localStorage.
- *   → Auto-loads on next visit — returning visitors see content instantly.
+ *   → Auto-loads on next visit - returning visitors see content instantly.
  *   → maxAge: 24 hours (cache discarded if older).
  *   → This is the PRIMARY source for returning visitors. No flicker.
  *
@@ -27,7 +27,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
  *
  * Layer 3: /public/fallback/*.json (server-side)
  *   → Auto-updated by webhook when admin saves changes.
- *   → Served from the same server as the frontend — always available.
+ *   → Served from the same server as the frontend - always available.
  *   → Contains real admin data from the last save.
  *   → When used as fallback, data gets persisted to localStorage for next visit.
  *
@@ -37,22 +37,22 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
  *   → For returning visitors, never shown (they have cached data).
  *   → Updated by developers when deploying.
  *
- * FLOW — RETURNING VISITOR:
+ * FLOW - RETURNING VISITOR:
  *   1. persistQueryClient hydrates from localStorage → render instantly
  *   2. API call in background → update if changed
  *   → No flicker. No content jumping. One render update if data changed.
  *
- * FLOW — FIRST VISITOR (API works):
+ * FLOW - FIRST VISITOR (API works):
  *   1. No cache → placeholderData renders instantly
  *   2. API responds → real data replaces placeholder → saved to localStorage
  *   → Brief placeholder, then real content. One transition.
  *
- * FLOW — FIRST VISITOR (API down):
+ * FLOW - FIRST VISITOR (API down):
  *   1. No cache → placeholderData renders instantly
  *   2. API fails → JSON fallback loads → real admin data replaces placeholder
  *   → JSON data saved to localStorage for next visit.
  *
- * FLOW — FIRST VISITOR (API down, JSON missing):
+ * FLOW - FIRST VISITOR (API down, JSON missing):
  *   1. No cache → placeholderData renders instantly
  *   2. API fails → JSON missing → query errors
  *   3. Component falls back to hardcoded defaults via ternary operators
@@ -62,12 +62,12 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60 * 4, // 4 hours — data is fresh for 4h
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours — cache kept for 24h
+      staleTime: 1000 * 60 * 60 * 4, // 4 hours - data is fresh for 4h
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours - cache kept for 24h
       refetchOnWindowFocus: false,
       refetchOnReconnect: "always",
       retry: (failureCount, error) => {
-        // Don't retry 404s — the resource simply doesn't exist
+        // Don't retry 404s - the resource simply doesn't exist
         const status = (error as { response?: { status?: number } } | null)?.response?.status;
         if (status === 404) return false;
         return failureCount < 2;
@@ -79,7 +79,7 @@ export const queryClient = new QueryClient({
 /* ── Persistence setup ────────────────────────────────
  * Only runs in the browser (not during SSR or build).
  * Uses localStorage so cached data survives page reloads
- * and browser restarts. Max age 24h — after that, stale
+ * and browser restarts. Max age 24h - after that, stale
  * cache is discarded and a fresh fetch is required. */
 if (typeof window !== "undefined") {
   try {
@@ -107,6 +107,6 @@ if (typeof window !== "undefined") {
     });
   } catch {
     // localStorage may be unavailable (private browsing, quota exceeded, etc.)
-    // Silently continue without persistence — placeholderData still works
+    // Silently continue without persistence - placeholderData still works
   }
 }

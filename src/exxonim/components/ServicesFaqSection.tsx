@@ -6,7 +6,7 @@ import { Button } from '@/exxonim/components/primitives/Button';
 import type { ServicesFaqItem } from '@/exxonim/types';
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * ServicesFaqSection — FAQ accordion with micro-CTAs after each answer.
+ * ServicesFaqSection - FAQ accordion with micro-CTAs after each answer.
  *
  * Displays an accordion list of questions/answers. Only one item can be
  * open at a time. Each answer can optionally include a micro-CTA button.

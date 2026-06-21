@@ -1,11 +1,11 @@
 /**
- * Shell data hook — loads brand, company info, and footer.
+ * Shell data hook - loads brand, company info, and footer.
  *
  * ARCHITECTURE:
  *   Layer 0: Memory cache (current session)
- *   Layer 1: persistQueryClient (localStorage) — returning visitors see cache instantly
+ *   Layer 1: persistQueryClient (localStorage) - returning visitors see cache instantly
  *   Layer 2: Live API → JSON fallback (if API fails)
- *   Layer 3: placeholderData (hardcoded) — shown during initial load
+ *   Layer 3: placeholderData (hardcoded) - shown during initial load
  *
  * Using placeholderData (not initialData):
  *   - Returning visitors: cached data from localStorage renders instantly.

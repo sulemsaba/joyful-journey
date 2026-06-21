@@ -8,14 +8,14 @@
  *     - CDN/Backend paths: /media/*, /storage/*, /uploads/* (resolved via API origin)
  *
  * Related endpoints that populate this data:
- *   GET    /api/v1/pages/home                 — Homepage content including provider_section.logos
- *   GET    /api/v1/navigation                 — Navigation items (currently static, future API)
- *   GET    /api/v1/site-settings/brand        — Brand assets (logos, company name)
+ *   GET    /api/v1/pages/home                 - Homepage content including provider_section.logos
+ *   GET    /api/v1/navigation                 - Navigation items (currently static, future API)
+ *   GET    /api/v1/site-settings/brand        - Brand assets (logos, company name)
  *
  * PostgreSQL Tables:
- *   pages — id, slug, content (JSONB containing provider_section.logos[])
- *   navigation_items — id, title, url, kind, sort_order, is_active
- *   site_settings — id, key, value (JSONB)
+ *   pages - id, slug, content (JSONB containing provider_section.logos[])
+ *   navigation_items - id, title, url, kind, sort_order, is_active
+ *   site_settings - id, key, value (JSONB)
  *
  * Future: A dedicated /api/v1/client-logos endpoint could be added to manage
  * partner/client logos independently from page content, with admin CRUD.
@@ -68,7 +68,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
   // We need at least enough copies so one set is wider than the viewport.
   // 10 logos × 4 = 40 items ensures coverage on all screen sizes.
   // Animation translates -50% so when the first half scrolls off,
-  // the identical second half is in its place — no gap.
+  // the identical second half is in its place - no gap.
   const repeatCount = 4;
   const repeatedLogos = Array.from({ length: repeatCount }, () => content.logos).flat();
 
@@ -94,7 +94,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
        *    stutter when the loop restarts.
        *
        * 4. EDGE FADE (MASKING)
-       *    15% gradient mask on each side — logos smoothly
+       *    15% gradient mask on each side - logos smoothly
        *    materialize and fade out.
        *
        * 5. INTERACTIVE PAUSING + COLOR REVEAL
@@ -102,12 +102,12 @@ export function ProviderSection({ content }: ProviderSectionProps) {
        *    low opacity) by default and reveal full color on hover.
        */}
 
-      {/* Label — tiny, muted */}
+      {/* Label - tiny, muted */}
       <p className="m-0 text-center text-xs font-extrabold uppercase tracking-[0.14em] text-accent pt-8 pb-3 md:pt-12 md:pb-4">
         Trusted by 120+
       </p>
 
-      {/* Logo marquee — full-bleed with 15% edge fades */}
+      {/* Logo marquee - full-bleed with 15% edge fades */}
       <div
         className="full-bleed overflow-hidden relative pb-8 md:pb-12 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
         aria-label="Partner logos"
@@ -152,7 +152,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
   );
 }
 
-/** Simple classnames join — avoids importing cn for this single use. */
+/** Simple classnames join - avoids importing cn for this single use. */
 function cn(...classes: (string | false | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }

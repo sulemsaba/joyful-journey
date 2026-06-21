@@ -57,7 +57,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
    * properties defined in globals.css (:root / html[data-theme="dark"]).
    * The @property registration + theme-transition class makes
    * these properties smoothly interpolate on :root during theme
-   * changes. No MutationObserver or React state needed — the
+   * changes. No MutationObserver or React state needed - the
    * browser handles the transition automatically.
    *
    * Benefits:
@@ -92,7 +92,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
       >
         {/* ── Background assets ───────────────────────────── */}
 
-        {/* Animated aurora canvas — flowing curtain-like lines.
+        {/* Animated aurora canvas - flowing curtain-like lines.
             Theme-reactive: adapts colors and opacity for light/dark.
             Opacity controlled by .hero-aurora-canvas CSS class. */}
         <HeroAurora />
@@ -139,7 +139,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                 {content.description}
               </p>
 
-              {/* CTAs — Hick's Law: ONE dominant primary CTA, secondary demoted to text link */}
+              {/* CTAs - Hick's Law: ONE dominant primary CTA, secondary demoted to text link */}
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Button size="hero" variant="primary" href={content.cta.href} className="px-8">
                   {content.cta.label}
@@ -156,7 +156,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                 ) : null}
               </div>
 
-              {/* Highlight chips — temporarily hidden during design iteration */}
+              {/* Highlight chips - temporarily hidden during design iteration */}
             </div>
           </div>
 

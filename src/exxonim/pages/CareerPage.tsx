@@ -1,32 +1,32 @@
 /**
- * Career Page — Exxonim Consult
+ * Career Page - Exxonim Consult
  *
  * ══════════════════════════════════════════════════════════════
  * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE
  * ══════════════════════════════════════════════════════════════
  *
  * Page Content (via usePage hook → pageService):
- *   GET    /api/v1/pages/career               — Get career page content (public)
+ *   GET    /api/v1/pages/career               - Get career page content (public)
  *
  * Published Jobs (via getPublishedJobs → jobsService):
- *   GET    /api/v1/jobs                        — List published jobs (public)
- *   GET    /api/v1/jobs/{slug}                 — Get single job by slug (public)
+ *   GET    /api/v1/jobs                        - List published jobs (public)
+ *   GET    /api/v1/jobs/{slug}                 - Get single job by slug (public)
  *
  * Job Application (inline modal, currently simulated):
- *   POST   /api/v1/jobs/{id}/apply             — Submit job application (multipart/form-data)
+ *   POST   /api/v1/jobs/{id}/apply             - Submit job application (multipart/form-data)
  *   Request: name (str, required), email (str, required), phone (str),
  *            cover_note (str), resume (File, required), academics (File), cover_letter (File)
  *   Response: { id: int, status: str, message: str }
  *
  * SEO (via useResolvedPageSeo hook → siteSettingsService):
- *   GET    /api/v1/site-settings/seo_defaults  — SEO default settings
+ *   GET    /api/v1/site-settings/seo_defaults  - SEO default settings
  *
  * PostgreSQL Tables:
- *   pages — id, slug, content (JSONB with hero, focus_areas, status)
- *   jobs — id, slug, title, department, employment_type, location_mode,
+ *   pages - id, slug, content (JSONB with hero, focus_areas, status)
+ *   jobs - id, slug, title, department, employment_type, location_mode,
  *          city, country, summary, description, requirements (JSONB),
  *          responsibilities (JSONB), is_published, published_at
- *   job_applications — id, job_id, name, email, phone, cover_note,
+ *   job_applications - id, job_id, name, email, phone, cover_note,
  *                      resume_url, academics_url, cover_letter_url, status
  *
  * See service files for full endpoint documentation:
@@ -47,7 +47,7 @@
  *    - Required: title, department, employment_type, location_mode,
  *      city, country, summary, requirements[], responsibilities[].
  *    - Optional: compensation_label, experience_label, published_at, description.
- *    - Jobs are NEVER auto-filtered out — they stay visible even if only 1 exists.
+ *    - Jobs are NEVER auto-filtered out - they stay visible even if only 1 exists.
  *    - When admin deletes a job (unpublishes), it disappears from the API response.
  *    - Compensation/salary is NOT displayed on the public career page.
  *
@@ -59,10 +59,10 @@
  * 4. SEARCH + FILTERS
  *    - Keyword search: filters by title, department, employment_type, summary.
  *    - Department dropdown: filters by department value from job data.
- *    - All jobs visible by default — filters only narrow the list.
+ *    - All jobs visible by default - filters only narrow the list.
  *    - "Clear" button resets all filters.
  *
- * 5. JOB CARDS — Single card container
+ * 5. JOB CARDS - Single card container
  *    - All jobs are inside ONE large card with consistent rounded corners.
  *    - Each job is a row within the card, separated by dividers.
  *    - Three expand states: collapsed → preview → full details.
@@ -70,7 +70,7 @@
  *    - Preview: adds summary, "Apply Now" + "Read More".
  *    - Full details: description, meta, responsibilities, requirements, actions.
  *    - NO salary/compensation displayed.
- *    - NO "72h+ posted" indicators — posted date only.
+ *    - NO "72h+ posted" indicators - posted date only.
  *
  * 6. APPLY NOW MODAL (NOT the contact page)
  *    - "Apply Now" opens an application modal.
@@ -141,7 +141,7 @@ function formatJobDate(date: string) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SOCIAL SHARE BUTTONS (Hero — dark bg)
+   SOCIAL SHARE BUTTONS (Hero - dark bg)
    ══════════════════════════════════════════════════════════════ */
 function SocialShareButtons() {
   const [copied, setCopied] = useState(false);
@@ -436,7 +436,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
             <p className="text-sm text-text-muted">
               <span className="text-accent font-medium">Click to upload</span>
             </p>
-            <p className="text-xs text-text-soft mt-0.5">PDF, DOC, DOCX — max 5MB</p>
+            <p className="text-xs text-text-soft mt-0.5">PDF, DOC, DOCX - max 5MB</p>
           </>
         )}
       </div>
@@ -446,7 +446,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center pb-safe">
-      {/* Backdrop — click does NOT close modal */}
+      {/* Backdrop - click does NOT close modal */}
       <div className="absolute inset-0 bg-overlay backdrop-blur-sm" />
 
       {/* Modal */}
@@ -457,7 +457,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
                     animate-in slide-in-from-bottom-4 duration-300 pb-env"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header — close ONLY with X */}
+        {/* Header - close ONLY with X */}
         <div className="sticky top-0 z-10 bg-surface-elevated border-b border-border-soft px-5 sm:px-7 py-4 flex items-center justify-between rounded-t-2xl">
           <div className="min-w-0 pr-4">
             <h2 className="text-base sm:text-lg font-bold text-text">Apply for this role</h2>
@@ -566,7 +566,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
               onClear={() => setAcademicsFile(null)}
             />
 
-            {/* Cover Note — textarea OR file upload */}
+            {/* Cover Note - textarea OR file upload */}
             <div>
               <label className="block text-sm font-medium text-text mb-1.5">
                 Cover note <span className="text-text-soft font-normal">(optional)</span>
@@ -751,31 +751,37 @@ export function CareerPage() {
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Career" }]} />
             </div>
 
-            {/* ═══ 1. HERO BANNER ═══ */}
+            {/* ═══ 1. HERO BANNER ═══
+             * Banner image: 1344×768px WebP (16:9 aspect ratio).
+             * Admin uploads via CMS → content.hero.banner_image.
+             * Fallback: /careers/banner-enhanced.png
+             * Dark overlay gradient ensures white text readability.
+             */}
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4">
-              <div className="relative w-full h-[180px] sm:h-[220px] rounded-2xl overflow-hidden">
+              <div className="relative w-full h-[240px] sm:h-[300px] md:h-[340px] rounded-2xl overflow-hidden">
                 <img
                   src={bannerImage}
-                  alt="Exxonim Consult — Career opportunities"
+                  alt="Exxonim Consult - Career opportunities"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-page/95 via-page/80 to-page/55" />
+                {/* Darker overlay for text contrast - left to right gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
                 <div className="relative z-10 flex items-center h-full px-5 sm:px-8">
                   <div className="flex items-center gap-4 sm:gap-5 flex-1">
                     <div>
-                      <h1 className="text-xl sm:text-2xl font-bold text-accent-contrast tracking-tight mb-1">
+                      <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-1">
                         Exxonim Consult
                       </h1>
-                      <p className="text-xs sm:text-sm text-accent-contrast/70 leading-snug max-w-md">
+                      <p className="text-xs sm:text-sm text-white/80 leading-snug max-w-md">
                         {content.hero.description}
                       </p>
                       <div className="flex items-center gap-2 sm:gap-3 mt-1.5 flex-wrap">
-                        <span className="flex items-center gap-1.5 text-accent-contrast/50 text-xs">
+                        <span className="flex items-center gap-1.5 text-white/60 text-xs">
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}><path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" strokeLinecap="round" strokeLinejoin="round" /></svg>
                           {allJobs.length} Open {allJobs.length === 1 ? "Role" : "Roles"}
                         </span>
-                        <span className="w-1 h-1 rounded-full bg-accent-contrast/40" />
-                        <span className="flex items-center gap-1.5 text-accent-contrast/50 text-xs">
+                        <span className="w-1 h-1 rounded-full bg-white/40" />
+                        <span className="flex items-center gap-1.5 text-white/60 text-xs">
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" /><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" strokeLinecap="round" strokeLinejoin="round" /></svg>
                           Tanzania
                         </span>
@@ -788,7 +794,7 @@ export function CareerPage() {
                       size="standard"
                       variant="outline"
                       href={routes.about}
-                      className="hidden md:inline-flex border-accent-contrast/30 text-accent-contrast hover:bg-accent-contrast/10"
+                      className="hidden md:inline-flex border-white/30 text-white hover:bg-white/10"
                     >
                       About Exxonim
                     </Button>
@@ -925,7 +931,7 @@ export function CareerPage() {
               </div>
             )}
 
-            {/* ═══ 5. JOB LISTINGS — ONE HUGE CARD ═══ */}
+            {/* ═══ 5. JOB LISTINGS - ONE HUGE CARD ═══ */}
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-6 mb-12">
                 {filteredJobs.length > 0 ? (
                   <div>
@@ -980,7 +986,7 @@ export function CareerPage() {
                                   </span>
                                 </div>
 
-                                {/* Pills — separate row for clean wrapping */}
+                                {/* Pills - separate row for clean wrapping */}
                                 <div className="flex flex-wrap items-center gap-1.5 mb-2">
                                   <span className="inline-flex items-center px-2 py-0.5 text-[10px] sm:text-[11px] font-medium rounded-full bg-accent-soft text-accent border border-accent/20">
                                     {job.department}
@@ -995,7 +1001,7 @@ export function CareerPage() {
                                   )}
                                 </div>
 
-                                {/* Meta + Apply — side by side on all sizes */}
+                                {/* Meta + Apply - side by side on all sizes */}
                                 <div className="flex items-center justify-between gap-3 flex-wrap">
                                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                                     {postedDate && (
@@ -1246,7 +1252,7 @@ export function CareerPage() {
                     <p className="text-sm text-text-muted max-w-md mx-auto mb-6 leading-relaxed">
                       {hasActiveFilters
                         ? "We couldn't find any positions matching your criteria. Try adjusting your filters or search terms."
-                        : "There are no open positions at the moment. New roles are posted regularly — check back soon or reach out to express your interest."}
+                        : "There are no open positions at the moment. New roles are posted regularly - check back soon or reach out to express your interest."}
                     </p>
                     {hasActiveFilters ? (
                       <Button
@@ -1273,7 +1279,7 @@ export function CareerPage() {
             <UnifiedCtaSection
               eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Job Alerts" }}
               heading="Never miss a new role"
-              description="Subscribe to get notified when Exxonim publishes new career opportunities. No spam — just job alerts that matter."
+              description="Subscribe to get notified when Exxonim publishes new career opportunities. No spam - just job alerts that matter."
             >
               <NewsletterForm />
             </UnifiedCtaSection>

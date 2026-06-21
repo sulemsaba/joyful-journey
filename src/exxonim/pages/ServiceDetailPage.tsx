@@ -12,14 +12,14 @@ import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import { routes, serviceDetailPath } from '@/exxonim/routes';
 
 /**
- * Service Detail Page — dedicated page for each service.
+ * Service Detail Page - dedicated page for each service.
  *
  * SEO: Each service gets its own URL (/services/{slug}/), title, meta description,
  * H1, and structured data (Service schema + BreadcrumbList). This lets Google rank
  * each service page for its own keywords (e.g., "work permit Tanzania").
  *
  * UX: When a user clicks a service in the navigation or on the catalog, they land
- * here — seeing exactly that service's info, no scrolling/searching needed.
+ * here - seeing exactly that service's info, no scrolling/searching needed.
  *
  * Content: Pulls from the service catalog (title, description, deliverables).
  * The "What's included" and "Process" sections render from catalog data.
@@ -81,7 +81,7 @@ export function ServiceDetailPage() {
       </div>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 1: Hero — service title + short description + CTA
+       *  SECTION 1: Hero - service title + short description + CTA
        *  Centered, clean, with badge if present.
        * ────────────────────────────────────────────────────────────── */}
       <section className="relative pt-8 pb-12 md:pt-14 md:pb-20" aria-labelledby="service-hero-title">
@@ -117,7 +117,7 @@ export function ServiceDetailPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 2: What's included — simple checkmark list (NOT cards).
+       *  SECTION 2: What's included - simple checkmark list (NOT cards).
        *  Clean list with checkmarks, no boxes/borders.
        *  Pulls from service.deliverables + deliverables_full.
        * ────────────────────────────────────────────────────────────── */}
@@ -136,7 +136,7 @@ export function ServiceDetailPage() {
               </h2>
             </div>
 
-            {/* Simple list — no cards, no borders. Just checkmarks + text. */}
+            {/* Simple list - no cards, no borders. Just checkmarks + text. */}
             <ul className="max-w-2xl mx-auto flex flex-col gap-3" data-reveal>
               {allDeliverables.map((item, i) => (
                 <li key={i} className="flex items-start gap-3 py-2">
@@ -150,8 +150,8 @@ export function ServiceDetailPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 3: Process — how this service works.
-       *  Placeholder UI — content to be filled later.
+       *  SECTION 3: Process - how this service works.
+       *  Placeholder UI - content to be filled later.
        *  Shows a 3-step timeline structure.
        * ────────────────────────────────────────────────────────────── */}
       <section className="py-12 md:py-20 bg-surface-soft/30" aria-labelledby="service-process-title">
@@ -168,7 +168,7 @@ export function ServiceDetailPage() {
             </h2>
           </div>
 
-          {/* Process timeline — content to be filled per service later */}
+          {/* Process timeline - content to be filled per service later */}
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute left-6 top-3 bottom-3 w-0.5 bg-gradient-to-b from-accent via-accent/30 to-transparent" />
             <div className="flex flex-col gap-8">
@@ -191,7 +191,7 @@ export function ServiceDetailPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 4: FAQ — service-specific questions.
+       *  SECTION 4: FAQ - service-specific questions.
        *  Accordion. Content to be filled per service later.
        *  Renders placeholder FAQs until admin content is added.
        * ────────────────────────────────────────────────────────────── */}
@@ -209,12 +209,12 @@ export function ServiceDetailPage() {
             </h2>
           </div>
 
-          {/* FAQ accordion — flat list with dividers, Plus/X toggle (matches main FAQ page) */}
+          {/* FAQ accordion - flat list with dividers, Plus/X toggle (matches main FAQ page) */}
           <div className="max-w-2xl mx-auto" data-reveal>
             {[
               { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
               { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
-              { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates — no login required.' },
+              { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates - no login required.' },
               { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
             ].map((faq, i) => (
               <div
@@ -246,7 +246,7 @@ export function ServiceDetailPage() {
                     )}
                   </span>
                 </button>
-                {/* Expandable answer — grid-rows animation */}
+                {/* Expandable answer - grid-rows animation */}
                 <div
                   className={`grid transition-all duration-300 ease-in-out ${
                     openFaq === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
@@ -267,7 +267,7 @@ export function ServiceDetailPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 5: Related services — same category.
+       *  SECTION 5: Related services - same category.
        *  Only shows if there are related services in the catalog.
        * ────────────────────────────────────────────────────────────── */}
       {relatedServices.length > 0 && (

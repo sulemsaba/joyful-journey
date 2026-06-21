@@ -33,7 +33,7 @@ const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
  * allow autoplay. If blocked, we retry on interaction.  *
  *                                                       *
  * PLAYBACK RATE: 0.7x gives a cinematic slow-motion     *
- * feel — purely aesthetic, no performance impact.        */
+ * feel - purely aesthetic, no performance impact.        */
 function LazyVideo({ sources, poster, playbackRate, className, style }: { sources: { src: string; type: string }[]; poster?: string; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLVideoElement>(null);
   const isVisible = useRef(false);
@@ -54,7 +54,7 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
     const tryPlay = () => {
       if (cancelled || !video) return;
       video.play().catch(() => {
-        // Autoplay blocked — retry on first user interaction
+        // Autoplay blocked - retry on first user interaction
         if (cancelled) return;
         interactionHandler = () => {
           video.play().catch(() => {/* give up */});
@@ -271,7 +271,7 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           className={cn(
             "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
             "bg-page",
-            /* NO portrait on mobile — landscape always */
+            /* NO portrait on mobile - landscape always */
             "aspect-[1.22]",
             "md:aspect-[1.22]",
             "xl:aspect-[1.22]"
@@ -303,7 +303,7 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                 />
               </>
             ) : (
-              /* ── Placeholder surface — no video ── */
+              /* ── Placeholder surface - no video ── */
               <>
                 {/* Mobile: landscape, fills container */}
                 <div

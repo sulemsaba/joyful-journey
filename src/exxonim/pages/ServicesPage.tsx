@@ -13,7 +13,7 @@ import type { ServicesPageContent } from '@/exxonim/types';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 
 /**
- * Services page — clean 5-section layout:
+ * Services page - clean 5-section layout:
  *   1. Overview hero (description, stats, search, service nav)
  *   2. Service Catalog (card grid with category tabs)
  *   3. Packages (pricing)
@@ -41,21 +41,21 @@ export function ServicesPage() {
     <>
       <StructuredData heroTitle={overview.title} heroDescription={overview.description} breadcrumbs={[{ name: 'Services', path: routes.services }]} />
 
-      {/* Breadcrumb — matches About/Contact pattern */}
+      {/* Breadcrumb - matches About/Contact pattern */}
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
         <Breadcrumb items={[{ label: 'Home', href: routes.home, icon: Home }, { label: 'Services' }]} />
       </div>
 
-      {/* 1. Overview hero — description, stats, search, service nav groups */}
+      {/* 1. Overview hero - description, stats, search, service nav groups */}
       <ServicesOverviewSection content={overview} />
 
-      {/* 2. Service Catalog — card grid with category tabs */}
+      {/* 2. Service Catalog - card grid with category tabs */}
       <ServiceCatalogSection
         heroEyebrow={catalog.eyebrow}
         heroTitle={catalog.title}
       />
 
-      {/* 3. Packages — pricing */}
+      {/* 3. Packages - pricing */}
       <ServicePackagesSection variant="page" />
 
       {/* 4. FAQ */}

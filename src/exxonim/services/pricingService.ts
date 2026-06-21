@@ -1,11 +1,11 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/pricing/plans                — List all pricing plans (public, active only)
- * GET    /api/v1/pricing/plans/{id}           — Get single pricing plan (admin only)
- * POST   /api/v1/pricing/plans                — Create pricing plan (admin only)
- * PUT    /api/v1/pricing/plans/{id}           — Update pricing plan (admin only)
- * DELETE /api/v1/pricing/plans/{id}           — Delete pricing plan (admin only)
+ * GET    /api/v1/pricing/plans                - List all pricing plans (public, active only)
+ * GET    /api/v1/pricing/plans/{id}           - Get single pricing plan (admin only)
+ * POST   /api/v1/pricing/plans                - Create pricing plan (admin only)
+ * PUT    /api/v1/pricing/plans/{id}           - Update pricing plan (admin only)
+ * DELETE /api/v1/pricing/plans/{id}           - Delete pricing plan (admin only)
  *
  * CACHING: TanStack Query handles caching via persistQueryClient.
  * Hooks use placeholderData from fallbackPublicContent.ts.

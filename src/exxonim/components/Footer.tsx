@@ -116,7 +116,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
         {/* ── 2-col on mobile, 4-col on tablet+ ── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8 md:gap-8 mb-8 pb-8 border-b border-footer-border">
 
-          {/* Brand Panel — full width on 2-col to give breathing room */}
+          {/* Brand Panel - full width on 2-col to give breathing room */}
           <section className="col-span-2 md:col-span-1 grid gap-3 content-start">
             <SmartLink
               href={routes.home}
@@ -184,7 +184,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </ul>
           </section>
 
-          {/* Contact Us — mobile: address + emails/phones side by side | desktop: original stacked layout */}
+          {/* Contact Us - mobile: address + emails/phones side by side | desktop: original stacked layout */}
           <section className="col-span-2 md:col-span-1">
             <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Contact Us
@@ -192,7 +192,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
             {/* ── Mobile only (below md): compact layout ── */}
             <div className="grid gap-2 md:hidden">
-              {/* Address — full width */}
+              {/* Address - full width */}
               <div className="flex items-start gap-2.5">
                 <svg className="w-4 h-4 mt-0.5 shrink-0 text-footer-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
@@ -202,7 +202,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
                 </span>
               </div>
-              {/* Emails (left) & Phone numbers (right) — side by side */}
+              {/* Emails (left) & Phone numbers (right) - side by side */}
               <div className="grid grid-cols-2 gap-x-4">
                 {/* Emails */}
                 <div className="flex items-start gap-2">

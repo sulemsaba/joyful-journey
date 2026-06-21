@@ -141,11 +141,11 @@ export const fallbackBrand: BrandAssets = {
 /* BACKEND: CompanyInfo powers the "Call Now" CTA, contact page, and footer.
  * Admin should validate:
  *   - phones[]: at least one phone recommended. E.164 preferred ("+255XXXXXXXXX").
- *     The display format can include spaces (e.g., "+255 794 689 099") — the
+ *     The display format can include spaces (e.g., "+255 794 689 099") - the
  *     Navigation and Footer components strip spaces for the tel: href automatically.
  *   - emails[]: at least one email recommended. Valid email format.
  *   - whatsapp: full WhatsApp link (https://wa.me/255794689099). NOT just a phone
- *     number — must be a complete wa.me URL. The WhatsApp floating button only
+ *     number - must be a complete wa.me URL. The WhatsApp floating button only
  *     appears when this field is non-empty.
  *   - address: free text. Used in footer and contact page.
  * When these are empty, the UI degrades gracefully (e.g., CTA shows
@@ -206,7 +206,7 @@ export const fallbackFooter: SiteSettingFooterValue = {
     { label: "Privacy", href: routes.privacy },
   ],
   tagline:
-    "Business consulting for registration, licensing, compliance, and operational advisory — with proactive tracking at every step.",
+    "Business consulting for registration, licensing, compliance, and operational advisory - with proactive tracking at every step.",
   primary_cta: {
     label: "Contact Exxonim",
     href: routes.contact,

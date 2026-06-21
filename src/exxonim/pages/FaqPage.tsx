@@ -12,7 +12,7 @@ import type { FaqPageContent } from '@/exxonim/types';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 
 /* ═══════════════════════════════════════════════════════════════
- * FaqStructuredData — JSON-LD for Google rich results
+ * FaqStructuredData - JSON-LD for Google rich results
  * ═══════════════════════════════════════════════════════════════ */
 function FaqStructuredData({ items }: { items: Array<{ question: string; answer: string }> }) {
   const schema = {
@@ -37,10 +37,10 @@ function FaqStructuredData({ items }: { items: Array<{ question: string; answer:
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * FaqAccordionItem — single expandable FAQ item
+ * FaqAccordionItem - single expandable FAQ item
  *
  * Design: Flat list with straight-line dividers, Plus/X toggle
- * icon. No container card — just clean separator lines between
+ * icon. No container card - just clean separator lines between
  * items. Plus icon when collapsed, X icon when expanded.
  * Smooth grid-rows animation for the answer reveal.
  * ═══════════════════════════════════════════════════════════════ */
@@ -108,7 +108,7 @@ function FaqAccordionItem({
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * EmptyState — shown when search returns no results
+ * EmptyState - shown when search returns no results
  * ═══════════════════════════════════════════════════════════════ */
 function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: () => void }) {
   return (
@@ -130,7 +130,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * FaqPage — Two-column layout with flat accordion list
+ * FaqPage - Two-column layout with flat accordion list
  *
  * ═══════════════════════════════════════════════════════════════
  * BACKEND / ADMIN INTEGRATION NOTES
@@ -139,8 +139,8 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  * DATABASE SCHEMA (Prisma):
  *   model FaqItem {
  *     id         String   @id @default(cuid())
- *     question   String   // max 200 chars — backend must validate
- *     answer     String   // max 1000 chars — backend must validate
+ *     question   String   // max 200 chars - backend must validate
+ *     answer     String   // max 1000 chars - backend must validate
  *     category   String   // "registration" | "licensing" | "tax" | "tracking" | "general"
  *     sort_order Int      @default(0) // lower = shown first
  *     is_active  Boolean  @default(true) // only active items appear publicly
@@ -149,26 +149,26 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  *   }
  *
  * API ENDPOINTS:
- *   GET    /api/v1/faq              — List all active FAQ items (public)
- *     Query params: ?category=<id> — filter by category
- *     Query params: ?search=<q>    — search by question/answer text
+ *   GET    /api/v1/faq              - List all active FAQ items (public)
+ *     Query params: ?category=<id> - filter by category
+ *     Query params: ?search=<q>    - search by question/answer text
  *     Response: { items: FaqItem[], total: number }
- *   GET    /api/v1/faq/:id          — Get single FAQ item
- *   POST   /api/v1/faq              — Create FAQ item (admin only)
- *   PUT    /api/v1/faq/:id          — Update FAQ item (admin only)
- *   DELETE /api/v1/faq/:id          — Delete FAQ item (admin only)
- *   PATCH  /api/v1/faq/reorder      — Reorder items (admin only)
+ *   GET    /api/v1/faq/:id          - Get single FAQ item
+ *   POST   /api/v1/faq              - Create FAQ item (admin only)
+ *   PUT    /api/v1/faq/:id          - Update FAQ item (admin only)
+ *   DELETE /api/v1/faq/:id          - Delete FAQ item (admin only)
+ *   PATCH  /api/v1/faq/reorder      - Reorder items (admin only)
  *     Body: { items: [{ id: string, sort_order: number }] }
  *
  * ADMIN FORM SPECIFICATION:
- *   question   — Text input, required, max 200 chars
+ *   question   - Text input, required, max 200 chars
  *     Placeholder: "e.g. How do I register a company in Tanzania?"
- *   answer     — Textarea, required, max 1000 chars
+ *   answer     - Textarea, required, max 1000 chars
  *     Placeholder: "Provide a clear, concise answer..."
- *   category   — Select dropdown, required
+ *   category   - Select dropdown, required
  *     Options: registration, licensing, tax, tracking, general
- *   sort_order — Number input (drag-and-drop reorder in admin UI preferred)
- *   is_active  — Toggle switch, default: true
+ *   sort_order - Number input (drag-and-drop reorder in admin UI preferred)
+ *   is_active  - Toggle switch, default: true
  *
  * DATA STRUCTURE EXPECTED BY THIS COMPONENT:
  *   interface FaqPageContent {
@@ -193,7 +193,7 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
  *   7. Categories can be re-added as a filter when the DB provides them
  *
  * SEO: FaqStructuredData renders JSON-LD for Google rich results.
- * Keep this even after DB migration — it helps search ranking.
+ * Keep this even after DB migration - it helps search ranking.
  * ═══════════════════════════════════════════════════════════════ */
 export function FaqPage() {
   const { data: page } = usePage<FaqPageContent>("faq");
@@ -274,7 +274,7 @@ export function FaqPage() {
                       </div>
                     </div>
 
-                    {/* Contact CTA — left column (desktop) */}
+                    {/* Contact CTA - left column (desktop) */}
                     <div className="mt-8 hidden lg:block">
                       <div className="rounded-2xl border border-accent/12 bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent p-5">
                         <div className="flex items-start gap-3">
@@ -306,7 +306,7 @@ export function FaqPage() {
                       </p>
                     )}
 
-                    {/* FAQ list — flat with straight line dividers, no card wrapper */}
+                    {/* FAQ list - flat with straight line dividers, no card wrapper */}
                     <div>
                       {filteredItems.length > 0 ? (
                         filteredItems.map((item, index) => (
@@ -355,7 +355,7 @@ export function FaqPage() {
             <UnifiedCtaSection
               eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
               heading="Still have questions?"
-              description="Get answers to new compliance questions delivered to your inbox as we publish them. No spam — just what matters for your business in Tanzania."
+              description="Get answers to new compliance questions delivered to your inbox as we publish them. No spam - just what matters for your business in Tanzania."
             >
               <NewsletterForm />
             </UnifiedCtaSection>

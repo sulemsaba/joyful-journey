@@ -1,8 +1,8 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/pages                       — List all pages (public, published only)
- * GET    /api/v1/pages/{slug}                — Get single page by slug (public, published only)
+ * GET    /api/v1/pages                       - List all pages (public, published only)
+ * GET    /api/v1/pages/{slug}                - Get single page by slug (public, published only)
  *
  * CACHING: TanStack Query handles caching via persistQueryClient.
  * Hooks use placeholderData from fallbackPublicContent.ts.

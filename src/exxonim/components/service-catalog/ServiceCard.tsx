@@ -134,7 +134,7 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         </>
       )}
 
-      {/* CTA — "Learn more" link to detail page + primary action button */}
+      {/* CTA - "Learn more" link to detail page + primary action button */}
       <div className="mt-auto pt-2 flex flex-col gap-2">
         <SmartLink
           href={serviceDetailPath(service.slug)}
@@ -158,10 +158,10 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
 
 /* ─── L8: SERVICE_CARD_SKELETON ────────────────────────────────────────
  * LABEL:    SERVICE_CARD_SKELETON
- * POSITION: Service catalog grid — replaces each ServiceCard during loading
+ * POSITION: Service catalog grid - replaces each ServiceCard during loading
  * APPEARANCE: Shimmer-animated card with badge, title, description,
  *             deliverables, and CTA button placeholders
- * STATUS:   disabled — returns null
+ * STATUS:   disabled - returns null
  * CSS REQUIRED: .animate-shimmer + @keyframes shimmer (add to globals.css)
  * USED BY:  ServiceCatalogSection.tsx (lines 150-159, also disabled)
  * RE-ENABLE: Uncomment JSX below + add .animate-shimmer CSS to globals.css

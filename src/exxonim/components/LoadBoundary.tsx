@@ -15,7 +15,7 @@ interface LoadBoundaryProps {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * LoadBoundary — Pending/error state gate
+ * LoadBoundary - Pending/error state gate
  * ═══════════════════════════════════════════════════════════════════════════
  * With the 5-layer resilience architecture (memory → localStorage → API →
  * JSON fallback → hardcoded), isPending is almost never true when fallback
@@ -23,10 +23,10 @@ interface LoadBoundaryProps {
  * the component using LoadBoundary handles loading in its own UI.
  *
  * LOADER POLICY:
- *   ✅ Button loaders — for mutations (Sending..., Searching...)
- *   ✅ Boot/emergency loader — CSS-only in index.html (favicon + dots)
- *   ❌ Route-transition loaders — permanently retired
- *   ❌ Skeleton loaders — permanently retired
+ *   ✅ Button loaders - for mutations (Sending..., Searching...)
+ *   ✅ Boot/emergency loader - CSS-only in index.html (favicon + dots)
+ *   ❌ Route-transition loaders - permanently retired
+ *   ❌ Skeleton loaders - permanently retired
  * ═══════════════════════════════════════════════════════════════════════════ */
 export function LoadBoundary({
   children,
@@ -38,7 +38,7 @@ export function LoadBoundary({
   variant = "page",
 }: LoadBoundaryProps) {
   if (isPending && !isReady) {
-    // No loader — fallback data renders immediately via the resilience architecture
+    // No loader - fallback data renders immediately via the resilience architecture
     return null;
   }
 

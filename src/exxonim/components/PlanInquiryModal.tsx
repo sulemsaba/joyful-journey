@@ -1,5 +1,5 @@
 /**
- * PlanInquiryModal — Quick inquiry form that opens from pricing card CTA.
+ * PlanInquiryModal - Quick inquiry form that opens from pricing card CTA.
  *
  * UX pattern:
  *   - Desktop: centered modal with backdrop
@@ -176,7 +176,7 @@ export function PlanInquiryModal({
           "relative z-20 w-full bg-surface border border-border-soft shadow-2xl",
           /* Mobile: bottom sheet */
           "rounded-t-2xl lg:rounded-2xl",
-          /* Mobile: max height — use flex so inner content scrolls, not the dialog itself */
+          /* Mobile: max height - use flex so inner content scrolls, not the dialog itself */
           "max-h-[92dvh] sm:max-h-[85dvh] lg:max-h-[80dvh] flex flex-col",
           /* Width */
           "lg:max-w-md",

@@ -9,7 +9,7 @@ import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
  * Linked items use `text-text-muted hover:text-accent`, the current (last)
  * item is `text-text font-medium` with no link.
  *
- * Supports an optional `icon` on any item — when provided, the icon is
+ * Supports an optional `icon` on any item - when provided, the icon is
  * rendered instead of the label text. The label is still used for
  * `aria-label` and `title` for accessibility.
  *
@@ -27,7 +27,7 @@ export interface BreadcrumbItem {
   label: string;
   /** If omitted, the item is treated as the current page (no link). */
   href?: string;
-  /** Optional icon — renders instead of the label. Label used for aria/title. */
+  /** Optional icon - renders instead of the label. Label used for aria/title. */
   icon?: LucideIcon;
 }
 

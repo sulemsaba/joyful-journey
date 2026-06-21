@@ -7,7 +7,7 @@ import { routes } from "@/exxonim/routes";
 import { cn } from "@/exxonim/utils/cn";
 
 /**
- * Mobile navigation panel — dropdown from the traditional full-width bar.
+ * Mobile navigation panel - dropdown from the traditional full-width bar.
  *
  * LAYOUT:
  * ───────
@@ -252,7 +252,7 @@ export function MobileNavigationPanel({
             {/* Thin separator */}
             <div className="h-px bg-accent-soft/30" />
 
-            {/* Highlight link — Track Consultation */}
+            {/* Highlight link - Track Consultation */}
             <Button
               size="compact"
               variant="primary"

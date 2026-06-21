@@ -3,7 +3,7 @@
  *
  * ARCHITECTURE:
  *   Layer 0: Memory cache (current session)
- *   Layer 1: persistQueryClient (localStorage) — previously viewed posts cached
+ *   Layer 1: persistQueryClient (localStorage) - previously viewed posts cached
  *   Layer 2: Live API → JSON fallback (if API fails)
  *   Layer 3: Hardcoded fallback (for known slugs, built into JS bundle)
  *

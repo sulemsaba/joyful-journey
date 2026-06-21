@@ -1,11 +1,11 @@
 
 /**
- * ServicePackagesSection — Segment-filtered plan tiers.
+ * ServicePackagesSection - Segment-filtered plan tiers.
  *
  * Redesigned with a card-deck carousel on mobile:
  *   - 4 segment filter buttons at top (Local Entrepreneurs, Foreign Investors, Enterprises, NGOs)
  *   - 3 tier cards per segment (Starter, Growth, Premium)
- *   - NO prices — CTA drives to consultation instead
+ *   - NO prices - CTA drives to consultation instead
  *   - Mobile (< lg): Card deck carousel with peek/triangle-fan effect
  *   - Desktop (≥ lg): 3-column grid layout
  *
@@ -271,7 +271,7 @@ const TestimonialCard = memo(function TestimonialCard({
 });
 
 /* ═══════════════════════════════════════════════════════════════
- * TestimonialMarquee — unchanged from original
+ * TestimonialMarquee - unchanged from original
  * ═══════════════════════════════════════════════════════════════ */
 function TestimonialMarquee({
   testimonials,
@@ -470,7 +470,7 @@ function TestimonialMarquee({
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * SegmentPlanCard — Modern portrait pricing card
+ * SegmentPlanCard - Modern portrait pricing card
  *
  * Design inspired by Linear / Vercel / Stripe pricing patterns:
  *   - Floating pill badge (absolute, centered, overlaps top border)
@@ -498,7 +498,7 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
     <article
       className={cn(
         "group relative flex h-full w-full flex-col rounded-2xl border transition-all duration-300",
-        /* ── Padding — extra top room for floating badge ── */
+        /* ── Padding - extra top room for floating badge ── */
         compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
         /* ── Featured vs normal ── */
         featured
@@ -509,7 +509,7 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
       )}
       aria-label={`${plan.name} service package`}
     >
-      {/* ── Floating pill badge — centered, overlaps top border ── */}
+      {/* ── Floating pill badge - centered, overlaps top border ── */}
       {plan.badge ? (
         <span
           className={cn(
@@ -547,7 +547,7 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
       {/* ── Divider ── */}
       <div className={cn("h-px my-5", featured ? "bg-accent/15" : "bg-border-soft")} />
 
-      {/* ── Features list — flex-1 pushes CTA to bottom ── */}
+      {/* ── Features list - flex-1 pushes CTA to bottom ── */}
       <ul className="flex flex-1 flex-col gap-3">
         {plan.features.map((feature) => (
           <li
@@ -578,7 +578,7 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
         ))}
       </ul>
 
-      {/* ── CTA button — opens inquiry modal instead of navigating ── */}
+      {/* ── CTA button - opens inquiry modal instead of navigating ── */}
       <Button
         size="standard"
         variant={featured ? "primary" : "outline"}
@@ -595,7 +595,7 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * ServicePackagesSection — main export
+ * ServicePackagesSection - main export
  * ═══════════════════════════════════════════════════════════════ */
 export function ServicePackagesSection({
   variant = "home",
@@ -681,7 +681,7 @@ export function ServicePackagesSection({
               </h2>
             </div>
 
-            {/* Segment filter buttons — compact icon+short label on mobile, full label on desktop */}
+            {/* Segment filter buttons - compact icon+short label on mobile, full label on desktop */}
             <div className="flex gap-1.5 sm:gap-2 justify-center mb-6 md:mb-8">
               {segments.map((seg) => {
                 const isActive = activeSegment === seg.key;

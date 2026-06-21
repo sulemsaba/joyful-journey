@@ -9,7 +9,7 @@ export function StatementCard({
 }) {
   return (
     <div className="flex items-center w-full">
-      {/* Text content — full width, visual placeholder reserved for future design */}
+      {/* Text content - full width, visual placeholder reserved for future design */}
       <div className="grid gap-3 sm:gap-5 justify-items-start w-full">
         <h2 className="m-0 text-[clamp(1.6rem,5vw,3rem)] leading-[1.08] font-semibold text-text">
           {item.title}
@@ -40,7 +40,7 @@ export function StatementCard({
         </div>
       </div>
 
-      {/* Visual placeholder — will be replaced with new design later */}
+      {/* Visual placeholder - will be replaced with new design later */}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { Button } from '@/exxonim/components/primitives/Button';
 import { routes } from '@/exxonim/routes';
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * FinalCtaSection — Strong final call-to-action block at the bottom of
+ * FinalCtaSection - Strong final call-to-action block at the bottom of
  * the services page.
  *
  * Features a centered card with radial gradient accent, heading,

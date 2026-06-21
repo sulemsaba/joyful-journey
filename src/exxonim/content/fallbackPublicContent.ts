@@ -168,7 +168,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
       eyebrow: "Business Setup, Compliance & Permits, Tanzania",
       title: "Stop chasing offices.\nWe handle it all\nfrom registration\nto compliance.",
       description:
-        "Registration, licensing, permits, and compliance — all handled. Stay updated by WhatsApp, email, or SMS.",
+        "Registration, licensing, permits, and compliance - all handled. Stay updated by WhatsApp, email, or SMS.",
       cta: {
         label: "Get Started",
         href: routes.contact,
@@ -332,7 +332,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       eyebrow: "About Exxonim Consult",
       title: "We stand between you and the authorities.",
       description:
-        "Registrations, filings, and compliance — all handled.",
+        "Registrations, filings, and compliance - all handled.",
     },
     company_profile: {
       eyebrow: "Who we are",
@@ -348,7 +348,7 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
       mission:
         "To make registration and compliance effortless for every organisation in Tanzania.",
       vision:
-        "To be Tanzania's most trusted compliance partner — no business ever chases an office.",
+        "To be Tanzania's most trusted compliance partner - no business ever chases an office.",
       global_mission:
         "To become the regulatory interface for businesses operating across East Africa and beyond \u2014 one trusted partner for every jurisdiction, every filing, every milestone.",
       global_vision:
@@ -357,15 +357,15 @@ export const fallbackAboutPage: PageRecord<AboutPageContent> = createFallbackPag
     who_we_serve: [
       { label: "Individuals", description: "Entrepreneurs and professionals starting their first business." },
       { label: "Companies", description: "Local businesses managing registration, tax, and compliance." },
-      { label: "Foreign Businesses", description: "Investors entering Tanzania — permits, registration, setup." },
+      { label: "Foreign Businesses", description: "Investors entering Tanzania - permits, registration, setup." },
       { label: "NGOs & Non-Profits", description: "Organisations handling registration and statutory obligations." },
       { label: "Institutions", description: "Public and private institutions with regulatory obligations." },
     ],
     differentiators: [
-      { title: "Specialists, not generalists", description: "We are experts in the regulatory interface — the space between you and the authorities." },
+      { title: "Specialists, not generalists", description: "We are experts in the regulatory interface - the space between you and the authorities." },
       { title: "Visibility at every step", description: "WhatsApp, email, or SMS updates at every milestone. Never wonder what's happening." },
       { title: "One partner, every filing", description: "Registration to compliance, all under one roof. No chasing multiple offices." },
-      { title: "A progressive partner", description: "We remind you of every deadline and obligation — so you never get fined for missing a filing." },
+      { title: "A progressive partner", description: "We remind you of every deadline and obligation - so you never get fined for missing a filing." },
     ],
     support_profiles_section: undefined,
     support_profiles: [],
@@ -474,9 +474,9 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
   {
     overview: {
       eyebrow: "Registration & Compliance",
-      title: "Your business, registered and kept compliant — without the office visits",
+      title: "Your business, registered and kept compliant - without the office visits",
       description:
-        "From first registration to recurring filings — all handled.",
+        "From first registration to recurring filings - all handled.",
       panel_title: "Trusted by businesses across Tanzania",
       panel_body:
         "Every engagement is tracked from intake to resolution. You always know what is complete, what is pending, and what comes next.",
@@ -580,7 +580,7 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
     faq: [
       {
         question: "Do I need to visit any office in person?",
-        answer: "No. We file everything electronically and keep you updated via WhatsApp. Our team liaises with all regulators — BRELA, TRA, NSSF, WCF, OSHA — on your behalf.",
+        answer: "No. We file everything electronically and keep you updated via WhatsApp. Our team liaises with all regulators - BRELA, TRA, NSSF, WCF, OSHA - on your behalf.",
         cta: { label: "Book a free consultation", href: routes.contact },
       },
       {
@@ -595,22 +595,22 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
       },
       {
         question: "Can I track my consultation status?",
-        answer: "Yes — every engagement gets a 6-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.",
+        answer: "Yes - every engagement gets a 6-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.",
         cta: { label: "Track your consultation", href: routes.trackConsultation },
       },
       {
         question: "What's included in the compliance reminders?",
-        answer: "We track all major compliance deadlines — BRELA returns, TRA filings, WCF, NSSF, OSHA renewals — and send you advance reminders via WhatsApp. No time limit, no cut-off.",
+        answer: "We track all major compliance deadlines - BRELA returns, TRA filings, WCF, NSSF, OSHA renewals - and send you advance reminders via WhatsApp. No time limit, no cut-off.",
         cta: { label: "Get compliance support", href: routes.contact },
       },
       {
         question: "Do you handle work permits for foreign employees?",
-        answer: "Yes. We process work permits, residence permits, and TIC/TISEZA registration for foreign investors and employees. Everything is handled remotely — no office visits needed.",
+        answer: "Yes. We process work permits, residence permits, and TIC/TISEZA registration for foreign investors and employees. Everything is handled remotely - no office visits needed.",
         cta: { label: "Apply for a work permit", href: routes.contact },
       },
       {
         question: "What are your service fees?",
-        answer: "Fees vary by service. Company registration starts from TZS 350,000. We provide a clear quote before any work begins — no hidden charges, no surprises.",
+        answer: "Fees vary by service. Company registration starts from TZS 350,000. We provide a clear quote before any work begins - no hidden charges, no surprises.",
         cta: { label: "Get a quote", href: routes.contact },
       },
       {
@@ -631,8 +631,8 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
         { title: "Resolution", detail: "Outcome confirmed, documents delivered.", status: "pending" },
       ],
       case_examples: [
-        { title: "Company Registration", detail: "EXX-24091 — In submission phase" },
-        { title: "TIN Application", detail: "EXX-24088 — Resolved, TIN issued" },
+        { title: "Company Registration", detail: "EXX-24091 - In submission phase" },
+        { title: "TIN Application", detail: "EXX-24088 - Resolved, TIN issued" },
       ],
       workflow_steps: [
         { title: "Request submitted", detail: "Client reaches out, Exxonim logs the inquiry." },
@@ -733,7 +733,7 @@ export const fallbackContactPage: PageRecord<ContactPageContent> = createFallbac
       eyebrow: "Get in touch",
       title: "Reach Exxonim for registration, compliance, and advisory support.",
       description:
-        "Use the contact route that works best for you — email, phone, or WhatsApp — and the Exxonim team will follow up promptly.",
+        "Use the contact route that works best for you - email, phone, or WhatsApp - and the Exxonim team will follow up promptly.",
     },
     cards: [
       {
@@ -912,7 +912,7 @@ export const fallbackDataRightsPage: PageRecord<InfoPageContent> = createFallbac
  *   2. Auto-generate a WebP version at 1344×768px for the cover.
  *   3. Auto-generate a 400×250px thumbnail for grid cards.
  *   4. Store the CDN URL in the blog_posts.cover_image_url column.
- *   5. Require cover_alt text (accessibility) — min 10 characters.
+ *   5. Require cover_alt text (accessibility) - min 10 characters.
  *
  * Author data: In production, author info comes from the blog_authors table.
  * The admin should manage author profiles with name, role, and avatar.
@@ -955,10 +955,10 @@ export const fallbackBlogPosts: BlogPost[] = [
 <h2>Choose the right entity type</h2>
 <p>The first and most important decision is selecting the correct legal structure for your business. In Tanzania, the main entity types are:</p>
 <ul>
-<li><strong>Private Limited Company</strong> — The most common structure for local and foreign investors. Requires at least one director and one shareholder. Liability is limited to share capital.</li>
-<li><strong>Public Limited Company</strong> — Suitable for larger operations planning to raise capital publicly. Requires at least three directors and seven shareholders.</li>
-<li><strong>Business Name Registration</strong> — For sole proprietors or partnerships operating under a trade name. Simpler registration, but no limited liability protection.</li>
-<li><strong>NGO Registration</strong> — For non-profit organisations. Registered through the Ministry of Health, Community Development, Gender, Elderly and Children or the Vice President's Office.</li>
+<li><strong>Private Limited Company</strong> - The most common structure for local and foreign investors. Requires at least one director and one shareholder. Liability is limited to share capital.</li>
+<li><strong>Public Limited Company</strong> - Suitable for larger operations planning to raise capital publicly. Requires at least three directors and seven shareholders.</li>
+<li><strong>Business Name Registration</strong> - For sole proprietors or partnerships operating under a trade name. Simpler registration, but no limited liability protection.</li>
+<li><strong>NGO Registration</strong> - For non-profit organisations. Registered through the Ministry of Health, Community Development, Gender, Elderly and Children or the Vice President's Office.</li>
 </ul>
 <p>Choosing the wrong entity type early on can cause delays later when you discover that your structure does not support the activities you planned. Take time to confirm the right fit before moving forward.</p>
 
@@ -974,34 +974,34 @@ export const fallbackBlogPosts: BlogPost[] = [
 </ol>
 <p>Missing even one document can mean a return trip to the authority. A simple filing checklist prevents these avoidable delays.</p>
 
-<blockquote><p>The most common reason registrations stall is not the authority processing time — it is incomplete document submissions. Prepare thoroughly before your first filing.</p></blockquote>
+<blockquote><p>The most common reason registrations stall is not the authority processing time - it is incomplete document submissions. Prepare thoroughly before your first filing.</p></blockquote>
 
 <h2>Understand the filing sequence</h2>
 <p>Registration in Tanzania follows a specific sequence. Attempting to skip steps or file out of order almost always creates additional work:</p>
-<p><strong>Step 1: Name reservation</strong> — Submit your proposed names to BRELA (Business Registration and Licensing Agency). Name clearance typically takes 1 to 3 working days. Once approved, the name is reserved for 30 days.</p>
-<p><strong>Step 2: Document preparation</strong> — With a reserved name, prepare the memorandum and articles of association, Form 1A (application for incorporation), and all supporting documents.</p>
-<p><strong>Step 3: Incorporation filing</strong> — Submit the complete package to BRELA. Processing typically takes 5 to 10 working days, though this can vary based on workload and completeness of your submission.</p>
-<p><strong>Step 4: Certificate collection</strong> — Once approved, collect your Certificate of Incorporation. This document is required for every subsequent step, including TIN registration, bank account opening, and business license applications.</p>
+<p><strong>Step 1: Name reservation</strong> - Submit your proposed names to BRELA (Business Registration and Licensing Agency). Name clearance typically takes 1 to 3 working days. Once approved, the name is reserved for 30 days.</p>
+<p><strong>Step 2: Document preparation</strong> - With a reserved name, prepare the memorandum and articles of association, Form 1A (application for incorporation), and all supporting documents.</p>
+<p><strong>Step 3: Incorporation filing</strong> - Submit the complete package to BRELA. Processing typically takes 5 to 10 working days, though this can vary based on workload and completeness of your submission.</p>
+<p><strong>Step 4: Certificate collection</strong> - Once approved, collect your Certificate of Incorporation. This document is required for every subsequent step, including TIN registration, bank account opening, and business license applications.</p>
 
 <h2>Common mistakes that delay registration</h2>
 <p>After guiding hundreds of registrations, the same issues come up repeatedly. Being aware of these in advance can save weeks of delay:</p>
 <ul>
-<li><strong>Name conflicts</strong> — Choosing names that are too similar to existing companies. Always prepare multiple alternatives.</li>
-<li><strong>Inconsistent information</strong> — Names, addresses, and ID numbers must match exactly across all documents. Even minor discrepancies trigger queries.</li>
-<li><strong>Missing share capital details</strong> — The minimum share capital for a limited company must be stated clearly. Ambiguity here causes rejection.</li>
-<li><strong>Incorrect forms</strong> — Using outdated or wrong BRELA forms. Always verify the current form version before submission.</li>
+<li><strong>Name conflicts</strong> - Choosing names that are too similar to existing companies. Always prepare multiple alternatives.</li>
+<li><strong>Inconsistent information</strong> - Names, addresses, and ID numbers must match exactly across all documents. Even minor discrepancies trigger queries.</li>
+<li><strong>Missing share capital details</strong> - The minimum share capital for a limited company must be stated clearly. Ambiguity here causes rejection.</li>
+<li><strong>Incorrect forms</strong> - Using outdated or wrong BRELA forms. Always verify the current form version before submission.</li>
 </ul>
 
 <h2>What happens after registration</h2>
 <p>Receiving your Certificate of Incorporation is the beginning, not the end. Immediately after registration, you need to address several follow-on requirements:</p>
 <ol>
-<li><strong>TIN Registration</strong> — Apply for a Tax Identification Number with TRA (Tanzania Revenue Authority). Required for all registered entities.</li>
-<li><strong>Business License</strong> — Apply through your local government authority or the Online Business Registration Portal (BRIS).</li>
-<li><strong>Bank Account</strong> — Open a corporate bank account using your certificate and TIN.</li>
-<li><strong>VAT Registration</strong> — If your projected turnover exceeds the threshold, register for VAT within 30 days.</li>
-<li><strong>Sector-specific permits</strong> — Depending on your industry, additional permits may be required (e.g., TCIA for construction, TFDA for food and pharmaceuticals).</li>
+<li><strong>TIN Registration</strong> - Apply for a Tax Identification Number with TRA (Tanzania Revenue Authority). Required for all registered entities.</li>
+<li><strong>Business License</strong> - Apply through your local government authority or the Online Business Registration Portal (BRIS).</li>
+<li><strong>Bank Account</strong> - Open a corporate bank account using your certificate and TIN.</li>
+<li><strong>VAT Registration</strong> - If your projected turnover exceeds the threshold, register for VAT within 30 days.</li>
+<li><strong>Sector-specific permits</strong> - Depending on your industry, additional permits may be required (e.g., TCIA for construction, TFDA for food and pharmaceuticals).</li>
 </ol>
-<p>Each of these steps has its own document requirements and processing times. Planning them in sequence — rather than discovering them reactively — keeps your business operational on schedule.</p>
+<p>Each of these steps has its own document requirements and processing times. Planning them in sequence - rather than discovering them reactively - keeps your business operational on schedule.</p>
 
 <blockquote><p>A successful registration is one where every step after incorporation has already been planned before the certificate is issued. That is what structured preparation looks like.</p></blockquote>`,
       sections: [],
@@ -1042,11 +1042,11 @@ export const fallbackBlogPosts: BlogPost[] = [
 <h2>What you need before applying</h2>
 <p>Before visiting the TRA office or using the online portal, ensure you have the following documents ready:</p>
 <ul>
-<li><strong>Certificate of Incorporation</strong> — Original and one certified copy</li>
-<li><strong>Memorandum and Articles of Association</strong> — Certified copy</li>
-<li><strong>Directors' IDs</strong> — National ID or passport copies for all directors</li>
-<li><strong>Proof of business address</strong> — Lease agreement, utility bill, or title deed</li>
-<li><strong>Bank introduction letter</strong> — From your corporate bank confirming account opening</li>
+<li><strong>Certificate of Incorporation</strong> - Original and one certified copy</li>
+<li><strong>Memorandum and Articles of Association</strong> - Certified copy</li>
+<li><strong>Directors' IDs</strong> - National ID or passport copies for all directors</li>
+<li><strong>Proof of business address</strong> - Lease agreement, utility bill, or title deed</li>
+<li><strong>Bank introduction letter</strong> - From your corporate bank confirming account opening</li>
 </ul>
 <p>Missing any of these documents will result in your application being returned. TRA does not accept partial submissions.</p>
 
@@ -1060,7 +1060,7 @@ export const fallbackBlogPosts: BlogPost[] = [
 </ul>
 <p>Double-check every field against your source documents before submission. A 15-minute review can prevent a two-week delay.</p>
 
-<blockquote><p>Consistency across documents is not optional — it is the difference between a one-visit registration and a multi-visit correction cycle.</p></blockquote>
+<blockquote><p>Consistency across documents is not optional - it is the difference between a one-visit registration and a multi-visit correction cycle.</p></blockquote>
 
 <h2>Online vs. in-person registration</h2>
 <p>TRA now supports both online and in-person TIN applications. Each method has its own considerations:</p>
@@ -1077,7 +1077,7 @@ export const fallbackBlogPosts: BlogPost[] = [
 <li>Register for VAT if your turnover exceeds the threshold</li>
 <li>Set up electronic filing access through the TRA portal</li>
 </ol>
-<p>A TIN is not a one-time registration — it creates an ongoing relationship with the tax authority. Understanding your obligations from day one prevents compliance issues later.</p>`,
+<p>A TIN is not a one-time registration - it creates an ongoing relationship with the tax authority. Understanding your obligations from day one prevents compliance issues later.</p>`,
       sections: [],
     },
   },
@@ -1111,26 +1111,26 @@ export const fallbackBlogPosts: BlogPost[] = [
         "Assign one accountable owner per renewal stream.",
         "Licensing renewal best practices.",
       ],
-      html: `<p>Business licences in Tanzania are not perpetual — they require periodic renewal, and missed deadlines can result in penalties, operational disruption, or even licence revocation. A structured approach to renewal management prevents these outcomes.</p>
+      html: `<p>Business licences in Tanzania are not perpetual - they require periodic renewal, and missed deadlines can result in penalties, operational disruption, or even licence revocation. A structured approach to renewal management prevents these outcomes.</p>
 
 <h2>Types of licences that require renewal</h2>
 <p>Most businesses in Tanzania hold multiple licences, each with its own renewal cycle:</p>
 <ul>
-<li><strong>Business Licence</strong> — Annual renewal through the local government authority or BRIS portal</li>
-<li><strong>Professional Licences</strong> — Sector-specific permits (e.g., engineering, legal, medical) with varying renewal periods</li>
-<li><strong>Import/Export Permits</strong> — Typically annual, managed through TRA and relevant sector authorities</li>
-<li><strong>Occupational Licences</strong> — Health and safety permits, fire safety certificates, environmental compliance permits</li>
+<li><strong>Business Licence</strong> - Annual renewal through the local government authority or BRIS portal</li>
+<li><strong>Professional Licences</strong> - Sector-specific permits (e.g., engineering, legal, medical) with varying renewal periods</li>
+<li><strong>Import/Export Permits</strong> - Typically annual, managed through TRA and relevant sector authorities</li>
+<li><strong>Occupational Licences</strong> - Health and safety permits, fire safety certificates, environmental compliance permits</li>
 </ul>
 <p>Each licence has a different renewal authority, different document requirements, and different processing times. Tracking them in one place is essential.</p>
 
 <h2>Build a renewal calendar</h2>
 <p>The foundation of effective renewal management is a single, visible calendar that captures every licence, its expiry date, and the lead time required for renewal. A practical renewal calendar includes:</p>
 <ol>
-<li><strong>Licence name and issuing authority</strong> — So you know where to go</li>
-<li><strong>Expiry date</strong> — The hard deadline</li>
-<li><strong>Internal reminder date</strong> — 60 days before expiry to begin preparation</li>
-<li><strong>Document checklist</strong> — What you need to submit</li>
-<li><strong>Assigned owner</strong> — One person accountable for tracking each renewal</li>
+<li><strong>Licence name and issuing authority</strong> - So you know where to go</li>
+<li><strong>Expiry date</strong> - The hard deadline</li>
+<li><strong>Internal reminder date</strong> - 60 days before expiry to begin preparation</li>
+<li><strong>Document checklist</strong> - What you need to submit</li>
+<li><strong>Assigned owner</strong> - One person accountable for tracking each renewal</li>
 </ol>
 <p>A shared filing calendar prevents deadlines from becoming last-minute recovery work. The calendar only helps if the team can see what is pending and who moves it forward.</p>
 
@@ -1149,10 +1149,10 @@ export const fallbackBlogPosts: BlogPost[] = [
 <h2>Common renewal pitfalls</h2>
 <p>After managing renewal cycles across dozens of organisations, the same patterns emerge:</p>
 <ul>
-<li><strong>Starting too late</strong> — 30 days is not enough for most renewals. Start at 60 days to accommodate document gathering and processing time.</li>
-<li><strong>Missing prerequisite updates</strong> — Some renewals require an up-to-date TIN certificate or tax clearance. If these have expired, the renewal itself will be delayed.</li>
-<li><strong>Ignoring processing delays</strong> — Authorities do not always process renewals on schedule. Build buffer into your timeline.</li>
-<li><strong>Not retaining proof</strong> — Always keep copies of submitted documents and receipts. If the authority loses your submission, you have evidence of timely filing.</li>
+<li><strong>Starting too late</strong> - 30 days is not enough for most renewals. Start at 60 days to accommodate document gathering and processing time.</li>
+<li><strong>Missing prerequisite updates</strong> - Some renewals require an up-to-date TIN certificate or tax clearance. If these have expired, the renewal itself will be delayed.</li>
+<li><strong>Ignoring processing delays</strong> - Authorities do not always process renewals on schedule. Build buffer into your timeline.</li>
+<li><strong>Not retaining proof</strong> - Always keep copies of submitted documents and receipts. If the authority loses your submission, you have evidence of timely filing.</li>
 </ul>
 
 <h2>When to seek professional support</h2>
@@ -1163,7 +1163,7 @@ export const fallbackBlogPosts: BlogPost[] = [
 <li>You have experienced a missed renewal in the past 12 months</li>
 <li>Your team does not have a dedicated compliance function</li>
 </ul>
-<p>Professional support is not about outsourcing responsibility — it is about adding structure and visibility to a process that directly affects your ability to operate.</p>`,
+<p>Professional support is not about outsourcing responsibility - it is about adding structure and visibility to a process that directly affects your ability to operate.</p>`,
       sections: [],
     },
   },
@@ -1196,26 +1196,26 @@ export const fallbackBlogPosts: BlogPost[] = [
         "Record the next action, not just the deadline.",
         "Compliance calendar framework.",
       ],
-      html: `<p>A compliance calendar is only useful if your team actually refers to it. The most effective calendars are simple, visible, and action-oriented — not comprehensive lists of every possible obligation buried in a spreadsheet nobody opens.</p>
+      html: `<p>A compliance calendar is only useful if your team actually refers to it. The most effective calendars are simple, visible, and action-oriented - not comprehensive lists of every possible obligation buried in a spreadsheet nobody opens.</p>
 
 <h2>What makes a compliance calendar work</h2>
 <p>Three principles separate calendars that get used from calendars that get ignored:</p>
 <ol>
-<li><strong>Visibility</strong> — The calendar must be accessible to everyone who needs it, without requiring special software access or login credentials. A shared document or dashboard that updates in real time works best.</li>
-<li><strong>Action-orientation</strong> — Each entry should describe the next action, not just the deadline. "Submit VAT return by March 25" is more useful than "VAT due Q1."</li>
-<li><strong>Single ownership</strong> — Every entry has one person responsible. If two people are listed, neither feels fully accountable.</li>
+<li><strong>Visibility</strong> - The calendar must be accessible to everyone who needs it, without requiring special software access or login credentials. A shared document or dashboard that updates in real time works best.</li>
+<li><strong>Action-orientation</strong> - Each entry should describe the next action, not just the deadline. "Submit VAT return by March 25" is more useful than "VAT due Q1."</li>
+<li><strong>Single ownership</strong> - Every entry has one person responsible. If two people are listed, neither feels fully accountable.</li>
 </ol>
 <p>When these three elements are in place, the calendar becomes a working tool rather than a reference document.</p>
 
 <h2>Key dates to include</h2>
 <p>At minimum, your compliance calendar should capture the following recurring obligations:</p>
 <ul>
-<li><strong>VAT returns</strong> — Monthly or quarterly, depending on your registration status</li>
-<li><strong>PAYE remittances</strong> — Monthly, by the 9th of the following month</li>
-<li><strong>Corporate tax instalments</strong> — Quarterly, based on estimated annual tax</li>
-<li><strong>Business licence renewals</strong> — Annual, typically aligned with your registration anniversary</li>
-<li><strong>Annual return filing</strong> — Within 30 days of the company's anniversary of incorporation</li>
-<li><strong>Statutory audits</strong> — For companies meeting the turnover threshold, annually</li>
+<li><strong>VAT returns</strong> - Monthly or quarterly, depending on your registration status</li>
+<li><strong>PAYE remittances</strong> - Monthly, by the 9th of the following month</li>
+<li><strong>Corporate tax instalments</strong> - Quarterly, based on estimated annual tax</li>
+<li><strong>Business licence renewals</strong> - Annual, typically aligned with your registration anniversary</li>
+<li><strong>Annual return filing</strong> - Within 30 days of the company's anniversary of incorporation</li>
+<li><strong>Statutory audits</strong> - For companies meeting the turnover threshold, annually</li>
 </ul>
 <p>Each entry should include the authority, the document requirements, and the contact point for queries.</p>
 
@@ -1224,11 +1224,11 @@ export const fallbackBlogPosts: BlogPost[] = [
 <h2>Tools and formats</h2>
 <p>The format of your calendar matters less than whether people use it. Common options include:</p>
 <ul>
-<li><strong>Shared spreadsheet</strong> — Simple, familiar, easy to set up. Works for small teams with fewer than 20 obligations.</li>
-<li><strong>Project management tool</strong> — Asana, Monday, or similar platforms add reminders, assignees, and progress tracking. Better for larger teams.</li>
-<li><strong>Dedicated compliance platform</strong> — Purpose-built tools with regulatory content pre-loaded. Suitable for organisations with complex compliance landscapes.</li>
+<li><strong>Shared spreadsheet</strong> - Simple, familiar, easy to set up. Works for small teams with fewer than 20 obligations.</li>
+<li><strong>Project management tool</strong> - Asana, Monday, or similar platforms add reminders, assignees, and progress tracking. Better for larger teams.</li>
+<li><strong>Dedicated compliance platform</strong> - Purpose-built tools with regulatory content pre-loaded. Suitable for organisations with complex compliance landscapes.</li>
 </ul>
-<p>Start with the simplest tool that your team will actually use. You can always upgrade later — the priority is getting the calendar into daily use.</p>
+<p>Start with the simplest tool that your team will actually use. You can always upgrade later - the priority is getting the calendar into daily use.</p>
 
 <h2>Review and maintain</h2>
 <p>A compliance calendar is a living document. Schedule a monthly review to:</p>
@@ -1432,7 +1432,7 @@ export const fallbackBlogPosts: BlogPost[] = [
         {
           heading: "Starting the framework",
           paragraphs: [
-            "Begin with the obligations you already know, then add new ones as they emerge. A simple spreadsheet or tracking tool is enough to start — the key is consistent review.",
+            "Begin with the obligations you already know, then add new ones as they emerge. A simple spreadsheet or tracking tool is enough to start - the key is consistent review.",
           ],
         },
       ],
@@ -1718,7 +1718,7 @@ export const fallbackPricingPlans: PricingPlan[] = [
     id: 1,
     name: "Foundation",
     badge: "Getting started",
-    description: "Registration and first-step compliance — ideal for new entities getting set up.",
+    description: "Registration and first-step compliance - ideal for new entities getting set up.",
     notes: "Use the Exxonim contact route for the latest package guidance.",
     recommended: false,
     features: [
@@ -1750,7 +1750,7 @@ export const fallbackPricingPlans: PricingPlan[] = [
     id: 3,
     name: "Continuity",
     badge: "Extended coverage",
-    description: "Full-service support — registration, compliance, work permits, and ongoing advisory.",
+    description: "Full-service support - registration, compliance, work permits, and ongoing advisory.",
     notes: "Contact Exxonim directly for a tailored scope while the live catalog reconnects.",
     recommended: false,
     features: [
@@ -1794,7 +1794,7 @@ export const fallbackTestimonials: Testimonial[] = [
     eyebrow: "Consultation tracking",
     headline: "We always knew where things stood.",
     support:
-      "Every consultation came with a tracking reference and milestone updates — no need to call and ask for status.",
+      "Every consultation came with a tracking reference and milestone updates - no need to call and ask for status.",
     quote:
       "Getting a WhatsApp update when our certificate was issued saved us days of back-and-forth.",
     name: "Programme Coordinator",
@@ -1820,10 +1820,10 @@ export const fallbackTestimonials: Testimonial[] = [
  *   - description: 1-2 sentence full description (shown in full details)
  *   - responsibilities[]: 3-5 action-oriented bullet points
  *   - requirements[]: 3-5 qualification bullet points
- *   - published_at: ISO date string — used for "Posted X" and 72h+ indicator
+ *   - published_at: ISO date string - used for "Posted X" and 72h+ indicator
  *
  * 72-hour indicator: If published_at is >72h ago, a "72h+ posted" pill appears.
- * This is VISUAL ONLY — jobs are never auto-removed. Admin must unpublish to remove.
+ * This is VISUAL ONLY - jobs are never auto-removed. Admin must unpublish to remove.
  *
  * Application flow: "Apply Now" opens an application modal (not the contact page).
  * The modal collects: name, email, phone, cover note, and CV/resume file upload.
@@ -1845,7 +1845,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     summary:
       "Coordinate internal follow-through, document readiness, and status visibility across active client work.",
     description:
-      "Coordinate internal follow-through, document readiness, and status visibility across active client work. You will be the connective tissue between case managers, compliance officers, and clients — making sure nothing falls through the cracks.",
+      "Coordinate internal follow-through, document readiness, and status visibility across active client work. You will be the connective tissue between case managers, compliance officers, and clients - making sure nothing falls through the cracks.",
     requirements: [
       "Comfort working with operational checklists",
       "Clear written communication",
@@ -1936,7 +1936,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     compensation_label: null,
     experience_label: "Senior",
     summary:
-      "Lead entity registration engagements — from entity type selection through to authority submission and certificate delivery.",
+      "Lead entity registration engagements - from entity type selection through to authority submission and certificate delivery.",
     description:
       "Guide clients through company, NGO, and business name registration from start to certificate. You will manage the full engagement cycle, advise on entity structures, and ensure every submission is complete and timely.",
     requirements: [
@@ -1969,7 +1969,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     summary:
       "Maintain internal tools, manage system workflows, and support digital operations across the consulting team.",
     description:
-      "Keep Exxonim's digital tools running smoothly — from case tracking systems to internal dashboards. You will coordinate with vendors, troubleshoot issues, and help improve how the team uses technology day-to-day.",
+      "Keep Exxonim's digital tools running smoothly - from case tracking systems to internal dashboards. You will coordinate with vendors, troubleshoot issues, and help improve how the team uses technology day-to-day.",
     requirements: [
       "Experience with SaaS tools and workflow automation",
       "Problem-solving mindset and clear communication",
@@ -2029,7 +2029,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     compensation_label: null,
     experience_label: "Mid-level",
     summary:
-      "Own the renewals pipeline — track deadlines, prepare submissions, and ensure no client obligation lapses.",
+      "Own the renewals pipeline - track deadlines, prepare submissions, and ensure no client obligation lapses.",
     description:
       "Manage Exxonim's renewals pipeline end-to-end: track upcoming deadlines across all clients, prepare renewal applications, submit on time, and confirm outcomes. You will be the person who makes sure nothing expires unnoticed.",
     requirements: [
@@ -2201,7 +2201,7 @@ export const fallbackTrackConsultationPage: PageRecord<InfoPageContent> = create
       eyebrow: "Consultation tracking",
       title: "Never ask \"What's happening?\" again",
       description:
-        "Automated updates at every milestone — via WhatsApp, email, or SMS. Enter your tracking number for an instant status check.",
+        "Automated updates at every milestone - via WhatsApp, email, or SMS. Enter your tracking number for an instant status check.",
     },
     sections: [
       {

@@ -204,7 +204,7 @@ export function buildResourcesBlogLayout(posts: BlogPost[]) {
  *
  * BACKEND / ADMIN NOTE:
  * The TOC is auto-generated from <h2> tags in the article
- * HTML body. No manual TOC management is needed — just
+ * HTML body. No manual TOC management is needed - just
  * ensure articles use proper <h2> heading hierarchy.
  *
  * For structured articles (sections-based), the headings

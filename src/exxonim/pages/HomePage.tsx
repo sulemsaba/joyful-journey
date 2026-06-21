@@ -16,7 +16,7 @@ import { getHomeBlogPosts } from "@/exxonim/utils/blog";
 import type { HomePageContent } from '@/exxonim/types';
 
 /**
- * Homepage — instant rendering, no full-page loader.
+ * Homepage - instant rendering, no full-page loader.
  *
  * The usePage hook guarantees fallback data via the Fallback Guarantee
  * pattern (data: query.data ?? fallback). The homepage renders instantly

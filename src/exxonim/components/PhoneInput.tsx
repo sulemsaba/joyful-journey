@@ -1,5 +1,5 @@
 /**
- * PhoneInput — Integrated country-code + phone number input.
+ * PhoneInput - Integrated country-code + phone number input.
  *
  * Design:
  *   Single control: [ 🇹🇿 +255 | 712 345 678 ]
@@ -433,7 +433,7 @@ export function PhoneInput({
     }
   }, [country, onChange, onCountryChange]);
 
-  /** Handle paste with smart parsing — also auto-switches country */
+  /** Handle paste with smart parsing - also auto-switches country */
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text/plain");
@@ -488,7 +488,7 @@ export function PhoneInput({
         </div>
       </div>
 
-      {/* Country list — custom scrollbar */}
+      {/* Country list - custom scrollbar */}
       <div className="max-h-60 overflow-y-auto overscroll-contain"
         style={{
           scrollbarWidth: "thin",

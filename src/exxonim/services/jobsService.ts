@@ -1,9 +1,9 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/jobs                         — List published jobs (public)
- * GET    /api/v1/jobs/{slug}                  — Get single job by slug (public)
- * POST   /api/v1/jobs/{id}/apply              — Submit job application (public)
+ * GET    /api/v1/jobs                         - List published jobs (public)
+ * GET    /api/v1/jobs/{slug}                  - Get single job by slug (public)
+ * POST   /api/v1/jobs/{id}/apply              - Submit job application (public)
  *
  * CACHING: TanStack Query handles caching via persistQueryClient.
  * Hooks use placeholderData from fallbackPublicContent.ts.

@@ -78,7 +78,7 @@ export function HowItWorksSection({ flow }: HowItWorksSectionProps) {
           </p>
         </div>
 
-        {/* Step Cards — Horizontal scroll on mobile, grid on desktop */}
+        {/* Step Cards - Horizontal scroll on mobile, grid on desktop */}
         <div className="flex gap-4 overflow-x-auto pb-4 md:pb-0 snap-x snap-mandatory scrollbar-none -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-4 md:overflow-visible">
           {flow.map((item, index) => (
             <article
@@ -109,14 +109,14 @@ export function HowItWorksSection({ flow }: HowItWorksSectionProps) {
           ))}
         </div>
 
-        {/* CTA — action-oriented (CRO audit Problem 1) */}
+        {/* CTA - action-oriented (CRO audit Problem 1) */}
         <div className="mt-10 md:mt-14 text-center flex flex-col sm:flex-row items-center justify-center gap-3">
           <Button
             size="hero"
             variant="primary"
             href={`${routes.contact}#inquiry`}
           >
-            Ask a Question — Free
+            Ask a Question - Free
           </Button>
           <Button
             size="hero"

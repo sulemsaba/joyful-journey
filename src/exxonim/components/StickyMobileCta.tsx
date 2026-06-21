@@ -5,7 +5,7 @@ import { routes } from '@/exxonim/routes';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 
 /**
- * StickyMobileCta — fixed bottom bar on mobile with "Ask a Question — Free" CTA.
+ * StickyMobileCta - fixed bottom bar on mobile with "Ask a Question - Free" CTA.
  * (CRO audit Problem 1: action-oriented primary CTA)
  *
  * Only appears on mobile viewports (below md breakpoint) after the user
@@ -44,7 +44,7 @@ export function StickyMobileCta() {
             href={`${routes.contact}#inquiry`}
             className="flex-1 inline-flex h-12 items-center justify-center rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover active:scale-[0.98]"
           >
-            Ask a Question — Free
+            Ask a Question - Free
           </SmartLink>
           <SmartLink
             href={routes.trackConsultation}

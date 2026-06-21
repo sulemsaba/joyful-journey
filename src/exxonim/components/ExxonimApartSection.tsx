@@ -5,7 +5,7 @@ import { routes } from '@/exxonim/routes';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * ExxonimApartSection — "What sets Exxonim apart" differentiator grid
+ * ExxonimApartSection - "What sets Exxonim apart" differentiator grid
  *
  * Displays 5 core differentiator cards in a responsive grid (1 col on mobile,
  * 2 on tablet, 3 on desktop). This section is designed for the Services page
@@ -17,15 +17,15 @@ import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
  *   - Add an "apart_section" field to the services page content type
  *   - Each card: { title, description, icon_key, link? }
  *   - Icon key maps to the Lucide icon switch below
- *   - Link is optional — only "track-consultation" currently links out
+ *   - Link is optional - only "track-consultation" currently links out
  * ──────────────────────────────────────────────────────────────────────────── */
 
-/** Differentiator card data — all static content */
+/** Differentiator card data - all static content */
 const differentiators = [
   {
     title: 'Live Consultation Tracking',
     description:
-      'Track every consultation from intake to resolution. Receive automatic updates at every milestone via WhatsApp, email, or SMS — no login required.',
+      'Track every consultation from intake to resolution. Receive automatic updates at every milestone via WhatsApp, email, or SMS - no login required.',
     icon: <CheckCircle className="h-6 w-6" />,
     link: routes.trackConsultation,
     linkLabel: 'Learn more',
@@ -33,7 +33,7 @@ const differentiators = [
   {
     title: 'Ongoing Compliance Reminders',
     description:
-      'We send timely reminders ahead of every compliance deadline — BRELA returns, TRA filings, license renewals, WCF, NSSF, OSHA. No time limit, no cut-off. Never be caught off-guard.',
+      'We send timely reminders ahead of every compliance deadline - BRELA returns, TRA filings, license renewals, WCF, NSSF, OSHA. No time limit, no cut-off. Never be caught off-guard.',
     icon: <Bell className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Get reminders',
@@ -41,7 +41,7 @@ const differentiators = [
   {
     title: 'Authority Liaison',
     description:
-      'We communicate directly with BRELA, TRA, NSSF, WCF, OSHA and other regulators on your behalf — so you don\'t have to chase offices or wait in queues.',
+      'We communicate directly with BRELA, TRA, NSSF, WCF, OSHA and other regulators on your behalf - so you don\'t have to chase offices or wait in queues.',
     icon: <ShieldCheck className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Get started',
@@ -49,7 +49,7 @@ const differentiators = [
   {
     title: 'Document Readiness Review',
     description:
-      'Before any filing, we review your documents for completeness and accuracy — preventing rejections, delays, and costly resubmissions.',
+      'Before any filing, we review your documents for completeness and accuracy - preventing rejections, delays, and costly resubmissions.',
     icon: <ClipboardCheck className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Submit documents',
@@ -57,7 +57,7 @@ const differentiators = [
   {
     title: 'No Office Visits Required',
     description:
-      'We file everything electronically and keep you updated via WhatsApp. Our team liaises with BRELA, TRA, NSSF, WCF, and OSHA on your behalf — no queues, no travel, no wasted time.',
+      'We file everything electronically and keep you updated via WhatsApp. Our team liaises with BRELA, TRA, NSSF, WCF, and OSHA on your behalf - no queues, no travel, no wasted time.',
     icon: <Globe className="h-6 w-6" />,
     link: routes.contact,
     linkLabel: 'Work remotely with us',

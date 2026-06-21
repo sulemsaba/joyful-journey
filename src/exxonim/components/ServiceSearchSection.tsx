@@ -176,7 +176,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
             <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-text-soft pointer-events-none" />
             <input
               type="search"
-              placeholder="Search services — e.g. company registration, TIN, work permit..."
+              placeholder="Search services - e.g. company registration, TIN, work permit..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-12 md:h-14 pl-12 pr-4 rounded-full border border-border-soft bg-surface text-text text-sm md:text-base placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-all"
@@ -203,7 +203,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
           ))}
         </div>
 
-        {/* Service Cards — grouped by category */}
+        {/* Service Cards - grouped by category */}
         {filteredServices.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-text-muted text-lg">No services match your search.</p>
@@ -272,7 +272,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
                           {service.detail}
                         </p>
 
-                        {/* CTA — always visible on mobile */}
+                        {/* CTA - always visible on mobile */}
                         <SmartLink
                           href={`${routes.contact}#inquiry`}
                           className="inline-flex items-center gap-1.5 mt-1 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
@@ -297,7 +297,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
             variant="primary"
             href={routes.contact}
           >
-            Ask a Question — Free
+            Ask a Question - Free
           </Button>
           <Button
             size="hero"

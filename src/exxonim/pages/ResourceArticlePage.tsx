@@ -1,5 +1,5 @@
 /**
- * Resource Article Detail Page — Wide reading layout with right-side TOC.
+ * Resource Article Detail Page - Wide reading layout with right-side TOC.
  *
  * ═══════════════════════════════════════════════════════════════════
  * LAYOUT:
@@ -38,7 +38,7 @@
  *
  * 2. TABLE OF CONTENTS (TOC):
  *    Auto-generated from <h2> tags in the article HTML body.
- *    No manual TOC management needed — the frontend extracts
+ *    No manual TOC management needed - the frontend extracts
  *    headings and injects scrollable IDs automatically.
  *    The TOC is vertically centered in the viewport height
  *    and uses an IntersectionObserver scrollspy to highlight
@@ -53,7 +53,7 @@
  *
  * 4. INLINE IMAGES (inside article HTML body):
  *    - Rendered at their natural/intrinsic dimensions.
- *    - NO border-radius (no rounding) — editorial, raw feel.
+ *    - NO border-radius (no rounding) - editorial, raw feel.
  *    - Max-width capped at the text column width.
  *
  * 5. TAGS:
@@ -76,7 +76,7 @@
  * 8. RELATED ARTICLES:
  *    - `post.relatedSlugs[]` takes priority if provided.
  *    - Fallback: same-category posts, newest first.
- *    - DISPLAY: Two cards at the bottom of the page — one at
+ *    - DISPLAY: Two cards at the bottom of the page - one at
  *      the LEFT edge, one at the RIGHT edge. Both have the
  *      same design (horizontal: image LEFT, content RIGHT).
  *      Reduced border-radius, reduced height, wider.
@@ -425,7 +425,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
       headings.forEach((heading) => {
         const rect = heading.getBoundingClientRect();
         if (rect.top <= headerOffset) {
-          // This heading has been scrolled past — it's a candidate.
+          // This heading has been scrolled past - it's a candidate.
           // Since we iterate in order, the last match wins (most recently passed).
           activeId = heading.id;
         }
@@ -520,7 +520,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                * The grid uses [1fr_240px] so the article column takes all available
                * space while the TOC sidebar is fixed at 240px. The article text
                * has a max-w-[56rem] (~896px) for comfortable reading width, wider
-               * than before. The article stays on the LEFT side of the viewport —
+               * than before. The article stays on the LEFT side of the viewport -
                * it is NOT centered on the full screen.
                *
                * BACKEND: No layout configuration needed. The TOC auto-shows/hides
@@ -601,7 +601,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                        *
                        * INLINE IMAGE RULES:
                        *   - Images render at NATURAL dimensions. No forced aspect ratio.
-                       *   - NO border-radius (no rounding) — editorial, raw feel.
+                       *   - NO border-radius (no rounding) - editorial, raw feel.
                        *   - max-width: 100% so they never exceed the text column.
                        *
                        * HEADING IDs:
@@ -639,7 +639,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                               {introText}
                             </p>
 
-                            {/* Structured sections — each heading gets an ID for TOC linking */}
+                            {/* Structured sections - each heading gets an ID for TOC linking */}
                             {articleSections.map((section, idx) => {
                               const sectionId = `section-${idx + 1}`;
                               return (
@@ -698,8 +698,8 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                   {/* ═══ RIGHT: Sidebar (sticky, below fixed header) ═══
                    *
                    * Contains ONLY:
-                   *   1. Share buttons — social sharing + copy link (ABOVE TOC).
-                   *   2. Table of Contents — auto-extracted from article headings.
+                   *   1. Share buttons - social sharing + copy link (ABOVE TOC).
+                   *   2. Table of Contents - auto-extracted from article headings.
                    *
                    * The sidebar is sticky and positioned just below the fixed
                    * 68px navigation header (top-[84px] with padding). It fills
@@ -742,7 +742,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                 {/* ═══ Related Articles: 2 cards, one at LEFT edge, one at RIGHT edge ═══
                  *
                  * Both cards have the SAME design (horizontal: image LEFT, content RIGHT).
-                 * They sit at the EDGES of the full-width container — not centered as a group.
+                 * They sit at the EDGES of the full-width container - not centered as a group.
                  * One card is at the far LEFT, one at the far RIGHT.
                  *
                  * BACKEND: `post.relatedSlugs[]` takes priority. Fallback: same-category posts.
@@ -776,7 +776,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
               <UnifiedCtaSection
                 eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
                 heading="Stay updated on compliance changes"
-                description="Get practical guides and regulatory updates delivered to your inbox. No spam — just what matters for your business in Tanzania."
+                description="Get practical guides and regulatory updates delivered to your inbox. No spam - just what matters for your business in Tanzania."
               >
                 <NewsletterForm />
               </UnifiedCtaSection>

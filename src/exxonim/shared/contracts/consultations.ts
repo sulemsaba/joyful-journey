@@ -104,10 +104,10 @@ export interface ApiConsultationListParams extends ApiPaginationParams {
 export type ApiConsultationListResponse = ApiPaginatedResponse<ApiConsultation>;
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * PUBLIC TRACKING SYSTEM — Client Case Tracking
+ * PUBLIC TRACKING SYSTEM - Client Case Tracking
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * BACKEND TEAM (FastAPI + PostgreSQL) — READ THIS:
+ * BACKEND TEAM (FastAPI + PostgreSQL) - READ THIS:
  * ──────────────────────────────────────────────
  * These types define the API contract for the public tracking lookup feature.
  *
@@ -136,7 +136,7 @@ export type ApiConsultationListResponse = ApiPaginatedResponse<ApiConsultation>;
  *   - All communication over HTTPS
  *   - Frontend sets Referrer-Policy: no-referrer
  *
- * See: "Exxonim Client Case Tracking System — Technical Design Report v1.0"
+ * See: "Exxonim Client Case Tracking System - Technical Design Report v1.0"
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /**
@@ -179,11 +179,11 @@ export interface ApiTrackingMilestone {
 }
 
 /**
- * Response body for the public tracking lookup — SUCCESS.
+ * Response body for the public tracking lookup - SUCCESS.
  *
  * BACKEND: This is the EXTENDED response format that includes visible milestones
  * for a richer client experience. The minimal spec response (just status + milestone
- * + nextMilestone) is also supported — the frontend gracefully handles both.
+ * + nextMilestone) is also supported - the frontend gracefully handles both.
  *
  * Minimal response (spec v1.0 §4):
  *   { status, milestone, lastUpdated, nextMilestone }
@@ -202,7 +202,7 @@ export interface ApiTrackingLookupResponse {
   /** The tracking code that was looked up (for display confirmation) */
   trackingCode?: string;
 
-  /** Service type label (e.g., "Company Registration") — from service_type lookup */
+  /** Service type label (e.g., "Company Registration") - from service_type lookup */
   serviceType?: string;
 
   /** Current milestone label (customer-facing) */
@@ -241,11 +241,11 @@ export interface ApiTrackingLookupResponse {
 }
 
 /**
- * Response body for the public tracking lookup — NOT FOUND.
+ * Response body for the public tracking lookup - NOT FOUND.
  *
  * BACKEND: Always return this exact shape for invalid, expired, or non-existent
  * tracking codes. Do NOT distinguish between "code doesn't exist" and
- * "code exists but case is closed/blocked" — this prevents information leakage.
+ * "code exists but case is closed/blocked" - this prevents information leakage.
  *
  * Return HTTP 404 with this body.
  */

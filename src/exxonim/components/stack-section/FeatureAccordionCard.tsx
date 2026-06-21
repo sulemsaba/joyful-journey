@@ -35,7 +35,7 @@ export function FeatureAccordionCard({
 
   return (
     <div className="flex items-center w-full">
-      {/* Accordion — full width, visual placeholder reserved for future design */}
+      {/* Accordion - full width, visual placeholder reserved for future design */}
       <div className="grid gap-4 w-full">
         <div className="grid">
           {rows.map((row, idx) => {
@@ -110,7 +110,7 @@ export function FeatureAccordionCard({
         </div>
       </div>
 
-      {/* Visual placeholder — will be replaced with new design later */}
+      {/* Visual placeholder - will be replaced with new design later */}
     </div>
   );
 }

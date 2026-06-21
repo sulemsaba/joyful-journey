@@ -4,13 +4,13 @@ import type { ReactNode } from 'react';
 import { Container } from './primitives/Container';
 
 /**
- * UnifiedCtaSection — One consistent CTA card design across all pages.
+ * UnifiedCtaSection - One consistent CTA card design across all pages.
  *
  * Same shell everywhere: full-width card with teal radial gradient glow,
  * border, rounded corners. Only the content (eyebrow, heading,
  * description, action area) changes per page via props.
  *
- * Brand accent: #0f5c63 teal — the radial gradient glow at the top
+ * Brand accent: #0f5c63 teal - the radial gradient glow at the top
  * of the card is the signature brand element.
  */
 
@@ -21,7 +21,7 @@ export interface UnifiedCtaSectionProps {
   heading: string;
   /** Supporting description below the heading. */
   description?: string;
-  /** Action area — email form, buttons, etc. */
+  /** Action area - email form, buttons, etc. */
   children: ReactNode;
   /** Section aria-label. */
   ariaLabel?: string;

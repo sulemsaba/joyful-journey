@@ -185,7 +185,7 @@ export const apiRoutes = {
   },
   public: {
     /**
-     * Public tracking lookup — POST /track
+     * Public tracking lookup - POST /track
      *
      * BACKEND (FastAPI): The spec defines this as POST /api/track.
      * The Next.js mock API uses POST /api/v1/track (catch-all route convention).

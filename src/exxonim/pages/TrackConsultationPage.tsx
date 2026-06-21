@@ -1,12 +1,12 @@
 /**
- * Track Your Consultation page — Exxonim Client Case Tracking System
+ * Track Your Consultation page - Exxonim Client Case Tracking System
  *
  * ═══════════════════════════════════════════════════════════════════════════
  * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Tracking Lookup (via lookupTrackingCode → consultationService):
- *   POST   /api/v1/track                      — Look up a case by tracking code
+ *   POST   /api/v1/track                      - Look up a case by tracking code
  *   Request: { trackingNumber: "11111A" }
  *   Response (200): { status, trackingCode, serviceType, milestone,
  *                     lastUpdated, nextMilestone, message, completedSteps,
@@ -14,25 +14,25 @@
  *   Response (404): { status: "not_found", message: "..." }
  *
  * Consultation Creation (from Contact page, referenced here):
- *   POST   /api/v1/consultations              — Submit a new consultation
+ *   POST   /api/v1/consultations              - Submit a new consultation
  *
  * PostgreSQL Tables:
- *   cases — id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
+ *   cases - id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
  *           status (active | completed | on_hold), created_at, updated_at
- *   case_milestones — id, case_id, milestone_id, status (completed | current | pending),
+ *   case_milestones - id, case_id, milestone_id, status (completed | current | pending),
  *                     visible_to_client, completed_at
- *   milestones — id, service_type_id, label, sort_order
- *   service_types — id, code, name, description
- *   customers — id, full_name, email, phone, company
+ *   milestones - id, service_type_id, label, sort_order
+ *   service_types - id, code, name, description
+ *   customers - id, full_name, email, phone, company
  *
  * See: src/exxonim/services/consultationService.ts for full endpoint documentation.
  *
  * ═══════════════════════════════════════════════════════════════════════════
- * BACKEND TEAM (FastAPI + PostgreSQL) — INTEGRATION GUIDE
+ * BACKEND TEAM (FastAPI + PostgreSQL) - INTEGRATION GUIDE
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * This page implements the public-facing tracking lookup per the
- * "Exxonim Client Case Tracking System — Technical Design Report v1.0"
+ * "Exxonim Client Case Tracking System - Technical Design Report v1.0"
  *
  * ── TRACKING CODE FORMAT ──
  *   6 characters: 5 digits + 1 uppercase letter (letter can be in any position)
@@ -42,7 +42,7 @@
  *
  * ── API CONTRACT ──
  *   Endpoint: POST /api/track
- *   (Next.js mock uses POST /api/v1/track — update when FastAPI is live)
+ *   (Next.js mock uses POST /api/v1/track - update when FastAPI is live)
  *
  *   Request:  { "trackingNumber": "11111A" }
  *   Response (200): { status, trackingCode, serviceType, milestone,
@@ -54,10 +54,10 @@
  *   or non-existent codes to prevent information leakage.
  *
  * ── DEMO TRACKING CODES (mock API) ──
- *   A11111 — Active consultation (Company Registration, 3/6 milestones done)
- *   22A222 — Completed consultation (TIN Application, all 4 milestones done)
- *   333A33 — On hold consultation (Business Licensing, awaiting client documents)
- *   4444A4 — Active consultation (Work Permit Application, 4/7 milestones done)
+ *   A11111 - Active consultation (Company Registration, 3/6 milestones done)
+ *   22A222 - Completed consultation (TIN Application, all 4 milestones done)
+ *   333A33 - On hold consultation (Business Licensing, awaiting client documents)
+ *   4444A4 - Active consultation (Work Permit Application, 4/7 milestones done)
  *   Any other code matching 5 digits + 1 letter (any position) → "not found"
  *
  * ═══════════════════════════════════════════════════════════════════════════
@@ -193,7 +193,7 @@ function getStatusDisplay(
 }
 
 /* ─────────────────────────────────────────────────────────
- * DEMO CODES — env-gated
+ * DEMO CODES - env-gated
  * ───────────────────────────────────────────────────────── */
 const SHOW_DEMO_HINT =
   typeof window !== "undefined" &&
@@ -203,7 +203,7 @@ const SHOW_DEMO_HINT =
 const DEMO_CODES = ["A11111", "22A222", "333A33", "4444A4"] as const;
 
 /* ─────────────────────────────────────────────────────────
- * HOW IT WORKS STEPS — uses Lucide icons
+ * HOW IT WORKS STEPS - uses Lucide icons
  * ───────────────────────────────────────────────────────── */
 const HOW_IT_WORKS_STEPS = [
   {
@@ -216,7 +216,7 @@ const HOW_IT_WORKS_STEPS = [
     icon: <Search className="w-8 h-8" />,
     title: "Check instantly",
     detail:
-      "Enter your code here — no login, no account needed.",
+      "Enter your code here - no login, no account needed.",
   },
   {
     icon: <Bell className="w-8 h-8" />,
@@ -248,7 +248,7 @@ function TrackingResultCard({
     <div className="grid gap-6">
       {/* ── Status header card ── */}
       <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
-        {/* Progress bar — color matches status */}
+        {/* Progress bar - color matches status */}
         {totalCount > 0 && (
           <div className="h-1.5 bg-surface-soft">
             <div
@@ -274,7 +274,7 @@ function TrackingResultCard({
               <span className="text-2xl md:text-3xl font-mono font-bold text-text tracking-[0.15em]">
                 {result.trackingCode
                   ? formatTrackingCode(result.trackingCode)
-                  : "—— —— ——"}
+                  : "-- -- --"}
               </span>
             </div>
             <span
@@ -295,7 +295,7 @@ function TrackingResultCard({
             </span>
           </div>
 
-          {/* Row 2: Key details — responsive grid */}
+          {/* Row 2: Key details - responsive grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y border-border-soft">
             {result.serviceType && (
               <DetailItem label="Service" value={result.serviceType} />
@@ -308,7 +308,7 @@ function TrackingResultCard({
             />
             <DetailItem
               label="Next Step"
-              value={result.nextMilestone ?? "—"}
+              value={result.nextMilestone ?? "-"}
             />
           </div>
 
@@ -528,7 +528,7 @@ function MilestoneItem({
 /* ─────────────────────────────────────────────────────────
  * NOT FOUND COMPONENT
  *
- * SECURITY: Generic message — no format hints or pattern leakage.
+ * SECURITY: Generic message - no format hints or pattern leakage.
  * ───────────────────────────────────────────────────────── */
 function TrackingNotFound({
   onReset,
@@ -547,7 +547,7 @@ function TrackingNotFound({
             No consultation found
           </h3>
           <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
-            Double-check your code and try again. Your code is 6 characters — 5 digits and 1 letter.
+            Double-check your code and try again. Your code is 6 characters - 5 digits and 1 letter.
           </p>
         </div>
       </div>
@@ -558,7 +558,7 @@ function TrackingNotFound({
         <div className="grid gap-2 text-sm text-text-muted">
           <div className="flex items-start gap-2">
             <MessageCircle className="w-4 h-4 text-[#25D366] mt-0.5 flex-shrink-0" />
-            <span>Check your WhatsApp — we send your code when your consultation starts.</span>
+            <span>Check your WhatsApp - we send your code when your consultation starts.</span>
           </div>
           <div className="flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
@@ -588,10 +588,10 @@ function TrackingNotFound({
 
 /* ─── L9: TRACKING_SKELETON ────────────────────────────────────────────
  * LABEL:    TRACKING_SKELETON
- * POSITION: Track Consultation page — replaces tracking result card during loading
+ * POSITION: Track Consultation page - replaces tracking result card during loading
  * APPEARANCE: Shimmer-animated card with progress bar, header row,
  *             and 4-column stats grid
- * STATUS:   disabled — returns null
+ * STATUS:   disabled - returns null
  * CSS REQUIRED: .animate-shimmer + @keyframes shimmer (add to globals.css)
  * USED BY:  TrackConsultationPage (lines ~940-944, also disabled)
  * RE-ENABLE: Uncomment JSX below + add .animate-shimmer CSS to globals.css
@@ -625,7 +625,7 @@ function TrackingSkeleton() {
 }
 
 /* ─────────────────────────────────────────────────────────
- * TRACKING CODE INPUT — auto-formatting, paste support
+ * TRACKING CODE INPUT - auto-formatting, paste support
  *
  * UX BEHAVIOUR:
  *   User types "84" → displays "84"
@@ -798,7 +798,7 @@ export function TrackConsultationPage() {
               "radial-gradient(60% 50% at 80% 0%, var(--color-accent-gradient-subtle), transparent 70%), radial-gradient(40% 40% at 10% 20%, var(--color-accent-gradient-weak), transparent 70%)",
           }}
         />
-        {/* Top fade: page bg → hero gradient — soft transition instead of hard line */}
+        {/* Top fade: page bg → hero gradient - soft transition instead of hard line */}
         <div
           className="absolute top-0 left-0 right-0 h-24 -z-[5] pointer-events-none"
           style={{
@@ -806,7 +806,7 @@ export function TrackConsultationPage() {
               "linear-gradient(to bottom, var(--color-page) 0%, var(--color-page) 10%, transparent 100%)",
           }}
         />
-        {/* Breadcrumb — now inside hero for seamless fade */}
+        {/* Breadcrumb - now inside hero for seamless fade */}
         <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           <Breadcrumb
             items={[
@@ -816,7 +816,7 @@ export function TrackConsultationPage() {
           />
         </div>
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
-          {/* Left: Text — on mobile renders AFTER the tracking card */}
+          {/* Left: Text - on mobile renders AFTER the tracking card */}
           <div className="grid gap-6" style={{ order: 2 }}>
             <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
               <span className="relative flex h-2 w-2">
@@ -834,7 +834,7 @@ export function TrackConsultationPage() {
 
           </div>
 
-          {/* Right: Tracking lookup card — on mobile renders FIRST */}
+          {/* Right: Tracking lookup card - on mobile renders FIRST */}
           <div className="relative" style={{ order: 1 }}>
             <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8 grid gap-5">
               <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
@@ -873,7 +873,7 @@ export function TrackConsultationPage() {
                 Lost your code?
               </a>
 
-              {/* Error state — dismissible */}
+              {/* Error state - dismissible */}
               {searchError && (
                 <div
                   className="p-3 rounded-xl bg-error-soft/30 border border-error/10 text-error text-sm flex items-start justify-between gap-2"
@@ -891,7 +891,7 @@ export function TrackConsultationPage() {
                 </div>
               )}
 
-              {/* Quick stats — only unique value props */}
+              {/* Quick stats - only unique value props */}
               <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-soft">
                 <div className="grid gap-1 items-center text-center">
                   <Clock className="w-5 h-5 text-accent mx-auto" />
@@ -913,7 +913,7 @@ export function TrackConsultationPage() {
                 </div>
               </div>
 
-              {/* Demo hint — env-gated, clickable chips, no pattern text */}
+              {/* Demo hint - env-gated, clickable chips, no pattern text */}
               {SHOW_DEMO_HINT && (
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   <span className="text-[0.65rem] text-text-soft/60">Demo:</span>
@@ -932,7 +932,7 @@ export function TrackConsultationPage() {
             </div>
           </div>
         </div>
-        {/* Bottom fade: hero gradient → page bg — soft transition to content below */}
+        {/* Bottom fade: hero gradient → page bg - soft transition to content below */}
         <div
           className="absolute bottom-0 left-0 right-0 h-20 -z-[5] pointer-events-none"
           style={{
@@ -944,7 +944,7 @@ export function TrackConsultationPage() {
 
       {/* ── Tracking result ── */}
       <div ref={resultRef}>
-        {/* Inline search indicator — subtle, in the result area only.
+        {/* Inline search indicator - subtle, in the result area only.
          * NOT a full-page loader. Shows a minimal "Searching..." message
          * inside the result panel so users know the lookup is in progress. */}
         {isSearching && (
@@ -1020,7 +1020,7 @@ export function TrackConsultationPage() {
         </div>
       </section>
 
-      {/* ── Privacy + Lost code — combined to reduce redundancy ── */}
+      {/* ── Privacy + Lost code - combined to reduce redundancy ── */}
       <section id="lost-code" className="py-16 md:py-20 scroll-mt-8">
         <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[42rem] grid gap-4">
           <div className="flex items-start gap-4 p-5 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
@@ -1037,7 +1037,7 @@ export function TrackConsultationPage() {
             <div className="grid gap-0.5">
               <strong className="text-text text-sm">Lost your code?</strong>
               <p className="m-0 text-text-muted text-xs leading-relaxed">
-                Check your WhatsApp — we send it when your consultation starts. Or{" "}
+                Check your WhatsApp - we send it when your consultation starts. Or{" "}
                 <SmartLink href={routes.contact} className="text-accent hover:text-accent-hover font-semibold transition-colors">contact us</SmartLink> and we&rsquo;ll look it up.
               </p>
             </div>

@@ -51,7 +51,7 @@ export function useRevealOnScroll(pathname?: string) {
           }
         });
       },
-      // Use simple threshold without negative rootMargin —
+      // Use simple threshold without negative rootMargin -
       // negative rootMargin can fail on iOS Safari with overflow-x:clip
       { threshold: 0.05 }
     );
@@ -85,7 +85,7 @@ export function useRevealOnScroll(pathname?: string) {
 
     scanAndObserve();
 
-    // Debounced MutationObserver — coalesces rapid DOM mutations
+    // Debounced MutationObserver - coalesces rapid DOM mutations
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     let autoDisconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -99,7 +99,7 @@ export function useRevealOnScroll(pathname?: string) {
       subtree: true,
     });
 
-    // Auto-disconnect MutationObserver after 15s — by then all lazy pages
+    // Auto-disconnect MutationObserver after 15s - by then all lazy pages
     // will have loaded, so there's no need to keep watching DOM changes
     autoDisconnectTimer = setTimeout(() => {
       mutationObserver.disconnect();

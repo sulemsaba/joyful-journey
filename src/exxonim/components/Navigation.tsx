@@ -14,7 +14,7 @@ import { cn } from "@/exxonim/utils/cn";
 import { preloadRoute } from "@/exxonim/preloadRoutes";
 
 /**
- * Navigation component — the fixed site header.
+ * Navigation component - the fixed site header.
  *
  * ARCHITECTURE:
  * ─────────────
@@ -191,7 +191,7 @@ export function Navigation({
        * MOBILE: Traditional full-width bar (< xl)
        * ───────────────────────────────────────────────────────
        * Transparent when over hero (homepage, scroll top),
-       * solid bg + blur when scrolled — same as desktop.
+       * solid bg + blur when scrolled - same as desktop.
        * Logo left, theme toggle + hamburger right.
        * Menu expands below the bar naturally.
        * Click outside closes the menu. */}
@@ -206,7 +206,7 @@ export function Navigation({
         )}
       >
         <div className="h-full px-4 flex items-center justify-between">
-          {/* Logo — matches footer size: h-8 sm:h-11 */}
+          {/* Logo - matches footer size: h-8 sm:h-11 */}
           <SmartLink
             href={routes.home}
             onClick={closeAllMenus}

@@ -106,9 +106,9 @@ export function ServicesOverviewSection({
       aria-labelledby="services-overview-title"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
-        {/* ── Hero + vertical stats slideshow — 2-column layout ── */}
+        {/* ── Hero + vertical stats slideshow - 2-column layout ── */}
         <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:gap-12 items-center">
-          {/* ── Left: Hero — open, no card, no CTA button (CTA is at bottom of page) ── */}
+          {/* ── Left: Hero - open, no card, no CTA button (CTA is at bottom of page) ── */}
           <div className="text-center lg:text-left" data-reveal>
             <p className="m-0 mb-4 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
               {content.eyebrow}
@@ -178,7 +178,7 @@ export function ServicesOverviewSection({
           </div>
         </div>
 
-        {/* ── Service search — simple inline, aligned right, no card container. ── */}
+        {/* ── Service search - simple inline, aligned right, no card container. ── */}
         <div
           ref={searchContainerRef}
           className="mt-8 md:mt-10 relative max-w-md ml-auto"

@@ -1,5 +1,5 @@
 /**
- * Service Index — barrel file for all API service modules.
+ * Service Index - barrel file for all API service modules.
  *
  * FASTAPI BACKEND MODULES COVERED:
  * ────────────────────────────────

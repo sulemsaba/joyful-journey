@@ -1,24 +1,24 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/site-settings               — List all site settings (admin only)
- * GET    /api/v1/site-settings/{key}         — Get single site setting by key (public)
- * PUT    /api/v1/site-settings/{key}         — Update site setting (admin only)
+ * GET    /api/v1/site-settings               - List all site settings (admin only)
+ * GET    /api/v1/site-settings/{key}         - Get single site setting by key (public)
+ * PUT    /api/v1/site-settings/{key}         - Update site setting (admin only)
  *
  * PostgreSQL Tables:
- *   site_settings — id, key (UNIQUE), value (JSONB), created_at, updated_at
+ *   site_settings - id, key (UNIQUE), value (JSONB), created_at, updated_at
  *
  * Known Setting Keys:
- *   brand          — { name: str, lightLogoSrc: str, darkLogoSrc: str }
- *   company_info   — { name: str, phones: str[], emails: str[], address: str, whatsapp: str }
- *   footer         — { quickLinks: NavLink[], otherResources: NavLink[], tagline: str,
+ *   brand          - { name: str, lightLogoSrc: str, darkLogoSrc: str }
+ *   company_info   - { name: str, phones: str[], emails: str[], address: str, whatsapp: str }
+ *   footer         - { quickLinks: NavLink[], otherResources: NavLink[], tagline: str,
  *                      primaryCta: { label: str, href: str }, copyright: str }
- *   seo_defaults   — { robotsIndex: bool, robotsFollow: bool, canonicalBaseUrl: str,
+ *   seo_defaults   - { robotsIndex: bool, robotsFollow: bool, canonicalBaseUrl: str,
  *                      defaultMetaDescription: str, defaultShareImageUrl: str }
- *   office_hours   — { schedule: str, timezone: str }
- *   social_links   — { links: [{ platform: str, url: str }] }
- *   policy_versions — { privacyPolicyVersion: str, termsVersion: str, cookieVersion: str }
- *   contact_map    — { embedUrl: str, latitude: float, longitude: float }
+ *   office_hours   - { schedule: str, timezone: str }
+ *   social_links   - { links: [{ platform: str, url: str }] }
+ *   policy_versions - { privacyPolicyVersion: str, termsVersion: str, cookieVersion: str }
+ *   contact_map    - { embedUrl: str, latitude: float, longitude: float }
  *
  * CACHING:
  * ────────

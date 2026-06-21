@@ -18,7 +18,7 @@ import { PRIVACY_CONSENT_EVENT } from "@/exxonim/services/privacyService";
 const STORAGE_KEY = "exxonim-theme";
 const LEGACY_STORAGE_KEY = "koro-theme";
 const TRANSITION_CLASS = "theme-transition";
-const TRANSITION_DURATION = 400; // ms — must match globals.css
+const TRANSITION_DURATION = 400; // ms - must match globals.css
 
 function getStoredTheme(): Theme | null {
   if (typeof window === "undefined") {
@@ -73,7 +73,7 @@ export function useTheme() {
 
     // The favicon follows the system/browser theme (prefers-color-scheme),
     // NOT the website's manual theme toggle. The <head> contains two <link>
-    // elements — #favicon-light and #favicon-dark — and the browser picks the
+    // elements - #favicon-light and #favicon-dark - and the browser picks the
     // right one based on OS preference via the media attribute.
     // We restore the original attributes so the media-query switching stays active
     // (in case anything rewrites them elsewhere).
@@ -140,11 +140,11 @@ export function useTheme() {
       // Smooth theme switch using CSS transitions instead of View Transitions.
       // We temporarily add a class that enables color transitions on ALL
       // elements, change the theme, then remove the class after the
-      // transition completes. This way every element — toggle knob,
-      // text, buttons, backgrounds — smoothly morphs to the new colors.
+      // transition completes. This way every element - toggle knob,
+      // text, buttons, backgrounds - smoothly morphs to the new colors.
       const root = document.documentElement;
 
-      // Add transition class — enables smooth color interpolation
+      // Add transition class - enables smooth color interpolation
       root.classList.add(TRANSITION_CLASS);
 
       // Apply the theme change

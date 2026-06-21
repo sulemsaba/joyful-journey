@@ -1,9 +1,9 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/blog/posts                   — List blog posts (public, published only)
- * GET    /api/v1/blog/posts/{slug}            — Get single blog post by slug (public)
- * GET    /api/v1/blog/categories              — List blog categories (public)
+ * GET    /api/v1/blog/posts                   - List blog posts (public, published only)
+ * GET    /api/v1/blog/posts/{slug}            - Get single blog post by slug (public)
+ * GET    /api/v1/blog/categories              - List blog categories (public)
  *
  * CACHING: TanStack Query handles caching via persistQueryClient.
  * Hooks use placeholderData from fallbackPublicContent.ts.

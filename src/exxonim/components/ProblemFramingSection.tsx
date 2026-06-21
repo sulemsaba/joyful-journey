@@ -4,7 +4,7 @@ import { Frown, FileQuestion, Clock, type LucideIcon } from 'lucide-react';
 import type { ProblemFramingItem } from '@/exxonim/types';
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * ProblemFramingSection — Pain-point cards that visitors relate to before
+ * ProblemFramingSection - Pain-point cards that visitors relate to before
  * seeing the services section.
  *
  * Displays 3 cards with iconic frustrations, italicized quotes, and
@@ -48,7 +48,7 @@ export function ProblemFramingSection({ items }: ProblemFramingSectionProps) {
             Running a business in Tanzania shouldn&apos;t mean chasing offices
           </h2>
           <p className="text-text-muted text-sm leading-relaxed">
-            These frustrations are common — but they don&apos;t have to be your normal.
+            These frustrations are common - but they don&apos;t have to be your normal.
           </p>
         </div>
 

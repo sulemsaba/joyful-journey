@@ -2,18 +2,18 @@
  * FASTAPI BACKEND ENDPOINTS USED BY THIS COMPONENT:
  * ──────────────────────────────────────────────────
  * Blog Posts (via parent page → blogService → useBlogPosts hook):
- *   GET    /api/v1/blog/posts                 — List blog posts (public, published only)
+ *   GET    /api/v1/blog/posts                 - List blog posts (public, published only)
  *     Query params: page, limit, featured_on_home, sort
- *   GET    /api/v1/blog/posts/{slug}          — Get single blog post by slug (public)
+ *   GET    /api/v1/blog/posts/{slug}          - Get single blog post by slug (public)
  *
  * Blog Categories:
- *   GET    /api/v1/blog/categories            — List blog categories (public)
+ *   GET    /api/v1/blog/categories            - List blog categories (public)
  *
  * PostgreSQL Tables:
- *   blog_posts — id, slug, title, excerpt, published_at, featured_on_home,
+ *   blog_posts - id, slug, title, excerpt, published_at, featured_on_home,
  *                category_id, author_id, cover_image_url, media_label
- *   blog_categories — id, label, description, slug
- *   blog_authors — id, name, slug, role, avatar_url
+ *   blog_categories - id, label, description, slug
+ *   blog_authors - id, name, slug, role, avatar_url
  *
  * This component displays featured blog posts filtered by featuredOnHome=true,
  * sorted by publishedAt (newest first), limited to 4 posts.
@@ -32,7 +32,7 @@ import { SmartLink } from "./primitives/SmartLink";
 import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
 
 /**
- * Homepage "Latest insights" section — up to 4 featured blog cards in a
+ * Homepage "Latest insights" section - up to 4 featured blog cards in a
  * single-row horizontal rail.
  *
  * BACKEND / ADMIN INTEGRATION NOTES:
@@ -45,15 +45,15 @@ import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
  *   4. If none are featured, the homepage falls back to the 4 newest posts.
  *
  * LAYOUT BEHAVIOUR:
- *   - Single-row rail — cards NEVER wrap.
+ *   - Single-row rail - cards NEVER wrap.
  *   - Desktop (xl+): rail spans full viewport, cards are centred with
  *     justify-center. All 4 visible at once. Arrow buttons hidden (no scroll).
  *   - Mobile/tablet (<xl): same card size, rail scrolls horizontally with
  *     snap. Users can swipe or tap ← → arrows.
- *   - Card width: clamp(260px,22vw,360px) — sized so 4 fit on ≥1280px.
+ *   - Card width: clamp(260px,22vw,360px) - sized so 4 fit on ≥1280px.
  *     Mobile cards: min(84vw, 360px) for comfortable swipe width.
  *
- * ADMIN — HOW MANY POSTS TO FEATURE:
+ * ADMIN - HOW MANY POSTS TO FEATURE:
  *   - 4 posts = full row on desktop. Best visual balance.
  *   - 3 posts = centred with space on the right. Still clean.
  *   - 2 posts = centred but sparse. Add a third.

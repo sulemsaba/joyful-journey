@@ -1,5 +1,5 @@
 /**
- * Resources landing page — the hub for ALL Exxonim resources.
+ * Resources landing page - the hub for ALL Exxonim resources.
  *
  * LAYOUT:
  * ─────────
@@ -30,7 +30,7 @@
  *    (heuristic: featuredSlot posts first, then by readTimeMinutes).
  * 3. NEWSLETTER: Email subscription section with inline input + button.
  * 4. QUICK-ACCESS: 3 cards only (Guides & Articles, FAQ, Support).
- *    Track Consultation is NOT a resource — it's a service feature
+ *    Track Consultation is NOT a resource - it's a service feature
  *    already prominent in the navigation.
  * 5. EMPTY STATES: Friendly "No results" when search/filter returns nothing.
  * 6. SEARCH + FILTER: Search works together with category filter.
@@ -104,7 +104,7 @@ function comparePostsPopularFirst(left: BlogPost, right: BlogPost) {
   return new Date(`${right.publishedAt}T00:00:00Z`).getTime() - new Date(`${left.publishedAt}T00:00:00Z`).getTime();
 }
 
-/* ── Quick-access resource cards (3 only — Track Consultation is a service, not a resource) ── */
+/* ── Quick-access resource cards (3 only - Track Consultation is a service, not a resource) ── */
 const RESOURCE_CARDS = [
   {
     icon: (
@@ -135,7 +135,7 @@ const RESOURCE_CARDS = [
       </svg>
     ),
     title: "Support",
-    description: "Get direct help from Exxonim — WhatsApp, email, or phone. We respond during business hours.",
+    description: "Get direct help from Exxonim - WhatsApp, email, or phone. We respond during business hours.",
     href: routes.support,
     accent: "bg-accent/10 text-accent",
   },
@@ -495,7 +495,7 @@ export function ResourcesPage() {
     if (sortMode === "popular") {
       return [...searchFilteredPosts].sort(comparePostsPopularFirst);
     }
-    // "latest" — already sorted newest-first from getVisibleBlogPosts
+    // "latest" - already sorted newest-first from getVisibleBlogPosts
     return searchFilteredPosts;
   }, [searchFilteredPosts, sortMode]);
 
@@ -555,7 +555,7 @@ export function ResourcesPage() {
                   {page.content.hero_title}
                 </h1>
                 <p className="mt-4 text-text-muted text-lg max-w-[42rem] leading-relaxed">
-                  Everything you need to navigate Tanzanian business processes — guides, checklists, FAQs, and real-time consultation tracking.
+                  Everything you need to navigate Tanzanian business processes - guides, checklists, FAQs, and real-time consultation tracking.
                 </p>
               </div>
             </section>

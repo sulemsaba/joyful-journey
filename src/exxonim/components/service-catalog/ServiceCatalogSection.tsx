@@ -41,7 +41,7 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
   return (
     <section id="service-catalog" className="pt-4 pb-6 md:pt-8 md:pb-16">
       <Container>
-        {/* Compact hero header — eyebrow + title only (no CTA button; CTA is at page bottom) */}
+        {/* Compact hero header - eyebrow + title only (no CTA button; CTA is at page bottom) */}
         <div className="mb-8 md:mb-12">
           {heroEyebrow && (
             <p className="m-0 mb-1.5 text-[0.72rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
@@ -53,7 +53,7 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </h1>
         </div>
 
-        {/* Error State — only shown when there is NO data at all */}
+        {/* Error State - only shown when there is NO data at all */}
         {!isPending && isError && !hasServices && (
           <div className={cn(
             'flex flex-col items-center justify-center py-16 text-center',
@@ -84,7 +84,7 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </div>
         )}
 
-        {/* Category rails — one heading + horizontal scroll per category. No tabs. */}
+        {/* Category rails - one heading + horizontal scroll per category. No tabs. */}
         {!isPending && hasServices && (
           <div className="flex flex-col gap-10 md:gap-14">
             {CATEGORY_ORDER.map((categoryName) => {
@@ -135,21 +135,21 @@ function MinimalServiceCard({ service }: { service: ServiceCatalogItem }) {
       href={serviceDetailPath(service.slug)}
       className="group snap-start flex-none w-64 md:w-72 flex flex-col gap-2 p-4 rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
     >
-      {/* Badge (if any) — small, inline */}
+      {/* Badge (if any) - small, inline */}
       {service.badge && (
         <span className="inline-flex items-center self-start px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider rounded-full bg-accent-soft text-accent">
           {service.badge}
         </span>
       )}
-      {/* Title — minimal */}
+      {/* Title - minimal */}
       <h3 className="text-sm md:text-base font-bold text-text leading-tight group-hover:text-accent transition-colors">
         {service.title}
       </h3>
-      {/* Short description — one line, truncated */}
+      {/* Short description - one line, truncated */}
       <p className="text-xs text-text-muted leading-relaxed line-clamp-2 flex-1">
         {service.short_description}
       </p>
-      {/* See more — takes user to detail page */}
+      {/* See more - takes user to detail page */}
       <span className="inline-flex items-center gap-1 mt-1 text-xs font-medium text-accent">
         See more
         <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />

@@ -1,5 +1,5 @@
 /**
- * Desktop navigation — rendered as a centered pill inside the header.
+ * Desktop navigation - rendered as a centered pill inside the header.
  *
  * LAYOUT ORDER (explicit, not API-driven):
  *   [Home] [About] [Services ▼] [Resources ▼] [Career] [Contact] [● Track Consultation]
@@ -9,7 +9,7 @@
  * Both Services and Resources dropdowns use a premium opaque mega menu
  * design with React-state-controlled visibility:
  *
- *   1. The parent <nav> is `relative` — dropdowns are positioned
+ *   1. The parent <nav> is `relative` - dropdowns are positioned
  *      relative to it, centered with `left-1/2 -translate-x-1/2`
  *   2. A `pt-3` (12px) invisible bridge keeps the mouse within the
  *      nav's descendant tree while traveling to the dropdown
@@ -39,7 +39,7 @@
  * BACKEND / ADMIN INTEGRATION NOTES:
  * ──────────────────────────────────
  * Nav structure is defined in staticNavigation.ts. To change the items,
- * order, or labels, edit that file — NOT this component.
+ * order, or labels, edit that file - NOT this component.
  */
 
 import { useEffect, useRef, useState, type FocusEvent } from "react";
@@ -81,7 +81,7 @@ const navLinkBase =
   "relative inline-flex items-center justify-center h-9 px-3.5 text-[0.8rem] font-medium tracking-wide text-text rounded-full transition-all hover:bg-accent-soft";
 const navLinkActive = "bg-accent-soft text-accent";
 
-/** Shared dropdown card classes — both menus have same width, radius, and min-height */
+/** Shared dropdown card classes - both menus have same width, radius, and min-height */
 const dropdownCardBase =
   "relative overflow-visible w-[620px] rounded-2xl border p-5 min-h-[250px] " +
   "bg-surface border-border-soft";
@@ -153,7 +153,7 @@ export function DesktopNavigation({
         {/* ═══════════════════════════════════════════════════════
          * SERVICES TRIGGER
          * ═══════════════════════════════════════════════════════
-         * Only the trigger lives here — the dropdown panel is
+         * Only the trigger lives here - the dropdown panel is
          * rendered as a direct child of <nav> for centering. */}
         <div
           ref={servicesTriggerRef}
@@ -225,7 +225,7 @@ export function DesktopNavigation({
           </SmartLink>
         ))}
 
-        {/* Highlight link — Track Consultation (differentiator) */}
+        {/* Highlight link - Track Consultation (differentiator) */}
         <Button
           size="compact"
           variant="primary"
@@ -246,13 +246,13 @@ export function DesktopNavigation({
         </Button>
 
         {/* ═══════════════════════════════════════════════════════
-         * DROPDOWN PANELS — centered on <nav>
+         * DROPDOWN PANELS - centered on <nav>
          * ═══════════════════════════════════════════════════════
          * Both panels are direct children of <nav>, positioned
          * absolutely with `left-1/2 -translate-x-1/2` to center
          * them on the navigation bar.
          *
-         * `pt-3` creates the hover bridge — when the mouse moves
+         * `pt-3` creates the hover bridge - when the mouse moves
          * from a trigger down to the dropdown, it stays within the
          * nav's descendant tree, so onMouseLeave on <nav> doesn't
          * fire.
@@ -271,7 +271,7 @@ export function DesktopNavigation({
           )}
         >
           <div className={dropdownCardBase}>
-            {/* Triangle connector — points up toward the Services nav link */}
+            {/* Triangle connector - points up toward the Services nav link */}
             <div
               className="absolute -top-[11px] left-1/2 pointer-events-none -translate-x-1/2"
               style={{ marginLeft: `${triangleOffset}px` }}
@@ -288,7 +288,7 @@ export function DesktopNavigation({
               onNavigate={closeAllMenus}
             />
 
-            {/* Footer CTA row — text link left, button right edge */}
+            {/* Footer CTA row - text link left, button right edge */}
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-border-soft">
               <SmartLink
                 href={routes.contact}
@@ -321,7 +321,7 @@ export function DesktopNavigation({
           )}
         >
           <div className={dropdownCardBase}>
-            {/* Triangle connector — points up toward the Resources nav link */}
+            {/* Triangle connector - points up toward the Resources nav link */}
             <div
               className="absolute -top-[11px] left-1/2 pointer-events-none -translate-x-1/2"
               style={{ marginLeft: `${triangleOffset}px` }}

@@ -1,5 +1,5 @@
 /**
- * Route preloader registry — shared between App.tsx and Navigation.tsx.
+ * Route preloader registry - shared between App.tsx and Navigation.tsx.
  *
  * Each lazy page has a preload function that triggers the Vite chunk
  * download without mounting the component. Navigation links call these
@@ -8,7 +8,7 @@
  * ARCHITECTURE:
  *   - App.tsx imports these for idle-time preloading (requestIdleCallback)
  *   - Navigation.tsx imports routePreloadMap for hover-based preloading
- *   - Each function is idempotent — calling it multiple times is safe
+ *   - Each function is idempotent - calling it multiple times is safe
  *     because Vite caches the module after the first import()
  */
 
@@ -68,7 +68,7 @@ export const publicPagePreloaders = [
 ];
 
 /**
- * High-priority preloaders — loaded first during idle time.
+ * High-priority preloaders - loaded first during idle time.
  * These are the most likely navigation targets.
  */
 export const highPriorityPreloaders = [
@@ -101,7 +101,7 @@ export const routePreloadMap: Record<string, () => Promise<unknown>> = {
 
 /**
  * Preload a route chunk by path. Safe to call multiple times.
- * Returns void — errors are silently caught (chunk will load on navigation instead).
+ * Returns void - errors are silently caught (chunk will load on navigation instead).
  *
  * Handles both static routes ("/about", "/services") and dynamic article
  * routes ("/resources/my-article-slug", "/blog/my-article-slug").

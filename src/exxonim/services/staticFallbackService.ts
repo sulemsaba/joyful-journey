@@ -9,10 +9,10 @@
  *
  * ARCHITECTURE (priority order):
  *   Layer 0: TanStack Memory Cache (current session)
- *   Layer 1: persistQueryClient (localStorage) — instant for returning visitors
- *   Layer 2: Live API — fresh data from database
- *   Layer 3: /fallback/*.json — emergency, same server, refreshed on admin save
- *   Layer 4: placeholderData (hardcoded TypeScript) — extreme disaster only
+ *   Layer 1: persistQueryClient (localStorage) - instant for returning visitors
+ *   Layer 2: Live API - fresh data from database
+ *   Layer 3: /fallback/*.json - emergency, same server, refreshed on admin save
+ *   Layer 4: placeholderData (hardcoded TypeScript) - extreme disaster only
  *
  * FLOW FOR RETURNING VISITOR:
  *   1. Load persisted cache from localStorage → render instantly
@@ -69,7 +69,7 @@ export function getStaticFallback<T>(key: string): T | undefined {
 
 /**
  * Load a static fallback JSON file from /fallback/{key}.json.
- * Public API — used by fetchWithJsonFallback and preloadStaticFallback.
+ * Public API - used by fetchWithJsonFallback and preloadStaticFallback.
  */
 export async function loadStaticFallback<T>(
   key: string,
@@ -112,7 +112,7 @@ export async function loadStaticFallback<T>(
 }
 
 /**
- * Fetch with JSON fallback — the standard queryFn wrapper.
+ * Fetch with JSON fallback - the standard queryFn wrapper.
  *
  * Tries the API first. If the API fails, falls back to the
  * static JSON file. If both fail, throws (the query goes to

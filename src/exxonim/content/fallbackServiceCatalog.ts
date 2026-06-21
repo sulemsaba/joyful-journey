@@ -196,7 +196,7 @@ export const fallbackServices: ServiceCatalogItem[] = [
     primary_segment: ['Local Entrepreneurs', 'Enterprises'],
     badge: null,
     short_description:
-      'PAYE, SDL, WCF, and NSSF filings — all prepared and submitted on schedule.',
+      'PAYE, SDL, WCF, and NSSF filings - all prepared and submitted on schedule.',
     deliverables: [
       'Payroll compliance filing (PAYE, SDL)',
       'WCF contribution filing',

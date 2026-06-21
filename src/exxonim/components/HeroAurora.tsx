@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * HeroAurora — animated aurora curtain background for the hero section.
+ * HeroAurora - animated aurora curtain background for the hero section.
  *
  * Converted from the Exxonim Aurora Engine design. Uses HTML Canvas to
  * draw flowing curtain-like lines with depth sub-lines, creating a
@@ -11,8 +11,8 @@ import { useEffect, useRef } from "react";
  * BRAND COLORS:
  *   - Lines use the Exxonim brand accent color read from
  *     CSS custom property --color-accent at runtime.
- *   - Light mode: #0f5c63 (deep teal) — lines are subtle, text prominent
- *   - Dark mode: #7fbcc1 (bright teal) — lines are vivid, rich visual
+ *   - Light mode: #0f5c63 (deep teal) - lines are subtle, text prominent
+ *   - Dark mode: #7fbcc1 (bright teal) - lines are vivid, rich visual
  *   - Depth variation: slight opacity/lightness shifts per sub-line
  *     create a layered look while staying on-brand.
  *
@@ -100,7 +100,7 @@ function draw(
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
     const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
 
-    // Brand-colored lines — vivid glow effect (brightened for both themes)
+    // Brand-colored lines - vivid glow effect (brightened for both themes)
     const baseAlpha = isDark ? 0.06 + dF * 0.20 : 0.05 + dF * 0.12;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
@@ -113,7 +113,7 @@ function draw(
       if (subAlpha <= 0) continue;
 
       ctx.globalAlpha = subAlpha;
-      // Use brand accent color directly — slight opacity variation per sub-line
+      // Use brand accent color directly - slight opacity variation per sub-line
       ctx.strokeStyle = withAlpha(accentColor, 0.7 + sub * 0.15 + dF * 0.2);
       ctx.lineWidth = 2 + dF * 4;
 
@@ -198,7 +198,7 @@ export function HeroAurora() {
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Cache accent color + theme — only re-read every 500ms, not every frame
+    // Cache accent color + theme - only re-read every 500ms, not every frame
     let cachedAccent = "#0f5c63";
     let cachedIsDark = false;
     let lastStyleRead = 0;

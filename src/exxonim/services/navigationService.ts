@@ -1,7 +1,7 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/navigation                   — List navigation items (public, active only)
+ * GET    /api/v1/navigation                   - List navigation items (public, active only)
  *
  * NOTE: Navigation is currently loaded from static configuration
  * (staticNavigation.ts). This service is kept for future API-driven

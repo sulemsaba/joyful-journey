@@ -3,7 +3,7 @@
  *
  * ARCHITECTURE:
  *   Layer 0: Memory cache (current session)
- *   Layer 1: persistQueryClient (localStorage) — returning visitors see cache instantly
+ *   Layer 1: persistQueryClient (localStorage) - returning visitors see cache instantly
  *   Layer 2: Live API → JSON fallback (if API fails)
  *   Layer 3: Hardcoded fallback (always available, built into JS bundle)
  *

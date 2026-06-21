@@ -1,5 +1,5 @@
 /**
- * SmartLink — route-aware navigation with automatic chunk preloading.
+ * SmartLink - route-aware navigation with automatic chunk preloading.
  *
  * PROBLEM:
  *   Desktop navbar preloads route chunks on mouseenter (hover),
@@ -11,13 +11,13 @@
  *     Hero CTA → Services  =  slow (chunk downloads on click)
  *
  *   On mobile, mouseenter doesn't exist at all, so there's zero
- *   preloading — every tap starts a cold chunk download.
+ *   preloading - every tap starts a cold chunk download.
  *
  * SOLUTION:
  *   SmartLink adds preloading on THREE events:
- *     1. onMouseEnter  — desktop hover (same as navbar)
- *     2. onFocus       — keyboard navigation & mobile accessibility
- *     3. onTouchStart  — mobile tap (fires before click, gives ~300ms head start)
+ *     1. onMouseEnter  - desktop hover (same as navbar)
+ *     2. onFocus       - keyboard navigation & mobile accessibility
+ *     3. onTouchStart  - mobile tap (fires before click, gives ~300ms head start)
  *
  *   Now every route-changing element behaves consistently:
  *     Navbar → Services  =  instant
@@ -57,15 +57,15 @@ function extractPath(href: string): string | null {
 }
 
 export interface SmartLinkProps {
-  /** Navigation target — used like <Link to={...}> or <a href={...}> */
+  /** Navigation target - used like <Link to={...}> or <a href={...}> */
   to?: string;
-  /** Alternative to `to` — same behavior, just different prop name for <a> compat */
+  /** Alternative to `to` - same behavior, just different prop name for <a> compat */
   href?: string;
   /** Link content */
   children: ReactNode;
   /** Additional CSS classes */
   className?: string;
-  /** Click handler — fires alongside navigation */
+  /** Click handler - fires alongside navigation */
   onClick?: MouseEventHandler<HTMLElement>;
   /** ARIA label */
   "aria-label"?: string;

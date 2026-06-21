@@ -9,7 +9,7 @@ import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 import type { AboutPageContent } from '@/exxonim/types';
 
-/* Icon map for "Who we serve" — unique icon per audience type */
+/* Icon map for "Who we serve" - unique icon per audience type */
 const AUDIENCE_ICONS = [User, Building2, Globe, HeartHandshake, Landmark];
 
 export function AboutPage() {
@@ -37,7 +37,7 @@ export function AboutPage() {
       </div>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 1: Hero — centered, no shadow, no gradient panel.
+       *  SECTION 1: Hero - centered, no shadow, no gradient panel.
        *  Clean open text, centered to fill the width without empty space.
        * ────────────────────────────────────────────────────────────── */}
       <section
@@ -61,8 +61,8 @@ export function AboutPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 2: Who we serve — compact inline pills.
-       *  Not a card grid — a tight strip of icon-pills.
+       *  SECTION 2: Who we serve - compact inline pills.
+       *  Not a card grid - a tight strip of icon-pills.
        *  Mobile: horizontal scroll. Desktop: 5-col flow.
        *  Each item is compact: icon + label only, description is subtle.
        * ────────────────────────────────────────────────────────────── */}
@@ -84,7 +84,7 @@ export function AboutPage() {
               </h2>
             </div>
 
-            {/* Compact pill strip — mobile: scroll, desktop: 5-col */}
+            {/* Compact pill strip - mobile: scroll, desktop: 5-col */}
             <div
               className="flex gap-2.5 overflow-x-auto pb-2 md:pb-0 md:grid md:grid-cols-5 md:gap-3 snap-x snap-mandatory [-webkit-mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] md:[mask-image:none]"
               style={{ scrollbarWidth: 'none' }}
@@ -115,7 +115,7 @@ export function AboutPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 3: Mission & Vision — open split, large text.
+       *  SECTION 3: Mission & Vision - open split, large text.
        *  No boxes, no borders. Just large text with a vertical divider.
        *  Accent icon circles. Feels like an editorial quote spread.
        * ────────────────────────────────────────────────────────────── */}
@@ -137,7 +137,7 @@ export function AboutPage() {
               </h2>
             </div>
 
-            {/* Open split — no boxes, no borders, just a divider line */}
+            {/* Open split - no boxes, no borders, just a divider line */}
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-0">
               {/* Mission */}
               <div className="pr-0 md:pr-12 lg:pr-16 pb-12 md:pb-0" data-reveal>
@@ -178,7 +178,7 @@ export function AboutPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 4: What sets us apart — vertical timeline.
+       *  SECTION 4: What sets us apart - vertical timeline.
        *  Filled accent number circles on a connecting line.
        *  Large title + description to the right.
        * ────────────────────────────────────────────────────────────── */}
@@ -231,7 +231,7 @@ export function AboutPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 5: CTA — accent gradient card.
+       *  SECTION 5: CTA - accent gradient card.
        * ────────────────────────────────────────────────────────────── */}
       <section
         className="py-14 md:py-20"

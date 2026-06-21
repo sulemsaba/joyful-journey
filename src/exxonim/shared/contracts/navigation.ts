@@ -23,11 +23,11 @@ import type { ApiContentStatus } from "./content";
  *     for future tooltip or SEO use.
  *
  * Admin CRUD endpoints:
- *   - GET  /admin/navigation         — list all items (flat, with parent_id)
- *   - GET  /admin/navigation/:id     — single item
- *   - POST /admin/navigation         — create item
- *   - PUT  /admin/navigation/:id     — update item (including reorder)
- *   - DELETE /admin/navigation/:id   — soft-delete (set status to "archived")
+ *   - GET  /admin/navigation         - list all items (flat, with parent_id)
+ *   - GET  /admin/navigation/:id     - single item
+ *   - POST /admin/navigation         - create item
+ *   - PUT  /admin/navigation/:id     - update item (including reorder)
+ *   - DELETE /admin/navigation/:id   - soft-delete (set status to "archived")
  *
  * The admin UI should provide:
  *   - Drag-and-drop tree editor for reordering.

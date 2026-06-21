@@ -2,11 +2,11 @@
 import { useEffect, useRef } from "react";
 
 /**
- * HeroRibbon — animated 3D-style ribbon canvas background for the hero section.
+ * HeroRibbon - animated 3D-style ribbon canvas background for the hero section.
  *
  * PERFORMANCE OPTIMIZATIONS (v2):
  *   - 24 lines × 80 steps (was 80 × 250 = 20,000 → now 1,920 lineTo calls)
- *   - Cached accent color — only reads getComputedStyle on theme change, not every frame
+ *   - Cached accent color - only reads getComputedStyle on theme change, not every frame
  *   - Throttled to ~30fps for subtle background animation
  *   - Pauses when canvas is off-screen via IntersectionObserver
  *   - Respects prefers-reduced-motion (stops animation)
@@ -35,7 +35,7 @@ export function HeroRibbon() {
   const lastFrameRef = useRef(0);
   const isVisibleRef = useRef(true);
 
-  // Cached style values — updated on theme change, not every frame
+  // Cached style values - updated on theme change, not every frame
   const accentColorRef = useRef("");
   const isDarkRef = useRef(false);
 
@@ -107,7 +107,7 @@ export function HeroRibbon() {
       ctx!.strokeStyle = accentColorRef.current;
       ctx!.lineWidth = 1.2;
 
-      // Ribbon configuration — reduced for performance
+      // Ribbon configuration - reduced for performance
       const lineCount = 24;
       const spacingY = 3.5;
       const ribbonCenterY = cssH / 2;

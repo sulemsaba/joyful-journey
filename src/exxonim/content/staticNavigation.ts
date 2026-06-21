@@ -25,9 +25,9 @@
  *   with a distinctive accent-colored pill and animated indicator dot so it
  *   stands out from regular links.
  * - When adding a new page route, also update:
- *     1. routes.ts — add the route constant
- *     2. src/exxonim/pages/ — create the page component
- *     3. src/exxonim/app/App.tsx — add the static route entry
+ *     1. routes.ts - add the route constant
+ *     2. src/exxonim/pages/ - create the page component
+ *     3. src/exxonim/app/App.tsx - add the static route entry
  *   The admin UI should warn that new routes require a code deploy.
  *
  * MEGA MENU LAYOUT:
@@ -66,7 +66,7 @@ export const staticNav = {
   ] as MenuItem[],
 
   /* ═══════════════════════════════════════════════════════════
-   * SERVICES MEGA MENU — Split layout (50/50)
+   * SERVICES MEGA MENU - Split layout (50/50)
    * ═══════════════════════════════════════════════════════════
    *
    * BACKEND: These reflect Exxonim's 5 core service areas:
@@ -77,8 +77,8 @@ export const staticNav = {
    *   5. Operational Advisory
    *
    * Split into 2 columns for the split layout:
-   *   Column 1 — Registration & Setup (3 items, WITH icons)
-   *   Column 2 — Compliance & Operations (3 items, WITH icons)
+   *   Column 1 - Registration & Setup (3 items, WITH icons)
+   *   Column 2 - Compliance & Operations (3 items, WITH icons)
    */
   servicesLayout: "split" as MegaMenuLayout,
   servicesColumns: [
@@ -133,10 +133,10 @@ export const staticNav = {
   servicesFeatureBox: undefined as FeatureBox | undefined,
 
   /* ═══════════════════════════════════════════════════════════
-   * RESOURCES MEGA MENU — Feature layout (60/40)
+   * RESOURCES MEGA MENU - Feature layout (60/40)
    * ═══════════════════════════════════════════════════════════
    *
-   * Left side (7 cols): Two sections of links — "Learn" and "Get Help"
+   * Left side (7 cols): Two sections of links - "Learn" and "Get Help"
    *   - NO icons on items (clean, minimal)
    *   - Items trigger dynamic feature box on hover
    * Right side (5 cols): Feature box CTA card
@@ -179,7 +179,7 @@ export const staticNav = {
     },
   ] as MenuColumn[],
 
-  /** Default feature box — shown when no item is hovered */
+  /** Default feature box - shown when no item is hovered */
   resourcesFeatureBox: {
     icon: "newspaper",
     title: "Latest insights",
@@ -188,7 +188,7 @@ export const staticNav = {
     ctaHref: routes.resources,
   } as FeatureBox,
 
-  /** Dynamic feature box content — changes based on hovered item.
+  /** Dynamic feature box content - changes based on hovered item.
    *  Key = item href, Value = FeatureBox to display.
    *  When an item is hovered, the feature box fades to its mapped content.
    *  When no item is hovered, falls back to resourcesFeatureBox. */
@@ -239,18 +239,18 @@ export const staticNav = {
   ] as MenuItem[],
 
   /**
-   * Prominent highlighted link — Track Consultation is Exxonim's CORE DIFFERENTIATOR.
+   * Prominent highlighted link - Track Consultation is Exxonim's CORE DIFFERENTIATOR.
    *
-   * This is not just another service — it's the automated tracking system that
+   * This is not just another service - it's the automated tracking system that
    * sets Exxonim apart from every competitor in Tanzania. No other consultancy
    * advertises proactive client updates or application tracking.
    *
    * How it works:
    *   - Every engagement gets a unique tracking number (e.g., EXX-24091).
    *   - At every milestone, the system sends proactive updates via WhatsApp,
-   *     email, or SMS — the client chooses their preferred channel.
+   *     email, or SMS - the client chooses their preferred channel.
    *   - The client never needs to call to ask "What's happening?"
-   *   - No login, no dashboard — just enter a tracking number on the website
+   *   - No login, no dashboard - just enter a tracking number on the website
    *     for an instant status lookup.
    *
    * BACKEND: If the admin renames or re-points this link in the future,

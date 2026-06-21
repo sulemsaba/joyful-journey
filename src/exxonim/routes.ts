@@ -27,7 +27,7 @@ export const routes = {
   faq: "/faq/",
   services: "/services/",
   resources: "/resources/",
-  blog: "/resources/",  // Alias — blog lives under /resources/ (same page)
+  blog: "/resources/",  // Alias - blog lives under /resources/ (same page)
   career: "/career/",
   contact: "/contact/",
   trackConsultation: "/track-consultation/",

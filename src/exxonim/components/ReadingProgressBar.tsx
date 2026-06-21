@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * Reading progress bar — a thin accent-colored bar fixed at the bottom of the
+ * Reading progress bar - a thin accent-colored bar fixed at the bottom of the
  * navigation header that fills proportionally as the user scrolls through an article.
  *
  * SCOPING:

@@ -4,11 +4,11 @@ import { routes } from '@/exxonim/routes';
 import { Button } from '@/exxonim/components/primitives/Button';
 
 /**
- * ComplianceCalendarSection — visual compliance calendar for Tanzania businesses.
+ * ComplianceCalendarSection - visual compliance calendar for Tanzania businesses.
  *
  * Shows a vertical timeline of 8 key Tanzania compliance deadlines grouped by
  * quarter, with a sticky CTA card on desktop. This is a key value-add feature
- * for the Services page — demonstrates Exxonim's deep knowledge of local
+ * for the Services page - demonstrates Exxonim's deep knowledge of local
  * regulatory requirements and positions the firm as a compliance partner.
  *
  * BACKEND / ADMIN INTEGRATION NOTES (FastAPI):
@@ -247,7 +247,7 @@ function CTACard() {
           </h3>
           <p className="m-0 mt-2 text-text-muted text-sm leading-relaxed">
             We track every regulatory deadline for your business and send you
-            advance reminders so you&apos;re always prepared — never caught off
+            advance reminders so you&apos;re always prepared - never caught off
             guard.
           </p>
         </div>
@@ -316,7 +316,7 @@ export function ComplianceCalendarSection() {
           </h2>
           <p className="m-0 max-w-[42rem] text-base leading-relaxed text-text-muted">
             We track these deadlines for our clients and send timely advance
-            reminders so you&apos;re always prepared — no time limit.
+            reminders so you&apos;re always prepared - no time limit.
           </p>
         </div>
 

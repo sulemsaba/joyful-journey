@@ -2,17 +2,17 @@
  * FASTAPI BACKEND ENDPOINTS USED BY THIS COMPONENT:
  * ──────────────────────────────────────────────────
  * Get Consent State (via getPrivacyConsent → privacyService):
- *   GET    /api/v1/privacy/consent              — Get current user's privacy consent state
+ *   GET    /api/v1/privacy/consent              - Get current user's privacy consent state
  *   Response: { consent_recorded: bool, categories: { necessary: bool, preferences: bool, analytics: bool },
  *              source_path: str | None }
  *
  * Update Consent (via updatePrivacyConsent → privacyService):
- *   POST   /api/v1/privacy/consent              — Record consent preferences
+ *   POST   /api/v1/privacy/consent              - Record consent preferences
  *   Request: { preferences: bool, source_path: str }
  *   Response: { consent_recorded: bool, categories: { necessary: bool, preferences: bool, analytics: bool } }
  *
  * PostgreSQL Tables:
- *   privacy_consents — id, session_id, categories (JSONB), source_path,
+ *   privacy_consents - id, session_id, categories (JSONB), source_path,
  *                      consent_recorded, created_at, updated_at
  *
  * See: src/exxonim/services/privacyService.ts for full endpoint documentation.

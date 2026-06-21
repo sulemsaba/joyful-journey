@@ -1,11 +1,11 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * GET    /api/v1/testimonials              — List all active testimonials (public)
- * GET    /api/v1/testimonials/{id}         — Get single testimonial (public)
- * POST   /api/v1/testimonials              — Create testimonial (admin only)
- * PUT    /api/v1/testimonials/{id}         — Update testimonial (admin only)
- * DELETE /api/v1/testimonials/{id}         — Delete testimonial (admin only)
+ * GET    /api/v1/testimonials              - List all active testimonials (public)
+ * GET    /api/v1/testimonials/{id}         - Get single testimonial (public)
+ * POST   /api/v1/testimonials              - Create testimonial (admin only)
+ * PUT    /api/v1/testimonials/{id}         - Update testimonial (admin only)
+ * DELETE /api/v1/testimonials/{id}         - Delete testimonial (admin only)
  *
  * CACHING: TanStack Query handles caching via persistQueryClient.
  * Hooks use placeholderData from fallbackPublicContent.ts.

@@ -1,5 +1,5 @@
 /**
- * useViewportPreload — viewport-based route chunk preloading.
+ * useViewportPreload - viewport-based route chunk preloading.
  *
  * PROBLEM:
  *   Mobile users don't hover, so onMouseEnter preloading doesn't work.
@@ -20,9 +20,9 @@
  *   - Uses IntersectionObserver with rootMargin: "200px" (start
  *     preloading 200px before the card enters the viewport)
  *   - Disconnects after the first intersection (preload once only)
- *   - Calls preloadRoute() which is idempotent — safe to call
+ *   - Calls preloadRoute() which is idempotent - safe to call
  *     multiple times, Vite caches the module after first import()
- *   - Does NOT mount the page component — only downloads the chunk
+ *   - Does NOT mount the page component - only downloads the chunk
  *
  * PERFORMANCE:
  *   - Zero layout impact (observer is passive)

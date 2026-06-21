@@ -79,7 +79,7 @@ type IdleWindow = typeof window & {
 /* ── Page-level Suspense fallback ──────────────────────
  * The boot loader overlay stays visible until actual page
  * content renders (see PageReady component below). So the
- * Suspense fallback can safely be null — the boot loader
+ * Suspense fallback can safely be null - the boot loader
  * covers the gap during lazy chunk download.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -99,7 +99,7 @@ function ScrollToTop() {
  * the gap between shell render and page content render.
  *
  * For eager-loaded pages (HomePage), this fires in the
- * same render cycle as the shell — no perceptible delay.
+ * same render cycle as the shell - no perceptible delay.
  * For lazy-loaded pages, this fires after the chunk
  * downloads and the component mounts. */
 function PageReady({ onReady }: { onReady: () => void }) {
@@ -120,7 +120,7 @@ function ResourceArticleRoute() {
 }
 
 /* ═══════════════════════════════════════════════════════════
- * APP — ROOT COMPONENT
+ * APP - ROOT COMPONENT
  * ═══════════════════════════════════════════════════════════
  *
  * No full-screen loader overlay: the body background (bg-page)
@@ -135,7 +135,7 @@ export function App({ onReady }: { onReady?: () => void }) {
 
   /* ── Page transition animation ─────────────────────────
    * On route change, trigger a subtle opacity dip on
-   * the <main> element. This is purely CSS — no layout
+   * the <main> element. This is purely CSS - no layout
    * thrashing, no JS-driven animations, no Framer Motion.
    *
    * DESIGN DECISION: We use a very short (120ms) opacity
@@ -164,7 +164,7 @@ export function App({ onReady }: { onReady?: () => void }) {
   /* ── Signal page readiness ─────────────────────────────
    * Called by <PageReady> which lives INSIDE <Routes>.
    * This guarantees the boot loader stays visible until
-   * the actual page component has rendered — not just
+   * the actual page component has rendered - not just
    * the nav + footer shell. */
   const handlePageReady = useCallback(() => {
     if (!readyFired.current && onReady) {

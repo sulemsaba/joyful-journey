@@ -24,7 +24,7 @@ section[aria-label="Service guidance overview"] h2 {
   text-wrap: balance;
 }
 
-/* ── Full-bleed utility — safe for iOS Safari ────────────
+/* ── Full-bleed utility - safe for iOS Safari ────────────
  * Replaces w-screen / 100vw which includes scrollbar width
  * on iOS Safari, causing horizontal overflow.
  * Uses 100dvw (dynamic viewport width) which excludes the
@@ -45,7 +45,7 @@ section[aria-label="Service guidance overview"] h2 {
 /* ── CSS Custom Property Animation Registration ──────────
  * @property tells the browser these custom properties hold
  * animatable <color> values. This enables smooth transitions
- * on :root — when a custom property transitions, ALL elements
+ * on :root - when a custom property transitions, ALL elements
  * using var(--that-property) automatically update smoothly,
  * including backgrounds, text colors, borders, AND gradients.
  *
@@ -54,12 +54,12 @@ section[aria-label="Service guidance overview"] h2 {
  * ONLY hex color values are used in initial-value. rgba()
  * values in initial-value cause @property registration to
  * fail silently in Samsung Internet and some Chromium forks,
- * making the property "guaranteed-invalid" — which means
+ * making the property "guaranteed-invalid" - which means
  * even :root declarations can't override it, resulting in
  * black/missing colors. Hex values are universally supported.
  *
  * Semi-transparent tokens (surface-elevated, text-muted, etc.)
- * do NOT use @property registration — they rely on :root
+ * do NOT use @property registration - they rely on :root
  * declarations only. This sacrifices smooth theme transitions
  * for those tokens but guarantees correct color rendering
  * in all browsers.
@@ -86,7 +86,7 @@ section[aria-label="Service guidance overview"] h2 {
 @property --color-cta-primary { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
 @property --color-cta-secondary { syntax: '<color>'; inherits: true; initial-value: #102529; }
 
-/* shadcn/ui color tokens — registered for smooth transitions
+/* shadcn/ui color tokens - registered for smooth transitions
  * NOTE: Using hex/rgba instead of oklch() for Samsung Internet / older browser support.
  * oklch() is not supported in Samsung Internet Browser, causing colors to appear black. */
 @property --background { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
@@ -223,7 +223,7 @@ section[aria-label="Service guidance overview"] h2 {
   --animate-accent-pulse: accent-pulse 2.2s ease-in-out infinite;
   --animate-reveal-up: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   --animate-reveal-fade: reveal-fade 0.6s ease forwards;
-  /* Retired: --animate-shimmer — skeleton loaders permanently retired */
+  /* Retired: --animate-shimmer - skeleton loaders permanently retired */
   --animate-dropdown-enter: dropdown-enter 200ms ease-out;
 
   --radius-2xl: 1.7rem;
@@ -312,7 +312,7 @@ section[aria-label="Service guidance overview"] h2 {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-/* Retired: @keyframes shimmer — skeleton loaders permanently retired.
+/* Retired: @keyframes shimmer - skeleton loaders permanently retired.
    Boot/emergency loader is now CSS-only in index.html (boot-pulse/boot-dot keyframes). */
 @keyframes gradient-rotate {
   0% { --gradient-angle: 0deg; }
@@ -325,7 +325,7 @@ section[aria-label="Service guidance overview"] h2 {
 /* Retired: @keyframes loader-pulse, loader-fade, .loader-dots, @keyframes loader-dot
    Boot/emergency loader is now CSS-only in index.html (boot-pulse/boot-dot keyframes). */
 
-/* ── Hero section — responsive height (no CLS) ──── */
+/* ── Hero section - responsive height (no CLS) ──── */
 .hero-section {
   /* Mobile: auto height so content never clips, with a min-height for visual impact */
   height: auto;
@@ -349,7 +349,7 @@ section[aria-label="Service guidance overview"] h2 {
   border-bottom-right-radius: 40px;
 }
 
-/* ── Scroll indicator — fades out when user scrolls ── */
+/* ── Scroll indicator - fades out when user scrolls ── */
 .hero-scroll-indicator {
   opacity: 1;
   transition: opacity 0.4s ease;
@@ -358,7 +358,7 @@ section[aria-label="Service guidance overview"] h2 {
   opacity: 0;
 }
 
-/* ── Review bar — stable height (no CLS) ────────── */
+/* ── Review bar - stable height (no CLS) ────────── */
 .hero-review-bar {
   height: 5.5svh;
   min-height: 48px;
@@ -409,7 +409,7 @@ html.reveal-instant [data-reveal] {
 
 /* ── Runtime theme variables ───────────────────────── */
 :root {
-  /* shadcn/ui tokens — hex/rgba for Samsung Internet / older browser support */
+  /* shadcn/ui tokens - hex/rgba for Samsung Internet / older browser support */
   --radius: 0.625rem;
   --background: #ffffff;
   --foreground: #0a0a0a;
@@ -496,7 +496,7 @@ html.reveal-instant [data-reveal] {
 }
 
 html[data-theme="dark"] {
-  /* shadcn/ui dark tokens — hex/rgba for Samsung Internet / older browser support */
+  /* shadcn/ui dark tokens - hex/rgba for Samsung Internet / older browser support */
   --background: #0f0f0f;
   --foreground: #e9e9e9;
   --card: #161616;
@@ -529,7 +529,7 @@ html[data-theme="dark"] {
   --sidebar-border: rgba(255, 255, 255, 0.14);
   --sidebar-ring: #737373;
 
-  /* ── Exxonim dark-mode tokens — comfortable dark palette ──
+  /* ── Exxonim dark-mode tokens - comfortable dark palette ──
    *
    * DESIGN RATIONALE:
    * Previous values were near-black (~3% lightness), causing:
@@ -585,7 +585,7 @@ html[data-theme="dark"] {
   --color-cta-primary: #7fbcc1;
   --color-cta-secondary: #7fbcc1;
 
-  /* Accent gradient tokens — dark mode values */
+  /* Accent gradient tokens - dark mode values */
   --color-accent-gradient-subtle: rgba(127, 188, 193, 0.18);
   --color-accent-gradient-weak: rgba(127, 188, 193, 0.10);
   --color-accent-gradient-medium: rgba(127, 188, 193, 0.22);
@@ -600,7 +600,7 @@ html[data-theme="dark"] {
  *
  * When a registered custom property (via @property) transitions
  * on :root, ALL elements using var(--that-property) automatically
- * see the smoothly interpolated value — including elements with
+ * see the smoothly interpolated value - including elements with
  * gradients, box-shadows, and border-colors that reference it.
  *
  * This approach:
@@ -612,11 +612,11 @@ html[data-theme="dark"] {
  *
  * The `.theme-transition` class is added to <html> before the
  * theme change and removed after 400ms. Without the class,
- * no transitions are active — so initial page load has no flash.
+ * no transitions are active - so initial page load has no flash.
  */
 html.theme-transition {
   transition:
-    /* Exxonim design tokens — only @property-registered (hex initial-value) tokens get smooth transitions.
+    /* Exxonim design tokens - only @property-registered (hex initial-value) tokens get smooth transitions.
      * Semi-transparent tokens (rgba initial-values) are NOT @property-registered for Samsung Internet
      * compatibility, so they can't be transitioned here. They swap instantly instead. */
     --color-page 0.4s ease,
@@ -658,7 +658,7 @@ html.theme-transition {
 }
 
 /* ── Logo crossfade during theme transition ───────────
- * Both logos are always rendered — one visible, one hidden
+ * Both logos are always rendered - one visible, one hidden
  * via opacity. During theme transitions, opacity smoothly
  * crossfades between them. Without .theme-transition, the
  * swap is instant (no initial-load flash).
@@ -673,12 +673,12 @@ html.theme-transition {
  * NO-FLASH ARCHITECTURE: Logo visibility is controlled ENTIRELY by CSS
  * using html[data-theme]. The data-theme attribute is set by a blocking
  * <script> in <head> BEFORE first paint, so the correct logo shows
- * instantly on every page load — no React hydration flash.
+ * instantly on every page load - no React hydration flash.
  *
  * header[data-over-hero] is set on the <header> when it's transparent
  * (homepage, scroll top). In light mode over hero, the header elements
  * need dark text/icons. In dark mode over hero, they need light text/icons.
- * CSS handles this with attribute selectors — zero React dependency.
+ * CSS handles this with attribute selectors - zero React dependency.
  */
 
 /* ── Default: light mode ─────────────────────────── */
@@ -710,7 +710,7 @@ html.theme-transition .logo-dark {
  * The default CSS above already handles this correctly:
  *   - Light mode → logo-light visible (dark text) ✓
  *   - Dark mode → logo-dark visible (light text) ✓
- * No overrides needed — the theme-based CSS just works.
+ * No overrides needed - the theme-based CSS just works.
  *
  * However, for the hamburger icon, theme toggle, and other nav elements
  * that use Tailwind color classes (not logo images), we need CSS overrides
@@ -718,12 +718,12 @@ html.theme-transition .logo-dark {
  */
 
 /* Light mode over hero: nav elements need dark color for readability
- * (hero bg is light teal #e4f0f2) — already handled by default text colors.
+ * (hero bg is light teal #e4f0f2) - already handled by default text colors.
  * But if the header was previously showing white text (e.g., from a
  * dark→light theme switch while at scroll top), these ensure correct colors. */
 
 /* Dark mode over hero: nav elements need light/white color
- * (hero bg is dark #131f23) — override text colors to white */
+ * (hero bg is dark #131f23) - override text colors to white */
 html[data-theme="dark"] header[data-over-hero] {
   color: #f7fbfb;
 }
@@ -782,7 +782,7 @@ html.theme-transition .nav-hamburger-line {
 /* ── Hero background image opacity ────────────────────
  * The hero bg image has different opacity in light (0.25)
  * vs dark (0.8) mode. This transitions smoothly only during
- * theme changes — no transition on initial load.
+ * theme changes - no transition on initial load.
  */
 .hero-bg-image { opacity: 0.25; }
 html[data-theme="dark"] .hero-bg-image { opacity: 0.8; }
@@ -790,7 +790,7 @@ html.theme-transition .hero-bg-image {
   transition: opacity 0.4s ease;
 }
 
-/* ── Provider logos — muted brand color, full color on hover ── */
+/* ── Provider logos - muted brand color, full color on hover ── */
 /* Logos appear in a single muted brand color by default.
  * On hover, they reveal their original full color.
  * Uses CSS filters: grayscale + sepia + hue-rotate to tint
@@ -810,11 +810,11 @@ html[data-theme="dark"] .provider-logo-item:hover .provider-logo-img {
   filter: grayscale(0) opacity(1);
 }
 
-/* ── Hero aurora canvas — theme-reactive opacity ──── */
+/* ── Hero aurora canvas - theme-reactive opacity ──── */
 /* The aurora canvas has different visual weight in light vs dark.
  * Light: near-full (0.9) for a vivid glow.
  * Dark: full (1.0) for visual richness against dark bg.
- * No transition on initial load — only during theme changes. */
+ * No transition on initial load - only during theme changes. */
 .hero-aurora-canvas { opacity: 0.9; }
 html[data-theme="dark"] .hero-aurora-canvas { opacity: 1; }
 html.theme-transition .hero-aurora-canvas {
@@ -868,7 +868,7 @@ html.theme-transition .hero-aurora-canvas {
   animation-delay: 1.2s;
 }
 
-/* Retired: .animate-shimmer — skeleton loaders permanently retired */
+/* Retired: .animate-shimmer - skeleton loaders permanently retired */
 
 /* ── Smooth page content entrance ─────────────────── */
 .animate-page-enter {
@@ -879,8 +879,8 @@ html.theme-transition .hero-aurora-canvas {
  * Triggered by adding .page-transition-enter to <main>
  * on route navigation. A very short (120ms) opacity dip
  * from 1 → 0.92 → 1 gives polish without feeling slow.
- * GPU-composited opacity only — zero layout/paint cost.
- * Intentionally NO slide/transform — that would add
+ * GPU-composited opacity only - zero layout/paint cost.
+ * Intentionally NO slide/transform - that would add
  * perceived delay, which we spent effort eliminating. */
 .page-transition-enter {
   animation: page-transition-dip 120ms ease-out both;
@@ -920,7 +920,7 @@ html.theme-transition .hero-aurora-canvas {
   background: var(--color-accent);
 }
 
-/* ── Custom select dropdown chevron — dark mode ──── */
+/* ── Custom select dropdown chevron - dark mode ──── */
 html[data-theme="dark"] select[class*="appearance-none"] {
   background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237fbcc1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E') !important;
 }

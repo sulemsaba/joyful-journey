@@ -10,14 +10,14 @@ import {
 import { cn } from '@/exxonim/utils/cn';
 
 /**
- * CardDeckCarousel — Swipeable card deck carousel for mobile.
+ * CardDeckCarousel - Swipeable card deck carousel for mobile.
  *
  * BEHAVIOUR:
  * - Shows one card centered, with the previous/next cards peeking
  *   from behind (left and right edges visible).
  * - Peeking cards are scaled down and slightly transparent.
  * - Swipe left/right or tap a peeking card to bring it to center.
- * - Desktop (≥ lg): hidden — parent should use a grid layout instead.
+ * - Desktop (≥ lg): hidden - parent should use a grid layout instead.
  *
  * DESIGN CONSTRAINTS (for admin-managed content):
  * - Card width is fixed at ~280px on mobile (portrait rectangle).
@@ -143,7 +143,7 @@ export function CardDeckCarousel({
                 isRight && 'z-20 cursor-pointer',
               )}
               style={{
-                // Card deck positioning — side cards peek from behind
+                // Card deck positioning - side cards peek from behind
                 transform: isCenter
                   ? 'translateX(0) scale(1)'
                   : isLeft

@@ -1,40 +1,40 @@
 /**
  * FASTAPI BACKEND ENDPOINTS:
  * ──────────────────────────
- * POST   /api/v1/consultations              — Submit a new public consultation (contact form)
- * POST   /api/v1/track                      — Look up a case by tracking code
+ * POST   /api/v1/consultations              - Submit a new public consultation (contact form)
+ * POST   /api/v1/track                      - Look up a case by tracking code
  *
  * PostgreSQL Tables:
- *   cases — id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
+ *   cases - id, tracking_code (CHAR(6) UNIQUE), customer_id, service_type_id,
  *           status, created_at, updated_at
- *   case_milestones — id, case_id, milestone_id, status, visible_to_client,
+ *   case_milestones - id, case_id, milestone_id, status, visible_to_client,
  *                     completed_at, created_at
- *   milestones — id, service_type_id, label, sort_order
- *   service_types — id, code, name, description
- *   customers — id, full_name, email, phone, company, created_at
+ *   milestones - id, service_type_id, label, sort_order
+ *   service_types - id, code, name, description
+ *   customers - id, full_name, email, phone, company, created_at
  *
- * Request Schema — Submit Consultation (POST /api/v1/consultations):
+ * Request Schema - Submit Consultation (POST /api/v1/consultations):
  *   { full_name: str, email: str, phone: str | None, company: str | None,
  *     service_type_code: str, message: str, idempotency_key: str,
  *     source_channel: str }
  *
- * Response Schema — Submit Consultation:
+ * Response Schema - Submit Consultation:
  *   { tracking_id: str, status: str, message: str }
  *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter in any position, e.g. "A1111" or "1111A")
  *
- * Request Schema — Track Lookup (POST /api/v1/track):
+ * Request Schema - Track Lookup (POST /api/v1/track):
  *   { trackingNumber: str }
  *   (6-char code: 5 digits + 1 uppercase letter, letter in any position)
  *
- * Response Schema — Track Lookup (200):
+ * Response Schema - Track Lookup (200):
  *   { status: str, trackingCode: str, serviceType: str, milestone: str,
  *     lastUpdated: datetime, nextMilestone: str | None, message: str | None,
  *     completedSteps: int, totalSteps: int,
  *     visibleMilestones: [{ label: str, status: str, date: datetime | None }] }
  *
- * Response Schema — Track Lookup (404):
+ * Response Schema - Track Lookup (404):
  *   { status: "not_found", message: str }
- *   (Same shape for invalid/expired/non-existent codes — no info leakage)
+ *   (Same shape for invalid/expired/non-existent codes - no info leakage)
  *
  * RATE LIMITING (enforced by backend):
  *   - Per IP: 20 failed lookups/min → IP blocked 5 min
@@ -92,7 +92,7 @@ export async function submitPublicConsultation(
  *   1. Validate the code format (5 digits + 1 letter, letter can be in any position)
  *   2. Query the cases table: SELECT * FROM cases WHERE tracking_code = $1
  *   3. If not found: return 404 { status: "not_found", message: "..." }
- *      (same response for invalid/expired/closed — no info leakage)
+ *      (same response for invalid/expired/closed - no info leakage)
  *   4. If found: query milestones + case_milestones, filter visible_to_client,
  *      and return the extended response shape (see ApiTrackingLookupResponse)
  *
@@ -133,7 +133,7 @@ export async function lookupTrackingCode(
       if (response.status === 404) {
         return data as ApiTrackingLookupResult;
       }
-      // Other errors (500, 429 rate-limited, etc.) — throw to show generic error
+      // Other errors (500, 429 rate-limited, etc.) - throw to show generic error
       throw new Error(data.message || data.detail || "Lookup failed");
     }
 

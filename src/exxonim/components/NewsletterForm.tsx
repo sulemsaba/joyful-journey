@@ -5,10 +5,10 @@ import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from './primitives/Button';
 
 /**
- * NewsletterForm — Email subscription form for use inside UnifiedCtaSection.
+ * NewsletterForm - Email subscription form for use inside UnifiedCtaSection.
  *
- * MOBILE: Single row — inline input + small subscribe button.
- * DESKTOP: Wider inline — input + button in a centered row.
+ * MOBILE: Single row - inline input + small subscribe button.
+ * DESKTOP: Wider inline - input + button in a centered row.
  *
  * UX PATTERN:
  *   Idle → Submitting... (button disabled + spinner) → Subscribed! (inline)
@@ -36,7 +36,7 @@ export function NewsletterForm() {
       // });
       // if (!response.ok) throw new Error('Subscription failed');
 
-      // Simulated delay — remove when backend is wired
+      // Simulated delay - remove when backend is wired
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       setSubmitted(true);
@@ -108,7 +108,7 @@ export function NewsletterForm() {
         {!isSubmitting && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
       </Button>
 
-      {/* Inline error — shown below the form row */}
+      {/* Inline error - shown below the form row */}
       {submitError && (
         <p role="alert" className="w-full text-center text-xs text-accent-hover mt-1">
           {submitError}

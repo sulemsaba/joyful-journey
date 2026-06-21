@@ -139,12 +139,12 @@ export interface BlogPost {
 }
 
 /**
- * Testimonial — a client quote displayed in the marquee slideshow.
+ * Testimonial - a client quote displayed in the marquee slideshow.
  *
  * BACKEND VALIDATION RULES (enforced on create/update):
  *   name:   required, max 50 characters. Backend rejects if exceeded.
  *   role:   required, max 80 characters. Backend rejects if exceeded.
- *   quote:  required, max 250 characters. Admin must shorten if too long — NO UI truncation.
+ *   quote:  required, max 250 characters. Admin must shorten if too long - NO UI truncation.
  *   rating: always 5. Not stored in DB; rendered as ★★★★★ on the frontend.
  *   eyebrow: max 30 characters.
  *   sort_order: integer, controls display order. Lower = shown first.
@@ -369,23 +369,23 @@ export interface AboutPageContent {
 }
 
 /**
- * FAQ page content — question/answer pairs displayed on the public FAQ page.
+ * FAQ page content - question/answer pairs displayed on the public FAQ page.
  *
  * ADMIN FRONTEND / API REQUIREMENTS:
  * ─────────────────────────────────
  * API Endpoints:
- *   GET    /api/v1/faq                — List all FAQ items (public, active only)
- *   GET    /api/v1/faq/:id            — Get single FAQ item
- *   POST   /api/v1/faq                — Create FAQ item (admin only)
- *   PUT    /api/v1/faq/:id            — Update FAQ item (admin only)
- *   DELETE /api/v1/faq/:id            — Delete FAQ item (admin only)
- *   PATCH  /api/v1/faq/reorder        — Reorder FAQ items (admin only, body: { id, sort_order }[])
+ *   GET    /api/v1/faq                - List all FAQ items (public, active only)
+ *   GET    /api/v1/faq/:id            - Get single FAQ item
+ *   POST   /api/v1/faq                - Create FAQ item (admin only)
+ *   PUT    /api/v1/faq/:id            - Update FAQ item (admin only)
+ *   DELETE /api/v1/faq/:id            - Delete FAQ item (admin only)
+ *   PATCH  /api/v1/faq/reorder        - Reorder FAQ items (admin only, body: { id, sort_order }[])
  *
  * Admin Form Fields:
- *   question   — Text input, required, max 120 characters
- *   answer     — Textarea, required, max 500 characters (backend must reject if exceeded)
- *   sort_order — Number input. Controls display order. Lower = shown first.
- *   is_active  — Toggle. Only active items appear on the public FAQ page.
+ *   question   - Text input, required, max 120 characters
+ *   answer     - Textarea, required, max 500 characters (backend must reject if exceeded)
+ *   sort_order - Number input. Controls display order. Lower = shown first.
+ *   is_active  - Toggle. Only active items appear on the public FAQ page.
  *
  * The FAQ page renders items sorted by sort_order (ascending).
  * Admin can drag-and-drop to reorder items (PATCH /api/v1/faq/reorder).

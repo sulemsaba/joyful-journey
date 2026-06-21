@@ -2,10 +2,10 @@
  * FASTAPI BACKEND ENDPOINTS USED BY THIS PAGE:
  * ────────────────────────────────────────────
  * Page Content (via usePage hook → pageService):
- *   GET    /api/v1/pages/contact              — Get contact page content (public)
+ *   GET    /api/v1/pages/contact              - Get contact page content (public)
  *
  * Consultation Submission (via submitPublicConsultation → consultationService):
- *   POST   /api/v1/consultations              — Submit a new public consultation
+ *   POST   /api/v1/consultations              - Submit a new public consultation
  *   Request: { full_name: str, email: str, phone: str | None, company: str | None,
  *             service_type_code: str, message: str, idempotency_key: str,
  *             source_channel: str }
@@ -13,18 +13,18 @@
  *   (tracking_id is a 6-char code: 5 digits + 1 uppercase letter, e.g. "11111A")
  *
  * Shell Data (via usePublicShell hook → siteSettingsService):
- *   GET    /api/v1/site-settings/brand        — Brand assets
- *   GET    /api/v1/site-settings/footer        — Footer content
- *   GET    /api/v1/site-settings/company_info  — Company info (emails, phones, whatsapp, address)
+ *   GET    /api/v1/site-settings/brand        - Brand assets
+ *   GET    /api/v1/site-settings/footer        - Footer content
+ *   GET    /api/v1/site-settings/company_info  - Company info (emails, phones, whatsapp, address)
  *
  * SEO (via useResolvedPageSeo hook → siteSettingsService):
- *   GET    /api/v1/site-settings/seo_defaults  — SEO default settings
+ *   GET    /api/v1/site-settings/seo_defaults  - SEO default settings
  *
  * PostgreSQL Tables:
- *   pages — id, slug, content (JSONB)
- *   cases — id, tracking_code, customer_id, service_type_id, status
- *   case_milestones — id, case_id, milestone_id, status, visible_to_client
- *   site_settings — id, key, value (JSONB)
+ *   pages - id, slug, content (JSONB)
+ *   cases - id, tracking_code, customer_id, service_type_id, status
+ *   case_milestones - id, case_id, milestone_id, status, visible_to_client
+ *   site_settings - id, key, value (JSONB)
  *
  * See service files for full endpoint documentation:
  *   src/exxonim/services/pageService.ts
@@ -102,7 +102,7 @@ function createInitialFormState() {
 }
 
 /* ────────────────────────────────────────────
-   Live Business Hours — shows Open / Closed
+   Live Business Hours - shows Open / Closed
    based on the visitor's current time (EAT).
    ──────────────────────────────────────────── */
 
@@ -223,7 +223,7 @@ export function ContactPage() {
   const { emails, phones, whatsapp, address } = shell.company;
   const hours = getBusinessHoursStatus();
 
-  /* Shared input styling — using design tokens */
+  /* Shared input styling - using design tokens */
   const inputCls =
     "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm min-h-[44px]";
 
@@ -242,7 +242,7 @@ export function ContactPage() {
           {/* ═══════════════════════════════════════════════════════
            * Two-column layout: Left = Contact info, Right = Form card
            * ────────────────────────────────────────────────────────
-           * Left side sits on page bg — no card/container.
+           * Left side sits on page bg - no card/container.
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
           <div className="max-w-[min(1240px,calc(100%-1.5rem))] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
@@ -260,7 +260,7 @@ export function ContactPage() {
                   </p>
                 </div>
 
-                {/* Contact info items — with icons */}
+                {/* Contact info items - with icons */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4 lg:gap-x-8 lg:gap-y-5 text-sm">
                   {/* Email */}
                   <div className="flex items-start gap-2.5">
@@ -311,7 +311,7 @@ export function ContactPage() {
                     </div>
                   </div>
 
-                  {/* Hours — live open/closed */}
+                  {/* Hours - live open/closed */}
                   <div className="flex items-start gap-2.5">
                     <svg className="w-4.5 h-4.5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="12" cy="12" r="10" />
@@ -339,7 +339,7 @@ export function ContactPage() {
                   </div>
                 </div>
 
-                {/* WhatsApp link — original inline style */}
+                {/* WhatsApp link - original inline style */}
                 {whatsapp && (
                   <a
                     href={whatsapp}
@@ -559,7 +559,7 @@ export function ContactPage() {
             </div>
           </div>
 
-          {/* GOOGLE MAPS IFRAME — Full width */}
+          {/* GOOGLE MAPS IFRAME - Full width */}
           <div className="w-full">
             <iframe
               title="Exxonim Consult Office Location"
