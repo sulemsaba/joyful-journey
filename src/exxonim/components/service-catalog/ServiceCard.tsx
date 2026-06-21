@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import { Button } from '@/exxonim/components/primitives/Button';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
+import { serviceDetailPath } from '@/exxonim/routes';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
 
 interface ServiceCardProps {
@@ -132,8 +134,15 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         </>
       )}
 
-      {/* CTA Button — uses design system primitive */}
-      <div className="mt-auto pt-2">
+      {/* CTA — "Learn more" link to detail page + primary action button */}
+      <div className="mt-auto pt-2 flex flex-col gap-2">
+        <SmartLink
+          href={serviceDetailPath(service.slug)}
+          className="group inline-flex items-center justify-center gap-1 text-sm font-medium text-accent hover:text-accent-hover transition-colors py-1"
+        >
+          Learn more
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </SmartLink>
         <Button
           size="standard"
           variant="primary"

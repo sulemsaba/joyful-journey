@@ -41,6 +41,7 @@ import {
   loadResourceArticlePage,
   loadResourcesPage,
   loadServicesPage,
+  loadServiceDetailPage,
   loadSupportPage,
   loadTermsPage,
   loadPrivacyPage,
@@ -58,6 +59,7 @@ const NotFoundPage = lazy(loadNotFoundPage);
 const ResourceArticlePage = lazy(loadResourceArticlePage);
 const ResourcesPage = lazy(loadResourcesPage);
 const ServicesPage = lazy(loadServicesPage);
+const ServiceDetailPage = lazy(loadServiceDetailPage);
 const SupportPage = lazy(loadSupportPage);
 const TermsPage = lazy(loadTermsPage);
 const PrivacyPage = lazy(loadPrivacyPage);
@@ -245,6 +247,7 @@ export function App({ onReady }: { onReady?: () => void }) {
                 <Route path="/about" element={<><PageReady onReady={handlePageReady} /><AboutPage /></>} />
                 <Route path="/faq" element={<><PageReady onReady={handlePageReady} /><FaqPage /></>} />
                 <Route path="/services" element={<><PageReady onReady={handlePageReady} /><ServicesPage /></>} />
+                <Route path="/services/:slug" element={<><PageReady onReady={handlePageReady} /><ServiceDetailPage /></>} />
                 <Route path="/resources" element={<><PageReady onReady={handlePageReady} /><ResourcesPage /></>} />
                 <Route path="/blog" element={<><PageReady onReady={handlePageReady} /><ResourcesPage /></>} />
                 <Route path="/resources/:slug" element={<><PageReady onReady={handlePageReady} /><ResourceArticleRoute /></>} />

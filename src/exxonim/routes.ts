@@ -49,6 +49,16 @@ export function resourcePost(slug: string) {
   return resourceArticlePath(slug);
 }
 
+/**
+ * Service detail page path.
+ * Each service in the catalog gets its own page: /services/{slug}/
+ * This is critical for SEO (each service ranks for its own keywords)
+ * and UX (nav links go straight to the service the user clicked).
+ */
+export function serviceDetailPath(slug: string) {
+  return `${routes.services}${slug}/`;
+}
+
 export function legacyBlogArticlePath(slug: string) {
   return `/blog/${slug}/`;
 }

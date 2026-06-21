@@ -30,6 +30,8 @@ export const loadResourcesPage = () =>
   import("@/exxonim/pages/ResourcesPage").then((m) => ({ default: m.ResourcesPage }));
 export const loadServicesPage = () =>
   import("@/exxonim/pages/ServicesPage").then((m) => ({ default: m.ServicesPage }));
+export const loadServiceDetailPage = () =>
+  import("@/exxonim/pages/ServiceDetailPage").then((m) => ({ default: m.ServiceDetailPage }));
 export const loadSupportPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }));
 export const loadTermsPage = () =>
@@ -56,6 +58,7 @@ export const publicPagePreloaders = [
   loadResourceArticlePage,
   loadResourcesPage,
   loadServicesPage,
+  loadServiceDetailPage,
   loadSupportPage,
   loadTermsPage,
   loadPrivacyPage,
@@ -120,5 +123,10 @@ export function preloadRoute(path: string) {
     (segments[0] === "resources" || segments[0] === "blog")
   ) {
     void loadResourceArticlePage().catch(() => {});
+  }
+
+  // Dynamic service detail paths: /services/<slug>
+  if (segments.length === 2 && segments[0] === "services") {
+    void loadServiceDetailPage().catch(() => {});
   }
 }

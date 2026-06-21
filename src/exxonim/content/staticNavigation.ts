@@ -87,19 +87,19 @@ export const staticNav = {
       items: [
         {
           label: "Entity Registration",
-          href: routes.services,
+          href: `${routes.services}company-registration/`,
           description: "Company, NGO, and business name registration",
           icon: "building" as const,
         },
         {
           label: "Tax & Licensing",
-          href: routes.services,
+          href: `${routes.services}tin-application/`,
           description: "TIN, VAT, and business licence applications",
           icon: "receipt" as const,
         },
         {
           label: "Work Permits",
-          href: routes.services,
+          href: `${routes.services}work-permit/`,
           description: "Foreign investor and work permit processing",
           icon: "passport" as const,
         },
@@ -111,19 +111,19 @@ export const staticNav = {
       items: [
         {
           label: "Statutory Filings",
-          href: routes.services,
+          href: `${routes.services}statutory-filings/`,
           description: "Recurring filing obligations on schedule",
           icon: "clipboard-list" as const,
         },
         {
           label: "Regulatory Renewals",
-          href: routes.services,
+          href: `${routes.services}regulatory-renewals/`,
           description: "Proactive tracking and timely renewals",
           icon: "refresh" as const,
         },
         {
           label: "Operational Advisory",
-          href: routes.services,
+          href: `${routes.services}operational-advisory/`,
           description: "Structured guidance for managing obligations",
           icon: "compass" as const,
         },
