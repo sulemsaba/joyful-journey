@@ -4,7 +4,8 @@ import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
 import { ServiceCard, ServiceCardSkeleton } from './ServiceCard';
 import { Button } from '@/exxonim/components/primitives/Button';
-import { routes } from '@/exxonim/routes';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
+import { routes, serviceDetailPath } from '@/exxonim/routes';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 
 /** Category tab definition with icon */
@@ -221,23 +222,41 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
         {!isPending && filteredServices.length > 0 && (
           <>
             {groupedServices ? (
-              /* Grouped layout: one section per category */
-              Object.entries(groupedServices).map(([categoryName, services]) => (
-                <div key={categoryName} className="mt-8 first:mt-0">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-2 w-2 rounded-full bg-accent" />
-                    <h2 className="text-sm font-bold uppercase tracking-wider text-text-soft">{categoryName}</h2>
-                    <div className="flex-1 h-px bg-border-soft" />
+              /* "All Services" view — compact category list, NOT a card grid.
+               * Shows 4 category groups with service names as text links.
+               * Avoids card overload (was 15 cards; now 0 cards on All view).
+               * Users click a service name → detail page. */
+              <div className="mt-6 flex flex-col gap-8 md:gap-10">
+                {Object.entries(groupedServices).map(([categoryName, services]) => (
+                  <div key={categoryName}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-2 w-2 rounded-full bg-accent" />
+                      <h2 className="text-sm font-bold uppercase tracking-wider text-text-soft">{categoryName}</h2>
+                      <div className="flex-1 h-px bg-border-soft" />
+                      <span className="text-xs text-text-muted tabular-nums">{services.length}</span>
+                    </div>
+                    {/* Compact list: service name + short description + Learn more link */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3">
+                      {services.map((service) => (
+                        <SmartLink
+                          key={service.id}
+                          href={serviceDetailPath(service.slug)}
+                          className="group flex flex-col gap-1 py-2 border-b border-border-soft/50 last:border-0 hover:border-accent/30 transition-colors"
+                        >
+                          <span className="text-sm md:text-base font-bold text-text leading-tight group-hover:text-accent transition-colors">
+                            {service.title}
+                          </span>
+                          <span className="text-xs text-text-muted leading-relaxed line-clamp-1">
+                            {service.short_description}
+                          </span>
+                        </SmartLink>
+                      ))}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-                    {services.map((service) => (
-                      <ServiceCard key={service.id} service={service} />
-                    ))}
-                  </div>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              /* Flat grid: single category selected */
+              /* Flat grid: single category selected (3-4 cards, manageable) */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                 {visibleServices.map((service) => (
                   <ServiceCard key={service.id} service={service} />
