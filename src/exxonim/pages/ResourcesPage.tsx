@@ -475,6 +475,13 @@ export function ResourcesPage() {
   const [sortMode, setSortMode] = useState<SortMode>("latest");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to page 1 when search/sort/category changes
+  const resetPagination = () => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    setCurrentPage(1);
+  };
 
   // Viewport-based preloading: when the articles grid section becomes
   // visible, preload the ResourceArticlePage chunk for instant mobile taps.
@@ -525,8 +532,19 @@ export function ResourcesPage() {
     return searchFilteredPosts;
   }, [searchFilteredPosts, sortMode]);
 
+  // Progressive expand + pagination:
+  // - Page starts with 6 articles
+  // - "See more" adds 6 each click (12, 18, 24...)
+  // - When user has expanded at least once AND there are more articles beyond
+  //   what's visible, show pagination to jump between pages (each page = 6)
   const visiblePosts = filteredPosts.slice(0, visibleCount);
   const hasMorePosts = filteredPosts.length > visiblePosts.length;
+  const totalPages = Math.ceil(filteredPosts.length / INITIAL_VISIBLE_COUNT);
+  const hasMultiplePages = totalPages > 1;
+  // Show pagination after the first "See more" click (visibleCount > 6 means
+  // the user has expanded at least once)
+  const showPagination = hasMultiplePages && visibleCount > INITIAL_VISIBLE_COUNT;
+
   const activeCategory =
     selectedCategory === "all"
       ? null
@@ -534,8 +552,8 @@ export function ResourcesPage() {
   const heroMediaSrc = heroPost?.coverImageSrc ?? topMedia?.hero;
   const heroMediaAlt = heroPost?.coverAlt ?? heroPost?.title ?? page?.content.hero_title;
 
-  // Only show trending section when no search is active and "all" category
-  const showTopSection = selectedCategory === "all" && !isSearchActive && heroPost;
+  // Trending section ALWAYS visible (not affected by search/filter)
+  const showTopSection = !!heroPost;
 
   const categoryOptions: { id: ActiveCategory; label: string }[] = [
     { id: "all", label: "All" },
@@ -544,17 +562,17 @@ export function ResourcesPage() {
 
   const handleSelectCategory = (categoryId: ActiveCategory) => {
     setSelectedCategory(categoryId);
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    resetPagination();
   };
 
   const handleSortChange = (mode: SortMode) => {
     setSortMode(mode);
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    resetPagination();
   };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    resetPagination();
   };
 
   if (!page) return null;
@@ -738,12 +756,72 @@ export function ResourcesPage() {
                 </article>
               )}
 
-              {/* See more */}
+              {/* See more + Pagination */}
               {hasMorePosts ? (
-                <div className="flex justify-center mt-10">
+                <div className="flex flex-col items-center gap-6 mt-10">
                   <Button size="standard" variant="primary" onClick={() => setVisibleCount((currentCount) => currentCount + INITIAL_VISIBLE_COUNT)}>See more</Button>
                 </div>
               ) : null}
+
+              {/* Pagination — appears after first "See more" click if multiple pages exist */}
+              {showPagination && (
+                <nav className="flex items-center justify-center gap-2 mt-8" aria-label="Article pages">
+                  {/* Prev button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newPage = Math.max(1, currentPage - 1);
+                      setCurrentPage(newPage);
+                      setVisibleCount(newPage * INITIAL_VISIBLE_COUNT);
+                      // Scroll to top of articles section
+                      articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    disabled={currentPage === 1}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-all hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+                    aria-label="Previous page"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+
+                  {/* Page numbers */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        setVisibleCount(pageNum * INITIAL_VISIBLE_COUNT);
+                        articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-medium transition-all ${
+                        currentPage === pageNum
+                          ? "bg-accent text-accent-contrast border border-accent"
+                          : "border border-border-soft bg-surface text-text-muted hover:bg-surface-elevated hover:text-text"
+                      }`}
+                      aria-label={`Page ${pageNum}`}
+                      aria-current={currentPage === pageNum ? "page" : undefined}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+
+                  {/* Next button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newPage = Math.min(totalPages, currentPage + 1);
+                      setCurrentPage(newPage);
+                      setVisibleCount(newPage * INITIAL_VISIBLE_COUNT);
+                      articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    disabled={currentPage === totalPages}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-all hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+                    aria-label="Next page"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+                </nav>
+              )}
             </section>
 
             {/* ── Newsletter subscription ── */}
