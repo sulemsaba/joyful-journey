@@ -117,14 +117,14 @@ export function ServiceDetailPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 2: What's included — deliverables list.
-       *  Two-column grid of checkmarked items.
+       *  SECTION 2: What's included — simple checkmark list (NOT cards).
+       *  Clean list with checkmarks, no boxes/borders.
        *  Pulls from service.deliverables + deliverables_full.
        * ────────────────────────────────────────────────────────────── */}
       {allDeliverables.length > 0 && (
         <section className="py-12 md:py-20 border-t border-border-soft" aria-labelledby="service-includes-title">
           <Container>
-            <div className="mb-10 md:mb-14 text-center" data-reveal>
+            <div className="mb-8 md:mb-12 text-center" data-reveal>
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
                 What's included
               </p>
@@ -136,18 +136,15 @@ export function ServiceDetailPage() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 max-w-3xl mx-auto">
+            {/* Simple list — no cards, no borders. Just checkmarks + text. */}
+            <ul className="max-w-2xl mx-auto flex flex-col gap-3" data-reveal>
               {allDeliverables.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 p-4 rounded-xl border border-border-soft bg-surface"
-                  data-reveal
-                >
+                <li key={i} className="flex items-start gap-3 py-2">
                   <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-                  <p className="text-sm text-text leading-relaxed">{item}</p>
-                </div>
+                  <span className="text-sm md:text-base text-text leading-relaxed">{item}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </Container>
         </section>
       )}
@@ -208,13 +205,13 @@ export function ServiceDetailPage() {
               id="service-faq-title"
               className="text-[clamp(1.5rem,3vw,2.4rem)] font-semibold leading-tight tracking-tight text-text"
             >
-              Things people ask about {service.title.toLowerCase()}.
+              Frequently asked questions
             </h2>
           </div>
 
           <div className="max-w-2xl mx-auto flex flex-col gap-3">
             {[
-              { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
+              { q: 'How long does this service take?', a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
               { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
               { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates — no login required.' },
               { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
