@@ -217,7 +217,7 @@ function renderGridCard(post: BlogPost) {
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
 
   return (
-    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-lg border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong">
+    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong">
       <div className="relative isolate aspect-[16/10] overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-30% after:to-overlay/50 bg-[radial-gradient(circle_at_top_right,var(--color-accent-soft-strong),transparent_48%),linear-gradient(160deg,var(--color-page-strong),var(--color-accent-soft-strong))]">
         {renderCardMedia(post, categoryLabel)}
       </div>
@@ -650,7 +650,7 @@ export function ResourcesPage() {
                   {/* Hero post */}
                   <SmartLink
                     href={resourceArticlePath(heroPost!.slug)}
-                    className="group block rounded-lg overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1"
+                    className="group block rounded-[8px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1"
                   >
                     <div className="aspect-[16/9] overflow-hidden">
                       <img
