@@ -283,16 +283,38 @@ function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min`);
 
   return (
-    <SmartLink href={articleLink} className="group flex gap-3.5 p-3 rounded-xl border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-0.5">
-      <div className="w-20 h-16 rounded-lg overflow-hidden shrink-0">
-        <img className="w-full h-full object-cover" src={thumbnailSrc} alt={post.coverAlt ?? post.title} loading="lazy" />
+    <SmartLink
+      href={articleLink}
+      className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50 hover:bg-surface-elevated hover:border-accent/30 transition-all duration-300"
+    >
+      {/* LEFT: Full-height image (matches RelatedArticleCard design) */}
+      <div className="w-[110px] sm:w-[130px] shrink-0 overflow-hidden bg-accent/5">
+        <img
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          src={thumbnailSrc}
+          alt={post.coverAlt ?? post.title}
+          loading="lazy"
+        />
       </div>
-      <div className="min-w-0 flex-1">
-        <h3 className="text-sm font-bold text-text line-clamp-2 group-hover:text-accent transition-colors">{post.title}</h3>
-        <div className="flex flex-wrap items-center gap-2 mt-1.5">
-          <span className="text-xs text-text-soft">{metaParts.join(" | ")}</span>
+
+      {/* RIGHT: Content (matches RelatedArticleCard design) */}
+      <div className="flex flex-col justify-center min-w-0 flex-1 p-2.5 sm:p-3">
+        <h3 className="text-[0.8rem] sm:text-[0.85rem] font-semibold text-text leading-snug mb-1 group-hover:text-accent transition-colors line-clamp-2">
+          {post.title}
+        </h3>
+        {post.excerpt && (
+          <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-2 mb-1">
+            {post.excerpt}
+          </p>
+        )}
+        <div className="flex items-center gap-2 mt-auto">
+          <span className="text-[10px] text-text-muted">
+            {metaParts.join(" · ")}
+          </span>
           {categoryLabel ? (
-            <span className="px-2 py-0.5 rounded-full bg-accent/10 text-accent text-[0.65rem] font-bold uppercase tracking-wider">{categoryLabel}</span>
+            <span className="px-1.5 py-0.5 rounded-full bg-accent/10 text-accent text-[0.6rem] font-bold uppercase tracking-wider">
+              {categoryLabel}
+            </span>
           ) : null}
         </div>
       </div>
