@@ -748,10 +748,10 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                  * BACKEND: `post.relatedSlugs[]` takes priority. Fallback: same-category posts.
                  */}
                 {relatedPosts.length > 0 && (
-                  <div className="mt-8 pt-8 border-t border-border-soft flex items-start justify-between gap-6">
-                    {/* LEFT edge: First related card */}
+                  <div className="mt-8 pt-8 border-t border-border-soft flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                    {/* First related card */}
                     {relatedPosts[0] && (
-                      <div className="w-[48%] max-w-[420px]">
+                      <div className="w-full md:w-[48%] md:max-w-[420px]">
                         <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft mb-3">
                           Continue reading
                         </h4>
@@ -759,9 +759,9 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                       </div>
                     )}
 
-                    {/* RIGHT edge: Second related card */}
+                    {/* Second related card */}
                     {relatedPosts[1] && (
-                      <div className="w-[48%] max-w-[420px]">
+                      <div className="w-full md:w-[48%] md:max-w-[420px]">
                         <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft mb-3">
                           More like this
                         </h4>

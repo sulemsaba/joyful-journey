@@ -560,9 +560,36 @@ export function ResourcesPage() {
               </div>
             </section>
 
-            {/* ── Quick-access resource cards (3 items) ── */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* ── Quick-access resource cards (3 items) ──
+             * Mobile: compact horizontal cards (icon left, text right) in a row
+             * Desktop: 3-column grid of centered cards */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-16">
+              {/* Mobile: horizontal scroll rail of compact cards */}
+              <div className="flex gap-2.5 overflow-x-auto pb-1 snap-x snap-mandatory sm:hidden [-webkit-mask-image:linear-gradient(to_right,black,black_92%,transparent)] [mask-image:linear-gradient(to_right,black,black_92%,transparent)]" style={{ scrollbarWidth: 'none' }}>
+                {RESOURCE_CARDS.map((card) => (
+                  <SmartLink
+                    key={card.title}
+                    href={card.href}
+                    className="group snap-start flex-none w-56 flex items-center gap-3 p-3 rounded-xl border border-accent/10 bg-accent/[0.04] transition-all duration-300 hover:bg-accent/[0.12] hover:border-accent/25"
+                  >
+                    <span className={`inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-lg ${card.accent} transition-transform duration-300 group-hover:scale-110`}>
+                      {card.icon}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <strong className="text-text text-sm block leading-tight">{card.title}</strong>
+                      <p className="m-0 text-text-muted text-[0.7rem] leading-snug line-clamp-1 mt-0.5">
+                        {card.description}
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center text-accent text-sm font-bold shrink-0">
+                      &rarr;
+                    </span>
+                  </SmartLink>
+                ))}
+              </div>
+
+              {/* Desktop: 3-column grid of centered cards */}
+              <div className="hidden sm:grid grid-cols-3 gap-4">
                 {RESOURCE_CARDS.map((card) => (
                   <SmartLink
                     key={card.title}
