@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Home, ArrowRight, ChevronDown, CheckCircle2, FileText, Phone, ArrowLeft } from 'lucide-react';
+import { Home, ArrowRight, Plus, X, CheckCircle2, FileText, Phone, ArrowLeft } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
@@ -205,38 +205,61 @@ export function ServiceDetailPage() {
               id="service-faq-title"
               className="text-[clamp(1.5rem,3vw,2.4rem)] font-semibold leading-tight tracking-tight text-text"
             >
-              Frequently asked questions
+              Things people ask about {service.title.toLowerCase()}.
             </h2>
           </div>
 
-          <div className="max-w-2xl mx-auto flex flex-col gap-3">
+          {/* FAQ accordion — flat list with dividers, Plus/X toggle (matches main FAQ page) */}
+          <div className="max-w-2xl mx-auto" data-reveal>
             {[
-              { q: 'How long does this service take?', a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
+              { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
               { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
               { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates — no login required.' },
               { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
             ].map((faq, i) => (
               <div
                 key={i}
-                className="rounded-xl border border-border-soft bg-surface overflow-hidden"
-                data-reveal
+                className={i < 3 ? "border-b border-border-soft" : ""}
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between gap-4 p-4 md:p-5 text-left"
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left cursor-pointer group"
                   aria-expanded={openFaq === i}
                 >
-                  <span className="text-sm md:text-base font-bold text-text">{faq.q}</span>
-                  <ChevronDown
-                    className={`w-5 h-5 text-text-muted shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
+                  <h3
+                    className={`text-[0.9375rem] sm:text-base leading-snug transition-colors duration-200 flex-1 min-w-0 ${
+                      openFaq === i ? "font-semibold text-text" : "font-normal text-text-muted group-hover:text-text"
+                    }`}
+                  >
+                    {faq.q}
+                  </h3>
+                  <span
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center transition-all duration-300 ${
+                      openFaq === i ? "text-accent" : "text-accent/50 group-hover:text-accent"
+                    }`}
                     aria-hidden="true"
-                  />
+                  >
+                    {openFaq === i ? (
+                      <X className="w-4 h-4" strokeWidth={2.5} />
+                    ) : (
+                      <Plus className="w-4 h-4" strokeWidth={2.5} />
+                    )}
+                  </span>
                 </button>
-                {openFaq === i && (
-                  <div className="px-4 md:px-5 pb-4 md:pb-5">
-                    <p className="text-sm text-text-muted leading-relaxed">{faq.a}</p>
+                {/* Expandable answer — grid-rows animation */}
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${
+                    openFaq === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="pb-5">
+                      <p className="text-sm sm:text-[0.9375rem] leading-relaxed text-text-muted">
+                        {faq.a}
+                      </p>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
