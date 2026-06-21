@@ -333,14 +333,18 @@ function CategoryFilter({
   onSelect: (id: ActiveCategory) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2.5" aria-label="Blog categories">
+    <div
+      className="flex gap-2.5 overflow-x-auto scrollbar-none pb-1 [-webkit-mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
+      aria-label="Blog categories"
+      style={{ scrollbarWidth: 'none' }}
+    >
       {categories.map((cat) => {
         const isActive = selectedCategory === cat.id;
         return (
           <button
             key={cat.id}
             type="button"
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold transition-all ${
+            className={`flex-none inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold transition-all ${
               isActive
                 ? "bg-accent text-accent-contrast border-accent"
                 : "border-border-soft bg-surface/60 text-text-muted hover:bg-surface hover:text-text"
