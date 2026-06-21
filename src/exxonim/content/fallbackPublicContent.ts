@@ -476,7 +476,7 @@ export const fallbackServicesPage: PageRecord<ServicesPageContent> = createFallb
       eyebrow: "Registration & Compliance",
       title: "Your business, registered and kept compliant — without the office visits",
       description:
-        "From first registration to recurring filings, Exxonim handles every step so you can focus on running your business. No office visits required — we file everything electronically and keep you updated via WhatsApp.",
+        "From first registration to recurring filings — all handled.",
       panel_title: "Trusted by businesses across Tanzania",
       panel_body:
         "Every engagement is tracked from intake to resolution. You always know what is complete, what is pending, and what comes next.",

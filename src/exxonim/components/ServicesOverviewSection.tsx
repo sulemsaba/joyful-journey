@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { Search, ArrowRight, ShieldCheck, Star } from 'lucide-react';
+import { Search, ArrowRight } from 'lucide-react';
 import { routes } from '@/exxonim/routes';
-import { Button } from '@/exxonim/components/primitives/Button';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 import type { ServicesOverviewContent } from '@/exxonim/types';
 
@@ -36,7 +35,16 @@ export function ServicesOverviewSection({
 }: ServicesOverviewSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [currentStat, setCurrentStat] = useState(0);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-rotate the trust stats slideshow every 3 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentStat((prev) => (prev + 1) % TRUST_STATS.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Flatten all services from nav groups for search
   const allServices = useMemo(() => {
@@ -98,72 +106,82 @@ export function ServicesOverviewSection({
       aria-labelledby="services-overview-title"
     >
       <div className="w-[min(1240px,calc(100%-2rem))] mx-auto relative z-10">
-        {/* ── Hero — open, no card. Clean text on page background. ── */}
-        <div className="text-center max-w-3xl mx-auto" data-reveal>
-          <p className="m-0 mb-4 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
-            {content.eyebrow}
-          </p>
-          <h2
-            id="services-overview-title"
-            className="m-0 text-[clamp(1.9rem,4.2vw,3.2rem)] leading-[1.05] tracking-[-0.03em] text-text font-semibold"
-          >
-            {content.title}
-          </h2>
-          <p className="text-base md:text-lg leading-relaxed text-text-muted mt-5 max-w-[58ch] mx-auto">
-            {content.description}
-          </p>
-          <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button size="standard" variant="primary" href={routes.contact}>
-              Book a Free Consultation
-              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-            </Button>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-soft text-accent text-sm font-semibold ring-1 ring-accent/25">
-              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-              No office visits required
-            </span>
+        {/* ── Hero + vertical stats slideshow — 2-column layout ── */}
+        <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:gap-12 items-center">
+          {/* ── Left: Hero — open, no card, no CTA button (CTA is at bottom of page) ── */}
+          <div className="text-center lg:text-left" data-reveal>
+            <p className="m-0 mb-4 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
+              {content.eyebrow}
+            </p>
+            <h2
+              id="services-overview-title"
+              className="m-0 text-[clamp(1.9rem,4.2vw,3.2rem)] leading-[1.05] tracking-[-0.03em] text-text font-semibold"
+            >
+              {content.title}
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed text-text-muted mt-5 max-w-[58ch] mx-auto lg:mx-0">
+              {content.description}
+            </p>
           </div>
-        </div>
 
-        {/* ── Trust stats — open row below hero, no card. ── */}
-        <div
-          className="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-6 md:divide-x md:divide-border-soft"
-          data-reveal
-        >
-          {TRUST_STATS.map((stat) => (
-            <div key={stat.label} className="text-center md:px-4">
-              <p className="text-2xl md:text-3xl font-bold text-accent leading-none">
-                {stat.value}
-              </p>
-              <p className="text-xs md:text-sm text-text-muted mt-1.5 leading-snug">
-                {stat.label}
-              </p>
+          {/* ── Right: Vertical trust stats slideshow ── */}
+          <div
+            className="flex flex-col items-center lg:items-end gap-3"
+            data-reveal
+          >
+            <div className="relative h-20 w-48 overflow-hidden">
+              {TRUST_STATS.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${
+                    i === currentStat
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-4 pointer-events-none'
+                  }`}
+                >
+                  <p className="text-3xl md:text-4xl font-bold text-accent leading-none">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs md:text-sm text-text-muted mt-1.5 leading-snug">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-
-        {/* ── Google review footer — open, aligned center. ── */}
-        <div className="mt-6 flex items-center justify-center gap-3" data-reveal>
-          <div className="flex items-center gap-2 min-w-0">
-            <GoogleLogo className="h-4 w-4 shrink-0" />
-            <span className="text-xs text-text-muted">
-              Trusted by businesses across Tanzania
-            </span>
+            {/* Slide indicators */}
+            <div className="flex gap-1.5">
+              {TRUST_STATS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentStat(i)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === currentStat ? 'w-6 bg-accent' : 'w-1.5 bg-border-soft hover:bg-accent/50'
+                  }`}
+                  aria-label={`Show stat ${i + 1}`}
+                />
+              ))}
+            </div>
+            {/* Google review footer */}
+            <div className="flex items-center gap-2 mt-1">
+              <GoogleLogo className="h-4 w-4 shrink-0" />
+              <span className="text-xs text-text-muted">Trusted by businesses across Tanzania</span>
+              <a
+                href="https://www.google.com/search?q=Exxonim+Consult+reviews"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 text-xs font-semibold text-accent shrink-0 transition-colors hover:text-accent-hover"
+              >
+                See all
+                <ArrowRight className="w-3 h-3" aria-hidden="true" />
+              </a>
+            </div>
           </div>
-          <a
-            href="https://www.google.com/search?q=Exxonim+Consult+reviews"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-0.5 text-xs font-semibold text-accent shrink-0 transition-colors hover:text-accent-hover"
-          >
-            See all
-            <ArrowRight className="w-3 h-3" aria-hidden="true" />
-          </a>
         </div>
 
         {/* ── Service search — simple inline, aligned right, no card container. ── */}
         <div
           ref={searchContainerRef}
-          className="mt-10 md:mt-12 relative max-w-md ml-auto"
+          className="mt-8 md:mt-10 relative max-w-md ml-auto"
           data-reveal
         >
           <div className="relative">
@@ -179,7 +197,7 @@ export function ServicesOverviewSection({
             />
           </div>
 
-          {/* Search results dropdown — appears below the inline search */}
+          {/* Search results dropdown */}
           {showDropdown && (
             <div id="services-search-dropdown" className="mt-2 rounded-xl border border-border-soft bg-surface shadow-lg overflow-hidden">
               {hasResults && (
