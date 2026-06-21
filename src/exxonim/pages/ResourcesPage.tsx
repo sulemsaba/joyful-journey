@@ -334,12 +334,14 @@ function CategoryFilter({
 }) {
   return (
     <div
-      className="flex gap-2.5 overflow-x-auto scrollbar-none pb-1 [-webkit-mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
+      className="flex gap-2.5 overflow-x-auto scrollbar-none pb-1"
       aria-label="Blog categories"
       style={{ scrollbarWidth: 'none' }}
     >
-      {categories.map((cat) => {
+      {/* "All" button — pinned, always visible (no mask on the left) */}
+      {categories.map((cat, index) => {
         const isActive = selectedCategory === cat.id;
+        const isAllButton = cat.id === "all";
         return (
           <button
             key={cat.id}
