@@ -583,16 +583,16 @@ export function ResourcesPage() {
             </section>
 
             {/* ── Quick-access resource cards (3 items) ──
-             * Mobile: compact horizontal cards (icon left, text right) in a row
+             * Mobile: vertical stack of compact horizontal cards (all 3 visible, no scroll)
              * Desktop: 3-column grid of centered cards */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-16">
-              {/* Mobile: horizontal scroll rail of compact cards */}
-              <div className="flex gap-2.5 overflow-x-auto pb-1 snap-x snap-mandatory sm:hidden [-webkit-mask-image:linear-gradient(to_right,black,black_92%,transparent)] [mask-image:linear-gradient(to_right,black,black_92%,transparent)]" style={{ scrollbarWidth: 'none' }}>
+              {/* Mobile: vertical stack — all 3 cards visible without scrolling */}
+              <div className="flex flex-col gap-2.5 sm:hidden">
                 {RESOURCE_CARDS.map((card) => (
                   <SmartLink
                     key={card.title}
                     href={card.href}
-                    className="group snap-start flex-none w-56 flex items-center gap-3 p-3 rounded-xl border border-accent/10 bg-accent/[0.04] transition-all duration-300 hover:bg-accent/[0.12] hover:border-accent/25"
+                    className="group flex items-center gap-3 p-3 rounded-xl border border-accent/10 bg-accent/[0.04] transition-all duration-300 hover:bg-accent/[0.12] hover:border-accent/25"
                   >
                     <span className={`inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-lg ${card.accent} transition-transform duration-300 group-hover:scale-110`}>
                       {card.icon}
