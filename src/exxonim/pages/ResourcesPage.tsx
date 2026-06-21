@@ -61,7 +61,7 @@
  *    Individual articles live at /resources/{slug}/.
  */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
