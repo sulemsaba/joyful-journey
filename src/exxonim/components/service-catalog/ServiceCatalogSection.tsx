@@ -93,17 +93,10 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
 
               return (
                 <div key={categoryName} data-reveal>
-                  {/* Category heading */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-2 w-2 rounded-full bg-accent" />
-                    <h2 className="text-sm font-bold uppercase tracking-wider text-text-soft">
-                      {categoryName}
-                    </h2>
-                    <div className="flex-1 h-px bg-border-soft" />
-                    <span className="text-xs text-text-muted tabular-nums">
-                      {services.length}
-                    </span>
-                  </div>
+                  {/* Category heading - white text with left teal border accent */}
+                  <h2 className="text-lg md:text-xl font-semibold text-text mb-4 border-l-[3px] border-accent-secondary pl-3 leading-tight">
+                    {categoryName}
+                  </h2>
 
                   {/* Horizontal scroll rail of minimal cards */}
                   <div
@@ -125,35 +118,74 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
 }
 
 /* ── Minimal service card for the horizontal rails ──
- * Very minimal words: title + short description + "See more" link.
- * No badge, no deliverables list, no expand button.
- * "See more" goes to the service detail page.
+ * Brand colors: deep navy bg, teal accents, hover-to-expand with white arc.
+ * Based on the services card.html reference design.
+ * Mobile: permanently expanded (no hover), shows content directly.
  */
 function MinimalServiceCard({ service }: { service: ServiceCatalogItem }) {
   return (
     <SmartLink
       href={serviceDetailPath(service.slug)}
-      className="group snap-start flex-none w-64 md:w-72 flex flex-col gap-2 p-4 rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+      className="group snap-start flex-none w-64 md:w-72 relative overflow-hidden rounded-lg p-4 transition-all duration-400 hover:-translate-y-1.5 hover:shadow-lg"
+      style={{ backgroundColor: '#2e3165' }}
     >
-      {/* Badge (if any) - small, inline */}
-      {service.badge && (
-        <span className="inline-flex items-center self-start px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider rounded-full bg-accent-soft text-accent">
-          {service.badge}
+      {/* Background arc (hover effect) - white sweep from bottom-left */}
+      <span
+        className="absolute -bottom-[30%] -left-[30%] w-[160%] h-[160%] rounded-full bg-surface scale-0 origin-bottom-left transition-transform duration-500 ease-out z-0 pointer-events-none group-hover:scale-100"
+        aria-hidden="true"
+      />
+
+      {/* Default content (visible by default, hidden on hover) */}
+      <div className="relative z-10 flex flex-col gap-2 transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-3 group-hover:pointer-events-none">
+        {/* Badge (if any) */}
+        {service.badge && (
+          <span className="inline-flex items-center self-start px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider rounded-full bg-accent-secondary/20 text-accent-secondary">
+            {service.badge}
+          </span>
+        )}
+        {/* Eyebrow label - light teal */}
+        <span className="text-[0.65rem] font-bold uppercase tracking-wider text-accent-secondary">
+          {service.category}
         </span>
-      )}
-      {/* Title - minimal */}
-      <h3 className="text-sm md:text-base font-bold text-text leading-tight group-hover:text-accent transition-colors">
-        {service.title}
-      </h3>
-      {/* Short description - one line, truncated */}
-      <p className="text-xs text-text-muted leading-relaxed line-clamp-2 flex-1">
-        {service.short_description}
-      </p>
-      {/* See more - takes user to detail page */}
-      <span className="inline-flex items-center gap-1 mt-1 text-xs font-medium text-accent">
-        See more
-        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-      </span>
+        {/* Title - white */}
+        <h3 className="text-sm md:text-base font-bold text-white leading-tight">
+          {service.title}
+        </h3>
+      </div>
+
+      {/* Expanded content (hidden by default, visible on hover) */}
+      <div className="absolute inset-0 z-20 flex flex-col gap-2 p-4 opacity-0 invisible transition-all duration-300 delay-150 group-hover:opacity-100 group-hover:visible">
+        {/* Eyebrow - deep teal */}
+        <span className="text-[0.65rem] font-extrabold uppercase tracking-wider text-accent">
+          {service.category}
+        </span>
+        {/* Title - dark text on white */}
+        <h3 className="text-sm md:text-base font-bold text-text leading-tight mb-1">
+          {service.title}
+        </h3>
+        {/* Description */}
+        <p className="text-xs text-text-muted leading-relaxed line-clamp-3 flex-1">
+          {service.short_description}
+        </p>
+        {/* Deliverables (first 3) with teal checkmarks */}
+        {service.deliverables && service.deliverables.length > 0 && (
+          <ul className="flex flex-col gap-1 mb-2">
+            {service.deliverables.slice(0, 3).map((item, i) => (
+              <li key={i} className="flex items-center gap-1.5 text-[0.7rem] font-semibold text-text">
+                <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth={3}>
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
+        {/* See more - deep teal */}
+        <span className="inline-flex items-center gap-1 mt-auto text-xs font-bold text-accent">
+          See more
+          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+        </span>
+      </div>
     </SmartLink>
   );
 }
