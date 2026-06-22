@@ -146,7 +146,7 @@ function ServiceCardExact({
       className="service-card-exact group relative overflow-hidden cursor-default"
       style={{
         height: '380px',
-        backgroundColor: '#2e3165',
+        backgroundColor: '#08181b',
         borderRadius: '12px',
         padding: '32px',
         display: 'flex',
@@ -175,10 +175,10 @@ function ServiceCardExact({
 
       {/* Default content — visible by default, hidden on hover */}
       <div className="service-card-default relative z-10">
-        {/* Icon — top-left, absolute */}
-        <div className="absolute" style={{ top: '32px', left: '32px' }}>
+        {/* Icon — top-left, absolute. Color set on wrapper so currentColor works */}
+        <div className="absolute" style={{ top: '32px', left: '32px', color: '#7fbcc1' }}>
           <Icon
-            style={{ width: '48px', height: '48px', stroke: '#7fbcc1', strokeWidth: 1.5, fill: 'none' }}
+            style={{ width: '48px', height: '48px', strokeWidth: 1.5 }}
             aria-hidden="true"
           />
         </div>
