@@ -969,3 +969,50 @@ html[data-theme="dark"] ::selection {
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+ * Service Card Exact — EXACT replica of services card.html reference
+ * Desktop: 380px navy cards with hover-to-expand (white arc sweep)
+ * Mobile: permanently expanded, white bg, no hover
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* Hover: show arc + expanded, hide default */
+.service-card-exact:hover .service-card-arc {
+  transform: scale(1) !important;
+}
+.service-card-exact:hover .service-card-default {
+  opacity: 0;
+  transform: translateY(15px);
+  pointer-events: none;
+}
+.service-card-exact:hover .service-card-expanded {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.service-card-default {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Mobile: permanently expanded, no hover, white bg */
+@media (max-width: 768px) {
+  .service-card-exact {
+    height: auto !important;
+    background-color: #f7fbfb !important;
+    padding: 0 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  }
+  .service-card-exact:hover {
+    transform: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  }
+  .service-card-exact .service-card-arc,
+  .service-card-exact .service-card-default {
+    display: none !important;
+  }
+  .service-card-exact .service-card-expanded {
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    padding: 32px 24px !important;
+  }
+}

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { AlertCircle, RefreshCw, ArrowRight } from 'lucide-react';
+import { AlertCircle, RefreshCw, ArrowRight, Briefcase } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
@@ -8,13 +8,10 @@ import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
 
 interface ServiceCatalogSectionProps {
-  /** Eyebrow text for the compact hero header */
   heroEyebrow?: string;
-  /** Title for the compact hero header */
   heroTitle?: string;
 }
 
-/** Category display order (controls the order rails appear) */
 const CATEGORY_ORDER = [
   'Business Setup',
   'Compliance Support',
@@ -28,7 +25,6 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
   const allServices = data?.data?.services ?? [];
   const hasServices = allServices.length > 0;
 
-  // Group services by category for the horizontal rails
   const groupedServices = useMemo(() => {
     const groups: Record<string, ServiceCatalogItem[]> = {};
     for (const s of allServices) {
@@ -41,7 +37,6 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
   return (
     <section id="service-catalog" className="pt-4 pb-6 md:pt-8 md:pb-16">
       <Container>
-        {/* Compact hero header - eyebrow + title only (no CTA button; CTA is at page bottom) */}
         <div className="mb-8 md:mb-12">
           {heroEyebrow && (
             <p className="m-0 mb-1.5 text-[0.72rem] font-extrabold tracking-[0.16em] uppercase text-text-soft">
@@ -53,7 +48,6 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </h1>
         </div>
 
-        {/* Error State - only shown when there is NO data at all */}
         {!isPending && isError && !hasServices && (
           <div className={cn(
             'flex flex-col items-center justify-center py-16 text-center',
@@ -84,27 +78,37 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </div>
         )}
 
-        {/* Category rails - one heading + horizontal scroll per category. No tabs. */}
         {!isPending && hasServices && (
-          <div className="flex flex-col gap-10 md:gap-14">
+          <div className="flex flex-col gap-10 md:gap-20">
             {CATEGORY_ORDER.map((categoryName) => {
               const services = groupedServices[categoryName] ?? [];
               if (services.length === 0) return null;
 
               return (
                 <div key={categoryName} data-reveal>
-                  {/* Category heading - white text with left teal border accent */}
-                  <h2 className="text-lg md:text-xl font-semibold text-text mb-4 border-l-[3px] border-accent-secondary pl-3 leading-tight">
+                  {/* Category title — exact match to HTML reference */}
+                  <h2
+                    className="text-text font-semibold mb-8"
+                    style={{
+                      fontSize: 'clamp(1.6rem, 3vw, 2rem)',
+                      letterSpacing: '0.5px',
+                      lineHeight: 1.2,
+                      borderLeft: '5px solid var(--color-accent-secondary)',
+                      paddingLeft: '1.2rem',
+                    }}
+                  >
                     {categoryName}
                   </h2>
 
-                  {/* Horizontal scroll rail of minimal cards */}
+                  {/* Grid — exact match to HTML reference */}
                   <div
-                    className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory [-webkit-mask-image:linear-gradient(to_right,black,black_92%,transparent)] [mask-image:linear-gradient(to_right,black,black_92%,transparent)]"
-                    style={{ scrollbarWidth: 'none' }}
+                    className="grid gap-7"
+                    style={{
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                    }}
                   >
                     {services.map((service) => (
-                      <MinimalServiceCard key={service.id} service={service} />
+                      <ServiceCardExact key={service.id} service={service} />
                     ))}
                   </div>
                 </div>
@@ -117,62 +121,155 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
   );
 }
 
-/* ── Minimal service card for the horizontal rails ──
- * Brand colors: deep navy bg, teal accents, hover-to-expand with white arc.
- * Based on the services card.html reference design.
- * Mobile: permanently expanded (no hover), shows content directly.
- */
-function MinimalServiceCard({ service }: { service: ServiceCatalogItem }) {
+/* ═══════════════════════════════════════════════════════════════
+ * ServiceCardExact — EXACT replica of the HTML reference card.
+ * - 380px height, navy bg (#2e3165), 12px radius, 32px padding
+ * - Icon top-left, default label + title at bottom
+ * - Hover: white arc sweeps in, content swaps to expanded view
+ * - Expanded: label, title, 3 deliverables (teal checkmarks), 2 buttons
+ * - Mobile: permanently expanded, white bg, no hover
+ * ═══════════════════════════════════════════════════════════════ */
+function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
+  const ctaLink = service.cta_link || '/contact';
+  const ctaText = service.cta_text || 'Get Started';
+  const detailLink = serviceDetailPath(service.slug);
+  const deliverables = (service.deliverables ?? []).slice(0, 3);
+
   return (
-    <SmartLink
-      href={serviceDetailPath(service.slug)}
-      className="group snap-start flex-none w-64 md:w-72 relative overflow-hidden rounded-lg p-4 transition-all duration-400 hover:-translate-y-1.5 hover:shadow-lg"
-      style={{ backgroundColor: '#2e3165' }}
+    <div
+      className="service-card-exact group relative overflow-hidden cursor-default transition-all duration-400"
+      style={{
+        height: '380px',
+        backgroundColor: '#2e3165',
+        borderRadius: '12px',
+        padding: '32px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-6px)';
+        e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = '';
+        e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.15)';
+      }}
     >
-      {/* Background arc (hover effect) - white sweep from bottom-left */}
+      {/* Background arc — white sweep from bottom-left on hover */}
       <span
-        className="absolute -bottom-[30%] -left-[30%] w-[160%] h-[160%] rounded-full bg-surface scale-0 origin-bottom-left transition-transform duration-500 ease-out z-0 pointer-events-none group-hover:scale-100"
-        aria-hidden="true"
+        className="service-card-arc absolute pointer-events-none"
+        style={{
+          bottom: '-30%',
+          left: '-30%',
+          width: '160%',
+          height: '160%',
+          backgroundColor: 'var(--color-accent-contrast)',
+          borderRadius: '50%',
+          transform: 'scale(0)',
+          transformOrigin: 'bottom left',
+          transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          zIndex: 0,
+        }}
       />
 
-      {/* Default content (visible by default, hidden on hover) */}
-      <div className="relative z-10 flex flex-col gap-2 transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-3 group-hover:pointer-events-none">
-        {/* Badge (if any) */}
-        {service.badge && (
-          <span className="inline-flex items-center self-start px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider rounded-full bg-accent-secondary/20 text-accent-secondary">
-            {service.badge}
-          </span>
-        )}
-        {/* Eyebrow label - light teal */}
-        <span className="text-[0.65rem] font-bold uppercase tracking-wider text-accent-secondary">
+      {/* Default content — visible by default, hidden on hover */}
+      <div className="service-card-default relative z-10">
+        {/* Icon — top-left, absolute */}
+        <div
+          className="absolute"
+          style={{ top: '32px', left: '32px' }}
+        >
+          <Briefcase
+            className="w-12 h-12"
+            style={{ stroke: 'var(--color-accent-secondary)', strokeWidth: 1.5 }}
+            aria-hidden="true"
+          />
+        </div>
+        {/* Default label — light teal, uppercase */}
+        <span
+          className="block mb-2"
+          style={{
+            fontSize: '12px',
+            fontWeight: 700,
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            color: 'var(--color-accent-secondary)',
+          }}
+        >
           {service.category}
         </span>
-        {/* Title - white */}
-        <h3 className="text-sm md:text-base font-bold text-white leading-tight">
+        {/* Default title — white */}
+        <h3
+          className="m-0"
+          style={{
+            color: '#ffffff',
+            fontSize: '24px',
+            fontWeight: 700,
+            lineHeight: 1.3,
+            maxWidth: '90%',
+          }}
+        >
           {service.title}
         </h3>
       </div>
 
-      {/* Expanded content (hidden by default, visible on hover) */}
-      <div className="absolute inset-0 z-20 flex flex-col gap-2 p-4 opacity-0 invisible transition-all duration-300 delay-150 group-hover:opacity-100 group-hover:visible">
-        {/* Eyebrow - deep teal */}
-        <span className="text-[0.65rem] font-extrabold uppercase tracking-wider text-accent">
+      {/* Expanded content — hidden by default, visible on hover */}
+      <div
+        className="service-card-expanded absolute inset-0 flex flex-col"
+        style={{
+          zIndex: 2,
+          padding: '36px 32px',
+          opacity: 0,
+          visibility: 'hidden',
+          transition: 'opacity 0.4s ease 0.15s, visibility 0.4s',
+          justifyContent: 'flex-start',
+        }}
+      >
+        {/* Expanded label — deep teal */}
+        <span
+          className="block mb-2"
+          style={{
+            fontSize: '11px',
+            fontWeight: 800,
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            color: 'var(--color-accent)',
+          }}
+        >
           {service.category}
         </span>
-        {/* Title - dark text on white */}
-        <h3 className="text-sm md:text-base font-bold text-text leading-tight mb-1">
+        {/* Expanded title — dark text */}
+        <h3
+          className="m-0 mb-6"
+          style={{
+            color: '#08181b',
+            fontSize: '22px',
+            fontWeight: 800,
+            lineHeight: 1.2,
+          }}
+        >
           {service.title}
         </h3>
-        {/* Description */}
-        <p className="text-xs text-text-muted leading-relaxed line-clamp-3 flex-1">
-          {service.short_description}
-        </p>
-        {/* Deliverables (first 3) with teal checkmarks */}
-        {service.deliverables && service.deliverables.length > 0 && (
-          <ul className="flex flex-col gap-1 mb-2">
-            {service.deliverables.slice(0, 3).map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5 text-[0.7rem] font-semibold text-text">
-                <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth={3}>
+        {/* Benefits list — 3 deliverables with teal checkmarks */}
+        {deliverables.length > 0 && (
+          <ul className="list-none m-0 mb-8 flex flex-col gap-3">
+            {deliverables.map((item, i) => (
+              <li
+                key={i}
+                className="flex items-center gap-2.5"
+                style={{
+                  fontSize: '15px',
+                  color: '#2c3052',
+                  fontWeight: 600,
+                }}
+              >
+                <svg
+                  className="shrink-0"
+                  style={{ width: '20px', height: '20px', stroke: 'var(--color-accent)', fill: 'none', strokeWidth: 3 }}
+                  viewBox="0 0 24 24"
+                >
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
                 {item}
@@ -180,12 +277,44 @@ function MinimalServiceCard({ service }: { service: ServiceCatalogItem }) {
             ))}
           </ul>
         )}
-        {/* See more - deep teal */}
-        <span className="inline-flex items-center gap-1 mt-auto text-xs font-bold text-accent">
-          See more
-          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-        </span>
+        {/* Button group */}
+        <div className="mt-auto flex flex-col gap-2.5">
+          {/* Primary button — deep teal bg */}
+          <SmartLink
+            href={ctaLink}
+            className="inline-flex items-center justify-center text-center no-underline transition-all duration-200"
+            style={{
+              padding: '12px 20px',
+              borderRadius: '8px',
+              fontWeight: 700,
+              fontSize: '14.5px',
+              width: '100%',
+              backgroundColor: 'var(--color-accent)',
+              color: 'var(--color-accent-contrast)',
+              boxShadow: '0 4px 12px rgba(15, 92, 99, 0.25)',
+            }}
+          >
+            {ctaText}
+          </SmartLink>
+          {/* Secondary button — outline */}
+          <SmartLink
+            href={detailLink}
+            className="inline-flex items-center justify-center text-center no-underline transition-all duration-200"
+            style={{
+              padding: '12px 20px',
+              borderRadius: '8px',
+              fontWeight: 700,
+              fontSize: '14.5px',
+              width: '100%',
+              backgroundColor: 'transparent',
+              color: 'var(--color-accent)',
+              border: '2px solid rgba(15, 92, 99, 0.2)',
+            }}
+          >
+            See Details
+          </SmartLink>
+        </div>
       </div>
-    </SmartLink>
+    </div>
   );
 }
