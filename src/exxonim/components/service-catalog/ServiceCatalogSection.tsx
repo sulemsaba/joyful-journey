@@ -137,7 +137,7 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
 
   return (
     <div
-      className="service-card-exact group relative overflow-hidden cursor-default transition-all duration-400"
+      className="service-card-exact group relative overflow-hidden cursor-default"
       style={{
         height: '380px',
         backgroundColor: '#2e3165',
@@ -147,14 +147,7 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
         flexDirection: 'column',
         justifyContent: 'flex-end',
         boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-6px)';
-        e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = '';
-        e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.15)';
+        transition: 'transform 0.4s ease, box-shadow 0.4s ease',
       }}
     >
       {/* Background arc — white sweep from bottom-left on hover */}
@@ -165,7 +158,7 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
           left: '-30%',
           width: '160%',
           height: '160%',
-          backgroundColor: 'var(--color-accent-contrast)',
+          backgroundColor: '#f7fbfb',
           borderRadius: '50%',
           transform: 'scale(0)',
           transformOrigin: 'bottom left',
@@ -176,14 +169,19 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
 
       {/* Default content — visible by default, hidden on hover */}
       <div className="service-card-default relative z-10">
-        {/* Icon — top-left, absolute */}
+        {/* Icon — top-left, larger with subtle circular bg */}
         <div
-          className="absolute"
-          style={{ top: '32px', left: '32px' }}
+          className="absolute flex items-center justify-center rounded-xl"
+          style={{
+            top: '28px',
+            left: '28px',
+            width: '56px',
+            height: '56px',
+            backgroundColor: 'rgba(127, 188, 193, 0.15)',
+          }}
         >
           <Briefcase
-            className="w-12 h-12"
-            style={{ stroke: 'var(--color-accent-secondary)', strokeWidth: 1.5 }}
+            style={{ width: '28px', height: '28px', stroke: '#7fbcc1', strokeWidth: 1.5, fill: 'none' }}
             aria-hidden="true"
           />
         </div>
@@ -195,7 +193,7 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
             fontWeight: 700,
             letterSpacing: '1px',
             textTransform: 'uppercase',
-            color: 'var(--color-accent-secondary)',
+            color: '#7fbcc1',
           }}
         >
           {service.category}
@@ -235,7 +233,7 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
             fontWeight: 800,
             letterSpacing: '1.5px',
             textTransform: 'uppercase',
-            color: 'var(--color-accent)',
+            color: '#0f5c63',
           }}
         >
           {service.category}
@@ -267,7 +265,7 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
               >
                 <svg
                   className="shrink-0"
-                  style={{ width: '20px', height: '20px', stroke: 'var(--color-accent)', fill: 'none', strokeWidth: 3 }}
+                  style={{ width: '20px', height: '20px', stroke: '#0f5c63', fill: 'none', strokeWidth: 3 }}
                   viewBox="0 0 24 24"
                 >
                   <polyline points="20 6 9 17 4 12" />
@@ -277,38 +275,40 @@ function ServiceCardExact({ service }: { service: ServiceCatalogItem }) {
             ))}
           </ul>
         )}
-        {/* Button group */}
-        <div className="mt-auto flex flex-col gap-2.5">
-          {/* Primary button — deep teal bg */}
+        {/* Button group — HORIZONTAL: one filled + one outlined */}
+        <div className="mt-auto flex flex-row gap-2.5">
+          {/* Primary button — filled deep teal */}
           <SmartLink
             href={ctaLink}
-            className="inline-flex items-center justify-center text-center no-underline transition-all duration-200"
+            className="service-btn-primary inline-flex items-center justify-center text-center no-underline"
             style={{
-              padding: '12px 20px',
+              flex: 1,
+              padding: '12px 16px',
               borderRadius: '8px',
               fontWeight: 700,
-              fontSize: '14.5px',
-              width: '100%',
-              backgroundColor: 'var(--color-accent)',
-              color: 'var(--color-accent-contrast)',
+              fontSize: '14px',
+              backgroundColor: '#0f5c63',
+              color: '#f7fbfb',
               boxShadow: '0 4px 12px rgba(15, 92, 99, 0.25)',
+              transition: 'background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
             }}
           >
             {ctaText}
           </SmartLink>
-          {/* Secondary button — outline */}
+          {/* Secondary button — outlined */}
           <SmartLink
             href={detailLink}
-            className="inline-flex items-center justify-center text-center no-underline transition-all duration-200"
+            className="service-btn-secondary inline-flex items-center justify-center text-center no-underline"
             style={{
-              padding: '12px 20px',
+              flex: 1,
+              padding: '12px 16px',
               borderRadius: '8px',
               fontWeight: 700,
-              fontSize: '14.5px',
-              width: '100%',
+              fontSize: '14px',
               backgroundColor: 'transparent',
-              color: 'var(--color-accent)',
+              color: '#0f5c63',
               border: '2px solid rgba(15, 92, 99, 0.2)',
+              transition: 'border-color 0.2s ease, background-color 0.2s ease',
             }}
           >
             See Details

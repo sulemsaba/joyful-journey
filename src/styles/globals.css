@@ -976,6 +976,12 @@ html[data-theme="dark"] ::selection {
  * Mobile: permanently expanded, white bg, no hover
  * ═══════════════════════════════════════════════════════════════ */
 
+/* Smooth hover lift (CSS-only, no JS) */
+.service-card-exact:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
 /* Hover: show arc + expanded, hide default */
 .service-card-exact:hover .service-card-arc {
   transform: scale(1) !important;
@@ -991,6 +997,17 @@ html[data-theme="dark"] ::selection {
 }
 .service-card-default {
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Button hover effects — smooth color transitions */
+.service-btn-primary:hover {
+  background-color: #0b4b51 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 92, 99, 0.4) !important;
+}
+.service-btn-secondary:hover {
+  border-color: #0f5c63 !important;
+  background-color: rgba(15, 92, 99, 0.05) !important;
 }
 
 /* Mobile: permanently expanded, no hover, white bg */
@@ -1016,3 +1033,4 @@ html[data-theme="dark"] ::selection {
     padding: 32px 24px !important;
   }
 }
+
