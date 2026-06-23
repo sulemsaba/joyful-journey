@@ -165,7 +165,7 @@ function ServiceCardExact({
           backgroundColor: '#f7fbfb',
           opacity: 0,
           transition: 'opacity 0.3s ease',
-          zIndex: 0,
+          zIndex: 1,
           borderRadius: '12px',
         }}
       />
@@ -181,7 +181,7 @@ function ServiceCardExact({
           transform: 'scale(0)',
           transformOrigin: 'bottom left',
           transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          zIndex: 1,
+          zIndex: 2,
         }}
       />
 

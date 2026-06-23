@@ -990,7 +990,7 @@ html[data-theme="dark"] ::selection {
 
 /* Hover: show bg fade + arc + expanded, hide default */
 .service-card-exact:hover .service-card-bg-fade {
-  opacity: 1;
+  opacity: 1 !important;
 }
 .service-card-exact:hover .service-card-arc {
   transform: scale(1) !important;
