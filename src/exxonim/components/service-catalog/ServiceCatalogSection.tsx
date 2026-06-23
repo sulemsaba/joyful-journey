@@ -145,10 +145,10 @@ function ServiceCardExact({
     <div
       className="service-card-exact group relative overflow-hidden cursor-default"
       style={{
-        height: '380px',
+        height: '320px',
         backgroundColor: '#08181b',
         borderRadius: '12px',
-        padding: '32px',
+        padding: '28px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end',
@@ -185,20 +185,21 @@ function ServiceCardExact({
         }}
       />
 
-      {/* Default content — visible by default, hidden on hover */}
-      <div className="service-card-default relative z-10">
-        {/* Icon — top-left, absolute. Color set on wrapper so currentColor works */}
-        <div className="absolute" style={{ top: '32px', left: '32px', color: '#7fbcc1' }}>
+      {/* Default content — visible by default, hidden on hover.
+          Icon is in-flow (NOT absolute) so it never overlaps the title. */}
+      <div className="service-card-default relative z-10 flex flex-col gap-3">
+        {/* Icon — in-flow, top of content. Color set on wrapper so currentColor works */}
+        <div style={{ color: '#7fbcc1' }}>
           <Icon
-            style={{ width: '48px', height: '48px', strokeWidth: 1.5 }}
+            style={{ width: '40px', height: '40px', strokeWidth: 1.5 }}
             aria-hidden="true"
           />
         </div>
         {/* Default label — light teal, uppercase */}
         <span
-          className="block mb-2"
+          className="block"
           style={{
-            fontSize: '12px',
+            fontSize: '11px',
             fontWeight: 700,
             letterSpacing: '1px',
             textTransform: 'uppercase',
@@ -212,10 +213,9 @@ function ServiceCardExact({
           className="m-0"
           style={{
             color: '#ffffff',
-            fontSize: '24px',
+            fontSize: '20px',
             fontWeight: 700,
             lineHeight: 1.3,
-            maxWidth: '90%',
           }}
         >
           {service.title}
@@ -228,7 +228,7 @@ function ServiceCardExact({
         className="service-card-expanded absolute inset-0 flex flex-col"
         style={{
           zIndex: 3,
-          padding: '36px 32px',
+          padding: '28px',
           opacity: 0,
           visibility: 'hidden',
           transition: 'opacity 0.4s ease 0.15s, visibility 0.4s',
