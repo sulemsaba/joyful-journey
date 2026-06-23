@@ -988,7 +988,10 @@ html[data-theme="dark"] ::selection {
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
-/* Hover: show arc + expanded, hide default */
+/* Hover: show bg fade + arc + expanded, hide default */
+.service-card-exact:hover .service-card-bg-fade {
+  opacity: 1;
+}
 .service-card-exact:hover .service-card-arc {
   transform: scale(1) !important;
 }
@@ -1003,6 +1006,25 @@ html[data-theme="dark"] ::selection {
 }
 .service-card-default {
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Button color overrides for the expanded card (white bg).
+   The Button primitive uses theme colors (light teal in dark mode),
+   but the expanded card has a white arc bg — deep teal #0f5c63 is correct. */
+.service-card-btn-primary {
+  background-color: #0f5c63 !important;
+  color: #f7fbfb !important;
+}
+.service-card-btn-primary:hover {
+  background-color: #0b4b51 !important;
+}
+.service-card-btn-secondary {
+  color: #0f5c63 !important;
+  border-color: rgba(15, 92, 99, 0.3) !important;
+}
+.service-card-btn-secondary:hover {
+  border-color: #0f5c63 !important;
+  background-color: rgba(15, 92, 99, 0.05) !important;
 }
 
 /* Mobile: permanently expanded, no hover, white bg, full-width stack */
@@ -1025,6 +1047,7 @@ html[data-theme="dark"] ::selection {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
   }
   .service-card-exact .service-card-arc,
+  .service-card-exact .service-card-bg-fade,
   .service-card-exact .service-card-default {
     display: none !important;
   }

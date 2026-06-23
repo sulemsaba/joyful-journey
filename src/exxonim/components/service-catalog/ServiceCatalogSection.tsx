@@ -156,7 +156,19 @@ function ServiceCardExact({
         transition: 'transform 0.4s ease, box-shadow 0.4s ease',
       }}
     >
-      {/* Background arc — white sweep from bottom-left on hover */}
+      {/* Background arc — white sweep from bottom-left on hover.
+          Also a solid white bg that fades in to cover the full card
+          (so top corners stay rounded, not box-like). */}
+      <span
+        className="service-card-bg-fade absolute inset-0 pointer-events-none"
+        style={{
+          backgroundColor: '#f7fbfb',
+          opacity: 0,
+          transition: 'opacity 0.3s ease',
+          zIndex: 0,
+          borderRadius: '12px',
+        }}
+      />
       <span
         className="service-card-arc absolute pointer-events-none"
         style={{
@@ -169,7 +181,7 @@ function ServiceCardExact({
           transform: 'scale(0)',
           transformOrigin: 'bottom left',
           transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          zIndex: 0,
+          zIndex: 1,
         }}
       />
 
@@ -210,21 +222,24 @@ function ServiceCardExact({
         </h3>
       </div>
 
-      {/* Expanded content — hidden by default, visible on hover */}
+      {/* Expanded content — hidden by default, visible on hover.
+          overflow-y: auto so long deliverable lists scroll instead of clipping. */}
       <div
         className="service-card-expanded absolute inset-0 flex flex-col"
         style={{
-          zIndex: 2,
+          zIndex: 3,
           padding: '36px 32px',
           opacity: 0,
           visibility: 'hidden',
           transition: 'opacity 0.4s ease 0.15s, visibility 0.4s',
           justifyContent: 'flex-start',
+          overflowY: 'auto',
+          scrollbarWidth: 'thin',
         }}
       >
         {/* Expanded label — deep teal */}
         <span
-          className="block mb-2"
+          className="block mb-2 shrink-0"
           style={{
             fontSize: '11px',
             fontWeight: 800,
@@ -237,7 +252,7 @@ function ServiceCardExact({
         </span>
         {/* Expanded title — dark text */}
         <h3
-          className="m-0 mb-6"
+          className="m-0 mb-5 shrink-0"
           style={{
             color: '#08181b',
             fontSize: '22px',
@@ -247,38 +262,42 @@ function ServiceCardExact({
         >
           {service.title}
         </h3>
-        {/* Benefits list — 3 deliverables with teal checkmarks */}
+        {/* Benefits list — 3 deliverables with teal checkmarks.
+            overflow-y: auto on parent handles scrolling if too long. */}
         {deliverables.length > 0 && (
-          <ul className="list-none m-0 mb-8 flex flex-col gap-3">
+          <ul className="list-none m-0 mb-6 flex flex-col gap-2.5">
             {deliverables.map((item, i) => (
               <li
                 key={i}
-                className="flex items-center gap-2.5"
+                className="flex items-start gap-2.5"
                 style={{
-                  fontSize: '15px',
-                  color: '#2c3052',
+                  fontSize: '14px',
+                  color: '#102529',
                   fontWeight: 600,
+                  lineHeight: 1.4,
                 }}
               >
                 <svg
-                  className="shrink-0"
-                  style={{ width: '20px', height: '20px', stroke: '#0f5c63', fill: 'none', strokeWidth: 3 }}
+                  className="shrink-0 mt-0.5"
+                  style={{ width: '18px', height: '18px', stroke: '#0f5c63', fill: 'none', strokeWidth: 3 }}
                   viewBox="0 0 24 24"
                 >
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                {item}
+                <span>{item}</span>
               </li>
             ))}
           </ul>
         )}
-        {/* Button group — HORIZONTAL: our Button primitive (one filled + one outlined) */}
-        <div className="mt-auto flex flex-row gap-2.5">
+        {/* Button group — HORIZONTAL: deep teal bg (not theme accent) for white arc bg.
+            Using inline style override because Button primitive uses theme colors
+            which resolve to light teal in dark mode — wrong for the white card bg. */}
+        <div className="mt-auto flex flex-row gap-2.5 shrink-0">
           <Button
             size="standard"
             variant="primary"
             href={ctaLink}
-            className="flex-1"
+            className="flex-1 service-card-btn-primary"
           >
             {ctaText}
           </Button>
@@ -286,7 +305,7 @@ function ServiceCardExact({
             size="standard"
             variant="outline"
             href={detailLink}
-            className="flex-1"
+            className="flex-1 service-card-btn-secondary"
           >
             Details
             <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
