@@ -2,8 +2,18 @@ const puppeteer = require('puppeteer-core');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
-const CHROME_PATH = '/home/z/.agent-browser/browsers/chrome-149.0.7827.115/chrome';
+// Auto-detect Chrome/Chromium path — works on any machine
+const possiblePaths = [
+  path.join(os.homedir(), '.agent-browser/browsers/chrome-149.0.7827.115/chrome'),
+  path.join(os.homedir(), '.cache/ms-playwright/chromium-1223/chrome-linux64/chrome'),
+  '/usr/bin/google-chrome',
+  '/usr/bin/chromium-browser',
+  '/usr/bin/chromium',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+];
+const CHROME_PATH = possiblePaths.find(p => { try { return fs.existsSync(p); } catch { return false; } });
 const BASE_URL = 'http://127.0.0.1:4173';
 
 function fetchUrl(url) {

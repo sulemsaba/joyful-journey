@@ -1,8 +1,21 @@
 import { chromium } from 'playwright';
+import path from 'path';
+import os from 'os';
+
+// Auto-detect Chrome/Chromium path — works on any machine
+const possiblePaths = [
+  path.join(os.homedir(), '.cache/ms-playwright/chromium-1223/chrome-linux64/chrome'),
+  path.join(os.homedir(), '.agent-browser/browsers/chrome-149.0.7827.115/chrome'),
+  '/usr/bin/google-chrome',
+  '/usr/bin/chromium-browser',
+  '/usr/bin/chromium',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+];
+const chromePath = possiblePaths.find(p => { try { return fs.existsSync(p); } catch { return false; } });
 
 const browser = await chromium.launch({
   headless: true,
-  executablePath: '/home/z/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome',
+  executablePath: chromePath,
   args: [
     '--no-sandbox',
     '--disable-setuid-sandbox',
