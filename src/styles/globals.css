@@ -78,7 +78,7 @@ section[aria-label="Service guidance overview"] h2 {
 @property --color-accent-hover { syntax: '<color>'; inherits: true; initial-value: #0b4b51; }
 @property --color-accent-secondary { syntax: '<color>'; inherits: true; initial-value: #7fbcc1; }
 @property --color-accent-contrast { syntax: '<color>'; inherits: true; initial-value: #f7fbfb; }
-@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #edf0eb; }
+@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #F5F5EE; }
 @property --color-success { syntax: '<color>'; inherits: true; initial-value: #0f8a5f; }
 @property --color-error { syntax: '<color>'; inherits: true; initial-value: #c4372f; }
 @property --color-warning { syntax: '<color>'; inherits: true; initial-value: #b45309; }
@@ -179,8 +179,8 @@ section[aria-label="Service guidance overview"] h2 {
   --color-border-soft: rgba(15, 92, 99, 0.12);
   --color-border-strong: rgba(15, 92, 99, 0.22);
   --color-overlay: rgba(8, 24, 27, 0.54);
-  --color-hero-bg: #edf0eb;
-  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
+  --color-hero-bg: #F5F5EE;
+  --color-hero-bg-fade: rgba(245, 245, 238, 0.8);
   --color-cinematic-card-border: rgba(255, 255, 255, 0.54);
   --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.28);
   --color-success: #0f8a5f;
@@ -462,8 +462,8 @@ html.reveal-instant [data-reveal] {
   --color-border-soft: rgba(15, 92, 99, 0.12);
   --color-border-strong: rgba(15, 92, 99, 0.22);
   --color-overlay: rgba(8, 24, 27, 0.54);
-  --color-hero-bg: #edf0eb;
-  --color-hero-bg-fade: rgba(237, 240, 235, 0.8);
+  --color-hero-bg: #F5F5EE;
+  --color-hero-bg-fade: rgba(245, 245, 238, 0.8);
   --shadow-panel: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-panel-strong: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-hero: 0 0 0 rgba(0, 0, 0, 0);

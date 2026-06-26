@@ -101,7 +101,7 @@ function draw(
     const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
 
     // Brand-colored lines with depth variation
-    const baseAlpha = isDark ? 0.07 + dF * 0.28 : 0.04 + dF * 0.16;
+    const baseAlpha = isDark ? 0.07 + dF * 0.28 : 0.06 + dF * 0.24;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
