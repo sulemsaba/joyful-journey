@@ -2,7 +2,6 @@ export { useBlogCategories } from "./useBlogCategories";
 export { useBlogPost } from "./useBlogPost";
 export { useBlogPosts } from "./useBlogPosts";
 export { useFaqItems } from "./useFaqItems";
-export { useNavigation } from "./useNavigation";
 export { usePage } from "./usePage";
 export { usePricingPlans } from "./usePricingPlans";
 export { usePublicShell } from "./usePublicShell";

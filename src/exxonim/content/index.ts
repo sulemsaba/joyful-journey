@@ -21,5 +21,4 @@ export {
   fallbackBrand,
   fallbackCompanyInfo,
   fallbackFooter,
-  fallbackNavigationItems,
 } from "./fallbackShell";

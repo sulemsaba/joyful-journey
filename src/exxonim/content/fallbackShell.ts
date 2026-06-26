@@ -1,6 +1,6 @@
 import type { SiteSettingFooterValue } from "@/exxonim/types/api";
 
-import type { BrandAssets, CompanyInfo, NavigationItem } from '@/exxonim/types';
+import type { BrandAssets, CompanyInfo } from '@/exxonim/types';
 import { routes } from "@/exxonim/routes";
 /* BACKEND / ADMIN INTEGRATION NOTES:
  * ──────────────────────────────────
@@ -21,107 +21,13 @@ const lightLogo = "/branding/exxonimLogoLight.webp";
 const darkLogo = "/branding/logo-dark.png";
 
 /**
- * Shell-level fallback data for navigation, branding, company contact details, and footer links.
+ * Shell-level fallback data for branding, company contact details, and footer links.
  * These values are loaded before page content so the site chrome remains stable during API outages.
+ *
+ * NOTE: Navigation is now managed statically via staticNavigation.ts.
+ * The old fallbackNavigationItems array and related helpers have been removed.
  */
 const FALLBACK_TIMESTAMP = "fallback";
-
-function createNavigationItem(
-  id: number,
-  title: string,
-  url: string,
-  order: number,
-  options?: {
-    kind?: string;
-    parentId?: number | null;
-    description?: string;
-    children?: NavigationItem[];
-  }
-): NavigationItem {
-  return {
-    id,
-    title,
-    url,
-    description: options?.description,
-    kind: options?.kind ?? "primary",
-    order,
-    isActive: true,
-    parentId: options?.parentId ?? null,
-    createdAt: FALLBACK_TIMESTAMP,
-    updatedAt: FALLBACK_TIMESTAMP,
-    children: options?.children ?? [],
-  };
-}
-
-const servicesNavigation = createNavigationItem(100, "Services", routes.services, 3, {
-  children: [
-    createNavigationItem(110, "Business Setup", routes.services, 1, {
-      kind: "group",
-      parentId: 100,
-      children: [
-        createNavigationItem(111, "Company Registration", routes.services, 1, {
-          kind: "secondary",
-          parentId: 110,
-        }),
-        createNavigationItem(112, "TIN Application", routes.services, 2, {
-          kind: "secondary",
-          parentId: 110,
-        }),
-        createNavigationItem(113, "Business License Applications", routes.services, 3, {
-          kind: "secondary",
-          parentId: 110,
-        }),
-      ],
-    }),
-    createNavigationItem(120, "Compliance Support", routes.services, 2, {
-      kind: "group",
-      parentId: 100,
-      children: [
-        createNavigationItem(121, "Statutory Filings", routes.services, 1, {
-          kind: "secondary",
-          parentId: 120,
-        }),
-        createNavigationItem(122, "Regulatory Renewals", routes.services, 2, {
-          kind: "secondary",
-          parentId: 120,
-        }),
-        createNavigationItem(123, "Operational Advisory", routes.services, 3, {
-          kind: "secondary",
-          parentId: 120,
-        }),
-      ],
-    }),
-  ],
-});
-
-const resourcesNavigation = createNavigationItem(
-  200,
-  "Resources",
-  routes.resources,
-  4,
-  {
-    children: [
-      createNavigationItem(210, "Guides", routes.resources, 1, {
-        kind: "group",
-        parentId: 200,
-        children: [
-          createNavigationItem(211, "Blog", routes.resources, 1, {
-            kind: "secondary",
-            parentId: 210,
-          }),
-          createNavigationItem(212, "FAQ", routes.faq, 2, {
-            kind: "secondary",
-            parentId: 210,
-          }),
-          createNavigationItem(213, "Support", routes.support, 3, {
-            kind: "secondary",
-            parentId: 210,
-          }),
-        ],
-      }),
-    ],
-  }
-);
 
 /* BACKEND: The BrandAssets type has a `faviconUrl` field in the API contract
  * (src/shared/contracts/site-settings.ts → SiteSettingBrandValue.favicon_url).
@@ -161,34 +67,6 @@ export const fallbackCompanyInfo: CompanyInfo = {
   address: "House No. 9, Block H, Mbezi Beach B, Africana, Bagamoyo Road, Dar es Salaam, Tanzania",
   whatsapp: "https://wa.me/255794689099",
 };
-
-/* BACKEND / ADMIN INTEGRATION NOTES:
- * ──────────────────────────────────
- * DEPRECATED: Navigation is now managed statically via staticNavigation.ts.
- * This fallbackNavigationItems array is kept for backward compatibility with
- * navigationService.ts (which is also deprecated). The Navigation component
- * now imports directly from staticNavigation.ts.
- *
- * If you need to add/remove/reorder navigation items, edit:
- *   src/exxonim/content/staticNavigation.ts
- *
- * Original notes (for reference if API-driven nav is re-enabled):
- *   Navigation tree structure (3-level hierarchy):
- *     Level 1 (kind="primary"): Top-bar links. `order` controls left→right position.
- *     Level 2 (kind="group"): Dropdown column headers inside a parent.
- *     Level 3 (kind="secondary"): Individual links inside a column.
- *   API contract: see src/shared/contracts/navigation.ts → ApiNavigationItem.
- *   Mapper: see src/utils/contentMappers.ts → mapNavigationItem().
- */
-export const fallbackNavigationItems: NavigationItem[] = [
-  createNavigationItem(0, "Home", routes.home, 0),
-  createNavigationItem(1, "About", routes.about, 1),
-  servicesNavigation,
-  resourcesNavigation,
-  createNavigationItem(5, "Career", routes.career, 5),
-  createNavigationItem(6, "Contact", routes.contact, 6),
-  createNavigationItem(7, "Track Consultation", routes.trackConsultation, 7),
-];
 
 export const fallbackFooter: SiteSettingFooterValue = {
   quick_links: [

@@ -20,7 +20,6 @@ import {
   fallbackBrand,
   fallbackCompanyInfo,
   fallbackFooter,
-  fallbackNavigationItems,
 } from "./fallbackShell";
 import { routes } from "@/exxonim/routes";
 const utecLogo = "/clients/utec.webp";
@@ -2236,4 +2235,4 @@ export const fallbackTrackConsultationPage: PageRecord<InfoPageContent> = create
   "Look up your Exxonim Consult consultation status anytime using your tracking reference ID. No login required."
 );
 
-export { fallbackBlogCategories, fallbackNavigationItems };
+export { fallbackBlogCategories };

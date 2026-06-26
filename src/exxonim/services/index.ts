@@ -6,7 +6,6 @@
  * blogService          → /api/v1/blog/posts, /api/v1/blog/categories, /api/v1/blog/authors
  * consultationService  → /api/v1/consultations, /api/v1/track
  * jobsService          → /api/v1/jobs
- * navigationService    → /api/v1/navigation
  * pageService          → /api/v1/pages
  * pricingService       → /api/v1/pricing/plans
  * privacyService       → /api/v1/privacy/consent, /api/v1/privacy-requests
@@ -27,7 +26,6 @@ export {
 } from "./blogService";
 export { lookupTrackingCode, submitPublicConsultation } from "./consultationService";
 export { getPublishedJobs } from "./jobsService";
-export { getNavigation } from "./navigationService";
 export { getPageBySlug } from "./pageService";
 export { getPricingPlans } from "./pricingService";
 export {
