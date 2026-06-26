@@ -70,6 +70,10 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
 
       if (entry.isIntersecting) {
         isVisible.current = true;
+        // Trigger video load if not already loading
+        if (video.readyState < 1) {
+          video.load();
+        }
         // If video has buffered enough, play immediately
         if (video.readyState >= 3) {
           tryPlay();
@@ -95,7 +99,7 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
 
     const observer = new IntersectionObserver(
       ([entry]) => handleVisibility(entry),
-      { rootMargin: "100px", threshold: 0.05 }
+      { rootMargin: "300px", threshold: 0.05 }
     );
     observer.observe(video);
 
@@ -141,7 +145,7 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
       autoPlay
       disablePictureInPicture
       disableRemotePlayback
-      preload="auto"
+      preload="metadata"
       aria-hidden="true"
       className={className}
       style={style}
