@@ -38,10 +38,10 @@ interface AuroraConfig {
 }
 
 const DEFAULT_CONFIG: AuroraConfig = {
-  speed: 0.5,
-  spacing: 2.5,
-  coverage: 75,
-  intensity: 52,
+  speed: 0.7,
+  spacing: 3.0,
+  coverage: 68,
+  intensity: 40,
   showDepth: true,
 };
 
@@ -93,15 +93,15 @@ function draw(
   const zoneH = h * (cfg.coverage / 100);
   const zoneTop = (h - zoneH) / 2;
   const rawCurtainCount = Math.max(2, Math.round(zoneH / (cfg.spacing * 3)));
-  const curtainCount = Math.max(2, Math.min(rawCurtainCount, 25));
-  const steps = w < 768 ? 80 : 160;
+  const curtainCount = Math.max(2, Math.min(rawCurtainCount, 20));
+  const steps = w < 768 ? 64 : 128;
 
   for (let c = 0; c < curtainCount; c++) {
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
     const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
 
     // Brand-colored lines with depth variation
-    const baseAlpha = isDark ? 0.08 + dF * 0.35 : 0.04 + dF * 0.2;
+    const baseAlpha = isDark ? 0.07 + dF * 0.28 : 0.04 + dF * 0.16;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
