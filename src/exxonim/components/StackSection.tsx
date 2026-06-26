@@ -37,100 +37,68 @@ const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
 function LazyVideo({ sources, poster, playbackRate, className, style }: { sources: { src: string; type: string }[]; poster?: string; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLVideoElement>(null);
   const isVisible = useRef(false);
-  const hasPlayed = useRef(false);
 
-  /* Step 1: Play/pause based on viewport visibility.
-   * When the video scrolls into view, we play it.
-   * When it scrolls out, we pause it.
-   * This means the video is already playing (or instantly
-   * starts) when the user scrolls to it. */
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
 
-    let interactionHandler: (() => void) | null = null;
     let cancelled = false;
+    let interactionHandler: (() => void) | null = null;
 
     const tryPlay = () => {
       if (cancelled || !video) return;
-      video.play().catch(() => {
-        // Autoplay blocked - retry on first user interaction
-        if (cancelled) return;
-        interactionHandler = () => {
-          video.play().catch(() => {/* give up */});
-        };
-        document.addEventListener("click", interactionHandler, { once: true });
-        document.addEventListener("touchstart", interactionHandler, { once: true });
-        document.addEventListener("keydown", interactionHandler, { once: true });
-      });
-    };
-
-    const handleVisibility = (entry: IntersectionObserverEntry) => {
-      if (cancelled) return;
-
-      if (entry.isIntersecting) {
-        isVisible.current = true;
-        // Trigger video load if not already loading
-        if (video.readyState < 1) {
-          video.load();
-        }
-        // If video has buffered enough, play immediately
-        if (video.readyState >= 3) {
-          tryPlay();
-        } else {
-          // Wait for enough data then play
-          const onReady = () => {
-            if (!cancelled && isVisible.current) tryPlay();
-            video.removeEventListener("canplaythrough", onReady);
-            video.removeEventListener("loadeddata", onReady);
-          };
-          video.addEventListener("canplaythrough", onReady);
-          video.addEventListener("loadeddata", onReady);
-        }
-      } else {
-        isVisible.current = false;
-        // Pause when out of view to save CPU/battery
-        if (!video.paused) {
-          video.pause();
-          hasPlayed.current = true;
-        }
+      if (video.paused) {
+        video.play().catch(() => {
+          // Autoplay blocked - retry on first user interaction
+          if (cancelled) return;
+          interactionHandler = () => { video.play().catch(() => {}); };
+          document.addEventListener("click", interactionHandler, { once: true });
+          document.addEventListener("touchstart", interactionHandler, { once: true });
+        });
       }
     };
 
+    // Play when video can play + is visible
+    const onCanPlay = () => {
+      if (!cancelled && isVisible.current) tryPlay();
+    };
+    video.addEventListener("canplay", onCanPlay);
+
+    // IntersectionObserver: load + play when visible, pause when not
     const observer = new IntersectionObserver(
-      ([entry]) => handleVisibility(entry),
+      ([entry]) => {
+        if (cancelled) return;
+
+        if (entry.isIntersecting) {
+          isVisible.current = true;
+          // If already ready, play immediately
+          if (video.readyState >= 3) {
+            tryPlay();
+          }
+          // Otherwise, onCanPlay will handle it
+        } else {
+          isVisible.current = false;
+          if (!video.paused) video.pause();
+        }
+      },
       { rootMargin: "300px", threshold: 0.05 }
     );
     observer.observe(video);
 
-    // Also try to play on canplaythrough if already visible
-    // (handles the case where video finishes loading after
-    // the user has already scrolled to it)
-    const onCanPlay = () => {
-      if (!cancelled && isVisible.current) tryPlay();
-    };
-    video.addEventListener("canplaythrough", onCanPlay);
-
-    // Apply playback rate
+    // Apply playback rate once metadata loads
     if (playbackRate) {
       const applyRate = () => { video.playbackRate = playbackRate; };
       video.addEventListener("loadedmetadata", applyRate);
       if (video.readyState >= 1) applyRate();
     }
 
-    // Safety: if video is in viewport on mount and ready, play
-    if (video.readyState >= 3 && isVisible.current) {
-      tryPlay();
-    }
-
     return () => {
       cancelled = true;
       observer.disconnect();
-      video.removeEventListener("canplaythrough", onCanPlay);
+      video.removeEventListener("canplay", onCanPlay);
       if (interactionHandler) {
         document.removeEventListener("click", interactionHandler);
         document.removeEventListener("touchstart", interactionHandler);
-        document.removeEventListener("keydown", interactionHandler);
       }
     };
   }, [playbackRate]);
