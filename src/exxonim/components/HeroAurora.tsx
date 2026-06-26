@@ -38,7 +38,7 @@ interface AuroraConfig {
 }
 
 const DEFAULT_CONFIG: AuroraConfig = {
-  speed: 0.7,
+  speed: 0.5,
   spacing: 3.0,
   coverage: 68,
   intensity: 40,

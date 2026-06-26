@@ -23,16 +23,8 @@
       (function(){try{var t=localStorage.getItem('exxonim-theme')||localStorage.getItem('koro-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}}catch(e){}})()
     </script>
 
-    <!-- Preload hero background image for LCP -->
+    <!-- Preload only hero background for LCP (other images lazy-load) -->
     <link rel="preload" as="image" href="/hero-bg.webp" fetchPriority="high" />
-
-    <!-- Preload logo images so header renders without shift -->
-    <link rel="preload" as="image" href="/branding/exxonimLogoLight.webp" fetchPriority="high" />
-    <link rel="preload" as="image" href="/branding/logo-dark.png" fetchPriority="high" />
-
-    <!-- Preload favicons for the boot loader (must appear instantly) -->
-    <link rel="preload" as="image" href="/branding/exxonim-favicon-light.png" />
-    <link rel="preload" as="image" href="/branding/exxonim-favicon-dark.png" />
 
     <!-- Favicons (light for light OS theme, dark for dark OS theme) -->
     <link rel="icon" type="image/png" href="/branding/exxonim-favicon-light.png" id="favicon-light" />
@@ -42,10 +34,7 @@
     <!-- RSS auto-discovery -->
     <link rel="alternate" type="application/rss+xml" title="Exxonim Consult Blog" href="/blog/rss.xml" />
 
-    <!-- Google Fonts: Geist Sans + Geist Mono (loaded async to avoid render-blocking) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&display=swap" />
+    <!-- Google Fonts: loaded async (no preconnect, no preload — minimal blocking) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&display=swap" /></noscript>
 
