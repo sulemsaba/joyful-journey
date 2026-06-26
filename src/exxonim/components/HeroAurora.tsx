@@ -1,8 +1,9 @@
+"use client";
 
 import { useEffect, useRef } from "react";
 
 /**
- * HeroAurora - animated aurora curtain background for the hero section.
+ * HeroAurora — animated aurora curtain background for the hero section.
  *
  * Converted from the Exxonim Aurora Engine design. Uses HTML Canvas to
  * draw flowing curtain-like lines with depth sub-lines, creating a
@@ -11,8 +12,8 @@ import { useEffect, useRef } from "react";
  * BRAND COLORS:
  *   - Lines use the Exxonim brand accent color read from
  *     CSS custom property --color-accent at runtime.
- *   - Light mode: #0f5c63 (deep teal) - lines are subtle, text prominent
- *   - Dark mode: #7fbcc1 (bright teal) - lines are vivid, rich visual
+ *   - Light mode: #0f5c63 (deep teal) — lines are subtle, text prominent
+ *   - Dark mode: #7fbcc1 (bright teal) — lines are vivid, rich visual
  *   - Depth variation: slight opacity/lightness shifts per sub-line
  *     create a layered look while staying on-brand.
  *
@@ -37,11 +38,11 @@ interface AuroraConfig {
 }
 
 const DEFAULT_CONFIG: AuroraConfig = {
-  speed: 0.5,
-  spacing: 3.5,
-  coverage: 60,
-  intensity: 28,
-  showDepth: false,
+  speed: 0.9,
+  spacing: 2.5,
+  coverage: 75,
+  intensity: 52,
+  showDepth: true,
 };
 
 /**
@@ -91,31 +92,30 @@ function draw(
 ) {
   const zoneH = h * (cfg.coverage / 100);
   const zoneTop = (h - zoneH) / 2;
-  const isSmallCanvas = w < 768;
   const rawCurtainCount = Math.max(2, Math.round(zoneH / (cfg.spacing * 3)));
-  const curtainCount = Math.max(2, Math.min(rawCurtainCount, isSmallCanvas ? 12 : 16));
-  const steps = isSmallCanvas ? 56 : 112;
+  const curtainCount = Math.max(2, Math.min(rawCurtainCount, 25));
+  const steps = w < 768 ? 80 : 160;
 
   for (let c = 0; c < curtainCount; c++) {
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
     const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
 
-    // Brand-colored lines - vivid glow effect (brightened for both themes)
-    const baseAlpha = isDark ? 0.06 + dF * 0.20 : 0.05 + dF * 0.12;
+    // Brand-colored lines with depth variation
+    const baseAlpha = isDark ? 0.08 + dF * 0.35 : 0.04 + dF * 0.2;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
 
-    const subLines = cfg.showDepth ? (isSmallCanvas ? 2 : 3) : 2;
+    const subLines = cfg.showDepth ? 4 : 2;
 
     for (let sub = 0; sub < subLines; sub++) {
-      const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 0.8);
+      const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 1.5);
       if (subAlpha <= 0) continue;
 
       ctx.globalAlpha = subAlpha;
-      // Use brand accent color directly - slight opacity variation per sub-line
-      ctx.strokeStyle = withAlpha(accentColor, 0.7 + sub * 0.15 + dF * 0.2);
-      ctx.lineWidth = 2 + dF * 4;
+      // Use brand accent color directly — slight opacity variation per sub-line
+      ctx.strokeStyle = withAlpha(accentColor, 0.5 + sub * 0.15 + dF * 0.2);
+      ctx.lineWidth = cfg.showDepth ? 1 + dF * 3 : 2;
 
       ctx.beginPath();
       for (let s = 0; s <= steps; s++) {
@@ -140,9 +140,6 @@ export function HeroAurora() {
   const timeRef = useRef(0);
   const lastFrameRef = useRef(0);
   const rafIdRef = useRef<number>(0);
-  const isVisibleRef = useRef(true);
-  const isDocumentVisibleRef = useRef(true);
-  const scrollingUntilRef = useRef(0);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
@@ -158,10 +155,9 @@ export function HeroAurora() {
 
     function resize() {
       // Cap DPR at 2 to prevent huge buffers on 3x Retina
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cssW = canvas!.clientWidth;
       const cssH = canvas!.clientHeight;
-      if (cssW === 0 || cssH === 0) return;
       if (canvas!.width !== cssW * dpr || canvas!.height !== cssH * dpr) {
         canvas!.width = cssW * dpr;
         canvas!.height = cssH * dpr;
@@ -172,51 +168,12 @@ export function HeroAurora() {
     resize();
     window.addEventListener("resize", resize);
 
-    const visibilityObserver =
-      "IntersectionObserver" in window
-        ? new IntersectionObserver(
-            ([entry]) => {
-              isVisibleRef.current = entry.isIntersecting;
-            },
-            { threshold: 0.01 }
-          )
-        : null;
-
-    visibilityObserver?.observe(canvas);
-
-    const handleVisibilityChange = () => {
-      isDocumentVisibleRef.current = document.visibilityState === "visible";
-      if (isDocumentVisibleRef.current) {
-        lastFrameRef.current = 0;
-      }
-    };
-
-    const handleScroll = () => {
-      scrollingUntilRef.current = performance.now() + 160;
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // Cache accent color + theme - only re-read every 500ms, not every frame
+    // Cache accent color + theme — only re-read every 500ms, not every frame
     let cachedAccent = "#0f5c63";
     let cachedIsDark = false;
     let lastStyleRead = 0;
-    let lastDraw = 0;
-    const FRAME_INTERVAL = 33;
 
     function animate(ts: number) {
-      if (
-        !isVisibleRef.current ||
-        !isDocumentVisibleRef.current ||
-        ts - lastDraw < FRAME_INTERVAL ||
-        performance.now() < scrollingUntilRef.current
-      ) {
-        rafIdRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
-      lastDraw = ts;
       if (lastFrameRef.current === 0) lastFrameRef.current = ts;
       const delta = Math.min(ts - lastFrameRef.current, 50);
       lastFrameRef.current = ts;
@@ -244,9 +201,6 @@ export function HeroAurora() {
 
     return () => {
       window.removeEventListener("resize", resize);
-      window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      visibilityObserver?.disconnect();
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }
