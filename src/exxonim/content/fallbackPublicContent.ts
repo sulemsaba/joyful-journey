@@ -217,7 +217,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaLabel: "Start My Registration",
           ctaHref: routes.contact,
           windowTitle: "Setup",
-          windowTag: "Guide",
+          windowTag: "",
           videoSources: [],
           mobileTitle: "Registration & Licensing",
           mobileDescription:
@@ -232,7 +232,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaLabel: "Protect My Compliance",
           ctaHref: routes.services,
           windowTitle: "Compliance",
-          windowTag: "Guide",
+          windowTag: "",
           videoSources: [],
           mobileTitle: "Annual Compliance",
           mobileDescription:
@@ -247,7 +247,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           ctaLabel: "Track My Case",
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
-          windowTag: "Guide",
+          windowTag: "",
           videoSources: [
             { src: "/videos/track-consultation.webm?v=2", type: "video/webm" },
             { src: "/videos/track-consultation.mp4?v=2", type: "video/mp4" },
