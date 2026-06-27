@@ -204,9 +204,9 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           <span className="hidden md:inline">{item.title}</span>
         </h2>
 
-        {/* Subtitle — desktop only (hidden on mobile for conciseness) */}
+        {/* Subtitle — desktop only, bold accent color for attention */}
         {item.subtitle && (
-          <p className="hidden md:block text-lg leading-relaxed text-accent font-medium">
+          <p className="hidden md:block text-lg leading-relaxed text-accent font-bold">
             {item.subtitle}
           </p>
         )}

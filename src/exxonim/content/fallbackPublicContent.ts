@@ -211,10 +211,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
       items: [
         {
           title: "Registration & Licensing",
-          subtitle: "From company registration and TIN to business licences, work permits, and NGO setup.",
+          subtitle: "Launch your business legally - zero paperwork headaches.",
           description:
-            "Start your business legally without the paperwork. We register companies, secure business licences, process work permits, and complete NGO registrations from start to finish. Skip the government queues. Minimal office visits. We handle the paperwork and government process so you can focus on running your business. Your certificates are delivered, ready for you to do business.",
-          ctaLabel: "Start My Registration",
+            "We handle full company registration, TIN, licences, work permits & NGO setup from start to finish. Skip government queues, minimize office visits, and get your certificates delivered to your door.",
+          ctaLabel: "Start My Company Registration",
           ctaHref: routes.contact,
           windowTitle: "Setup",
           windowTag: "",
@@ -226,10 +226,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
         },
         {
           title: "Annual Compliance & Renewals",
-          subtitle: "We handle statutory filings, licence renewals, annual returns, and compliance deadlines for you.",
+          subtitle: "Avoid costly penalties & stay fully compliant - hands-off.",
           description:
-            "Stay compliant and avoid costly late penalties. We manage statutory filings, licence renewals, and annual returns for your business. We track every deadline, file everything on your behalf, and remind you before every due date. No deadline stress. No missed filings. Total compliance with zero stress.",
-          ctaLabel: "Protect My Compliance",
+            "We manage all statutory filings, licence renewals & annual returns. With proactive deadline tracking and pre-due-date reminders, you get zero missed filings and absolute peace of mind.",
+          ctaLabel: "Secure My Compliance Now",
           ctaHref: routes.services,
           windowTitle: "Compliance",
           windowTag: "",
@@ -241,10 +241,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
         },
         {
           title: "Live Case Tracking",
-          subtitle: "Get updates by WhatsApp, email, or SMS at every milestone.",
+          subtitle: "Real-time visibility into your application - via WhatsApp.",
           description:
-            "Know exactly where your application is at every stage. Every client receives a unique tracking code to follow their case in real time. Get instant WhatsApp updates at every milestone, including name clearance, submission, and approval. You can also check your progress online anytime. No passwords. No hassle. Just complete visibility and peace of mind.",
-          ctaLabel: "Track My Case",
+            "Get instant updates at every milestone (name clearance to final approval). Track progress online 24/7 with a unique code - no logins, no hassle, just total clarity.",
+          ctaLabel: "Track My Case in Real Time",
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
           windowTag: "",
