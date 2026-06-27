@@ -168,6 +168,11 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
   const badge = item.windowTag || undefined;
   const hasVideo = item.videoSources.length > 0;
 
+  // Mobile copy (falls back to desktop copy if not set)
+  const mobileTitle = item.mobileTitle || item.title;
+  const mobileDescription = item.mobileDescription || item.description;
+  const mobileCtaLabel = item.mobileCtaLabel || item.ctaLabel;
+
   return (
     <div
       className={cn(
@@ -193,31 +198,34 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           </div>
         )}
 
-        {/* Heading */}
+        {/* Heading — mobile copy on small screens, desktop copy on md+ */}
         <h2 className="text-2xl font-bold tracking-tight text-text sm:text-3xl md:text-4xl">
-          {item.title}
+          <span className="md:hidden">{mobileTitle}</span>
+          <span className="hidden md:inline">{item.title}</span>
         </h2>
 
-        {/* Subtitle */}
+        {/* Subtitle — desktop only (hidden on mobile for conciseness) */}
         {item.subtitle && (
-          <p className="text-lg leading-relaxed text-accent font-medium">
+          <p className="hidden md:block text-lg leading-relaxed text-accent font-medium">
             {item.subtitle}
           </p>
         )}
 
-        {/* Description */}
+        {/* Description — mobile copy on small screens, desktop copy on md+ */}
         <p className="text-base leading-relaxed text-text-muted sm:text-lg">
-          {item.description}
+          <span className="md:hidden">{mobileDescription}</span>
+          <span className="hidden md:inline">{item.description}</span>
         </p>
 
-        {/* CTA */}
+        {/* CTA — mobile label on small screens, desktop label on md+ */}
         <div className="flex items-center gap-3 pt-2">
           <Button
             size="standard"
             variant="primary"
             href={item.ctaHref || "/contact/"}
           >
-            {item.ctaLabel || "Learn More"}
+            <span className="md:hidden">{mobileCtaLabel}</span>
+            <span className="hidden md:inline">{item.ctaLabel}</span>
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
           </Button>
         </div>

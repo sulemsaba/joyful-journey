@@ -75,6 +75,10 @@ export interface StackItem {
   videoSources: { src: string; type: string }[];
   /** When true, the item is hidden from the stack section (e.g., consultation tracking card) */
   isHidden?: boolean;
+  /** Mobile-specific copy (conversational, high clarity). Falls back to desktop copy if not set. */
+  mobileTitle?: string;
+  mobileDescription?: string;
+  mobileCtaLabel?: string;
 }
 
 export interface FeatureRow {

@@ -219,6 +219,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Setup",
           windowTag: "Guide",
           videoSources: [],
+          mobileTitle: "Registration & Licensing",
+          mobileDescription:
+            "Skip the government queues. We register your business, secure licences and permits, and deliver your certificates.",
+          mobileCtaLabel: "Start My Registration",
         },
         {
           title: "We\u00A0let you focus on your business",
@@ -230,6 +234,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Compliance",
           windowTag: "Guide",
           videoSources: [],
+          mobileTitle: "Annual Compliance",
+          mobileDescription:
+            "Avoid costly late fines. We track deadlines, file your returns, and remind you before every due date.",
+          mobileCtaLabel: "Protect My Compliance",
         },
         {
           title: "Never wonder what's happening with your case",
@@ -244,6 +252,10 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
             { src: "/videos/track-consultation.webm?v=2", type: "video/webm" },
             { src: "/videos/track-consultation.mp4?v=2", type: "video/mp4" },
           ],
+          mobileTitle: "Live Case Tracking",
+          mobileDescription:
+            "Track your case in real time. Get WhatsApp updates and check your progress online anytime.",
+          mobileCtaLabel: "Track My Case",
         },
       ],
       default_feature_rows: [
