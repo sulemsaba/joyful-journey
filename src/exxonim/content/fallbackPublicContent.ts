@@ -210,11 +210,11 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
     stack_section: {
       items: [
         {
-          title: "Everything you need to start operating in Tanzania",
+          title: "Registration & Licensing",
           subtitle: "From company registration and TIN to business licences, work permits, and NGO setup.",
           description:
-            "We guide you through the full setup: pick the right business type, prepare all documents, and submit to BRELA, TRA, and local authorities. You get your certificates without office visits.",
-          ctaLabel: "Start Your Setup",
+            "Start your business legally without the paperwork. We register companies, secure business licences, process work permits, and complete NGO registrations from start to finish. Skip the government queues. Minimal office visits. We handle the paperwork and government process so you can focus on running your business. Your certificates are delivered, ready for you to do business.",
+          ctaLabel: "Start My Registration",
           ctaHref: routes.contact,
           windowTitle: "Setup",
           windowTag: "Guide",
@@ -225,11 +225,11 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           mobileCtaLabel: "Start My Registration",
         },
         {
-          title: "We\u00A0let you focus on your business",
-          subtitle: "We\u00A0handle all from statutory filings, licence renewals, annual returns, to compliance deadlines for you.",
+          title: "Annual Compliance & Renewals",
+          subtitle: "We handle statutory filings, licence renewals, annual returns, and compliance deadlines for you.",
           description:
-            "No more chasing approvals or missing deadlines. We prepare and submit everything on schedule, with reminders before each deadline so nothing falls through the cracks.",
-          ctaLabel: "See All Services",
+            "Stay compliant and avoid costly late penalties. We manage statutory filings, licence renewals, and annual returns for your business. We track every deadline, file everything on your behalf, and remind you before every due date. No deadline stress. No missed filings. Total compliance with zero stress.",
+          ctaLabel: "Protect My Compliance",
           ctaHref: routes.services,
           windowTitle: "Compliance",
           windowTag: "Guide",
@@ -240,11 +240,11 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           mobileCtaLabel: "Protect My Compliance",
         },
         {
-          title: "Never wonder what's happening with your case",
+          title: "Live Case Tracking",
           subtitle: "Get updates by WhatsApp, email, or SMS at every milestone.",
           description:
-            "You get a tracking code. Every time something happens, name clearance, submission, approval, we send you a message. You can also check online anytime, no login needed, 99.99% fast & secure.",
-          ctaLabel: "Track a Consultation",
+            "Know exactly where your application is at every stage. Every client receives a unique tracking code to follow their case in real time. Get instant WhatsApp updates at every milestone, including name clearance, submission, and approval. You can also check your progress online anytime. No passwords. No hassle. Just complete visibility and peace of mind.",
+          ctaLabel: "Track My Case",
           ctaHref: routes.trackConsultation,
           windowTitle: "Tracking",
           windowTag: "Guide",
