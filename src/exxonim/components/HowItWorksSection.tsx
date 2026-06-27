@@ -61,7 +61,7 @@ export function HowItWorksSection({ flow }: HowItWorksSectionProps) {
       className="py-16 md:py-24"
       aria-labelledby="how-it-works-title"
     >
-      <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+      <div className="max-w-[1240px] px-8 mx-auto">
         {/* Section Header */}
         <div className="grid gap-3 mb-10 md:mb-14 text-center max-w-[min(52ch,90%)] mx-auto">
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent">

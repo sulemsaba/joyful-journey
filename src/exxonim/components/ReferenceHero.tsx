@@ -115,7 +115,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         />
 
         {/* ── Content ────────────────────────────────────── */}
-        <div className="mx-auto w-[min(1240px,calc(100%-2rem))] px-0">
+        <div className="mx-auto max-w-[1240px] px-8 px-0">
           <div className="relative" data-reveal>
             <div className="relative z-10 max-w-[540px] sm:max-w-[600px] md:max-w-[700px] xl:max-w-[760px] pt-4 md:pt-8 xl:pt-10">
               <p

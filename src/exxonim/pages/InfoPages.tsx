@@ -35,13 +35,13 @@ function ContentPage({
         heroDescription={description}
         breadcrumbs={structuredBreadcrumbs}
       />
-<div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+<div className="max-max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           {breadcrumbItems && breadcrumbItems.length > 0 && (
             <Breadcrumb items={breadcrumbItems} />
           )}
         </div>
 <section className="pb-16 relative bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-page)_100%)] backdrop-blur-[8px]">
-        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8">
           <header className="mb-16 pt-8 md:pt-12">
             <p className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-elevated text-xs font-bold tracking-widest uppercase text-text-muted">
               <span className="w-2 h-2 rounded-full bg-accent"></span>

@@ -152,7 +152,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
       className="py-16 md:py-24 bg-page-strong"
       aria-labelledby="service-search-title"
     >
-      <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+      <div className="max-w-[1240px] px-8 mx-auto">
         {/* Section Header */}
         <div className="grid gap-4 max-w-[min(52ch,90%)] mx-auto text-center mb-10 md:mb-14">
           <p className="inline-flex items-center justify-center gap-2 text-accent text-xs font-extrabold tracking-[0.14em] uppercase">

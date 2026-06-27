@@ -299,7 +299,7 @@ export function ComplianceCalendarSection() {
       aria-labelledby="compliance-calendar-title"
       className="py-10 md:py-24"
     >
-      <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+      <div className="max-w-[1240px] px-8 mx-auto">
         {/* ── Section header ── */}
         <div className="grid gap-2.5 md:gap-3 mb-8 md:mb-14">
           <div className="flex flex-wrap items-center gap-3">

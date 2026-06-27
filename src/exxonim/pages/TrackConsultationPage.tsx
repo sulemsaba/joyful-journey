@@ -807,7 +807,7 @@ export function TrackConsultationPage() {
           }}
         />
         {/* Breadcrumb - now inside hero for seamless fade */}
-        <div className="max-w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="max-max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8 pt-4">
           <Breadcrumb
             items={[
               { label: "Home", href: routes.home, icon: Home },
@@ -815,7 +815,7 @@ export function TrackConsultationPage() {
             ]}
           />
         </div>
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+        <div className="max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           {/* Left: Text - on mobile renders AFTER the tracking card */}
           <div className="grid gap-6" style={{ order: 2 }}>
             <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
@@ -949,7 +949,7 @@ export function TrackConsultationPage() {
          * inside the result panel so users know the lookup is in progress. */}
         {isSearching && (
           <section className="pb-16 md:pb-20">
-            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+            <div className="max-w-[1240px] px-8 mx-auto max-w-[52rem]">
               <div className="rounded-2xl border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8">
                 <div className="flex items-center justify-center gap-3 py-8 text-text-muted">
                   <svg
@@ -971,7 +971,7 @@ export function TrackConsultationPage() {
 
         {!isSearching && (lookupResult || notFound) && (
           <section className="pb-16 md:pb-20">
-            <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[52rem]">
+            <div className="max-w-[1240px] px-8 mx-auto max-w-[52rem]">
               {lookupResult && (
                 <TrackingResultCard
                   result={lookupResult}
@@ -991,7 +991,7 @@ export function TrackConsultationPage() {
 
       {/* ── How it works ── */}
       <section className="py-16 md:py-20">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto grid gap-10">
+        <div className="max-w-[1240px] px-8 mx-auto grid gap-10">
           <div className="grid gap-3 max-w-[42rem]">
             <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
               How it works
@@ -1022,7 +1022,7 @@ export function TrackConsultationPage() {
 
       {/* ── Privacy + Lost code - combined to reduce redundancy ── */}
       <section id="lost-code" className="py-16 md:py-20 scroll-mt-8">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto max-w-[42rem] grid gap-4">
+        <div className="max-w-[1240px] px-8 mx-auto max-w-[42rem] grid gap-4">
           <div className="flex items-start gap-4 p-5 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
             <span className="text-accent mt-0.5 flex-shrink-0"><ShieldCheck className="w-5 h-5" /></span>
             <div className="grid gap-0.5">

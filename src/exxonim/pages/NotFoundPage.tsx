@@ -30,7 +30,7 @@ export function NotFoundPage({ pathname }: NotFoundPageProps) {
   return (
     <>
 <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-page)_100%)]">
-        <div className="w-[min(1240px,calc(100%-2rem))] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-[1fr_1fr] gap-12 items-center min-h-[70vh]">
             <div className="max-w-lg">
               <div className="relative mb-8">

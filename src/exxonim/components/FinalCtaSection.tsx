@@ -18,7 +18,7 @@ export function FinalCtaSection() {
       aria-labelledby="final-cta-title"
       className="py-10 md:py-24"
     >
-      <div className="w-[min(1240px,calc(100%-2rem))] mx-auto">
+      <div className="max-w-[1240px] px-8 mx-auto">
         <div
           className="max-w-[42rem] mx-auto rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-12 text-center"
           style={{
