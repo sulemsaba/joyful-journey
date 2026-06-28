@@ -173,16 +173,24 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
           </div>
 
           {/* ── Scroll-down indicator ─────────────────────────
-           * Bouncing chevron anchored at the bottom-LEFT of the hero content
-           * (matches the left-anchored layout). Fades out when the user
-           * scrolls (hero-shrunk state).
+           * Vertical scroll indicator anchored to the LEFT EDGE of the hero,
+           * vertically centered (top-1/2). Consists of a thin vertical track
+           * with a bouncing chevron at the bottom — a premium "world-class"
+           * pattern that signals "scroll down" without cluttering the content.
+           * Fades out when the user scrolls (hero-shrunk state).
            * Uses .hero-scroll-indicator CSS for the hide-on-scroll.
-           */}
+           *
+           * Positioned at the true left edge of the viewport (left-4 on
+           * mobile, left-6 sm, left-8 lg) so it hugs the screen edge along
+           * the view height of the device. */}
           <div
-            className="hero-scroll-indicator absolute bottom-6 left-6 sm:left-8 lg:left-12 z-20 flex flex-col items-center gap-1 pointer-events-none select-none"
+            className="hero-scroll-indicator absolute top-1/2 left-4 sm:left-6 lg:left-8 -translate-y-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none select-none"
             aria-hidden="true"
           >
-            <ChevronDown className="h-5 w-5 text-text-muted/60 animate-bounce" />
+            {/* Vertical track */}
+            <span className="block w-px h-10 bg-text-muted/30" />
+            {/* Bouncing chevron at the bottom of the track */}
+            <ChevronDown className="h-4 w-4 text-text-muted/60 animate-bounce" />
           </div>
         </div>
       </section>

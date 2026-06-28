@@ -197,9 +197,18 @@ export function ServicesOverviewSection({
             />
           </div>
 
-          {/* Search results dropdown */}
+          {/* Search results dropdown
+              ── Absolute positioned so it overlays content below instead of
+              pushing it down. The parent container (searchContainerRef) is
+              `relative`, so `absolute top-full left-0 right-0` anchors the
+              dropdown to the search input's bounds and floats it on top of
+              whatever follows (the service catalog). z-50 ensures it sits
+              above sibling sections. */}
           {showDropdown && (
-            <div id="services-search-dropdown" className="mt-2 rounded-xl border border-border-soft bg-surface shadow-lg overflow-hidden">
+            <div
+              id="services-search-dropdown"
+              className="absolute top-full left-0 right-0 mt-2 z-50 rounded-xl border border-border-soft bg-surface shadow-xl overflow-hidden max-h-[320px] overflow-y-auto"
+            >
               {hasResults && (
                 <ul className="grid gap-0">
                   {filteredServices.slice(0, 6).map((service) => (
