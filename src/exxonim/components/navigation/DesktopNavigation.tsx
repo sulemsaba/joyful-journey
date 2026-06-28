@@ -129,7 +129,7 @@ export function DesktopNavigation({
   }, [desktopMenu]);
 
   return (
-    <div className="hidden xl:flex items-center">
+    <div className="hidden lg:flex items-center">
       <nav
         ref={navRef}
         className="relative inline-flex items-center gap-1 p-1.5 rounded-full border border-border-soft overflow-visible"

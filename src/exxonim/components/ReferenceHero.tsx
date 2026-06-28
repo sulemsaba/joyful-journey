@@ -83,7 +83,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         aria-label="Hero introduction"
         className={cn(
           "relative isolate overflow-x-clip",
-          "-mt-[60px] xl:-mt-[68px] pt-[60px] xl:pt-[68px]",
+          "-mt-[60px] lg:-mt-[68px] pt-[60px] lg:pt-[68px]",
           "flex items-center",
           "origin-top",
           "bg-hero-bg",
@@ -174,17 +174,17 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
 
           {/* ── Scroll-down indicator ─────────────────────────
            * Vertical scroll indicator anchored to the LEFT EDGE of the hero,
-           * vertically centered (top-1/2). Consists of a thin vertical track
-           * with a bouncing chevron at the bottom — a premium "world-class"
-           * pattern that signals "scroll down" without cluttering the content.
+           * at the BOTTOM of the 94.5svh hero section (near the bottom of
+           * the device viewport). Consists of a thin vertical track with a
+           * bouncing chevron at the bottom — a premium "world-class" pattern
+           * that signals "scroll down" without cluttering the content.
            * Fades out when the user scrolls (hero-shrunk state).
            * Uses .hero-scroll-indicator CSS for the hide-on-scroll.
            *
            * Positioned at the true left edge of the viewport (left-4 on
-           * mobile, left-6 sm, left-8 lg) so it hugs the screen edge along
-           * the view height of the device. */}
+           * mobile, left-6 sm, left-8 lg) at the bottom of the hero. */}
           <div
-            className="hero-scroll-indicator absolute top-1/2 left-4 sm:left-6 lg:left-8 -translate-y-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none select-none"
+            className="hero-scroll-indicator absolute bottom-8 left-4 sm:left-6 lg:left-8 z-20 flex flex-col items-center gap-2 pointer-events-none select-none"
             aria-hidden="true"
           >
             {/* Vertical track */}

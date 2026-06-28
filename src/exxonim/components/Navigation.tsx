@@ -198,7 +198,7 @@ export function Navigation({
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
-          "xl:hidden fixed z-50 top-0 inset-x-0 h-[60px]",
+          "lg:hidden fixed z-50 top-0 inset-x-0 h-[60px]",
           "transition-[background-color,backdrop-filter] duration-300",
           headerOverHero
             ? "bg-transparent"
@@ -291,7 +291,7 @@ export function Navigation({
            backdrop-filter creating a new containing block) ── */}
       {mobileMenuOpen && (
         <div
-          className="xl:hidden fixed inset-0 top-[60px] z-40 bg-black/20 md:bg-black/10"
+          className="lg:hidden fixed inset-0 top-[60px] z-40 bg-black/20 md:bg-black/10"
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden="true"
         />
@@ -305,13 +305,13 @@ export function Navigation({
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
-          "hidden xl:block fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
+          "hidden lg:block fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
           headerOverHero
             ? "bg-transparent"
             : "bg-page/95 backdrop-blur-xl"
         )}
       >
-        <div className="h-full w-full px-[clamp(12px,2vw,24px)] grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between xl:justify-center gap-4">
+        <div className="h-full w-full px-[clamp(12px,2vw,24px)] grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between lg:justify-center gap-4">
           {/* Left: Brand logo */}
           <SmartLink
             href={routes.home}
