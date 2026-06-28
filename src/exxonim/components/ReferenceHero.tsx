@@ -83,7 +83,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         aria-label="Hero introduction"
         className={cn(
           "relative isolate overflow-x-clip",
-          "-mt-[60px] lg:-mt-[68px] pt-[60px] lg:pt-[68px]",
+          "-mt-[60px] md:-mt-[68px] pt-[60px] md:pt-[68px]",
           "flex items-center",
           "origin-top",
           "bg-hero-bg",
