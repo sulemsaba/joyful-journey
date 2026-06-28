@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@source "./src/**/*.{ts,tsx,js,jsx,mdx}";
 @import "tw-animate-css";
+@source "./src/**/*.{ts,tsx,js,jsx,mdx}";
 
 /* ── Prevent horizontal scroll from full-bleed elements ── */
 html, body {

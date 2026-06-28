@@ -165,15 +165,15 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
   {
     hero: {
       eyebrow: "Business Setup, Compliance & Permits, Tanzania",
-      title: "Stop chasing offices.\nWe handle it all\nfrom registration\nto compliance.",
+      title: "Get Your Company Registered, Licensed & Ready to Operate in Days—Not Weeks.",
       description:
-        "Registration, licensing, permits, and compliance - all handled. Stay updated by WhatsApp, email, or SMS.",
+        "We handle everything from setup to annual filings. We keep you updated instantly via SMS, WhatsApp or email.",
       cta: {
-        label: "Get Started",
+        label: "Start My Registration",
         href: routes.contact,
       },
       secondary_cta: {
-        label: "See All Services",
+        label: "View All Services",
         href: routes.services,
       },
       highlights: [

@@ -112,7 +112,7 @@ if (typeof window !== "undefined") {
     // Bust localStorage cache when content version changes.
     // Increment CACHE_VERSION when fallback content is updated to force
     // returning visitors to see the new content immediately.
-    const CACHE_VERSION = "2025-06-26-4";
+    const CACHE_VERSION = "2025-06-28-1";
     const storedVersion = localStorage.getItem("exxonim-cache-version");
     if (storedVersion !== CACHE_VERSION) {
       localStorage.removeItem("exxonim-query-cache");

@@ -114,17 +114,26 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
           }}
         />
 
-        {/* ── Content ────────────────────────────────────── */}
-        <div className="mx-auto max-w-[1240px] px-8 px-0">
+        {/* ── Content ──────────────────────────────────────
+         * Left-anchored layout: content sits at the true left edge of the
+         * viewport (with responsive horizontal padding), NOT centered in a
+         * centered container. This is the "world-class" hero pattern used by
+         * Stripe, Linear, Vercel — content hugs the left, aurora breathes on
+         * the right. The container is still max-w-[1240px] mx-auto so on
+         * ultra-wide screens the content doesn't drift too far right, but
+         * within that container the content is left-aligned (no mx-auto on
+         * the content block itself). */}
+        <div className="mx-auto max-w-[1240px] w-full px-6 sm:px-8 lg:px-12">
           <div className="relative" data-reveal>
-            <div className="relative z-10 max-w-[540px] sm:max-w-[600px] md:max-w-[700px] xl:max-w-[760px] pt-4 md:pt-8 xl:pt-10">
+            <div className="relative z-10 max-w-[640px] sm:max-w-[680px] md:max-w-[760px] lg:max-w-[820px] xl:max-w-[880px] pt-6 md:pt-10 xl:pt-14">
               <p
-                className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent"
+                className="mb-5 md:mb-6 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-accent"
               >
                 {content.eyebrow}
               </p>
               <h1
-                className="m-0 text-[clamp(2.2rem,5.5vw,5.5rem)] font-semibold leading-[1.05] tracking-tight text-text"
+                className="m-0 text-[clamp(2rem,5.2vw,4.75rem)] font-semibold leading-[1.08] tracking-tight text-text"
+                style={{ textWrap: "balance" }}
               >
                 {content.title.split("\n").map((line, i) => (
                   <span key={i}>
@@ -134,26 +143,52 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
                 ))}
               </h1>
               <p
-                className="mt-6 max-w-[28rem] md:max-w-[34rem] text-[clamp(1.05rem,1.4vw,1.2rem)] leading-relaxed text-text-muted"
+                className="mt-5 md:mt-7 max-w-[30rem] sm:max-w-[32rem] md:max-w-[36rem] text-[clamp(1rem,1.35vw,1.1875rem)] leading-relaxed text-text-muted"
+                style={{ textWrap: "pretty" }}
               >
                 {content.description}
               </p>
 
               {/* CTAs - Hick's Law: ONE dominant primary CTA, secondary demoted to text link */}
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Button size="hero" variant="primary" href={content.cta.href} className="px-8">
+              <div className="mt-7 md:mt-9 flex flex-wrap items-center gap-4">
+                <Button size="hero" variant="primary" href={content.cta.href} className="px-7 md:px-8">
                   {content.cta.label}
                   <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Button>
                 {hasSecondaryCta ? (
                   <SmartLink
                     href={content.secondary_cta.href}
-                    className="inline-flex items-center gap-1.5 min-h-12 px-3 py-2 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 text-sm font-medium text-text-muted hover:text-accent transition-colors"
+                    className="inline-flex items-center gap-1.5 min-h-12 px-3 py-2 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 text-sm font-medium text-text-muted hover:text-accent transition-colors group"
                   >
-                    {content.secondary_cta.label}
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span className="border-b border-current/40 group-hover:border-current pb-0.5 transition-colors">
+                      {content.secondary_cta.label}
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                   </SmartLink>
                 ) : null}
+              </div>
+
+              {/* ── Trust signal row ──────────────────────────
+               * Compact social proof below CTAs: Google rating + key
+               * promise. World-class hero pattern (cf. Stripe, Notion). */}
+              <div className="mt-8 md:mt-10 flex items-center gap-4 md:gap-6 flex-wrap">
+                <a
+                  href="https://www.google.com/search?q=Exxonim+Consult+reviews"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 no-underline text-text-muted hover:text-text transition-colors"
+                >
+                  <span className="flex items-center gap-0.5 text-star">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+                    ))}
+                  </span>
+                  <span className="text-xs sm:text-sm font-medium">5.0 Google Rating</span>
+                </a>
+                <span className="hidden sm:block w-px h-4 bg-border-soft" aria-hidden="true" />
+                <span className="text-xs sm:text-sm text-text-muted">
+                  TIN, VAT, BRELA &amp; Business Licences — handled.
+                </span>
               </div>
 
               {/* Highlight chips - temporarily hidden during design iteration */}
@@ -161,12 +196,13 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
           </div>
 
           {/* ── Scroll-down indicator ─────────────────────────
-           * Bouncing chevron anchored at the bottom of the hero.
-           * Fades out when the user scrolls (hero-shrunk state).
+           * Bouncing chevron anchored at the bottom-LEFT of the hero content
+           * (matches the left-anchored layout). Fades out when the user
+           * scrolls (hero-shrunk state).
            * Uses .hero-scroll-indicator CSS for the hide-on-scroll.
            */}
           <div
-            className="hero-scroll-indicator absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 pointer-events-none select-none"
+            className="hero-scroll-indicator absolute bottom-6 left-6 sm:left-8 lg:left-12 z-20 flex flex-col items-center gap-1 pointer-events-none select-none"
             aria-hidden="true"
           >
             <ChevronDown className="h-5 w-5 text-text-muted/60 animate-bounce" />
@@ -174,41 +210,31 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         </div>
       </section>
 
-      {/* ── Google Review Peek Bar ──────────────────────────
-       * Occupies the remaining 5.5svh of the viewport.
-       * Visible at the bottom of the initial viewport as
-       * above-the-fold social proof before any scroll.
-       */}
+      {/* ── Hero footer bar ─────────────────────────────────
+       * Slim divider strip below the hero. Originally held the Google
+       * rating; that now lives inside the hero trust row (above), so this
+       * bar is a compact "marquee" of key promises — visible above the
+       * fold as a closing signal before the next section. */}
       <section
-        aria-label="Google reviews"
-        className="hero-review-bar flex items-center justify-center bg-page px-8"
+        aria-label="Why Exxonim"
+        className="hero-review-bar flex items-center justify-center bg-page px-6"
       >
-        <a
-          href="https://www.google.com/search?q=Exxonim+Consult+reviews"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 no-underline"
-        >
-          {/* Google logo SVG */}
-          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          <span className="text-[clamp(0.85rem,1.8vw,1rem)] font-medium text-text-muted">
-            Google Rating
+        <div className="flex items-center gap-4 md:gap-8 text-text-muted text-xs sm:text-sm flex-wrap justify-center">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true" />
+            <span className="font-medium">5–10 day turnaround</span>
           </span>
-          <span className="flex items-center gap-0.5 text-star">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
-            ))}
+          <span className="hidden sm:block w-px h-3 bg-border-soft" aria-hidden="true" />
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
+            <span className="font-medium">SMS, WhatsApp &amp; email updates</span>
           </span>
-          <span className="text-[clamp(0.85rem,1.8vw,1rem)] font-medium text-text-muted">
-            5.0
+          <span className="hidden md:block w-px h-3 bg-border-soft" aria-hidden="true" />
+          <span className="hidden md:flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-star" aria-hidden="true" />
+            <span className="font-medium">Real-time case tracking</span>
           </span>
-
-        </a>
+        </div>
       </section>
     </>
   );
