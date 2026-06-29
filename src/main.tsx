@@ -23,15 +23,15 @@ function dismissBootLoader() {
   // Reset the auto-reload counter - React mounted successfully, so the
   // next stuck page (if any) is allowed to auto-reload again.
   try { sessionStorage.removeItem("__bootReload"); } catch { /* ignore */ }
-  // Wait one frame so the real content is painted, then fade out
-  requestAnimationFrame(() => {
-    const el = document.getElementById("boot-loader");
-    if (el) {
-      el.classList.add("boot-loader--hidden");
-      // Remove from DOM after fade-out completes (250ms)
-      setTimeout(() => el.remove(), 300);
-    }
-  });
+  // Start the CSS fade-out immediately — the transition handles smoothness.
+  // The old requestAnimationFrame delay was removed because on slow devices
+  // it added visible boot-loader time before any content appeared.
+  // Content renders underneath the fading overlay (not after it).
+  const el = document.getElementById("boot-loader");
+  if (el) {
+    el.classList.add("boot-loader--hidden");
+    setTimeout(() => el.remove(), 300);
+  }
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

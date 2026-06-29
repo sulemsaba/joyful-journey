@@ -133,6 +133,25 @@ export function App({ onReady }: { onReady?: () => void }) {
   const location = useLocation();
   const readyFired = useRef(false);
 
+  /* ── Dismiss boot loader IMMEDIATELY on mount ─────────
+   * Before: waited for PageReady inside <Routes> which required the
+   * entire page component tree (HomePage → ReferenceHero → etc.) to
+   * commit before firing. On 6x CPU this added seconds of loader time.
+   *
+   * Now: dismisses on the FIRST commit of the <App> shell itself.
+   * The CSS fade-out runs while React continues rendering the page
+   * content underneath — the correct bg-color is already set via
+   * the blocking <style> in <head>, so no white flash.
+   *
+   * For lazy-loaded route changes, PageReady still fires from inside
+   * <Routes> to dismiss any subsequent loading state. */
+  useLayoutEffect(() => {
+    if (!readyFired.current && onReady) {
+      readyFired.current = true;
+      onReady();
+    }
+  }, [onReady]);
+
   /* ── Page transition animation ─────────────────────────
    * On route change, trigger a subtle opacity dip on
    * the <main> element. This is purely CSS - no layout

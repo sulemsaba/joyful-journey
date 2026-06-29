@@ -507,7 +507,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
               {/* ── Breadcrumb navigation ──
                * Note: article title is NOT included in the breadcrumb - it
                * appears as the H1 below. Showing it in both places is redundant. */}
-              <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-4">
+              <div className="mx-auto max-w-[1400px] px-8 pt-4">
                 <Breadcrumb items={[
                   { label: "Home", href: routes.home, icon: Home },
                   { label: "Resources", href: routes.resources },

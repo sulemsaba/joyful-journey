@@ -105,32 +105,42 @@ export function ProviderSection({ content }: ProviderSectionProps) {
        */}
 
       {/* Label - tiny, muted */}
-      <p className="m-0 text-center text-xs font-extrabold uppercase tracking-[0.14em] text-accent pt-8 pb-3 md:pt-12 md:pb-4">
+      <p className="m-0 text-center text-xs font-extrabold uppercase tracking-[0.14em] text-accent pt-6 pb-2 md:pt-10 md:pb-3">
         Trusted by 120+
       </p>
 
-      {/* Logo marquee - full-bleed with 15% edge fades */}
+      {/* Logo marquee - full-bleed with 12% edge fades.
+       *
+       * SPACING STRATEGY (padding-based, not gap-based):
+       * Each logo container uses `px-*` (horizontal padding) instead of a
+       * fixed width. This ensures consistent visual spacing around every
+       * logo regardless of its aspect ratio. A small logo doesn't leave
+       * dead space in a wide fixed-width box — it shrink-wraps naturally.
+       *
+       * The `gap-*` on the track is removed because the padding on each
+       * container already provides the inter-logo spacing. Together, the
+       * right-padding of logo A + left-padding of logo B = the gap.
+       *
+       * Reference: Linear, Vercel, Figma, and Intercom all use padding-
+       * based spacing for their logo trust bars for this exact reason. */}
       <div
-        className="full-bleed overflow-hidden relative pb-8 md:pb-12 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+        className="full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
         aria-label="Partner logos"
       >
         <div className="provider-marquee-track flex items-center w-max will-change-transform animate-provider-marquee hover:[animation-play-state:paused]">
           {repeatedLogos.map((logo, index) => {
-            const isSolid = logo.opticalWeight === "solid";
-
             return (
               <div
                 key={`${logo.alt}-${index}`}
-                className="provider-logo-item group flex items-center justify-center flex-none w-20 sm:w-28 md:w-40 h-12 sm:h-14 md:h-16"
+                className="provider-logo-item group flex items-center justify-center flex-none px-4 md:px-6 h-10 sm:h-12 md:h-14"
                 aria-label={logo.alt}
                 role="img"
               >
                 <img
                   className={cn(
-                    "block w-auto object-contain transition-all duration-300",
-                    // Muted brand color by default, full color on hover
-                    "provider-logo-img",
-                    isSolid ? "max-h-8 sm:max-h-10 md:max-h-12" : "max-h-10 sm:max-h-14 md:max-h-16"
+                    "block w-auto max-h-full object-contain transition-opacity duration-300",
+                    // Muted by default, full color on hover
+                    "provider-logo-img"
                   )}
                   src={resolveLogoSrc(logo.src)}
                   alt={`${logo.alt} logo`}

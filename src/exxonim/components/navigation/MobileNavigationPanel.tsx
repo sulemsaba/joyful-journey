@@ -176,10 +176,11 @@ export function MobileNavigationPanel({
       id={id}
       aria-hidden={!isOpen}
       className={cn(
-        "grid transition-all duration-300 ease-[cubic-bezier(0.25,0.4,0.25,1)]",
-        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
-        /* Tablet: right-aligned card, not full-width */
-        "relative z-50 md:absolute md:right-0 md:top-full md:w-[360px]"
+        /* Show/hide via hidden (no layout animation).
+         * The old grid-rows-[0fr→1fr] transition was retired because it
+         * forces layout recalculation on every animation frame — on low-end
+         * devices this added hundreds of ms to the hamburger INP. */
+        `${isOpen ? '' : 'hidden'} relative z-50 md:absolute md:right-0 md:top-full md:w-[360px]`
       )}
     >
       <div className="overflow-hidden">

@@ -278,7 +278,7 @@ const TestimonialCard = memo(function TestimonialCard({
  * Pauses on hover/touch, resumes after 3s of inactivity.
  * Arrow buttons skip by one card width.
  * ═══════════════════════════════════════════════════════════════ */
-function TestimonialMarquee({
+const TestimonialMarquee = memo(function TestimonialMarquee({
   testimonials,
 }: {
   testimonials: Testimonial[];
@@ -371,7 +371,7 @@ function TestimonialMarquee({
       </Button>
     </div>
   );
-}
+});
 
 /* ═══════════════════════════════════════════════════════════════
  * SegmentPlanCard - Modern portrait pricing card
@@ -391,11 +391,10 @@ function TestimonialMarquee({
  * - Description max ~120 chars recommended for clean layout.
  * - Badge text max ~20 chars recommended to fit the pill.
  * ═══════════════════════════════════════════════════════════════ */
-function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
+const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact, onCtaClick }: {
   plan: SegmentPlan;
   featured: boolean;
   compact?: boolean;
-  segmentKey: SegmentKey;
   onCtaClick: () => void;
 }) {
   return (
@@ -496,7 +495,7 @@ function SegmentPlanCard({ plan, featured, compact, segmentKey, onCtaClick }: {
       </Button>
     </article>
   );
-}
+});
 
 /* ═══════════════════════════════════════════════════════════════
  * ServicePackagesSection - main export
@@ -518,8 +517,13 @@ export function ServicePackagesSection({
   const [modalPlanName, setModalPlanName] = useState<string>("");
   const [modalFeatured, setModalFeatured] = useState(false);
 
-  const openModal = useCallback((planName: string, segmentKey: SegmentKey, featured: boolean) => {
-    setModalPlanSlug(`${planName.toLowerCase()}-${segmentKey}`);
+  /* Ref-based active segment so openModal stays stable (React.memo depends on it) */
+  const activeSegmentRef = useRef(activeSegment);
+  activeSegmentRef.current = activeSegment;
+
+  const openModal = useCallback((planName: string, featured: boolean) => {
+    const seg = activeSegmentRef.current;
+    setModalPlanSlug(`${planName.toLowerCase()}-${seg}`);
     setModalPlanName(planName);
     setModalFeatured(featured);
     setModalOpen(true);
@@ -531,22 +535,36 @@ export function ServicePackagesSection({
 
   const currentPlans = segmentPlans[activeSegment];
 
+  /* ── Stable per-plan callbacks for memoized SegmentPlanCard ── */
+  const cardCtaRefs = useRef<Map<string, () => void>>(new Map());
+  const getCardCta = useCallback((planName: string, featured: boolean) => {
+    const key = `${planName}-${featured}`;
+    let fn = cardCtaRefs.current.get(key);
+    if (!fn) {
+      fn = () => openModal(planName, featured);
+      cardCtaRefs.current.set(key, fn);
+    }
+    return fn;
+  }, [openModal]);
+
   /* ── Card deck data (for mobile carousel) ── */
   const carouselCards = useMemo(
     () =>
-      currentPlans.map((plan, index) => ({
-        key: `${activeSegment}-${plan.name}`,
-        content: (
-          <SegmentPlanCard
-            plan={plan}
-            featured={plan.badge !== null}
-            compact
-            segmentKey={activeSegment}
-            onCtaClick={() => openModal(plan.name, activeSegment, plan.badge !== null)}
-          />
-        ),
-      })),
-    [currentPlans, activeSegment, openModal]
+      currentPlans.map((plan) => {
+        const featured = plan.badge !== null;
+        return {
+          key: `${activeSegment}-${plan.name}`,
+          content: (
+            <SegmentPlanCard
+              plan={plan}
+              featured={featured}
+              compact
+              onCtaClick={getCardCta(plan.name, featured)}
+            />
+          ),
+        };
+      }),
+    [currentPlans, activeSegment, getCardCta]
   );
 
   /* ── Default to middle card (Growth / "Most Popular") ── */
@@ -628,18 +646,20 @@ export function ServicePackagesSection({
 
             {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
             <div className="hidden lg:grid gap-6 lg:grid-cols-3 lg:max-w-[1100px] lg:mx-auto">
-              {currentPlans.map((plan) => (
+              {currentPlans.map((plan) => {
+                const featured = plan.badge !== null;
+                return (
                 <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
                   <div className="w-full max-w-[320px]">
                     <SegmentPlanCard
                       plan={plan}
-                      featured={plan.badge !== null}
-                      segmentKey={activeSegment}
-                      onCtaClick={() => openModal(plan.name, activeSegment, plan.badge !== null)}
+                      featured={featured}
+                      onCtaClick={getCardCta(plan.name, featured)}
                     />
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </Container>

@@ -235,7 +235,7 @@ export function ContactPage() {
     <section className="bg-page">
           <StructuredData heroTitle="Contact Exxonim Consult" heroDescription="Reach Exxonim for registration, compliance, and advisory support." breadcrumbs={[{ name: 'Contact', path: routes.contact }]} />
           {/* Breadcrumb */}
-          <div className="max-max-w-[1240px] px-6 mx-auto px-3 sm:px-6 lg:px-8 pt-4">
+          <div className="max-w-[1240px] px-8 mx-auto pt-4">
             <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Contact" }]} />
           </div>
 
@@ -245,7 +245,7 @@ export function ContactPage() {
            * Left side sits on page bg - no card/container.
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
-          <div className="max-max-w-[1240px] px-6 mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
+          <div className="max-w-[1240px] px-8 mx-auto pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-start min-w-0">
 
               {/* ── Left column: Contact info on page bg ── */}

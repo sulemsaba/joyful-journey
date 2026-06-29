@@ -792,18 +792,23 @@ html.theme-transition .hero-bg-image {
 
 /* ── Provider logos - muted, full color on hover ── */
 /* Uses opacity only (compositor-friendly, no paint cost).
+ * The muted state (0.6) provides subtle brand presence without
+ * distracting from the page content. On hover/interaction, logos
+ * reveal at full opacity for engagement.
+ *
  * filter:grayscale was retired because it triggers per-frame
  * rasterization on hover (jank on mid-range devices). */
 .provider-logo-img {
-  opacity: 0.55;
+  opacity: 0.6;
   transition: opacity 0.3s ease;
 }
 .provider-logo-item:hover .provider-logo-img {
   opacity: 1;
 }
-/* Dark mode: slightly brighter muted state */
+/* Dark mode: slightly dimmer muted state (logos tend to
+ * look brighter against dark backgrounds) */
 html[data-theme="dark"] .provider-logo-img {
-  opacity: 0.45;
+  opacity: 0.5;
 }
 html[data-theme="dark"] .provider-logo-item:hover .provider-logo-img {
   opacity: 1;

@@ -70,7 +70,7 @@ export function ServiceDetailPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="max-w-[1240px] px-8 mx-auto">
+      <div className="max-w-[1240px] px-8 mx-auto pt-4">
         <Breadcrumb
           items={[
             { label: 'Home', href: routes.home, icon: Home },

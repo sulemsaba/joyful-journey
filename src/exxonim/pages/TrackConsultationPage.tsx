@@ -807,7 +807,7 @@ export function TrackConsultationPage() {
           }}
         />
         {/* Breadcrumb - now inside hero for seamless fade */}
-        <div className="max-max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="max-w-[1240px] px-8 mx-auto pt-4">
           <Breadcrumb
             items={[
               { label: "Home", href: routes.home, icon: Home },
@@ -815,7 +815,7 @@ export function TrackConsultationPage() {
             ]}
           />
         </div>
-        <div className="max-w-[1240px] px-8 mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+        <div className="max-w-[1240px] px-8 mx-auto pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           {/* Left: Text - on mobile renders AFTER the tracking card */}
           <div className="grid gap-6" style={{ order: 2 }}>
             <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
