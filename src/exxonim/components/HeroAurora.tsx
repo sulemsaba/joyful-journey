@@ -140,6 +140,7 @@ export function HeroAurora() {
   const timeRef = useRef(0);
   const lastFrameRef = useRef(0);
   const rafIdRef = useRef<number>(0);
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
@@ -153,8 +154,28 @@ export function HeroAurora() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        // Start/stop the rAF loop based on visibility so we're not
+        // burning CPU on animation frames the user can't see.
+        if (entry.isIntersecting) {
+          if (!rafIdRef.current) {
+            lastFrameRef.current = 0;
+            rafIdRef.current = requestAnimationFrame(animate);
+          }
+        } else {
+          if (rafIdRef.current) {
+            cancelAnimationFrame(rafIdRef.current);
+            rafIdRef.current = 0;
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+    visibilityObserver.observe(canvas);
+
     function resize() {
-      // Cap DPR at 2 to prevent huge buffers on 3x Retina
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cssW = canvas!.clientWidth;
       const cssH = canvas!.clientHeight;
@@ -168,18 +189,27 @@ export function HeroAurora() {
     resize();
     window.addEventListener("resize", resize);
 
-    // Cache accent color + theme — only re-read every 500ms, not every frame
     let cachedAccent = "#0f5c63";
     let cachedIsDark = false;
     let lastStyleRead = 0;
 
+    const FRAME_INTERVAL = 33;
+
     function animate(ts: number) {
+      if (!isVisibleRef.current || document.hidden) {
+        rafIdRef.current = 0;
+        return;
+      }
+      rafIdRef.current = requestAnimationFrame(animate);
+
+      const elapsed = ts - lastFrameRef.current;
+      if (elapsed < FRAME_INTERVAL) return;
+
       if (lastFrameRef.current === 0) lastFrameRef.current = ts;
-      const delta = Math.min(ts - lastFrameRef.current, 50);
-      lastFrameRef.current = ts;
+      const delta = Math.min(elapsed, 50);
+      lastFrameRef.current = ts - (elapsed % FRAME_INTERVAL);
       timeRef.current += (delta / 1000) * DEFAULT_CONFIG.speed * 0.5;
 
-      // Throttle expensive getComputedStyle to ~2Hz
       if (ts - lastStyleRead > 500) {
         const style = getComputedStyle(document.documentElement);
         cachedAccent = style.getPropertyValue("--color-accent").trim();
@@ -194,13 +224,13 @@ export function HeroAurora() {
       draw(ctx!, cssW, cssH, timeRef.current, DEFAULT_CONFIG, cachedAccent, cachedIsDark);
 
       ctx!.globalAlpha = 1;
-      rafIdRef.current = requestAnimationFrame(animate);
     }
 
     rafIdRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", resize);
+      visibilityObserver.disconnect();
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }

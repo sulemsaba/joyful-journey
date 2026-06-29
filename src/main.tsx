@@ -23,8 +23,6 @@ function dismissBootLoader() {
   // Reset the auto-reload counter - React mounted successfully, so the
   // next stuck page (if any) is allowed to auto-reload again.
   try { sessionStorage.removeItem("__bootReload"); } catch { /* ignore */ }
-  // Remove overflow:hidden from body (was set to prevent scrollbar during boot)
-  document.body.style.overflow = "";
   // Wait one frame so the real content is painted, then fade out
   requestAnimationFrame(() => {
     const el = document.getElementById("boot-loader");

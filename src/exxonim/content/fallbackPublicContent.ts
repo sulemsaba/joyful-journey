@@ -167,7 +167,7 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
       eyebrow: "Business Setup, Compliance & Permits, Tanzania",
       title: "Get Your Company Registered, Licensed & Ready to Operate in Days, Not Weeks.",
       description:
-        "We handle everything from setup to annual filings. We keep you updated instantly via SMS, WhatsApp or email.",
+        "In today's fast-paced world, your focus belongs on your business. Let our experts handle everything from setup to annual filings, keeping you informed every step of the way via SMS, WhatsApp, or email.",
       cta: {
         label: "Start My Registration",
         href: routes.contact,

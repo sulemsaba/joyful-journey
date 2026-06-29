@@ -271,181 +271,85 @@ const TestimonialCard = memo(function TestimonialCard({
 });
 
 /* ═══════════════════════════════════════════════════════════════
- * TestimonialMarquee - unchanged from original
+ * TestimonialMarquee - lightweight scroll-based marquee
+ *
+ * Auto-scrolls using a lightweight setInterval (not rAF).
+ * No variable speed, no fractional pixel accumulation.
+ * Pauses on hover/touch, resumes after 3s of inactivity.
+ * Arrow buttons skip by one card width.
  * ═══════════════════════════════════════════════════════════════ */
 function TestimonialMarquee({
   testimonials,
 }: {
   testimonials: Testimonial[];
 }) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isSliding, setIsSliding] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
-  const [isDraggingState, setIsDraggingState] = useState(false);
-
-  const isPaused = useRef(false);
-  const isDragging = useRef(false);
-  const isVisible = useRef(false);
-  const hasStarted = useRef(false);
-  const startX = useRef(0);
-  const scrollStart = useRef(0);
-  const rafRef = useRef<number>(0);
-  const startTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const tickRef = useRef(0);
-  const scrollDelta = useRef(0);
-  const scrollingUntilRef = useRef(0);
+  const scrollingPaused = useRef(false);
 
   const items = [...testimonials, ...testimonials, ...testimonials];
   const CARD_WIDTH = 320;
-  const BASE_SPEED = 0.3;
-  const SPEED_AMPLITUDE = 0.12;
-  const SPEED_PERIOD = 480;
 
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible.current = entry.isIntersecting;
-        if (entry.isIntersecting && !hasStarted.current && !startTimerRef.current) {
-          startTimerRef.current = setTimeout(() => {
-            hasStarted.current = true;
-            startTimerRef.current = null;
-            setIsSliding(true);
-          }, 1200);
-        }
-        if (!entry.isIntersecting && !hasStarted.current && startTimerRef.current) {
-          clearTimeout(startTimerRef.current);
-          startTimerRef.current = null;
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(wrapper);
-    return () => {
-      observer.disconnect();
-      if (startTimerRef.current) {
-        clearTimeout(startTimerRef.current);
-        startTimerRef.current = null;
-      }
-    };
+  /* ── Start/stop auto-scroll ── */
+  const startScrolling = useCallback(() => {
+    if (intervalRef.current) return;
+    intervalRef.current = setInterval(() => {
+      const el = trackRef.current;
+      if (!el || scrollingPaused.current || document.hidden) return;
+      el.scrollLeft += 0.3;
+      const setWidth = el.scrollWidth / 3;
+      if (el.scrollLeft >= setWidth) el.scrollLeft -= setWidth;
+    }, 33);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => { scrollingUntilRef.current = performance.now() + 180; };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!isSliding) return;
-    const el = scrollerRef.current;
-    if (!el) return;
-    const getSetWidth = () => el.scrollWidth / 3;
-    let lastFrame = 0;
-    const FRAME_INTERVAL = 33;
-    const step = (timestamp: number) => {
-      if (isVisible.current && !document.hidden && timestamp - lastFrame >= FRAME_INTERVAL && timestamp >= scrollingUntilRef.current) {
-        lastFrame = timestamp;
-        if (!isPaused.current && !isDragging.current) {
-          tickRef.current += 1;
-          const speed = BASE_SPEED + SPEED_AMPLITUDE * Math.sin((2 * Math.PI * tickRef.current) / SPEED_PERIOD);
-          scrollDelta.current += speed;
-          const wholePixels = Math.floor(scrollDelta.current);
-          if (wholePixels >= 1) {
-            el.scrollLeft += wholePixels;
-            scrollDelta.current -= wholePixels;
-          }
-          const setWidth = getSetWidth();
-          if (el.scrollLeft >= setWidth) { el.scrollLeft -= setWidth; }
-        }
-      }
-      rafRef.current = requestAnimationFrame(step);
-    };
-    rafRef.current = requestAnimationFrame(step);
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [isSliding]);
-
-  const pauseAndResume = useCallback(() => {
-    isPaused.current = true;
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-    pauseTimerRef.current = setTimeout(() => { isPaused.current = false; }, 3000);
-  }, []);
-
-  const handleArrowClick = useCallback((direction: "left" | "right") => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollBy({ left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH, behavior: "smooth" });
-    pauseAndResume();
-  }, [pauseAndResume]);
-
-  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    isDragging.current = true;
-    setIsDraggingState(true);
-    startX.current = e.clientX;
-    scrollStart.current = el.scrollLeft;
-    el.setPointerCapture(e.pointerId);
-    isPaused.current = true;
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-  }, []);
-
-  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    const el = scrollerRef.current;
-    if (!el || !isDragging.current) return;
-    el.scrollLeft = scrollStart.current - (e.clientX - startX.current);
-  }, []);
-
-  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    isDragging.current = false;
-    setIsDraggingState(false);
-    el.releasePointerCapture(e.pointerId);
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-    pauseTimerRef.current = setTimeout(() => { isPaused.current = false; }, 3000);
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    setShowArrows(true);
-    isPaused.current = true;
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setShowArrows(false);
-    if (!isDragging.current) {
-      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-      pauseTimerRef.current = setTimeout(() => { isPaused.current = false; }, 3000);
+  const stopScrolling = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
   }, []);
 
+  /* ── Pause on interaction, auto-resume after 3s ── */
+  const pauseTemporarily = useCallback(() => {
+    scrollingPaused.current = true;
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => { scrollingPaused.current = false; }, 3000);
+  }, []);
+
+  /* ── Arrow navigation ── */
+  const handleArrowClick = useCallback((direction: "left" | "right") => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH, behavior: "smooth" });
+    pauseTemporarily();
+  }, [pauseTemporarily]);
+
+  /* ── Start scrolling when component mounts ── */
+  useEffect(() => {
+    startScrolling();
+    return stopScrolling;
+  }, [startScrolling, stopScrolling]);
+
   useEffect(() => {
     return () => {
-      if (startTimerRef.current) clearTimeout(startTimerRef.current);
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
     };
   }, []);
 
   return (
     <div
-      ref={wrapperRef}
       className="full-bleed group relative overflow-hidden [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
       aria-label="Client testimonials"
+      onMouseEnter={() => { setShowArrows(true); pauseTemporarily(); }}
+      onMouseLeave={() => { setShowArrows(false); pauseTemporarily(); }}
     >
       <div
-        ref={scrollerRef}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        ref={trackRef}
+        onPointerDown={() => pauseTemporarily()}
         className="flex overflow-x-auto scrollbar-none select-none touch-pan-y"
-        style={{ WebkitOverflowScrolling: "touch", cursor: isDraggingState ? "grabbing" : "grab" }}
+        style={{ WebkitOverflowScrolling: "touch", cursor: "grab" }}
       >
         {items.map((testimonial, index) => (
           <div key={`${testimonial.id}-${index}`} className="flex-none w-[280px] md:w-80">

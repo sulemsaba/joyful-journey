@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import type { StackItem } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { ArrowRight } from "lucide-react";
 
-/* ── Animation config ────────────────────────────────── */
-const EASE = [0.25, 0.4, 0.25, 1] as const;
-const DURATION = 0.6;
-const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
+/* ── Animation is handled by the existing [data-reveal] CSS system ──
+ * (globals.css: html.js [data-reveal]:not(.revealed) → reveal-up transition)
+ * No JS animation library needed — GPU-composited CSS transitions. */
 
 /* ── Smart video: pre-loads early, plays on visibility ── *
  *                                                       *
@@ -34,7 +32,7 @@ const VIEWPORT_ONCE = { once: true, margin: "-80px" } as const;
  *                                                       *
  * PLAYBACK RATE: 0.7x gives a cinematic slow-motion     *
  * feel - purely aesthetic, no performance impact.        */
-function LazyVideo({ sources, poster, playbackRate, className, style }: { sources: { src: string; type: string }[]; poster?: string; playbackRate?: number; className?: string; style?: React.CSSProperties }) {
+function LazyVideo({ sources, poster, playbackRate, className, mobileStyle, desktopStyle }: { sources: { src: string; type: string }[]; poster?: string; playbackRate?: number; className?: string; mobileStyle?: React.CSSProperties; desktopStyle?: React.CSSProperties }) {
   const ref = useRef<HTMLVideoElement>(null);
   const isVisible = useRef(false);
 
@@ -81,7 +79,7 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
           if (!video.paused) video.pause();
         }
       },
-      { rootMargin: "300px", threshold: 0.05 }
+      { rootMargin: "100px", threshold: 0.05 }
     );
     observer.observe(video);
 
@@ -103,6 +101,18 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
     };
   }, [playbackRate]);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  const activeStyle = isMobile ? (mobileStyle ?? {}) : (desktopStyle ?? {});
+
   return (
     <video
       ref={ref}
@@ -113,10 +123,10 @@ function LazyVideo({ sources, poster, playbackRate, className, style }: { source
       autoPlay
       disablePictureInPicture
       disableRemotePlayback
-      preload="metadata"
+      preload="auto"
       aria-hidden="true"
       className={className}
-      style={style}
+      style={activeStyle}
     >
       {sources.map((s) => <source key={s.src} src={s.src} type={s.type} />)}
     </video>
@@ -180,12 +190,9 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
         isReversed && "md:[direction:rtl]"
       )}
     >
-      {/* ── Text Half ── Slides up from below */}
-      <motion.div
-        initial={{ opacity: 0, y: 48 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={VIEWPORT_ONCE}
-        transition={{ duration: DURATION, ease: EASE }}
+      {/* ── Text Half ── Reveals up on scroll via CSS [data-reveal] */}
+      <div
+        data-reveal
         className={cn(
           "space-y-6 md:pr-4",
           isReversed && "md:[direction:ltr]"
@@ -229,14 +236,11 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* ── Video Surface Half ── Fades in like going beneath the text card */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 12 }}
-        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        viewport={VIEWPORT_ONCE}
-        transition={{ duration: DURATION + 0.15, ease: EASE }}
+      {/* ── Video Surface Half ── Reveals on scroll via CSS [data-reveal] with stagger */}
+      <div
+        data-reveal
         className={cn(
           "relative w-full",
           /* CSS custom properties for responsive video positioning */
@@ -257,31 +261,26 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
             "xl:aspect-[1.22]"
           )}
         >
-          <div className="relative size-full">
+          <div className="relative size-full contain-paint">
             {hasVideo ? (
-              /* ── Actual video (lazy-loaded) ── */
-              <>
-                {/* Mobile: landscape, fills container */}
-                <LazyVideo
-                  sources={item.videoSources}
-                  poster="/videos/track-consultation-poster.webp"
-                  playbackRate={0.7}
-                  className="pointer-events-none absolute inset-0 rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft md:hidden"
-                />
-                {/* Desktop: phone-in-frame portrait style */}
-                <LazyVideo
-                  sources={item.videoSources}
-                  poster="/videos/track-consultation-poster.webp"
-                  playbackRate={0.7}
-                  className="pointer-events-none absolute hidden md:block rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
-                  style={{
-                    top: "var(--video-y-offset)",
-                    left: "calc((100% - var(--video-width)) / 2)",
-                    width: "var(--video-width)",
-                    aspectRatio: "0.462",
-                  }}
-                />
-              </>
+              <LazyVideo
+                sources={item.videoSources}
+                poster="/videos/track-consultation-poster.webp"
+                playbackRate={0.7}
+                className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
+                mobileStyle={{
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+                desktopStyle={{
+                  top: "var(--video-y-offset)",
+                  left: "calc((100% - var(--video-width)) / 2)",
+                  width: "var(--video-width)",
+                  aspectRatio: "0.462",
+                }}
+              />
             ) : (
               /* ── Placeholder surface - no video ── */
               <>
@@ -307,7 +306,7 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

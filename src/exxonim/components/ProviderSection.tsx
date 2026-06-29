@@ -28,48 +28,50 @@ interface ProviderSectionProps {
   content: ProviderSectionContent;
 }
 
+/* ── API origin: computed once at module level, not per render ── */
+const ORIGIN_API = (() => {
+  try {
+    const apiUrl = (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_API_URL) || undefined;
+    return new URL(resolveApiBaseUrl(apiUrl)).origin;
+  } catch {
+    return "";
+  }
+})();
+
+function resolveLogoSrc(src: string): string {
+  const trimmed = src?.trim?.() ? src.trim() : "";
+  if (!trimmed) return "/placeholder.svg";
+  if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
+  if (/^(data|blob):/i.test(trimmed)) return trimmed;
+  if (
+    trimmed.startsWith("/assets/") ||
+    trimmed.startsWith("/src/") ||
+    trimmed.startsWith("/placeholder") ||
+    trimmed.startsWith("/favicon")
+  ) {
+    return trimmed;
+  }
+  if (!ORIGIN_API) return trimmed;
+  if (
+    trimmed.startsWith("/media/") ||
+    trimmed.startsWith("/storage/") ||
+    trimmed.startsWith("/uploads/") ||
+    trimmed.startsWith("/static/")
+  ) {
+    return `${ORIGIN_API}${trimmed}`;
+  }
+  if (trimmed.startsWith("/")) return trimmed;
+  return `${ORIGIN_API}/${trimmed}`;
+}
+
 export function ProviderSection({ content }: ProviderSectionProps) {
-  const apiOrigin = (() => {
-    try {
-      const apiUrl = (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_API_URL) || undefined;
-      return new URL(resolveApiBaseUrl(apiUrl)).origin;
-    } catch {
-      return "";
-    }
-  })();
-
-  const resolveLogoSrc = (src: string) => {
-    const trimmed = src?.trim?.() ? src.trim() : "";
-    if (!trimmed) return "/placeholder.svg";
-    if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
-    if (/^(data|blob):/i.test(trimmed)) return trimmed;
-    if (
-      trimmed.startsWith("/assets/") ||
-      trimmed.startsWith("/src/") ||
-      trimmed.startsWith("/placeholder") ||
-      trimmed.startsWith("/favicon")
-    ) {
-      return trimmed;
-    }
-    if (!apiOrigin) return trimmed;
-    if (
-      trimmed.startsWith("/media/") ||
-      trimmed.startsWith("/storage/") ||
-      trimmed.startsWith("/uploads/") ||
-      trimmed.startsWith("/static/")
-    ) {
-      return `${apiOrigin}${trimmed}`;
-    }
-    if (trimmed.startsWith("/")) return trimmed;
-    return `${apiOrigin}/${trimmed}`;
-  };
-
-  // Repeat logos enough times for seamless infinite scroll.
-  // We need at least enough copies so one set is wider than the viewport.
-  // 10 logos × 4 = 40 items ensures coverage on all screen sizes.
+  // Repeat logos for seamless infinite scroll.
+  // 10 logos × 2 = 20 items — on the widest viewport 20 items at ~160px
+  // each = 3200px, which exceeds any screen width. Two copies is enough
+  // for the translateX(-50%) loop to cycle seamlessly.
   // Animation translates -50% so when the first half scrolls off,
   // the identical second half is in its place - no gap.
-  const repeatCount = 4;
+  const repeatCount = 2;
   const repeatedLogos = Array.from({ length: repeatCount }, () => content.logos).flat();
 
   return (
@@ -134,7 +136,8 @@ export function ProviderSection({ content }: ProviderSectionProps) {
                   alt={`${logo.alt} logo`}
                   width="176"
                   height="64"
-                  loading={index < content.logos.length ? 'eager' : 'lazy'}
+                  loading="lazy"
+                  fetchPriority="low"
                   decoding="async"
                   onError={(event) => {
                     const img = event.currentTarget;
