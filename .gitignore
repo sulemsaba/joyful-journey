@@ -15,7 +15,6 @@ node_modules/
 # ─────────────────────────────────────────────────────────────
 /dist/
 /build
-/.next/
 /out/
 
 # ─────────────────────────────────────────────────────────────
@@ -50,7 +49,7 @@ server.log
 # TypeScript
 # ─────────────────────────────────────────────────────────────
 *.tsbuildinfo
-next-env.d.ts
+tsconfig.tsbuildinfo
 
 # ─────────────────────────────────────────────────────────────
 # OS / editor
@@ -100,5 +99,31 @@ final-loaded.png
 # ─────────────────────────────────────────────────────────────
 .vercel
 package-lock.json
+bun.lock
 home/
 test
+.next/
+
+# ─────────────────────────────────────────────────────────────
+# Spec / planning docs (dev workbench, not app code)
+# ─────────────────────────────────────────────────────────────
+ADMIN_SIDEBAR_SPEC.md
+API_DESIGN.md
+BACKEND-ADMIN-AUDIT.md
+SERVICE_PACKAGES_PLAN.md
+a_content.md
+from_here.md
+services-page-redesign-audit.md
+worklog.md
+
+# ─────────────────────────────────────────────────────────────
+# Dev scripts & tools
+# ─────────────────────────────────────────────────────────────
+# Dev/utility scripts (not project build scripts)
+keep-server.sh
+start.sh
+server.mjs
+perf-audit.mjs
+perf-measure.cjs
+test-results/
+Caddyfile
