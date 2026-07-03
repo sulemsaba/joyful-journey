@@ -129,7 +129,7 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
               <p
                 className="mb-5 md:mb-6 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-accent"
               >
-                {content.eyebrow}
+                {content?.eyebrow}
               </p>
               <h1
                 className="m-0 text-[clamp(2rem,5.2vw,4.75rem)] font-semibold leading-[1.08] tracking-tight text-text"

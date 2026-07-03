@@ -39,7 +39,7 @@ export function useTestimonials() {
     queryKey: ["testimonials"],
     queryFn: () => fetchWithJsonFallback(getTestimonials, "testimonials"),
     placeholderData: fallbackTestimonials,
-    staleTime: 1000 * 60 * 60 * 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 1,
   });
 

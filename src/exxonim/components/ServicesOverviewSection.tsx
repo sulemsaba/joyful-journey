@@ -48,14 +48,15 @@ export function ServicesOverviewSection({
 
   // Flatten all services from nav groups for search
   const allServices = useMemo(() => {
+    if (!content?.service_nav_groups) return [];
     return content.service_nav_groups.flatMap((group) =>
-      group.items.map((item) => ({
+      (group?.items ?? []).map((item) => ({
         name: item,
-        group: group.title,
-        href: group.href,
+        group: group.title ?? "",
+        href: group.href ?? "",
       }))
     );
-  }, [content.service_nav_groups]);
+  }, [content?.service_nav_groups]);
 
   // Filter services by search query
   const filteredServices = useMemo(() => {
@@ -111,7 +112,7 @@ export function ServicesOverviewSection({
           {/* ── Left: Hero - open, no card, no CTA button (CTA is at bottom of page) ── */}
           <div className="text-center lg:text-left" data-reveal>
             <p className="m-0 mb-4 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
-              {content.eyebrow}
+              {content?.eyebrow}
             </p>
             <h2
               id="services-overview-title"

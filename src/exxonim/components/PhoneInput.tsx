@@ -358,9 +358,9 @@ export function PhoneInput({
     const q = searchQuery.toLowerCase();
     return COUNTRIES.filter(
       (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.dialCode.includes(q) ||
-        c.code.toLowerCase().includes(q)
+        (c.name?.toLowerCase().includes(q) ?? false) ||
+        (c.dialCode?.includes(q) ?? false) ||
+        (c.code?.toLowerCase().includes(q) ?? false)
     );
   }, [searchQuery]);
 

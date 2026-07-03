@@ -53,7 +53,7 @@ export function useBlogPost(slug: string | null) {
       ),
     enabled: Boolean(slug),
     placeholderData: fallback,
-    staleTime: 1000 * 60 * 30,
+    staleTime: 1000 * 30, // 30 seconds
     retry: (failureCount, error) => {
       const status = (error as { response?: { status?: number } } | null)?.response?.status;
       if (status === 404) return false;

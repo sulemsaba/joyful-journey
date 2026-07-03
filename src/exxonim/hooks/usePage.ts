@@ -48,14 +48,14 @@ export function usePage<TContent = Record<string, unknown>>(slug: string) {
   const fallback = getFallbackPage(slug) as PageRecord<TContent> | undefined;
 
   const query = useQuery({
-    queryKey: ["pages", slug],
+    queryKey: ["pages-v2", slug],
     queryFn: () =>
       fetchWithJsonFallback(
         () => getPageBySlug<TContent>(slug),
         `pages-${slug}`
       ),
     placeholderData: fallback,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 5, // 5 minutes — pages change via admin
     retry: (failureCount, error) => {
       const status = (error as { response?: { status?: number } } | null)?.response?.status;
       if (status === 404) return false;

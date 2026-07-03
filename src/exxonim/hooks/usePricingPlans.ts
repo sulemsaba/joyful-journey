@@ -39,7 +39,7 @@ export function usePricingPlans() {
     queryKey: ["pricing", "plans"],
     queryFn: () => fetchWithJsonFallback(getPricingPlans, "pricing-plans"),
     placeholderData: fallbackPricingPlans,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 5, // 5 minutes — pricing changes propagate quickly
     retry: 1,
   });
 

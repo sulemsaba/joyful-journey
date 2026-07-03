@@ -52,10 +52,11 @@ import type { SiteSetting } from '@/exxonim/types';
 import type { ApiSiteSetting } from "@/exxonim/types/api";
 
 async function fetchSiteSetting<TValue = unknown>(key: string) {
-  const response = await api.get<ApiSiteSetting<TValue>>(
+  const response = await api.get<{ id: string; key: string; value: TValue; createdAt: string; updatedAt: string }>(
     apiRoutes.public.siteSettings.byKey(key)
   );
-  return mapSiteSetting(response.data) as SiteSetting<TValue>;
+  const raw = response.data;
+  return mapSiteSetting({ id: Number(raw.id), key: raw.key, value: raw.value, created_at: raw.createdAt, updated_at: raw.updatedAt }) as SiteSetting<TValue>;
 }
 
 /** Fetch a site setting by key. TanStack Query handles caching + persistence. */

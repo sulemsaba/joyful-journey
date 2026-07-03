@@ -668,10 +668,10 @@ export function CareerPage() {
       const kw = keyword.toLowerCase();
       result = result.filter(
         (j) =>
-          j.title.toLowerCase().includes(kw) ||
-          j.department.toLowerCase().includes(kw) ||
-          j.employment_type.toLowerCase().includes(kw) ||
-          j.summary.toLowerCase().includes(kw)
+          (j.title?.toLowerCase().includes(kw) ?? false) ||
+          (j.department?.toLowerCase().includes(kw) ?? false) ||
+          (j.employment_type?.toLowerCase().includes(kw) ?? false) ||
+          (j.summary?.toLowerCase().includes(kw) ?? false)
       );
     }
     if (selectedDepartment !== "All Departments") {

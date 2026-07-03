@@ -4,10 +4,12 @@ import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
 import { PrivacyConsentBanner } from "@/exxonim/components/PrivacyConsentBanner";
 import { ShellStatusNotice } from "@/exxonim/components/ShellStatusNotice";
+import { NetworkStatus } from "@/exxonim/components/NetworkStatus";
 import { WhatsAppButton } from "@/exxonim/components/WhatsAppButton";
 import { ScrollToTopButton } from "@/exxonim/components/ScrollToTopButton";
 import { ErrorBoundary } from "@/exxonim/components/ErrorBoundary";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
+import { useContentVersion } from "@/exxonim/hooks/useContentVersion";
 import { useRevealOnScroll } from "@/exxonim/hooks/useRevealOnScroll";
 import { useTheme } from "@/exxonim/hooks/useTheme";
 import { publicPagePreloaders, highPriorityPreloaders } from "@/exxonim/preloadRoutes";
@@ -130,6 +132,7 @@ function ResourceArticleRoute() {
 export function App({ onReady }: { onReady?: () => void }) {
   const { theme, toggleTheme } = useTheme();
   const shell = usePublicShell();
+  useContentVersion();
   const location = useLocation();
   const readyFired = useRef(false);
 
@@ -250,6 +253,7 @@ export function App({ onReady }: { onReady?: () => void }) {
           theme={theme}
         />
 
+        <NetworkStatus />
         <ShellStatusNotice />
 
         {/*

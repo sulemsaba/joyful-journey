@@ -121,7 +121,7 @@ function InfoPageRoute({
 
   return (
     <ContentPage
-      eyebrow={page.content.hero.eyebrow}
+      eyebrow={page.content?.hero?.eyebrow}
       title={page.content.hero.title}
       description={page.content.hero.description}
       sections={page.content.sections}

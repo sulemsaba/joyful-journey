@@ -46,7 +46,7 @@ export function AboutPage() {
       >
         <div className="max-w-[1240px] px-8 mx-auto text-center flex flex-col items-center" data-reveal>
           <p className="m-0 mb-5 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
-            {content.hero.eyebrow}
+            {content.hero?.eyebrow}
           </p>
           <h1
             id="about-hero-title"

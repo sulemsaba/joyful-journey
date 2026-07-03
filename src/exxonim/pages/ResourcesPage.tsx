@@ -519,8 +519,8 @@ export function ResourcesPage() {
   const searchFilteredPosts = useMemo(() => {
     if (!isSearchActive) return categoryFilteredPosts;
     return categoryFilteredPosts.filter((post) => {
-      const titleMatch = post.title.toLowerCase().includes(normalizedQuery);
-      const excerptMatch = post.excerpt.toLowerCase().includes(normalizedQuery);
+      const titleMatch = post.title?.toLowerCase().includes(normalizedQuery) ?? false;
+      const excerptMatch = post.excerpt?.toLowerCase().includes(normalizedQuery) ?? false;
       return titleMatch || excerptMatch;
     });
   }, [categoryFilteredPosts, isSearchActive, normalizedQuery]);

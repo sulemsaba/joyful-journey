@@ -46,7 +46,7 @@ export function useSiteSetting<TValue = unknown>(key: string) {
         `site-settings-${key}`
       ),
     placeholderData: fallback,
-    staleTime: 1000 * 60 * 60 * 4,
+    staleTime: 1000 * 30, // 30 seconds — generic setting hook
     retry: (failureCount, error) => {
       const status = (error as { response?: { status?: number } } | null)?.response?.status;
       if (status === 404) return false;

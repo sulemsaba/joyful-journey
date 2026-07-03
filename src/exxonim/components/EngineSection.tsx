@@ -63,7 +63,7 @@ export function EngineSection({ content }: EngineSectionProps) {
         <div className="grid gap-4 text-center max-w-[min(52ch,90%)] mx-auto mb-12 md:mb-16">
           <p className="inline-flex items-center justify-center gap-2 text-accent text-xs font-extrabold tracking-[0.14em] uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            {content.eyebrow}
+            {content?.eyebrow}
           </p>
           <h2 className="font-display text-[clamp(1.8rem,3.2vw,2.6rem)] font-medium leading-tight tracking-tight">
             {content.title}

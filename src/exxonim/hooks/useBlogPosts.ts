@@ -39,7 +39,7 @@ export function useBlogPosts() {
     queryKey: ["blog", "posts"],
     queryFn: () => fetchWithJsonFallback(listPublicBlogPosts, "blog-posts"),
     placeholderData: fallbackBlogPosts,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 30, // 30 seconds — blog updates propagate fast
     retry: 1,
   });
 

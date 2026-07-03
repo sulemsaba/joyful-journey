@@ -215,8 +215,8 @@ export function FaqPage() {
       const q = searchQuery.toLowerCase();
       items = items.filter(
         (item) =>
-          item.question.toLowerCase().includes(q) ||
-          item.answer.toLowerCase().includes(q)
+          (item.question?.toLowerCase().includes(q) ?? false) ||
+          (item.answer?.toLowerCase().includes(q) ?? false)
       );
     }
     return items;

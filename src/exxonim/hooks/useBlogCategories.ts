@@ -39,7 +39,7 @@ export function useBlogCategories() {
     queryKey: ["blog", "categories"],
     queryFn: () => fetchWithJsonFallback(listPublicBlogCategories, "blog-categories"),
     placeholderData: fallbackBlogCategories,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 1,
   });
 

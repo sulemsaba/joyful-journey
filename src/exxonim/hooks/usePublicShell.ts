@@ -92,7 +92,7 @@ export function usePublicShell() {
         "site-settings-brand"
       ),
     placeholderData: PLACEHOLDER_BRAND,
-    staleTime: 1000 * 60 * 60 * 4,
+    staleTime: 1000 * 60 * 5,
     retry: 1,
   });
 
@@ -104,7 +104,7 @@ export function usePublicShell() {
         "site-settings-footer"
       ),
     placeholderData: PLACEHOLDER_FOOTER,
-    staleTime: 1000 * 60 * 60 * 4,
+    staleTime: 1000 * 60 * 5,
     retry: 1,
   });
 
@@ -116,7 +116,7 @@ export function usePublicShell() {
         "site-settings-company_info"
       ),
     placeholderData: PLACEHOLDER_COMPANY,
-    staleTime: 1000 * 60 * 60 * 4,
+    staleTime: 1000 * 60 * 5,
     retry: 1,
   });
 

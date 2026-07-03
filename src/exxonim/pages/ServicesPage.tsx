@@ -51,7 +51,7 @@ export function ServicesPage() {
 
       {/* 2. Service Catalog - card grid with category tabs */}
       <ServiceCatalogSection
-        heroEyebrow={catalog.eyebrow}
+        heroEyebrow={catalog?.eyebrow}
         heroTitle={catalog.title}
       />
 

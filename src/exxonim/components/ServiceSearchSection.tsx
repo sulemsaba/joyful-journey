@@ -123,11 +123,11 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
       const query = searchQuery.toLowerCase().trim();
       result = result.filter(
         (s) =>
-          s.label.toLowerCase().includes(query) ||
-          s.detail.toLowerCase().includes(query) ||
-          (s.outcome && s.outcome.toLowerCase().includes(query)) ||
-          (s.tags && s.tags.some((tag) => tag.toLowerCase().includes(query))) ||
-          s.groupTitle.toLowerCase().includes(query)
+          (s.label?.toLowerCase().includes(query) ?? false) ||
+          (s.detail?.toLowerCase().includes(query) ?? false) ||
+          (s.outcome?.toLowerCase().includes(query) ?? false) ||
+          (s.tags?.some((tag) => tag?.toLowerCase().includes(query)) ?? false) ||
+          (s.groupTitle?.toLowerCase().includes(query) ?? false)
       );
     }
 
@@ -157,7 +157,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
         <div className="grid gap-4 max-w-[min(52ch,90%)] mx-auto text-center mb-10 md:mb-14">
           <p className="inline-flex items-center justify-center gap-2 text-accent text-xs font-extrabold tracking-[0.14em] uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            {content.eyebrow}
+            {content?.eyebrow}
           </p>
           <h2
             id="service-search-title"

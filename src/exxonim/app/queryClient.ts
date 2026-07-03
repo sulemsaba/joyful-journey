@@ -81,16 +81,22 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 60 * 4, // 4 hours - data is fresh for 4h
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours - cache kept for 24h
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: "always",
+      // ── Stale-While-Revalidate ─────────────────────────────
+      // Short staleTime (30s) means data is refreshed aggressively
+      // in the background. The user always sees cached/fallback data
+      // instantly — the refetch is silent, no flicker.
+      staleTime: 1000 * 30, // 30 seconds before background refetch
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours - cached data retained for offline
+      refetchOnWindowFocus: true, // Refresh when user returns to tab
+      refetchOnReconnect: "always", // Refresh when network recovers
       retry: (failureCount, error) => {
         // Don't retry 404s - the resource simply doesn't exist
         const status = (error as { response?: { status?: number } } | null)?.response?.status;
         if (status === 404) return false;
+        // Retry quickly: 0s, 1s, 2s — 3 attempts total
         return failureCount < 2;
       },
+      retryDelay: (attemptIndex) => Math.min(1000 * attemptIndex, 3000),
     },
   },
 });

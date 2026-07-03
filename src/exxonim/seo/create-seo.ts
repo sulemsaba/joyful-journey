@@ -10,7 +10,8 @@ const BRAND_SUFFIX = " | Exxonim Consult";
  * Appends the brand suffix to a title if it's not already present.
  * Keeps titles under 60 characters when possible (Moz recommendation).
  */
-function titleWithBrand(title: string): string {
+function titleWithBrand(title: string | undefined): string {
+  if (!title) return "";
   if (title.includes("Exxonim Consult")) return title;
   const combined = title + BRAND_SUFFIX;
   // If combined exceeds 60 chars, truncate the title part to fit
@@ -86,7 +87,7 @@ export function createBlogPostSeo(
   const canonicalBaseUrl = options.canonicalBaseUrl ?? siteOrigin;
 
   return {
-    title: titleWithBrand(post.metaTitle ?? post.title),
+    title: titleWithBrand(post.metaTitle ?? post.title) || "Exxonim Consult",
     description: post.metaDescription ?? post.excerpt ?? options.defaultDescription ?? post.title,
     canonicalPath: resourceArticlePath(post.slug),
     image:
