@@ -2,17 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-const LOCAL_SERVICES_API = "http://127.0.0.1:3031";
 const LOCAL_FASTAPI_API = "http://127.0.0.1:3032";
-
-// Prefixes for the services microservice (3031)
-const LOCAL_SERVICES_API_PREFIXES = [
-  "/api/admin",
-  "/api/categories",
-  "/api/health",
-  "/api/segments",
-  "/api/services",
-];
 
 // Prefix for the FastAPI backend (3032)
 const LOCAL_FASTAPI_API_PREFIX = "/api/v1";
@@ -31,9 +21,8 @@ export default defineConfig({
           if (req.url?.startsWith("/api/")) {
             const requestPath = req.url.split("?")[0];
             // Skip both services (3031) and FastAPI (3032) prefixes — they're handled by proxies
-            const isServicesPrefix = LOCAL_SERVICES_API_PREFIXES.some((prefix) => requestPath.startsWith(prefix));
             const isFastApiPrefix = requestPath.startsWith(LOCAL_FASTAPI_API_PREFIX);
-            if (isServicesPrefix || isFastApiPrefix) {
+            if (isFastApiPrefix) {
               next();
               return;
             }
@@ -58,17 +47,7 @@ export default defineConfig({
     host: true,
     allowedHosts: true,
     proxy: {
-      // Services microservice (port 3031) — service catalog, categories, segments
-      ...Object.fromEntries(
-        LOCAL_SERVICES_API_PREFIXES.map((prefix) => [
-          prefix,
-          {
-            target: LOCAL_SERVICES_API,
-            changeOrigin: true,
-          },
-        ])
-      ),
-      // FastAPI backend (port 3032) — all public API endpoints
+      // FastAPI backend (port 3032) — all API endpoints
       "/api/v1": {
         target: LOCAL_FASTAPI_API,
         changeOrigin: true,
@@ -114,17 +93,6 @@ export default defineConfig({
           }
         },
       },
-    },
-  },
-  server: {
-    watch: {
-      ignored: [
-        "**/node_modules/**",
-        "**/.git/**",
-        "**/.bun/**",
-        "**/__pycache__/**",
-        "**/.*/**",
-      ],
     },
   },
 });
