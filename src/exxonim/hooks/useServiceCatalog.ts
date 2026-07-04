@@ -85,11 +85,14 @@ export function useServiceCatalog(segment?: string) {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Normalize: the API returns { success, data: { services } }
-  // but the fallback JSON returns { services, total, categories } directly
-  // (loadStaticFallback extracts the `data` field from the JSON envelope).
-  // Wrap it so the component always gets the same shape.
-  const rawData = query.data ?? fallback;
+  // FALLBACK GUARANTEE: Always use hardcoded fallback when the API returns
+  // zero services (common when DB is empty/unseeded). Without this check,
+  // an empty API response replaces the 15 hardcoded fallback services,
+  // causing the catalog to disappear on refresh.
+  const apiData = query.data;
+  const apiHasServices = apiData?.data?.services && apiData.data.services.length > 0;
+  const rawData = apiHasServices ? apiData : fallback;
+
   const normalizedData = rawData?.data
     ? rawData
     : { success: true, data: rawData };
