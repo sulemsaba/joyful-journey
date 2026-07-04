@@ -9,31 +9,25 @@ import { ProviderSection } from "@/exxonim/components/ProviderSection";
 import { StackSection } from "@/exxonim/components/StackSection";
 import { StructuredData } from "@/exxonim/components/StructuredData";
 import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
-import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
 import { getHomeBlogPosts } from "@/exxonim/utils/blog";
-import type { HomePageContent } from '@/exxonim/types';
+import { fallbackHomePage } from "@/exxonim/content/fallbackPublicContent";
 
 /**
- * Homepage - instant rendering, no full-page loader.
+ * Homepage — hero, stack cards, and provider logos are static (hardcoded).
+ * Blog posts in the insights section are dynamic (API-driven).
  *
- * The usePage hook guarantees fallback data via the Fallback Guarantee
- * pattern (data: query.data ?? fallback). The homepage renders instantly
- * with cached/fallback content while the API refreshes in the background.
- *
- * Returning visitors see cached data from localStorage immediately.
- * First-time visitors see hardcoded fallback content immediately.
- * Either way, no loader, no waiting.
+ * No API call for page content — the homepage always renders instantly
+ * with the approved content from a_content.md decisions.
  */
 export function HomePage() {
   const railRef = useRef<HTMLDivElement>(null);
-  const { data: page } = usePage<HomePageContent>("home");
   const { data: blogPosts = [] } = useBlogPosts();
 
-  useResolvedPageSeo(page, routes.home);
+  const homeContent = fallbackHomePage.content!;
+  useResolvedPageSeo(fallbackHomePage, routes.home);
 
-  const homeContent = page?.content;
   const homePosts = getHomeBlogPosts(blogPosts);
   const featuredPosts = homePosts.length > 0 ? homePosts : blogPosts.slice(0, 4);
 
@@ -45,8 +39,6 @@ export function HomePage() {
       behavior: "smooth",
     });
   }, []);
-
-  if (!homeContent) return null;
 
   return (
     <>
