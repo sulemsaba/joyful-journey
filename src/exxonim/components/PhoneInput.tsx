@@ -364,8 +364,11 @@ export function PhoneInput({
     );
   }, [searchQuery]);
 
-  /* Ref for mobile bottom sheet portal (rendered outside dropdownRef) */
+  /* Refs for portal-rendered dropdowns */
   const mobileSheetRef = useRef<HTMLDivElement>(null);
+  const desktopDropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [desktopDropdownPosition, setDesktopDropdownPosition] = useState({ top: 0, left: 0 });
 
   /* Close dropdown on outside click
    * Must check BOTH dropdownRef (desktop popover) AND mobileSheetRef (portal bottom sheet)
@@ -374,9 +377,10 @@ export function PhoneInput({
   useEffect(() => {
     if (!dropdownOpen) return;
     const isInside = (target: Node) => {
-      const insideDesktop = dropdownRef.current?.contains(target);
+      const insideTrigger = dropdownRef.current?.contains(target);
       const insideMobile = mobileSheetRef.current?.contains(target);
-      return insideDesktop || insideMobile;
+      const insideDesktop = desktopDropdownRef.current?.contains(target);
+      return insideTrigger || insideMobile || insideDesktop;
     };
     const mouseHandler = (e: MouseEvent) => {
       if (!isInside(e.target as Node)) {
@@ -396,6 +400,17 @@ export function PhoneInput({
       document.removeEventListener("mousedown", mouseHandler);
       document.removeEventListener("touchstart", touchHandler);
     };
+  }, [dropdownOpen]);
+
+  /* Calculate desktop dropdown position when it opens */
+  useEffect(() => {
+    if (dropdownOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setDesktopDropdownPosition({
+        top: rect.bottom + 4,
+        left: rect.left,
+      });
+    }
   }, [dropdownOpen]);
 
   /* Focus search input when dropdown opens */
@@ -553,6 +568,7 @@ export function PhoneInput({
         {/* ── Country selector button ── */}
         <div className="relative" ref={dropdownRef}>
           <button
+            ref={triggerRef}
             type="button"
             onClick={handleDropdownToggle}
             disabled={disabled}
@@ -574,20 +590,26 @@ export function PhoneInput({
             )} />
           </button>
 
-          {/* ── Desktop dropdown (popover) ── */}
-          {dropdownOpen && (
+          {/* ── Desktop dropdown (popover, portal-rendered to avoid overflow clipping) ── */}
+          {dropdownOpen && createPortal(
             <div
+              ref={desktopDropdownRef}
               className={cn(
-                "hidden sm:block absolute top-full left-0 z-50 mt-1",
+                "hidden sm:block fixed z-[65]",
                 "w-72 bg-surface border border-border-soft rounded-xl shadow-2xl",
                 "animate-in fade-in slide-in-from-top-1 duration-150",
                 "overflow-hidden",
               )}
+              style={{
+                top: desktopDropdownPosition.top,
+                left: desktopDropdownPosition.left,
+              }}
               role="listbox"
               aria-label="Select country"
             >
               {dropdownContent}
-            </div>
+            </div>,
+            document.body,
           )}
         </div>
 

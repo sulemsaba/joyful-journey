@@ -357,7 +357,7 @@ export function ContactPage() {
 
               {/* ── Right column: Form card ── */}
               <div
-                className="bg-surface border border-border-soft rounded-2xl px-3 py-4 sm:px-6 sm:p-6 lg:px-8 lg:py-10 min-w-0 overflow-hidden"
+                className="bg-surface border border-border-soft rounded-2xl px-3 py-4 sm:px-6 sm:p-6 lg:px-8 lg:py-10 min-w-0"
                 id="contact-form"
               >
                 {submissionResult ? (
