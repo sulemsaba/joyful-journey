@@ -578,6 +578,7 @@ export function ResourcesPage() {
   };
 
   if (!page) return null;
+  if (!page.content) return null;
 
   return (
     <div>

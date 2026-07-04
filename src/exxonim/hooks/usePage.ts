@@ -63,18 +63,22 @@ export function usePage<TContent = Record<string, unknown>>(slug: string) {
     },
   });
 
-  // FALLBACK GUARANTEE: When the query has no real data (e.g., API is down
-  // and JSON fallback files are missing), always return the hardcoded fallback.
-  // This prevents pages from showing "Unable to load" error states when
-  // the hardcoded content is perfectly valid and always available.
-  const data = query.data ?? fallback;
+  // FALLBACK GUARANTEE: When the query has no real data (e.g., API is down,
+  // JSON fallback files are missing, or localStorage cache is stale/missing content),
+  // always return the hardcoded fallback.
+  //
+  // IMPORTANT: We check `query.data?.content` explicitly because persistQueryClient
+  // can restore a stale cached object where `content` is undefined/null (e.g., from
+  // a prior session where the page didn't exist in the DB). In that case, `query.data`
+  // is truthy but `content` is missing — the simple `query.data ?? fallback` check
+  // would NOT trigger the fallback. This caused: "Cannot destructure property
+  // 'overview' of 'page.content' as it is undefined."
+  const hasValidContent = query.data && query.data.content != null;
+  const data = hasValidContent ? query.data : fallback;
 
   return {
     ...query,
     data,
-    // isPending should be false if we have fallback data to show, even
-    // if the query is still loading. This prevents LoadBoundary from
-    // showing a loading spinner when fallback content is already available.
     isPending: query.isPending && !fallback,
   };
 }

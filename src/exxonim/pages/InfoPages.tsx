@@ -118,6 +118,7 @@ function InfoPageRoute({
   useResolvedPageSeo(page, canonicalPath);
 
   if (!page) return null;
+  if (!page.content) return null;
 
   return (
     <ContentPage

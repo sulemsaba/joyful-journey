@@ -34,6 +34,7 @@ export function ServicesPage() {
   useResolvedPageSeo(page, routes.services);
 
   if (!page) return null;
+  if (!page.content) return null;
 
   const { overview, catalog, faq } = page.content;
 
