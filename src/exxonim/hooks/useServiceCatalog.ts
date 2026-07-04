@@ -34,8 +34,6 @@ import type { ServicesResponse, ServiceSegment } from '@/exxonim/types/service-c
 import { fallbackServices, fallbackCategories, fallbackSegments } from '@/exxonim/content/fallbackServiceCatalog';
 import { fetchWithJsonFallback } from '@/exxonim/services/staticFallbackService';
 
-const API_PORT = 3031;
-
 const FALLBACK_RESPONSE: ServicesResponse = {
   success: true,
   data: {
@@ -48,8 +46,7 @@ const FALLBACK_RESPONSE: ServicesResponse = {
 async function fetchServices(segment?: string): Promise<ServicesResponse> {
   const params = new URLSearchParams();
   if (segment && segment !== 'all') params.set('segment', segment);
-  params.set('status', 'published');
-  const resp = await fetch(`/api/services?${params.toString()}&XTransformPort=${API_PORT}`);
+  const resp = await fetch(`/api/v1/services?${params.toString()}`);
   if (!resp.ok) throw new Error('API error');
   return (await resp.json()) as ServicesResponse;
 }
