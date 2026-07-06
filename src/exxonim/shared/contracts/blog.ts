@@ -38,7 +38,7 @@ export interface ApiBlogPost {
     }>;
     html?: string;
   };
-  featured_image?: string | null;
+  featured_image_url?: string | null;
   cover_alt?: string | null;
   media_label?: string | null;
   featured_slot?: string | null;

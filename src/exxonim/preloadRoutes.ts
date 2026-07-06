@@ -36,12 +36,6 @@ export const loadSupportPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.SupportPage }));
 export const loadTermsPage = () =>
   import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.TermsPage }));
-export const loadPrivacyPage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.PrivacyPage }));
-export const loadCookiePage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.CookiePage }));
-export const loadDataRightsPage = () =>
-  import("@/exxonim/pages/InfoPages").then((m) => ({ default: m.DataRightsPage }));
 export const loadTrackConsultationPage = () =>
   import("@/exxonim/pages/TrackConsultationPage").then((m) => ({ default: m.TrackConsultationPage }));
 
@@ -61,9 +55,6 @@ export const publicPagePreloaders = [
   loadServiceDetailPage,
   loadSupportPage,
   loadTermsPage,
-  loadPrivacyPage,
-  loadCookiePage,
-  loadDataRightsPage,
   loadTrackConsultationPage,
 ];
 
@@ -93,9 +84,6 @@ export const routePreloadMap: Record<string, () => Promise<unknown>> = {
   "/blog": loadResourcesPage,
   "/support": loadSupportPage,
   "/terms": loadTermsPage,
-  "/privacy": loadPrivacyPage,
-  "/cookies": loadCookiePage,
-  "/data-rights": loadDataRightsPage,
   "/track-consultation": loadTrackConsultationPage,
 };
 

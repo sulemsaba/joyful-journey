@@ -59,7 +59,7 @@ export function ProblemFramingSection({ items }: ProblemFramingSectionProps) {
             return (
               <article
                 key={index}
-                className="rounded-2xl md:rounded-[1.35rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                className="rounded-2xl md:rounded-[1.35rem] border border-border-soft bg-surface p-5 md:p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-accent/30"
                 data-reveal
               >
                 {/* Icon in a circle */}

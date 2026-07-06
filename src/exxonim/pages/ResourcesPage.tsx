@@ -217,18 +217,20 @@ function renderGridCard(post: BlogPost) {
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
 
   return (
-    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong">
-      <div className="relative isolate aspect-[16/10] overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-30% after:to-overlay/50 bg-[radial-gradient(circle_at_top_right,var(--color-accent-soft-strong),transparent_48%),linear-gradient(160deg,var(--color-page-strong),var(--color-accent-soft-strong))]">
+    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong">
+      <div className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft">
         {renderCardMedia(post, categoryLabel)}
       </div>
-      <div className="flex flex-1 flex-col bg-surface p-5 pb-[18px]">
-        <span className="mb-2.5 text-[0.72rem] font-bold uppercase tracking-[0.09em] text-text-soft">
-          {metaParts.join(" · ")}
-        </span>
-        <h3 className="m-0 mb-2 text-[clamp(1.1rem,1.8vw,1.35rem)] font-medium leading-tight tracking-tight text-text line-clamp-2">
+      <div className="flex flex-1 flex-col bg-surface p-5 pb-5">
+        <div className="flex flex-wrap items-center gap-2 mb-2.5">
+          <span className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
+            {metaParts.join(" · ")}
+          </span>
+        </div>
+        <h3 className="m-0 mb-2.5 text-[clamp(1.1rem,1.8vw,1.35rem)] font-semibold leading-snug tracking-tight text-text line-clamp-2">
           {post.title}
         </h3>
-        <p className="m-0 text-[0.9rem] leading-relaxed text-text-muted line-clamp-2">
+        <p className="m-0 text-[0.85rem] leading-relaxed text-text-muted line-clamp-2">
           {post.excerpt}
         </p>
         <div className="mt-auto flex items-center justify-between gap-3 pt-4 max-md:flex-col max-md:items-start max-md:gap-3">
@@ -237,7 +239,7 @@ function renderGridCard(post: BlogPost) {
             href={articleLink}
             className="inline-flex items-center gap-1.5 whitespace-nowrap text-[0.85rem] font-bold text-accent transition-colors hover:text-accent-hover"
           >
-            Learn more
+            Read article
             <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[2px]">
               &rarr;
             </span>
@@ -285,7 +287,7 @@ function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[
   return (
     <SmartLink
       href={articleLink}
-      className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50 hover:bg-surface-elevated hover:border-accent/30 transition-all duration-300"
+      className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50 hover:bg-surface-elevated hover:border-accent/30 transition-shadow duration-300"
     >
       {/* LEFT: Full-height image (matches RelatedArticleCard design) */}
       <div className="w-[110px] sm:w-[130px] shrink-0 overflow-hidden bg-accent/5">
@@ -346,7 +348,7 @@ function CategoryFilter({
           <button
             key={cat.id}
             type="button"
-            className={`flex-none inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold transition-all ${
+            className={`flex-none inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold transition-colors ${
               isActive
                 ? "bg-accent text-accent-contrast border-accent"
                 : "border-border-soft bg-surface/60 text-text-muted hover:bg-surface hover:text-text"
@@ -376,7 +378,7 @@ function SortToggle({
         type="button"
         role="radio"
         aria-checked={sortMode === "latest"}
-        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
           sortMode === "latest"
             ? "bg-accent text-accent-contrast"
             : "text-text-muted hover:text-text"
@@ -389,7 +391,7 @@ function SortToggle({
         type="button"
         role="radio"
         aria-checked={sortMode === "popular"}
-        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
           sortMode === "popular"
             ? "bg-accent text-accent-contrast"
             : "text-text-muted hover:text-text"
@@ -430,7 +432,7 @@ function SearchBar({
         placeholder="Search articles..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-9 pl-10 pr-4 rounded-full border border-border-soft bg-surface-elevated text-text placeholder:text-text-soft text-sm outline-none transition-all focus:border-accent focus:ring-2 focus:ring-accent/20"
+        className="w-full h-9 pl-10 pr-4 rounded-full border border-border-soft bg-surface-elevated text-text placeholder:text-text-soft text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
         aria-label="Search articles by title or content"
       />
       {value ? (
@@ -617,7 +619,7 @@ export function ResourcesPage() {
                   <SmartLink
                     key={card.title}
                     href={card.href}
-                    className="group flex items-center gap-3 p-3 rounded-xl border border-accent/10 bg-accent/[0.04] transition-all duration-300 hover:bg-accent/[0.12] hover:border-accent/25"
+                    className="group flex items-center gap-3 p-3 rounded-xl border border-accent/10 bg-accent/[0.04] transition-colors duration-300 hover:bg-accent/[0.12] hover:border-accent/25"
                   >
                     <span className={`inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-lg ${card.accent} transition-transform duration-300 group-hover:scale-110`}>
                       {card.icon}
@@ -641,7 +643,7 @@ export function ResourcesPage() {
                   <SmartLink
                     key={card.title}
                     href={card.href}
-                    className="group p-5 rounded-[1.35rem] border border-accent/10 bg-accent/[0.04] text-center transition-all duration-300 hover:bg-accent/[0.12] hover:border-accent/25 hover:-translate-y-0.5 flex flex-col items-center gap-2.5"
+                    className="group p-5 rounded-[1.35rem] border border-accent/10 bg-accent/[0.04] text-center transition-transform duration-300 hover:bg-accent/[0.12] hover:border-accent/25 hover:-translate-y-0.5 flex flex-col items-center gap-2.5"
                   >
                     <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${card.accent} transition-transform duration-300 group-hover:scale-110`}>
                       {card.icon}
@@ -650,7 +652,7 @@ export function ResourcesPage() {
                     <p className="m-0 text-text-muted text-sm leading-relaxed line-clamp-2 max-w-[26ch]">
                       {card.description}
                     </p>
-                    <span className="inline-flex items-center gap-1 text-accent text-sm font-bold group-hover:gap-2 transition-all">
+                    <span className="inline-flex items-center gap-1 text-accent text-sm font-bold group-hover:gap-2 transition-colors duration-200">
                       Go <span aria-hidden="true">&rarr;</span>
                     </span>
                   </SmartLink>
@@ -671,7 +673,7 @@ export function ResourcesPage() {
                   {/* Hero post */}
                   <SmartLink
                     href={resourceArticlePath(heroPost!.slug)}
-                    className="group block rounded-[8px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-all hover:-translate-y-1"
+                    className="group block rounded-[8px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-shadow hover:-translate-y-1"
                   >
                     <div className="aspect-[16/9] overflow-hidden">
                       <img
@@ -780,7 +782,7 @@ export function ResourcesPage() {
                       articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }}
                     disabled={currentPage === 1}
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-all hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-colors hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
                     aria-label="Previous page"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -796,7 +798,7 @@ export function ResourcesPage() {
                         setVisibleCount(pageNum * INITIAL_VISIBLE_COUNT);
                         articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }}
-                      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-medium transition-all ${
+                      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
                         currentPage === pageNum
                           ? "bg-accent text-accent-contrast border border-accent"
                           : "border border-border-soft bg-surface text-text-muted hover:bg-surface-elevated hover:text-text"
@@ -818,7 +820,7 @@ export function ResourcesPage() {
                       articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }}
                     disabled={currentPage === totalPages}
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-all hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-colors hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
                     aria-label="Next page"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>

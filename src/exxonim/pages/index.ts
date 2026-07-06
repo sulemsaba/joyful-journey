@@ -4,9 +4,6 @@ export { ContactPage } from "./ContactPage";
 export { FaqPage } from "./FaqPage";
 export { HomePage } from "./HomePage";
 export {
-  CookiePage,
-  DataRightsPage,
-  PrivacyPage,
   SupportPage,
   TermsPage,
 } from "./InfoPages";

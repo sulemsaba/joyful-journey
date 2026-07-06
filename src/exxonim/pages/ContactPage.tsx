@@ -225,7 +225,7 @@ export function ContactPage() {
 
   /* Shared input styling - using design tokens */
   const inputCls =
-    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm min-h-[44px]";
+    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors text-sm min-h-[44px]";
 
   /* Select-specific: hide native arrow, add custom chevron, style dropdown */
   const selectCls =

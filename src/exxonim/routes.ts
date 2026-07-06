@@ -33,9 +33,6 @@ export const routes = {
   trackConsultation: "/track-consultation/",
   support: "/support/",
   terms: "/terms/",
-  privacy: "/privacy/",
-  cookies: "/cookies/",
-  dataRights: "/data-rights/",
   notFound: "/404/",
 } as const;
 

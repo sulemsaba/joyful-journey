@@ -74,7 +74,7 @@ function FaqAccordionItem({
         </h3>
 
         <span
-          className={`flex h-6 w-6 shrink-0 items-center justify-center transition-all duration-300 ${
+          className={`flex h-6 w-6 shrink-0 items-center justify-center transition-opacity duration-300 ${
             isOpen
               ? "text-accent"
               : "text-accent/50 group-hover:text-accent"
@@ -91,7 +91,7 @@ function FaqAccordionItem({
 
       {/* Expandable answer */}
       <div
-        className={`grid transition-all duration-300 ease-in-out ${
+        className={`grid transition-transform duration-300 ease-in-out ${
           isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >
@@ -263,7 +263,7 @@ export function FaqPage() {
                           placeholder="Search questions..."
                           value={searchQuery}
                           onChange={(e) => handleSearchChange(e.target.value)}
-                          className="w-full h-10 pl-10 pr-4 rounded-xl border border-border-soft bg-surface text-text placeholder:text-text-soft text-sm outline-none transition-all focus:border-accent/40 focus:ring-2 focus:ring-accent/15"
+                          className="w-full h-10 pl-10 pr-4 rounded-xl border border-border-soft bg-surface text-text placeholder:text-text-soft text-sm outline-none transition-colors focus:border-accent/40 focus:ring-2 focus:ring-accent/15"
                           aria-label="Search FAQ questions"
                         />
                         {searchQuery && (

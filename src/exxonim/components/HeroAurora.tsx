@@ -1,33 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
-/**
- * HeroAurora — animated aurora curtain background for the hero section.
- *
- * Converted from the Exxonim Aurora Engine design. Uses HTML Canvas to
- * draw flowing curtain-like lines with depth sub-lines, creating a
- * northern-lights / aurora borealis effect.
- *
- * BRAND COLORS:
- *   - Lines use the Exxonim brand accent color read from
- *     CSS custom property --color-accent at runtime.
- *   - Light mode: #0f5c63 (deep teal) — lines are subtle, text prominent
- *   - Dark mode: #7fbcc1 (bright teal) — lines are vivid, rich visual
- *   - Depth variation: slight opacity/lightness shifts per sub-line
- *     create a layered look while staying on-brand.
- *
- * THEME ADAPTATION:
- *   - Opacity controlled by .hero-aurora-canvas CSS class
- *   - Smooth transition during theme change via .theme-transition
- *
- * PERFORMANCE:
- *   - Uses requestAnimationFrame for smooth 60fps
- *   - High-DPI canvas scaling for crisp rendering
- *   - Respects prefers-reduced-motion (stops animation)
- *
- * BACKEND: No configuration needed. Purely client-side.
- */
+import { useCallback, useEffect, useRef } from "react";
 
 interface AuroraConfig {
   speed: number;
@@ -45,15 +18,8 @@ const DEFAULT_CONFIG: AuroraConfig = {
   showDepth: true,
 };
 
-/**
- * Parse a CSS color string into an rgba() string with a given alpha.
- * Handles hex (#0f5c63) and rgb/rgba() formats.
- * Returns the original color with the new alpha if parsing fails.
- */
 function withAlpha(color: string, alpha: number): string {
   const trimmed = color.trim();
-
-  // Handle hex: #rgb, #rrggbb, #rrggbbaa
   const hexMatch = trimmed.match(/^#([0-9a-f]{3,8})$/i);
   if (hexMatch) {
     const hex = hexMatch[1];
@@ -71,13 +37,10 @@ function withAlpha(color: string, alpha: number): string {
     }
     return `rgba(${r},${g},${b},${alpha})`;
   }
-
-  // Handle rgba()
   const rgbaMatch = trimmed.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
   if (rgbaMatch) {
     return `rgba(${rgbaMatch[1]},${rgbaMatch[2]},${rgbaMatch[3]},${alpha})`;
   }
-
   return trimmed;
 }
 
@@ -98,35 +61,27 @@ function draw(
 
   for (let c = 0; c < curtainCount; c++) {
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
-    const dF = 1 - Math.abs(nC - 0.5) * 2; // 0 at edges, 1 at center
-
-    // Brand-colored lines with depth variation
+    const dF = 1 - Math.abs(nC - 0.5) * 2;
     const baseAlpha = isDark ? 0.07 + dF * 0.28 : 0.06 + dF * 0.24;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
-
     const subLines = cfg.showDepth ? 4 : 2;
 
     for (let sub = 0; sub < subLines; sub++) {
       const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 1.5);
       if (subAlpha <= 0) continue;
-
       ctx.globalAlpha = subAlpha;
-      // Use brand accent color directly — slight opacity variation per sub-line
       ctx.strokeStyle = withAlpha(accentColor, 0.5 + sub * 0.15 + dF * 0.2);
       ctx.lineWidth = cfg.showDepth ? 1 + dF * 3 : 2;
-
       ctx.beginPath();
       for (let s = 0; s <= steps; s++) {
         const x = (s / steps) * (w + 200) - 100;
         const xP = s / steps;
-
         const wave1 = Math.sin(xP * Math.PI * 1.5 + waveSpeed) * 60 * (1 + cfg.intensity * 0.02);
         const wave2 = Math.sin(xP * Math.PI * 3 + waveSpeed * 1.3) * 25;
         const droop = Math.sin(xP * Math.PI) * curtainHeight * 0.3;
         const y = baseY + wave1 + wave2 + droop + (sub - subLines / 2) * 8;
-
         if (s === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
@@ -142,6 +97,15 @@ export function HeroAurora() {
   const rafIdRef = useRef<number>(0);
   const isVisibleRef = useRef(true);
 
+  const cachedAccentRef = useRef("#0f5c63");
+  const cachedIsDarkRef = useRef(false);
+
+  const refreshCache = useCallback(() => {
+    const style = getComputedStyle(document.documentElement);
+    cachedAccentRef.current = style.getPropertyValue("--color-accent").trim() || "#0f5c63";
+    cachedIsDarkRef.current = document.documentElement.getAttribute("data-theme") === "dark";
+  }, []);
+
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
@@ -154,11 +118,11 @@ export function HeroAurora() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    refreshCache();
+
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
         isVisibleRef.current = entry.isIntersecting;
-        // Start/stop the rAF loop based on visibility so we're not
-        // burning CPU on animation frames the user can't see.
         if (entry.isIntersecting) {
           if (!rafIdRef.current) {
             lastFrameRef.current = 0;
@@ -189,10 +153,6 @@ export function HeroAurora() {
     resize();
     window.addEventListener("resize", resize);
 
-    let cachedAccent = "#0f5c63";
-    let cachedIsDark = false;
-    let lastStyleRead = 0;
-
     const FRAME_INTERVAL = 33;
 
     function animate(ts: number) {
@@ -210,19 +170,19 @@ export function HeroAurora() {
       lastFrameRef.current = ts - (elapsed % FRAME_INTERVAL);
       timeRef.current += (delta / 1000) * DEFAULT_CONFIG.speed * 0.5;
 
-      if (ts - lastStyleRead > 500) {
-        const style = getComputedStyle(document.documentElement);
-        cachedAccent = style.getPropertyValue("--color-accent").trim();
-        cachedIsDark = document.documentElement.getAttribute("data-theme") === "dark";
-        lastStyleRead = ts;
-      }
-
       const cssW = canvas!.clientWidth;
       const cssH = canvas!.clientHeight;
 
       ctx!.clearRect(0, 0, cssW, cssH);
-      draw(ctx!, cssW, cssH, timeRef.current, DEFAULT_CONFIG, cachedAccent, cachedIsDark);
-
+      draw(
+        ctx!,
+        cssW,
+        cssH,
+        timeRef.current,
+        DEFAULT_CONFIG,
+        cachedAccentRef.current,
+        cachedIsDarkRef.current
+      );
       ctx!.globalAlpha = 1;
     }
 
@@ -235,7 +195,18 @@ export function HeroAurora() {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, []);
+  }, [refreshCache]);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => refreshCache();
+    mql.addEventListener("change", handler);
+    window.addEventListener("resize", refreshCache);
+    return () => {
+      mql.removeEventListener("change", handler);
+      window.removeEventListener("resize", refreshCache);
+    };
+  }, [refreshCache]);
 
   return (
     <canvas

@@ -152,7 +152,7 @@ export function PlanInquiryModal({
 
   /* ── Input styles ── */
   const inputCls =
-    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all text-sm min-h-[44px]";
+    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors text-sm min-h-[44px]";
 
   /* Don't render if not open */
   if (!open) return null;
@@ -334,7 +334,7 @@ export function PlanInquiryModal({
                 type="submit"
                 disabled={!canSubmit}
                 className={cn(
-                  "w-full py-3 rounded-xl font-semibold text-sm transition-all",
+                  "w-full py-3 rounded-xl font-semibold text-sm transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
                   canSubmit
                     ? "bg-accent text-accent-contrast hover:bg-accent-hover shadow-md shadow-accent/20"

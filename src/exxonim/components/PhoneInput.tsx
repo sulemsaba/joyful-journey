@@ -558,7 +558,7 @@ export function PhoneInput({
       </label>
 
       <div className={cn(
-        "flex items-stretch rounded-xl border transition-all max-w-full overflow-hidden",
+        "flex items-stretch rounded-xl border transition-colors max-w-full overflow-hidden",
         "bg-page-strong/40",
         validationState
           ? "border-border-soft focus-within:ring-2 focus-within:ring-accent/20 focus-within:border-accent/40"

@@ -137,7 +137,7 @@ export function CardDeckCarousel({
             <div
               key={card.key}
               className={cn(
-                'absolute transition-all duration-300 ease-out cursor-pointer',
+                 'absolute transition-transform transition-opacity duration-300 ease-out cursor-pointer',
                 isCenter && 'z-30',
                 isLeft && 'z-20 cursor-pointer',
                 isRight && 'z-20 cursor-pointer',
@@ -178,7 +178,7 @@ export function CardDeckCarousel({
               aria-label={`Go to card ${index + 1}`}
               onClick={() => goTo(index)}
               className={cn(
-                'h-2 rounded-full transition-all duration-200',
+                'h-2 rounded-full transition-colors duration-200',
                 index === activeIndex
                   ? 'w-5 bg-accent'
                   : 'w-2 bg-border-soft hover:bg-accent/40'

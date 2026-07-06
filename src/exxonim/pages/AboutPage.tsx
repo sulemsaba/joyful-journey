@@ -94,7 +94,7 @@ export function AboutPage() {
                 return (
                   <div
                     key={i}
-                    className="group snap-start flex-none w-36 md:w-auto flex flex-col items-center text-center gap-2 p-4 rounded-2xl bg-surface border border-border-soft/50 transition-all duration-300 hover:border-accent/40 hover:-translate-y-0.5"
+                    className="group snap-start flex-none w-36 md:w-auto flex flex-col items-center text-center gap-2 p-4 rounded-2xl bg-surface border border-border-soft/50 transition-transform duration-300 hover:border-accent/40 hover:-translate-y-0.5"
                     data-reveal
                   >
                     <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-accent text-accent-contrast transition-transform duration-300 group-hover:scale-110">

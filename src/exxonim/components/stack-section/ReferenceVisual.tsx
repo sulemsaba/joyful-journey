@@ -70,7 +70,7 @@ function CardNarrow({
 }
 
 export function ReferenceVisual({ index }: { index: number }) {
-  const shellClasses = "w-full p-4 sm:p-5 lg:p-8 transition-all";
+  const shellClasses = "w-full p-4 sm:p-5 lg:p-8 transition-opacity";
 
   if (index === 0) {
     return (

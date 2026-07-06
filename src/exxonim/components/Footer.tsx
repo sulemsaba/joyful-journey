@@ -66,7 +66,7 @@ function SocialCircleLink({ platform, url }: { platform: string; url: string }) 
       rel="noreferrer noopener"
       aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
       title={platform.charAt(0).toUpperCase() + platform.slice(1)}
-      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-all duration-200"
+      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-colors duration-200"
     >
       <span className="w-4 h-4 flex items-center justify-center">
         {renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}
@@ -80,9 +80,9 @@ function FooterLink({ label, href }: { label: string; href: string }) {
   return (
     <SmartLink
       href={href}
-      className="inline-flex items-center py-1 text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-all duration-200 group"
+      className="inline-flex items-center py-1 text-footer-text text-[0.8rem] sm:text-[0.875rem] hover:text-footer-heading hover:translate-x-0.5 transition-colors duration-200 group"
     >
-      <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-all duration-200" />
+      <span className="w-0 group-hover:w-2 h-0.5 bg-footer-heading rounded-full mr-0 group-hover:mr-2 transition-colors duration-200" />
       {label}
     </SmartLink>
   );

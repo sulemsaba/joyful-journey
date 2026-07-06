@@ -134,7 +134,7 @@ export function ServicesOverviewSection({
               {TRUST_STATS.map((stat, i) => (
                 <div
                   key={stat.label}
-                  className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${
+                  className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ${
                     i === currentStat
                       ? 'opacity-100 translate-y-0'
                       : 'opacity-0 translate-y-4 pointer-events-none'
@@ -155,7 +155,7 @@ export function ServicesOverviewSection({
                 <button
                   key={i}
                   onClick={() => setCurrentStat(i)}
-                  className={`h-1.5 rounded-full transition-all ${
+                  className={`h-1.5 rounded-full transition-colors ${
                     i === currentStat ? 'w-6 bg-accent' : 'w-1.5 bg-border-soft hover:bg-accent/50'
                   }`}
                   aria-label={`Show stat ${i + 1}`}
@@ -194,7 +194,7 @@ export function ServicesOverviewSection({
               onFocus={() => setIsDropdownOpen(true)}
               placeholder="Search for a service..."
               aria-label="Search services"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-soft bg-surface/50 text-text text-sm placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/25 focus:border-accent/40 focus:bg-surface transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border-soft bg-surface/50 text-text text-sm placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/25 focus:border-accent/40 focus:bg-surface transition-colors"
             />
           </div>
 

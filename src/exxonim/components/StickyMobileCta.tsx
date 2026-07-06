@@ -42,13 +42,13 @@ export function StickyMobileCta() {
         <div className="py-3 flex gap-3">
           <SmartLink
             href={`${routes.contact}#inquiry`}
-            className="flex-1 inline-flex h-12 items-center justify-center rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-all hover:bg-accent-hover active:scale-[0.98]"
+             className="flex-1 inline-flex h-12 items-center justify-center rounded-full bg-accent text-accent-contrast text-sm font-extrabold transition-colors hover:bg-accent-hover active:scale-[0.98]"
           >
             Ask a Question - Free
           </SmartLink>
           <SmartLink
             href={routes.trackConsultation}
-            className="inline-flex h-12 items-center justify-center rounded-full border border-border-soft bg-surface text-text text-sm font-semibold px-4 transition-all hover:bg-surface-soft active:scale-[0.98]"
+            className="inline-flex h-12 items-center justify-center rounded-full border border-border-soft bg-surface text-text text-sm font-semibold px-4 transition-colors hover:bg-surface-soft active:scale-[0.98]"
           >
             Track
           </SmartLink>

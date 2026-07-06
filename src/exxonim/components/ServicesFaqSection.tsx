@@ -80,7 +80,7 @@ export function ServicesFaqSection({ items }: ServicesFaqSectionProps) {
                   id={`services-faq-answer-${index}`}
                   role="region"
                   aria-labelledby={`services-faq-question-${index}`}
-                  className={`grid transition-all duration-200 ${
+                  className={`grid transition-transform duration-200 ${
                     isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                   }`}
                 >

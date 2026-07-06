@@ -81,7 +81,6 @@ export const fallbackFooter: SiteSettingFooterValue = {
     { label: "FAQ", href: routes.faq },
     { label: "Support", href: routes.support },
     { label: "Terms", href: routes.terms },
-    { label: "Privacy", href: routes.privacy },
   ],
   tagline:
     "Business consulting for registration, licensing, compliance, and operational advisory - with proactive tracking at every step.",

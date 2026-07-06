@@ -64,7 +64,7 @@ export function mapBlogPost(post: ApiBlogPost): BlogPost {
     publishedAt: toDateOnly(post.published_at),
     category: mapBlogCategory(post.category),
     author: mapBlogAuthor(post.author),
-    coverImageSrc: post.featured_image ?? undefined,
+    coverImageSrc: post.featured_image_url ?? undefined,
     coverAlt: post.cover_alt ?? undefined,
     mediaLabel: post.media_label ?? post.title,
     featuredSlot: post.featured_slot ?? undefined,

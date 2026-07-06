@@ -83,7 +83,7 @@ export function HowItWorksSection({ flow }: HowItWorksSectionProps) {
           {flow.map((item, index) => (
             <article
               key={item.step}
-              className="flex-shrink-0 w-[280px] md:w-auto snap-start rounded-[1.6rem] bg-gradient-to-b from-accent/90 to-accent p-6 md:p-7 grid gap-4 content-start text-accent-contrast transition-all duration-300 hover:-translate-y-1"
+              className="flex-shrink-0 w-[280px] md:w-auto snap-start rounded-[1.6rem] bg-gradient-to-b from-accent/90 to-accent p-6 md:p-7 grid gap-4 content-start text-accent-contrast transition-transform duration-300 hover:-translate-y-1"
               data-reveal
             >
               {/* Step number */}

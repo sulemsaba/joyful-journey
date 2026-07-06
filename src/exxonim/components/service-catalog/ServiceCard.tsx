@@ -23,7 +23,7 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         'p-4 md:p-5 lg:p-6',
         'bg-surface',
         'border border-border-soft',
-        'transition-all duration-200 ease-out',
+        'transition-transform transition-shadow duration-200 ease-out',
         'hover:border-accent/30 hover:shadow-[0_8px_24px_rgba(15,92,99,0.08)]',
         'dark:hover:shadow-[0_8px_24px_rgba(127,188,193,0.06)]',
         'h-full',
@@ -78,7 +78,7 @@ export function ServiceCard({ service, className }: ServiceCardProps) {
         <>
           <div
             className={cn(
-              'overflow-hidden transition-all duration-300 ease-out',
+              'overflow-hidden transition-max-height transition-opacity duration-300 ease-out',
               expanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
             )}
             aria-hidden={!expanded}

@@ -155,35 +155,4 @@ export function TermsPage() {
   );
 }
 
-export function PrivacyPage() {
-  return (
-    <InfoPageRoute
-      slug="privacy"
-      canonicalPath={routes.privacy}
-      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Privacy" }]}
-      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Privacy", path: routes.privacy }]}
-    />
-  );
-}
 
-export function CookiePage() {
-  return (
-    <InfoPageRoute
-      slug="cookies"
-      canonicalPath={routes.cookies}
-      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Cookie Notice" }]}
-      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Cookie Notice", path: routes.cookies }]}
-    />
-  );
-}
-
-export function DataRightsPage() {
-  return (
-    <InfoPageRoute
-      slug="data-rights"
-      canonicalPath={routes.dataRights}
-      breadcrumbItems={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "Data Rights" }]}
-      structuredBreadcrumbs={[{ name: "Resources", path: routes.resources }, { name: "Data Rights", path: routes.dataRights }]}
-    />
-  );
-}

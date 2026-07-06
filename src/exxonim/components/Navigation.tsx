@@ -199,10 +199,10 @@ export function Navigation({
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
           "md:hidden fixed z-50 top-0 inset-x-0 h-[60px]",
-          "transition-[background-color,backdrop-filter] duration-300",
+          "transition-[background-color] duration-300",
           headerOverHero
             ? "bg-transparent"
-            : "bg-page/95 backdrop-blur-xl"
+            : "bg-page/95"
         )}
       >
         <div className="h-full px-4 flex items-center justify-between">

@@ -234,7 +234,7 @@ export function ServiceDetailPage() {
                     {faq.q}
                   </h3>
                   <span
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center transition-all duration-300 ${
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center transition-opacity duration-300 ${
                       openFaq === i ? "text-accent" : "text-accent/50 group-hover:text-accent"
                     }`}
                     aria-hidden="true"
@@ -248,7 +248,7 @@ export function ServiceDetailPage() {
                 </button>
                 {/* Expandable answer - grid-rows animation */}
                 <div
-                  className={`grid transition-all duration-300 ease-in-out ${
+                  className={`grid transition-transform duration-300 ease-in-out ${
                     openFaq === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
@@ -290,7 +290,7 @@ export function ServiceDetailPage() {
                 <SmartLink
                   key={rel.id}
                   href={serviceDetailPath(rel.slug)}
-                  className="group block p-5 md:p-6 rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                  className="group block p-5 md:p-6 rounded-2xl border border-border-soft bg-surface transition-transform duration-300 hover:-translate-y-1 hover:border-accent/30"
                 >
                   <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-accent-soft text-accent mb-4 transition-transform group-hover:scale-110">
                     <FileText className="h-5 w-5" aria-hidden="true" />

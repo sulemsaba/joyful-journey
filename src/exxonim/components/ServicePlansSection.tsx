@@ -285,29 +285,39 @@ const TestimonialMarquee = memo(function TestimonialMarquee({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const rafIdRef = useRef<number>(0);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollingPaused = useRef(false);
 
   const items = [...testimonials, ...testimonials, ...testimonials];
   const CARD_WIDTH = 320;
 
-  /* ── Start/stop auto-scroll ── */
   const startScrolling = useCallback(() => {
-    if (intervalRef.current) return;
-    intervalRef.current = setInterval(() => {
-      const el = trackRef.current;
-      if (!el || scrollingPaused.current || document.hidden) return;
-      el.scrollLeft += 0.3;
-      const setWidth = el.scrollWidth / 3;
-      if (el.scrollLeft >= setWidth) el.scrollLeft -= setWidth;
-    }, 33);
+    if (rafIdRef.current) return;
+    let lastTime = performance.now();
+    const animate = (now: number) => {
+      if (document.hidden) {
+        rafIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      const delta = now - lastTime;
+      if (delta >= 16 && !scrollingPaused.current) {
+        lastTime = now;
+        const el = trackRef.current;
+        if (!el) return;
+        el.scrollLeft += 0.3;
+        const setWidth = el.scrollWidth / 3;
+        if (el.scrollLeft >= setWidth) el.scrollLeft -= setWidth;
+      }
+      rafIdRef.current = requestAnimationFrame(animate);
+    };
+    rafIdRef.current = requestAnimationFrame(animate);
   }, []);
 
   const stopScrolling = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = 0;
     }
   }, []);
 
@@ -400,7 +410,7 @@ const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact,
   return (
     <article
       className={cn(
-        "group relative flex h-full w-full flex-col rounded-2xl border transition-all duration-300",
+        "group relative flex h-full w-full flex-col rounded-2xl border transition-transform transition-shadow duration-300",
         /* ── Padding - extra top room for floating badge ── */
         compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
         /* ── Featured vs normal ── */
@@ -615,7 +625,7 @@ export function ServicePackagesSection({
                     onClick={() => setActiveSegment(seg.key)}
                     className={cn(
                       'flex-shrink-0 rounded-full min-h-[40px] font-medium',
-                      'transition-all duration-200 ease-out',
+                      'transition-colors duration-200 ease-out',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                       'flex flex-col items-center justify-center gap-0.5',
                       'sm:flex-row sm:gap-2 sm:px-4 sm:py-2',

@@ -115,7 +115,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 const baseStyles = cn(
   'inline-flex items-center justify-center',
   'no-underline',
-  'transition-all duration-200',
+  'transition-transform duration-200',
   'hover:-translate-y-0.5 active:translate-y-0',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
   'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0',

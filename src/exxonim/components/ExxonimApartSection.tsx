@@ -89,7 +89,7 @@ export function ExxonimApartSection() {
           {differentiators.map((card) => (
             <article
               key={card.title}
-              className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+              className="rounded-2xl md:rounded-[1.5rem] border border-border-soft bg-surface p-5 md:p-6 transition-transform duration-300 hover:-translate-y-1 hover:border-accent/30"
             >
               {/* Icon */}
               <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-accent-soft text-accent mb-3 md:mb-4">

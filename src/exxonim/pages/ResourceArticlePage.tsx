@@ -289,62 +289,6 @@ function SocialShareButtons() {
   );
 }
 
-/* ── Single Related Article Card (Image Left, Content Right) ──
- *
- * Horizontal flex card with reduced border-radius (rounded-md),
- * reduced height, increased width. Image fills full card height
- * on the LEFT side.
- *
- * BACKEND / ADMIN NOTE:
- * Related articles come from `post.relatedSlugs[]` or same-category
- * fallback. For best results, cover images should be at least 400px
- * wide and 300px tall.
- */
-function RelatedArticleCard({ post: relatedPost }: { post: BlogPost }) {
-  return (
-    <SmartLink
-      href={resourceArticlePath(relatedPost.slug)}
-      className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50
-                 hover:bg-surface-elevated hover:border-accent/30
-                 transition-all duration-300"
-    >
-      {/* LEFT: Full-height image */}
-      <div className="w-[110px] sm:w-[130px] shrink-0 overflow-hidden bg-accent/5">
-        {relatedPost.coverImageSrc ? (
-          <img
-            src={relatedPost.coverImageSrc}
-            alt={relatedPost.coverAlt ?? relatedPost.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full min-h-[90px] flex items-center justify-center
-                          bg-[radial-gradient(circle_at_30%_30%,var(--color-accent-soft-strong),transparent_40%),linear-gradient(135deg,var(--color-accent-soft),var(--color-page-strong))]">
-            <svg className="w-5 h-5 text-accent/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-              <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-            </svg>
-          </div>
-        )}
-      </div>
-
-      {/* RIGHT: Content */}
-      <div className="flex flex-col justify-center min-w-0 flex-1 p-2.5 sm:p-3">
-        <h4 className="text-[0.8rem] sm:text-[0.85rem] font-semibold text-text leading-snug mb-1
-                       group-hover:text-accent transition-colors line-clamp-2">
-          {relatedPost.title}
-        </h4>
-        <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-2 mb-1">
-          {relatedPost.excerpt}
-        </p>
-        <span className="text-[10px] text-text-muted mt-auto">
-          {formatBlogDate(relatedPost.publishedAt)}
-          {relatedPost.readTimeMinutes ? ` · ${relatedPost.readTimeMinutes} min` : ""}
-        </span>
-      </div>
-    </SmartLink>
-  );
-}
-
 /* ── Bottom CTA Banner (compact) ── */
 function BottomCTABanner() {
   return (
@@ -475,7 +419,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
           const articleHtml = htmlWithIds || "";
           const introText = getBlogArticleIntro(post);
           const categoryLabel = post.category?.label;
-          const relatedPosts = getRelatedBlogPosts(post, posts).slice(0, 2);
+          const relatedPosts = getRelatedBlogPosts(post, posts).slice(0, 3);
 
           /* ── Tags: derived from category + highlights, max 4 ──
            * BACKEND / ADMIN NOTE:
@@ -676,8 +620,8 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                               <span key={tag}
                                 className="px-3 py-1.5 rounded-full text-xs font-medium border border-border-soft
                                            bg-surface/50 text-text-muted hover:bg-accent-soft
-                                           hover:border-accent/20 hover:text-accent
-                                           transition-all duration-200 cursor-default"
+                                            hover:border-accent/20 hover:text-accent
+                                            transition-colors duration-200 cursor-default"
                               >
                                 {tag}
                               </span>
@@ -740,35 +684,71 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                   </aside>
                 </div>
 
-                {/* ═══ Related Articles: 2 cards, one at LEFT edge, one at RIGHT edge ═══
+                {/* ═══ Related Articles: up to 3 cards in a modern grid ═══
                  *
-                 * Both cards have the SAME design (horizontal: image LEFT, content RIGHT).
-                 * They sit at the EDGES of the full-width container - not centered as a group.
-                 * One card is at the far LEFT, one at the far RIGHT.
+                 * Shows up to 3 related posts in a responsive grid:
+                 *   - Mobile: single column
+                 *   - Tablet: 2 columns
+                 *   - Desktop: 3 columns
                  *
                  * BACKEND: `post.relatedSlugs[]` takes priority. Fallback: same-category posts.
                  */}
                 {relatedPosts.length > 0 && (
-                  <div className="mt-8 pt-8 border-t border-border-soft flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-                    {/* First related card */}
-                    {relatedPosts[0] && (
-                      <div className="w-full md:w-[48%] md:max-w-[420px]">
-                        <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft mb-3">
-                          Continue reading
-                        </h4>
-                        <RelatedArticleCard post={relatedPosts[0]} />
-                      </div>
-                    )}
-
-                    {/* Second related card */}
-                    {relatedPosts[1] && (
-                      <div className="w-full md:w-[48%] md:max-w-[420px]">
-                        <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-text-soft mb-3">
-                          More like this
-                        </h4>
-                        <RelatedArticleCard post={relatedPosts[1]} />
-                      </div>
-                    )}
+                  <div className="mt-10 pt-8 border-t border-border-soft">
+                    <div className="flex items-center gap-3 mb-6">
+                      <h2 className="text-[clamp(1.25rem,2vw,1.5rem)] font-semibold tracking-tight text-text">
+                        Continue reading
+                      </h2>
+                      <span className="flex-1 h-px bg-border-soft" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {relatedPosts.map((relatedPost) => (
+                        <article
+                          key={relatedPost.slug}
+                          className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong"
+                        >
+                          <div className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft">
+                            {relatedPost.coverImageSrc ? (
+                              <img
+                                src={relatedPost.coverImageSrc}
+                                alt={relatedPost.coverAlt ?? relatedPost.title}
+                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="w-full h-full min-h-[160px] flex items-center justify-center bg-[radial-gradient(circle_at_30%_30%,var(--color-accent-soft-strong),transparent_40%),linear-gradient(135deg,var(--color-accent-soft),var(--color-page-strong))]">
+                                <svg className="w-8 h-8 text-accent/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                                  <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex flex-1 flex-col bg-surface p-5 pb-5">
+                            <span className="mb-2 text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
+                              {formatBlogDate(relatedPost.publishedAt)}
+                              {relatedPost.readTimeMinutes ? ` · ${relatedPost.readTimeMinutes} min read` : ""}
+                            </span>
+                            <h4 className="text-[0.95rem] font-semibold text-text leading-snug mb-2 line-clamp-2 group-hover:text-accent transition-colors">
+                              {relatedPost.title}
+                            </h4>
+                            <p className="text-sm text-text-muted leading-relaxed line-clamp-2">
+                              {relatedPost.excerpt}
+                            </p>
+                            <div className="mt-auto pt-4">
+                              <SmartLink
+                                href={resourceArticlePath(relatedPost.slug)}
+                                className="inline-flex items-center gap-1.5 text-sm font-bold text-accent transition-colors hover:text-accent-hover"
+                              >
+                                Read article
+                                <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[2px]">
+                                  &rarr;
+                                </span>
+                              </SmartLink>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

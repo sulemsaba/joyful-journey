@@ -63,7 +63,7 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
             <button
               type="button"
               onClick={() => refetch()}
-              className="inline-flex items-center justify-center gap-2 rounded-full min-h-[44px] px-6 py-2.5 bg-accent text-accent-contrast text-sm font-semibold transition-all hover:bg-accent-hover"
+              className="inline-flex items-center justify-center gap-2 rounded-full min-h-[44px] px-6 py-2.5 bg-accent text-accent-contrast text-sm font-semibold transition-colors hover:bg-accent-hover"
             >
               <RefreshCw className="w-4 h-4" aria-hidden="true" />
               Retry

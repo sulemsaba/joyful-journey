@@ -78,7 +78,7 @@ interface DesktopNavigationProps {
 }
 
 const navLinkBase =
-  "relative inline-flex items-center justify-center h-9 px-3.5 text-[0.8rem] font-medium tracking-wide text-text rounded-full transition-all hover:bg-accent-soft";
+  "relative inline-flex items-center justify-center h-9 px-3.5 text-[0.8rem] font-medium tracking-wide text-text rounded-full transition-colors hover:bg-accent-soft";
 const navLinkActive = "bg-accent-soft text-accent";
 
 /** Shared dropdown card classes - both menus have same width, radius, and min-height */
@@ -264,7 +264,7 @@ export function DesktopNavigation({
           id={servicesMenuId}
           aria-hidden={desktopMenu !== "services"}
           className={cn(
-            "absolute top-full left-1/2 -translate-x-1/2 pt-3 origin-top transition-all duration-200 z-50",
+            "absolute top-full left-1/2 -translate-x-1/2 pt-3 origin-top transition-opacity duration-200 z-50",
             desktopMenu === "services"
               ? "visible opacity-100 scale-100 pointer-events-auto"
               : "invisible opacity-0 scale-95 pointer-events-none"
@@ -314,7 +314,7 @@ export function DesktopNavigation({
           id={resourcesMenuId}
           aria-hidden={desktopMenu !== "resources"}
           className={cn(
-            "absolute top-full left-1/2 -translate-x-1/2 pt-3 origin-top transition-all duration-200 z-50",
+            "absolute top-full left-1/2 -translate-x-1/2 pt-3 origin-top transition-opacity duration-200 z-50",
             desktopMenu === "resources"
               ? "visible opacity-100 scale-100 pointer-events-auto"
               : "invisible opacity-0 scale-95 pointer-events-none"

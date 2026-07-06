@@ -66,12 +66,10 @@ function resolveLogoSrc(src: string): string {
 
 export function ProviderSection({ content }: ProviderSectionProps) {
   // Repeat logos for seamless infinite scroll.
-  // 10 logos × 2 = 20 items — on the widest viewport 20 items at ~160px
-  // each = 3200px, which exceeds any screen width. Two copies is enough
-  // for the translateX(-50%) loop to cycle seamlessly.
-  // Animation translates -50% so when the first half scrolls off,
-  // the identical second half is in its place - no gap.
-  const repeatCount = 2;
+  // 10 logos × 3 = 30 items — guarantees the first half (15 items)
+  // exceeds any viewport width so translateX(-50%) never shows a gap,
+  // even on ultrawide monitors.
+  const repeatCount = 3;
   const repeatedLogos = Array.from({ length: repeatCount }, () => content.logos).flat();
 
   return (
@@ -127,12 +125,17 @@ export function ProviderSection({ content }: ProviderSectionProps) {
         className="full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
         aria-label="Partner logos"
       >
-        <div className="provider-marquee-track flex items-center w-max will-change-transform animate-provider-marquee hover:[animation-play-state:paused]">
+        <div className="provider-marquee-track flex items-center w-max animate-provider-marquee hover:[animation-play-state:paused]">
           {repeatedLogos.map((logo, index) => {
             return (
               <div
                 key={`${logo.alt}-${index}`}
-                className="provider-logo-item group flex items-center justify-center flex-none px-4 md:px-6 h-10 sm:h-12 md:h-14"
+                className={cn(
+                  "provider-logo-item group flex items-center justify-center flex-none",
+                  logo.opticalWeight === "solid"
+                    ? "h-8 sm:h-10 md:h-12 px-3 md:px-5"
+                    : "h-10 sm:h-12 md:h-16 px-4 md:px-6"
+                )}
                 aria-label={logo.alt}
                 role="img"
               >

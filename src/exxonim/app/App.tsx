@@ -2,7 +2,6 @@ import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useSta
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
-import { PrivacyConsentBanner } from "@/exxonim/components/PrivacyConsentBanner";
 import { ShellStatusNotice } from "@/exxonim/components/ShellStatusNotice";
 import { NetworkStatus } from "@/exxonim/components/NetworkStatus";
 import { WhatsAppButton } from "@/exxonim/components/WhatsAppButton";
@@ -46,9 +45,6 @@ import {
   loadServiceDetailPage,
   loadSupportPage,
   loadTermsPage,
-  loadPrivacyPage,
-  loadCookiePage,
-  loadDataRightsPage,
   loadTrackConsultationPage,
 } from "@/exxonim/preloadRoutes";
 
@@ -64,9 +60,6 @@ const ServicesPage = lazy(loadServicesPage);
 const ServiceDetailPage = lazy(loadServiceDetailPage);
 const SupportPage = lazy(loadSupportPage);
 const TermsPage = lazy(loadTermsPage);
-const PrivacyPage = lazy(loadPrivacyPage);
-const CookiePage = lazy(loadCookiePage);
-const DataRightsPage = lazy(loadDataRightsPage);
 const TrackConsultationPage = lazy(loadTrackConsultationPage);
 
 // ── Type helper for requestIdleCallback ────────────────
@@ -200,16 +193,17 @@ export function App({ onReady }: { onReady?: () => void }) {
    * system for [data-reveal] elements. Without .js, text
    * is always visible (progressive enhancement for no-JS).
    *
-   * TIMING: This MUST run AFTER useRevealOnScroll has
-   * synchronously revealed all in-viewport elements.
-   * Since useRevealOnScroll is called BEFORE this effect,
-   * and its scanAndObserve() runs synchronously with
-   * .revealed class additions, by the time this effect
-   * fires, all in-viewport elements already have .revealed
-   * and will stay visible when html.js activates opacity:0
-   * on unrevealed (below-fold) elements. */
+   * VISIBILITY SAFEGUARD: We add .js immediately, but delay
+   * .reveal-ready by one frame so IntersectionObserver in
+   * useRevealOnScroll can reveal in-viewport elements before
+   * the CSS starts hiding unrevealed (below-fold) ones. This
+   * eliminates the flash-of-invisible-content risk. */
   useEffect(() => {
     document.documentElement.classList.add("js");
+    const handle = requestAnimationFrame(() => {
+      document.documentElement.classList.add("reveal-ready");
+    });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   /* ── Idle-time preloading ─────────────────────────────────
@@ -245,6 +239,13 @@ export function App({ onReady }: { onReady?: () => void }) {
   return (
     <ErrorBoundary>
       <div className="min-h-screen flex flex-col bg-page text-text">
+        <a
+          href="#top"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[999] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-contrast focus:text-sm focus:font-semibold focus:shadow-lg"
+        >
+          Skip to content
+        </a>
+
         <Navigation
           brand={shell.brand}
           company={shell.company}
@@ -279,9 +280,6 @@ export function App({ onReady }: { onReady?: () => void }) {
                 <Route path="/contact" element={<><PageReady onReady={handlePageReady} /><ContactPage /></>} />
                 <Route path="/support" element={<><PageReady onReady={handlePageReady} /><SupportPage /></>} />
                 <Route path="/terms" element={<><PageReady onReady={handlePageReady} /><TermsPage /></>} />
-                <Route path="/privacy" element={<><PageReady onReady={handlePageReady} /><PrivacyPage /></>} />
-                <Route path="/cookies" element={<><PageReady onReady={handlePageReady} /><CookiePage /></>} />
-                <Route path="/data-rights" element={<><PageReady onReady={handlePageReady} /><DataRightsPage /></>} />
                 <Route path="/track-consultation" element={<><PageReady onReady={handlePageReady} /><TrackConsultationPage /></>} />
                 <Route path="*" element={<><PageReady onReady={handlePageReady} /><NotFoundPage pathname={location.pathname} /></>} />
               </Routes>
@@ -294,8 +292,6 @@ export function App({ onReady }: { onReady?: () => void }) {
           company={shell.company}
           footer={shell.footer}
         />
-
-        <PrivacyConsentBanner pathname={location.pathname} />
 
         {whatsappUrl && <WhatsAppButton phoneNumber={whatsappUrl} />}
         <ScrollToTopButton />

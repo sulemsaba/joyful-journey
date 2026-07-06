@@ -200,19 +200,21 @@ export function InsightsSection({
               return (
                 <article
                   key={post.slug}
-                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-200 hover:-translate-y-1 hover:border-border-strong [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(78vw,320px)]"
+                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(78vw,320px)]"
                 >
                   <div
-                    className="relative isolate aspect-[16/10] overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-30% after:to-overlay/50 bg-[radial-gradient(circle_at_top_right,var(--color-accent-soft-strong),transparent_48%),linear-gradient(160deg,var(--color-page-strong),var(--color-accent-soft-strong))]"
+                    className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft"
                   >
                     {renderMedia(post, categoryLabel)}
                   </div>
 
                   <div className="flex flex-1 flex-col bg-surface p-5 pb-4 max-md:p-4">
-                    <span className="mb-3 text-xs font-bold uppercase tracking-[0.09em] text-text-soft">
-                      {metaParts.join(" | ")}
-                    </span>
-                    <h3 className="m-0 mb-2 text-[clamp(1.05rem,1.4vw,1.3rem)] font-semibold leading-tight tracking-tight text-text">
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <span className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
+                        {metaParts.join(" · ")}
+                      </span>
+                    </div>
+                    <h3 className="m-0 mb-2 text-[clamp(1.05rem,1.4vw,1.3rem)] font-semibold leading-snug tracking-tight text-text">
                       {post.title}
                     </h3>
                     <p className="m-0 text-sm leading-relaxed text-text-muted line-clamp-2">
@@ -245,7 +247,7 @@ export function InsightsSection({
                         href={resourceArticlePath(post.slug)}
                         className="inline-flex items-center gap-2 min-h-10 py-1.5 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 whitespace-nowrap text-sm font-bold text-accent transition-colors hover:text-accent-hover"
                       >
-                        Learn more
+                        Read article
                         <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[3px]">
                           &rarr;
                         </span>

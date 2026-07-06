@@ -406,7 +406,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
       <div
         onClick={() => inputRef.current?.click()}
         className={`relative rounded-xl border-2 border-dashed p-4 text-center cursor-pointer
-                   transition-all duration-200 hover:border-accent/40 hover:bg-accent/[0.02]
+                   transition-colors duration-200 hover:border-accent/40 hover:bg-accent/[0.02]
                    ${file ? "border-accent/30 bg-accent/[0.03]" : "border-border-soft"}`}
       >
         <input
@@ -509,7 +509,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
                   placeholder="Your full name"
                   className="w-full px-4 py-2.5 rounded-xl border border-border-soft bg-surface text-sm
                              text-text placeholder:text-text-soft focus:outline-none
-                             focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
+                              focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors"
                 />
               </div>
               <div>
@@ -524,24 +524,24 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
                   placeholder="you@example.com"
                   className="w-full px-4 py-2.5 rounded-xl border border-border-soft bg-surface text-sm
                              text-text placeholder:text-text-soft focus:outline-none
-                             focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
-                />
+                              focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Phone */}
-            <div>
-              <label className="block text-sm font-medium text-text mb-1.5">
-                Phone number
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+255 7XX XXX XXX"
-                className="w-full px-4 py-2.5 rounded-xl border border-border-soft bg-surface text-sm
-                           text-text placeholder:text-text-soft focus:outline-none
-                           focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
+              {/* Phone */}
+              <div>
+                <label className="block text-sm font-medium text-text mb-1.5">
+                  Phone number
+                </label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+255 7XX XXX XXX"
+                  className="w-full px-4 py-2.5 rounded-xl border border-border-soft bg-surface text-sm
+                             text-text placeholder:text-text-soft focus:outline-none
+                             focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors"
               />
             </div>
 
@@ -578,7 +578,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
                 rows={3}
                 className="w-full px-4 py-2.5 rounded-xl border border-border-soft bg-surface text-sm
                            text-text placeholder:text-text-soft focus:outline-none
-                           focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all resize-y"
+                            focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors resize-y"
               />
               <p className="text-xs text-text-soft mt-1.5 mb-2">Or upload a cover letter file:</p>
               <FileUploadZone
@@ -854,7 +854,7 @@ export function CareerPage() {
                       onChange={(e) => handleKeywordChange(e.target.value)}
                       className="w-full pl-9 pr-3 py-2 sm:py-2.5 rounded-full border border-border-soft bg-surface text-sm
                                  text-text placeholder:text-text-soft focus:outline-none
-                                 focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-all"
+                                 focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors"
                     />
                   </div>
                   <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>

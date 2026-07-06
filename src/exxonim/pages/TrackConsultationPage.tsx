@@ -189,6 +189,14 @@ function getStatusDisplay(
         colorClass: "bg-warning-soft text-warning",
         dotClass: "bg-warning",
       };
+    default:
+      // Any other status (new, assigned, pending_settlement…) renders as
+      // "In Progress" instead of crashing the whole page.
+      return {
+        label: "In Progress",
+        colorClass: "bg-accent-soft text-accent",
+        dotClass: "bg-accent",
+      };
   }
 }
 
@@ -252,7 +260,7 @@ function TrackingResultCard({
         {totalCount > 0 && (
           <div className="h-1.5 bg-surface-soft">
             <div
-              className={`h-full ${getProgressBarClass(result.status)} transition-all duration-700 ease-out rounded-r-full`}
+              className={`h-full ${getProgressBarClass(result.status)} transition-opacity duration-700 ease-out rounded-r-full`}
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -458,7 +466,7 @@ function MilestoneItem({
       {/* Timeline column */}
       <div className="flex flex-col items-center">
         <div
-          className={`w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center border-2 transition-all ${
+          className={`w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center border-2 transition-colors ${
             isCompleted
               ? "bg-accent border-accent"
               : isCurrent
@@ -1004,7 +1012,7 @@ export function TrackConsultationPage() {
             {HOW_IT_WORKS_STEPS.map((step, i) => (
               <article
                 key={i}
-                className="group relative p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated transition-all hover:-translate-y-1 hover:border-accent/40 grid gap-3"
+                className="group relative p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated transition-transform hover:-translate-y-1 hover:border-accent/40 grid gap-3"
               >
                 <span className="inline-flex items-center gap-2.5">
                   <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold">{i + 1}</span>

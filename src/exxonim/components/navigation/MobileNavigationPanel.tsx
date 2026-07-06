@@ -98,7 +98,7 @@ function MobileAccordion({
 
       <div
         className={cn(
-          "grid transition-all duration-300 ease-out",
+          "grid transition-transform duration-300 ease-out",
           open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         )}
       >
@@ -123,7 +123,7 @@ function MobileAccordion({
                       >
                         <span className="w-1 h-1 rounded-full bg-accent/60 shrink-0 group-hover:bg-accent transition-colors" aria-hidden="true" />
                         <span className="flex-1">{item.label}</span>
-                        <ArrowRight className="w-3 h-3 text-text-muted/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150" aria-hidden="true" />
+                        <ArrowRight className="w-3 h-3 text-text-muted/50 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-opacity duration-150" aria-hidden="true" />
                       </SmartLink>
                     </li>
                   ))}

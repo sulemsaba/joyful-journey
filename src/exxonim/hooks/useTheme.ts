@@ -11,7 +11,7 @@
  *
  * See: src/exxonim/services/privacyService.ts for privacy consent endpoints.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Theme } from '@/exxonim/types';
 import { PRIVACY_CONSENT_EVENT } from "@/exxonim/services/privacyService";
 
@@ -132,29 +132,47 @@ export function useTheme() {
     }
   }, [canPersistPreference, theme]);
 
+  const cleanupRef = useRef<(() => void) | null>(null);
+
   return {
     theme,
     toggleTheme: () => {
-      const next = theme === "dark" ? "light" : "dark";
+      if (cleanupRef.current) {
+        cleanupRef.current();
+      }
 
-      // Smooth theme switch using CSS transitions instead of View Transitions.
-      // We temporarily add a class that enables color transitions on ALL
-      // elements, change the theme, then remove the class after the
-      // transition completes. This way every element - toggle knob,
-      // text, buttons, backgrounds - smoothly morphs to the new colors.
+      const next = theme === "dark" ? "light" : "dark";
       const root = document.documentElement;
 
-      // Add transition class - enables smooth color interpolation
       root.classList.add(TRANSITION_CLASS);
-
-      // Apply the theme change
       setTheme(next);
 
-      // Remove the class after transition completes so it doesn't
-      // interfere with hover effects, animations, or the hero shrink
-      setTimeout(() => {
+      let settled = false;
+      const settle = () => {
+        if (settled) return;
+        settled = true;
+        cleanupRef.current = null;
         root.classList.remove(TRANSITION_CLASS);
-      }, TRANSITION_DURATION);
+      };
+
+      const timeout = setTimeout(settle, TRANSITION_DURATION + 100);
+
+      const onTransitionEnd = (event: TransitionEvent) => {
+        if (event.target === root && event.propertyName.startsWith("--")) {
+          clearTimeout(timeout);
+          settle();
+        }
+      };
+
+      root.addEventListener("transitionend", onTransitionEnd);
+
+      cleanupRef.current = () => {
+        clearTimeout(timeout);
+        root.removeEventListener("transitionend", onTransitionEnd);
+        if (!settled) {
+          root.classList.remove(TRANSITION_CLASS);
+        }
+      };
     },
   };
 }

@@ -123,7 +123,7 @@ function LazyVideo({ sources, poster, playbackRate, className, mobileStyle, desk
       autoPlay
       disablePictureInPicture
       disableRemotePlayback
-      preload="auto"
+      preload="metadata"
       aria-hidden="true"
       className={className}
       style={activeStyle}

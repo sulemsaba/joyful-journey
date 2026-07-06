@@ -179,7 +179,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
               placeholder="Search services - e.g. company registration, TIN, work permit..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 md:h-14 pl-12 pr-4 rounded-full border border-border-soft bg-surface text-text text-sm md:text-base placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-all"
+              className="w-full h-12 md:h-14 pl-12 pr-4 rounded-full border border-border-soft bg-surface text-text text-sm md:text-base placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-colors duration-200"
               aria-label="Search services"
             />
           </div>
@@ -191,7 +191,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
             <button
               key={option.key}
               onClick={() => setActiveFilter(option.key)}
-              className={`flex-shrink-0 inline-flex items-center h-10 px-5 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${
+              className={`flex-shrink-0 inline-flex items-center h-10 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
                 activeFilter === option.key
                   ? 'bg-accent text-accent-contrast'
                   : 'bg-surface border border-border-soft text-text-muted hover:text-text hover:border-accent/30'
@@ -239,7 +239,7 @@ export function ServiceSearchSection({ content }: ServiceSearchSectionProps) {
                       <article
                         key={service.id}
                         id={service.id}
-                        className="rounded-[1.4rem] border border-border-soft bg-surface/88 p-5 grid gap-3 content-start transition-all duration-300 hover:-translate-y-1 hover:border-accent/30"
+                        className="rounded-[1.4rem] border border-border-soft bg-surface/88 p-5 grid gap-3 content-start transition-transform duration-300 hover:-translate-y-1 hover:border-accent/30"
                       >
                         {/* Tags */}
                         {service.tags && service.tags.length > 0 && (

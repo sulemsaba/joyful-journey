@@ -208,7 +208,7 @@ section[aria-label="Service guidance overview"] h2 {
 
   --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
   --animate-phone-ring: phone-ring 2s ease-in-out infinite;
-  --animate-provider-marquee: provider-marquee 90s linear infinite;
+  --animate-provider-marquee: provider-marquee 30s linear infinite;
   --animate-code-pan: code-pan 12s linear infinite alternate;
   --animate-call-shimmer: call-shimmer 4.5s linear infinite;
   --animate-call-ping: call-ping 1.85s ease-out infinite;
@@ -255,8 +255,8 @@ section[aria-label="Service guidance overview"] h2 {
   50% { transform: rotate(0deg); }
 }
 @keyframes provider-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 @keyframes call-shimmer {
   0% { transform: translateX(0) skewX(-22deg); }
@@ -387,19 +387,18 @@ section[aria-label="Service guidance overview"] h2 {
  * so in-viewport elements appear instantly on route change.
  * The class is added briefly during route transitions.
  */
-html.js [data-reveal]:not(.revealed) {
+html.js.reveal-ready [data-reveal]:not(.revealed) {
   opacity: 0;
   -webkit-transform: translateY(24px);
   transform: translateY(24px);
   -webkit-transition: opacity 0.7s ease-out, -webkit-transform 0.7s ease-out;
   transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-  will-change: opacity, transform;
 }
-html.js [data-reveal].revealed {
+html.js.reveal-ready [data-reveal].revealed {
   opacity: 1;
   -webkit-transform: translateY(0);
   transform: translateY(0);
-  will-change: auto;
+  transition: none;
 }
 /* Instant reveal: skip animation during route transitions and initial load */
 html.reveal-instant [data-reveal] {
@@ -616,45 +615,16 @@ html[data-theme="dark"] {
  */
 html.theme-transition {
   transition:
-    /* Exxonim design tokens - only @property-registered (hex initial-value) tokens get smooth transitions.
-     * Semi-transparent tokens (rgba initial-values) are NOT @property-registered for Samsung Internet
-     * compatibility, so they can't be transitioned here. They swap instantly instead. */
+    /* Core design tokens — these drive the largest visual areas during theme changes.
+       Reducing from 28 animated tokens to 8 cuts compositor work significantly. */
     --color-page 0.4s ease,
-    --color-page-strong 0.4s ease,
     --color-surface 0.4s ease,
-    --color-surface-soft 0.4s ease,
     --color-text 0.4s ease,
     --color-accent 0.4s ease,
-    --color-accent-hover 0.4s ease,
-    --color-accent-secondary 0.4s ease,
-    --color-accent-contrast 0.4s ease,
     --color-hero-bg 0.4s ease,
-    --color-success 0.4s ease,
-    --color-warning 0.4s ease,
-    --color-error 0.4s ease,
-    --color-star 0.4s ease,
-    --color-footer-bg 0.4s ease,
-    --color-cta-primary 0.4s ease,
-    --color-cta-secondary 0.4s ease,
-    /* shadcn/ui tokens */
     --background 0.4s ease,
     --foreground 0.4s ease,
-    --card 0.4s ease,
-    --card-foreground 0.4s ease,
-    --popover 0.4s ease,
-    --popover-foreground 0.4s ease,
-    --primary 0.4s ease,
-    --primary-foreground 0.4s ease,
-    --secondary 0.4s ease,
-    --secondary-foreground 0.4s ease,
-    --muted 0.4s ease,
-    --muted-foreground 0.4s ease,
-    --accent 0.4s ease,
-    --accent-foreground 0.4s ease,
-    --destructive 0.4s ease,
-    --border 0.4s ease,
-    --input 0.4s ease,
-    --ring 0.4s ease;
+    --border 0.4s ease;
 }
 
 /* ── Logo crossfade during theme transition ───────────
