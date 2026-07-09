@@ -79,6 +79,7 @@ section[aria-label="Service guidance overview"] h2 {
 @property --color-accent-secondary { syntax: '<color>'; inherits: true; initial-value: #7fbcc1; }
 @property --color-accent-contrast { syntax: '<color>'; inherits: true; initial-value: #f7fbfb; }
 @property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #F5F5EE; }
+@property --color-hero-bg-fade { syntax: '<color>'; inherits: true; initial-value: #F5F5EE; }
 @property --color-success { syntax: '<color>'; inherits: true; initial-value: #0f8a5f; }
 @property --color-error { syntax: '<color>'; inherits: true; initial-value: #c4372f; }
 @property --color-warning { syntax: '<color>'; inherits: true; initial-value: #b45309; }
@@ -614,18 +615,31 @@ html[data-theme="dark"] {
  * theme change and removed after 400ms. Without the class,
  * no transitions are active - so initial page load has no flash.
  */
+/* :root only — interpolate the CSS vars consumed inside GRADIENTS (hero left/
+ * bottom fades, radial glows). Solid-color paints are handled by the global
+ * rule below; but gradients are background-image and can't transition via
+ * background-color, so their driving vars must interpolate here. */
 html.theme-transition {
   transition:
-    /* Core design tokens — these drive the largest visual areas during theme changes.
-       Reducing from 28 animated tokens to 8 cuts compositor work significantly. */
     --color-page 0.4s ease,
-    --color-surface 0.4s ease,
-    --color-text 0.4s ease,
-    --color-accent 0.4s ease,
     --color-hero-bg 0.4s ease,
-    --background 0.4s ease,
-    --foreground 0.4s ease,
-    --border 0.4s ease;
+    --color-hero-bg-fade 0.4s ease,
+    --color-accent 0.4s ease,
+    --color-accent-secondary 0.4s ease;
+}
+
+/* Whole-page-at-once theme fade: during the toggle window every element fades
+ * its solid paint properties over the SAME 0.4s, so the page changes uniformly
+ * instead of some regions snapping (the old rule animated only 8 of ~28 tokens,
+ * so any element on a non-listed token snapped → the staggered "changes from
+ * the left" look). Scoped to `html.theme-transition` (added on toggle, removed
+ * after ~500ms), so it never affects load or normal interaction. */
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition-property: background-color, color, border-color, fill, stroke, outline-color;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
 }
 
 /* ── Logo crossfade during theme transition ───────────
