@@ -123,20 +123,25 @@ export function HeroAurora() {
 
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-        if (entry.isIntersecting) {
+        // Animate only while the hero is the primary focus (>=40% in view). Once
+        // you scroll down to the sections below, the hero is still partly visible
+        // but the aurora would keep redrawing at 30fps and steal main-thread
+        // frames from the trusted-by marquee just below it (measured: still 960
+        // draws/s at 37% visible). Pausing below 40% keeps that region smooth; a
+        // barely-visible frozen aurora strip is imperceptible.
+        const active = entry.isIntersecting && entry.intersectionRatio >= 0.4;
+        isVisibleRef.current = active;
+        if (active) {
           if (!rafIdRef.current) {
             lastFrameRef.current = 0;
             rafIdRef.current = requestAnimationFrame(animate);
           }
-        } else {
-          if (rafIdRef.current) {
-            cancelAnimationFrame(rafIdRef.current);
-            rafIdRef.current = 0;
-          }
+        } else if (rafIdRef.current) {
+          cancelAnimationFrame(rafIdRef.current);
+          rafIdRef.current = 0;
         }
       },
-      { threshold: 0 }
+      { threshold: [0, 0.4, 1] }
     );
     visibilityObserver.observe(canvas);
 
