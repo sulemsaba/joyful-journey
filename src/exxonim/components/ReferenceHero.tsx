@@ -95,19 +95,6 @@ export function ReferenceHero({ content }: ReferenceHeroProps) {
         {/* Animated aurora canvas - flowing curtain-like lines.
             Theme-reactive: adapts colors and opacity for light/dark.
             Opacity controlled by .hero-aurora-canvas CSS class. */}
-        {/* Brand-color glow behind the aurora — a soft teal (top) + gold (lower)
-            wash on the right so the hero reads as on-brand and grabs the eye,
-            while the aurora lines animate over it. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 -z-20 w-[75%]"
-          style={{
-            background:
-              "radial-gradient(55% 60% at 80% 38%, rgba(15,92,99,0.28), transparent 70%), " +
-              "radial-gradient(45% 45% at 93% 72%, rgba(212,147,13,0.16), transparent 72%)",
-          }}
-        />
-
         <HeroAurora />
 
         {/* Left-side fade so text always has contrast over the aurora */}
