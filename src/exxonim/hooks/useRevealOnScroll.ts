@@ -20,13 +20,39 @@ export function useRevealOnScroll(pathname?: string) {
           }
         });
       },
-      { threshold: 0.05, rootMargin: "300px 0px" }
+      // Reveal well ahead of the viewport so a fast scroll never outruns it.
+      { threshold: 0, rootMargin: "0px 0px 2000px 0px" }
     );
     observerRef.current = observer;
 
     document.querySelectorAll("[data-reveal]:not(.revealed)").forEach((el) => {
       observer.observe(el);
     });
+
+    // Synchronous fail-safe: IntersectionObserver is async and can lag behind a
+    // hard/fling scroll, leaving a section at opacity:0 (a black void on the dark
+    // theme). On scroll (rAF-throttled) we directly reveal anything within ~1.5
+    // viewports of the top, guaranteeing content is painted before you reach it.
+    let scrollTicking = false;
+    const revealNearby = () => {
+      scrollTicking = false;
+      // Reveal ~2.5 viewports ahead so the 0.5s fade-in fully completes before
+      // the element actually enters view — no near-zero opacity is ever visible,
+      // even on a hard fling (critical on the dark theme, where opacity:0 = black).
+      const limit = window.innerHeight * 2.5;
+      document.querySelectorAll("[data-reveal]:not(.revealed)").forEach((el) => {
+        if ((el as HTMLElement).getBoundingClientRect().top < limit) {
+          el.classList.add("revealed");
+          observer.unobserve(el);
+        }
+      });
+    };
+    const onScroll = () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(revealNearby);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     const mainEl = document.querySelector("main");
@@ -62,6 +88,7 @@ export function useRevealOnScroll(pathname?: string) {
     }, 3000);
 
     return () => {
+      window.removeEventListener("scroll", onScroll);
       mutationObserver.disconnect();
       observer.disconnect();
       observerRef.current = null;
