@@ -12,7 +12,7 @@ interface AuroraConfig {
 
 const DEFAULT_CONFIG: AuroraConfig = {
   speed: 0.5,
-  spacing: 3.0,
+  spacing: 3.6, // wider spacing → fewer curtain lines (lighter to draw)
   coverage: 68,
   intensity: 40,
   showDepth: true,
@@ -56,8 +56,8 @@ function draw(
   const zoneH = h * (cfg.coverage / 100);
   const zoneTop = (h - zoneH) / 2;
   const rawCurtainCount = Math.max(2, Math.round(zoneH / (cfg.spacing * 3)));
-  const curtainCount = Math.max(2, Math.min(rawCurtainCount, 20));
-  const steps = w < 768 ? 64 : 128;
+  const curtainCount = Math.max(2, Math.min(rawCurtainCount, 15));
+  const steps = w < 768 ? 48 : 96;
 
   for (let c = 0; c < curtainCount; c++) {
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
@@ -66,14 +66,14 @@ function draw(
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
-    const subLines = cfg.showDepth ? 4 : 2;
+    const subLines = cfg.showDepth ? 3 : 2;
 
     for (let sub = 0; sub < subLines; sub++) {
       const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 1.5);
       if (subAlpha <= 0) continue;
       ctx.globalAlpha = subAlpha;
       ctx.strokeStyle = withAlpha(accentColor, 0.5 + sub * 0.15 + dF * 0.2);
-      ctx.lineWidth = cfg.showDepth ? 1 + dF * 3 : 2;
+      ctx.lineWidth = cfg.showDepth ? 0.7 + dF * 1.9 : 1.4;
       ctx.beginPath();
       for (let s = 0; s <= steps; s++) {
         const x = (s / steps) * (w + 200) - 100;
@@ -159,7 +159,7 @@ export function HeroAurora() {
     resize();
     window.addEventListener("resize", resize);
 
-    const FRAME_INTERVAL = 33;
+    const FRAME_INTERVAL = 42; // ~24fps — imperceptible for a slow drift, lighter main-thread load
 
     function animate(ts: number) {
       if (!isVisibleRef.current || document.hidden) {
