@@ -345,10 +345,27 @@ const TestimonialMarquee = memo(function TestimonialMarquee({
     pauseTemporarily();
   }, [pauseTemporarily]);
 
-  /* ── Start scrolling when component mounts ── */
+  /* ── Auto-scroll ONLY while the marquee is on-screen ──
+   * The loop does el.scrollLeft += 0.3 every frame, which forces a layout each
+   * frame. Left running while off-screen it competed for the main thread and
+   * janked the whole page during scroll (e.g. made the trusted-by logos above it
+   * look like they were stepping). An IntersectionObserver starts it when it
+   * enters the viewport and stops it when it leaves. */
   useEffect(() => {
-    startScrolling();
-    return stopScrolling;
+    const el = trackRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) startScrolling();
+        else stopScrolling();
+      },
+      { threshold: 0 }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      stopScrolling();
+    };
   }, [startScrolling, stopScrolling]);
 
   useEffect(() => {

@@ -16,18 +16,30 @@ export function StickyMobileCta() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    function handleScroll() {
+    // rAF-throttled: the old handler ran on EVERY scroll event and read
+    // scrollHeight each time (a forced layout reflow), janking the whole page —
+    // even on desktop where this bar is hidden. Now layout is read at most once
+    // per frame, and setVisible only fires when the value actually changes.
+    let frame = 0;
+    const update = () => {
+      frame = 0;
       const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight;
-      const winHeight = window.innerHeight;
-      const nearBottom = scrollY + winHeight > docHeight - 300;
+      const nearBottom = scrollY + window.innerHeight > docHeight - 300;
+      const next = scrollY > 200 && !nearBottom;
+      setVisible((prev) => (prev === next ? prev : next));
+    };
+    const handleScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(update);
+    };
 
-      // Show after scrolling 200px, hide near the bottom of the page
-      setVisible(scrollY > 200 && !nearBottom);
-    }
-
+    update();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
