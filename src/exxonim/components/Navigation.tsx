@@ -11,7 +11,6 @@ import { useMobileMenuFocusTrap } from "@/exxonim/components/navigation/useMobil
 import { normalizePathname, routes } from "@/exxonim/routes";
 import type { BrandAssets, CompanyInfo, Theme } from '@/exxonim/types';
 import { cn } from "@/exxonim/utils/cn";
-import { preloadRoute } from "@/exxonim/preloadRoutes";
 
 /**
  * Navigation component - the fixed site header.
@@ -40,14 +39,16 @@ function getHrefPath(href: string) {
   return normalizePathname(href.split("#")[0]);
 }
 
+// Pages that live UNDER the Resources dropdown, so being on them highlights the
+// Resources nav item. The /resources landing page and article slugs are handled
+// separately in isResourcesPath(). NOTE: routes.privacy/cookies/dataRights were
+// referenced here but DO NOT EXIST — normalizePathname(undefined) returned "/",
+// which poisoned this set so isResourcesPath("/") was true and Resources showed
+// as the active page on the HOME page. routes.terms is not in the Resources menu
+// either, so it's dropped too.
 const RESOURCE_CHILD_PATHS = new Set([
   normalizePathname(routes.faq),
   normalizePathname(routes.support),
-  normalizePathname(routes.terms),
-  normalizePathname(routes.privacy),
-  normalizePathname(routes.cookies),
-  normalizePathname(routes.dataRights),
-  normalizePathname(routes.blog),
 ]);
 
 function isResourcesPath(path: string): boolean {

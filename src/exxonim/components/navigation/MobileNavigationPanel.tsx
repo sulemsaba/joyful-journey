@@ -34,7 +34,7 @@ interface MobileNavigationPanelProps {
   servicesActive: boolean;
   resourcesColumns: MenuColumn[];
   servicesColumns: MenuColumn[];
-  panelRef: RefObject<HTMLDivElement>;
+  panelRef: RefObject<HTMLDivElement | null>;
   primaryPhone?: string;
   isActive: (href: string) => boolean;
   onClose: () => void;

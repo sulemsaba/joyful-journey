@@ -121,7 +121,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
        * Reference: Linear, Vercel, Figma, and Intercom all use padding-
        * based spacing for their logo trust bars for this exact reason. */}
       <div
-        className="full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page"
+        className="provider-marquee-wrap full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page"
         aria-label="Partner logos"
       >
         <div className="provider-marquee-track flex items-center w-max animate-provider-marquee">
