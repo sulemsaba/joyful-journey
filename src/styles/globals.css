@@ -269,11 +269,6 @@ section[aria-label="Service guidance overview"] h2 {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-/* Pause the marquee during the theme toggle so the 0.4s colour fade has the
- * main thread to itself instead of competing with the animation for frames. */
-html.theme-transition .provider-marquee-track {
-  animation-play-state: paused;
-}
 @keyframes call-shimmer {
   0% { transform: translateX(0) skewX(-22deg); }
   100% { transform: translateX(420%) skewX(-22deg); }
@@ -607,57 +602,34 @@ html[data-theme="dark"] {
   --color-accent-gradient-medium: rgba(127, 188, 193, 0.22);
 }
 
-/* ── Smooth theme switch via CSS custom property transitions
- * ────────────────────────────────────────────────────────
- * ARCHITECTURE: Instead of forcing `transition` on every DOM
- * element with `* !important` (which clobbers the toggle knob
- * slide, hero shrink animation, and all hover effects), we
- * transition the CSS custom properties THEMSELVES on :root.
+/* ── Theme switch via the View Transitions API ─────────────────────────────
+ * The theme toggle (useTheme.ts) wraps the data-theme flip in
+ * document.startViewTransition(), so the browser snapshots the whole page
+ * before + after and crossfades the two snapshots on the COMPOSITOR.
  *
- * When a registered custom property (via @property) transitions
- * on :root, ALL elements using var(--that-property) automatically
- * see the smoothly interpolated value - including elements with
- * gradients, box-shadows, and border-colors that reference it.
+ * Why this replaced the previous CSS approaches:
+ *   - Transitioning 8 :root vars only  → most elements snapped (staggered
+ *     "changes from the left").
+ *   - Transitioning every element's paint props → uniform but far too heavy
+ *     (hundreds of simultaneous transitions), so the fade lagged even on pages
+ *     with no aurora (e.g. About).
+ *   The View Transition is BOTH uniform (one whole-page image) AND cheap (a
+ *   single GPU crossfade — zero per-element transitions, zero var interpolation),
+ *   so it stays smooth on every page and even while the hero aurora is running.
  *
- * This approach:
- *   ✅ Preserves element-level transitions (knob slide, shrink)
- *   ✅ Smooths gradients using var() (hero overlay gradients)
- *   ✅ Smooths all color tokens everywhere (no missed elements)
- *   ✅ Doesn't clobber hover effects or animation transitions
- *   ✅ Progressive enhancement (older browsers: instant swap)
- *
- * The `.theme-transition` class is added to <html> before the
- * theme change and removed after 400ms. Without the class,
- * no transitions are active - so initial page load has no flash.
- */
-/* :root only — interpolate the CSS vars consumed inside GRADIENTS (hero left/
- * bottom fades, radial glows). Solid-color paints are handled by the global
- * rule below; but gradients are background-image and can't transition via
- * background-color, so their driving vars must interpolate here. */
-html.theme-transition {
-  transition:
-    /* ONLY vars consumed inside gradients. Solid-color vars (--color-page,
-     * --color-accent, …) are intentionally NOT here: they are handled by the
-     * per-element rule below. Listing them here too made every surface animate
-     * twice (a background-color transition chasing an interpolating var), which
-     * double-eased the largest areas and made the fade feel slow/laggy. */
-    --color-hero-bg 0.4s ease,
-    --color-hero-bg-fade 0.4s ease,
-    --color-accent-secondary 0.4s ease;
+ * Browsers without the API (e.g. Firefox) fall back to an instant swap in JS.
+ * Only the crossfade duration is tuned here; the default cross-fade animation is
+ * what we want. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.32s;
+  animation-timing-function: ease;
 }
-
-/* Whole-page-at-once theme fade: during the toggle window every element fades
- * its solid paint properties over the SAME 0.4s, so the page changes uniformly
- * instead of some regions snapping (the old rule animated only 8 of ~28 tokens,
- * so any element on a non-listed token snapped → the staggered "changes from
- * the left" look). Scoped to `html.theme-transition` (added on toggle, removed
- * after ~500ms), so it never affects load or normal interaction. */
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition-property: background-color, color, border-color, fill, stroke, outline-color;
-  transition-duration: 0.4s;
-  transition-timing-function: ease;
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
 
 /* ── Logo crossfade during theme transition ───────────
