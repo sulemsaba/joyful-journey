@@ -44,39 +44,13 @@ function withAlpha(color: string, alpha: number): string {
   return trimmed;
 }
 
-function hexToRgb(hex: string): [number, number, number] {
-  const h = (hex || "").trim().replace("#", "");
-  const s = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
-  return [parseInt(s.slice(0, 2) || "0f", 16), parseInt(s.slice(2, 4) || "5c", 16), parseInt(s.slice(4, 6) || "63", 16)];
-}
-
-function _toHex(n: number): string {
-  return Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
-}
-
-/** Interpolate two hex colors → hex (so withAlpha still works downstream). */
-function lerpColor(a: string, b: string, t: number): string {
-  const [ar, ag, ab] = hexToRgb(a);
-  const [br, bg, bb] = hexToRgb(b);
-  return `#${_toHex(ar + (br - ar) * t)}${_toHex(ag + (bg - ag) * t)}${_toHex(ab + (bb - ab) * t)}`;
-}
-
-/** Sample a multi-stop gradient at t∈[0,1) (wraps), returning a hex color. */
-function sampleGradient(stops: string[], t: number): string {
-  if (stops.length <= 1) return stops[0] || "#0f5c63";
-  const clamped = ((t % 1) + 1) % 1;
-  const scaled = clamped * (stops.length - 1);
-  const i = Math.floor(scaled);
-  return lerpColor(stops[i], stops[Math.min(i + 1, stops.length - 1)], scaled - i);
-}
-
 function draw(
   ctx: CanvasRenderingContext2D,
   w: number,
   h: number,
   t: number,
   cfg: AuroraConfig,
-  palette: string[],
+  accentColor: string,
   isDark: boolean
 ) {
   const zoneH = h * (cfg.coverage / 100);
@@ -88,21 +62,17 @@ function draw(
   for (let c = 0; c < curtainCount; c++) {
     const nC = curtainCount > 1 ? c / (curtainCount - 1) : 0.5;
     const dF = 1 - Math.abs(nC - 0.5) * 2;
-    const baseAlpha = isDark ? 0.20 + dF * 0.55 : 0.14 + dF * 0.40;
+    const baseAlpha = isDark ? 0.07 + dF * 0.28 : 0.06 + dF * 0.24;
     const baseY = zoneTop + nC * zoneH;
     const curtainHeight = zoneH * (0.25 + cfg.intensity * 0.006);
     const waveSpeed = t * (0.2 + nC * 0.3);
     const subLines = cfg.showDepth ? 4 : 2;
-    // On-brand aurora: hue is mostly TIME-driven so the bright centre ribbons
-    // (not just the faint edges) sweep through teal → light-teal → gold and back,
-    // making both brand colors clearly visible as it animates.
-    const curtainColor = sampleGradient(palette, t * 0.14 + nC * 0.3);
 
     for (let sub = 0; sub < subLines; sub++) {
       const subAlpha = baseAlpha * (1 - Math.abs(sub / subLines - 0.5) * 1.5);
       if (subAlpha <= 0) continue;
       ctx.globalAlpha = subAlpha;
-      ctx.strokeStyle = withAlpha(curtainColor, 0.5 + sub * 0.15 + dF * 0.2);
+      ctx.strokeStyle = withAlpha(accentColor, 0.5 + sub * 0.15 + dF * 0.2);
       ctx.lineWidth = cfg.showDepth ? 1 + dF * 3 : 2;
       ctx.beginPath();
       for (let s = 0; s <= steps; s++) {
@@ -127,16 +97,12 @@ export function HeroAurora() {
   const rafIdRef = useRef<number>(0);
   const isVisibleRef = useRef(true);
 
-  const cachedPaletteRef = useRef<string[]>(["#0f5c63", "#7fbcc1", "#d4930d"]);
+  const cachedAccentRef = useRef("#0f5c63");
   const cachedIsDarkRef = useRef(false);
 
   const refreshCache = useCallback(() => {
     const style = getComputedStyle(document.documentElement);
-    const teal = style.getPropertyValue("--color-accent").trim() || "#0f5c63";
-    const lightTeal = style.getPropertyValue("--color-accent-secondary").trim() || "#7fbcc1";
-    const gold = style.getPropertyValue("--color-star").trim() || "#d4930d";
-    // Brand aurora ramp: teal → light-teal → gold (and back toward teal so it loops smoothly).
-    cachedPaletteRef.current = [teal, lightTeal, gold, lightTeal];
+    cachedAccentRef.current = style.getPropertyValue("--color-accent").trim() || "#0f5c63";
     cachedIsDarkRef.current = document.documentElement.getAttribute("data-theme") === "dark";
   }, []);
 
@@ -214,7 +180,7 @@ export function HeroAurora() {
         cssH,
         timeRef.current,
         DEFAULT_CONFIG,
-        cachedPaletteRef.current,
+        cachedAccentRef.current,
         cachedIsDarkRef.current
       );
       ctx!.globalAlpha = 1;
