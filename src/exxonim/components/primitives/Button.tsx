@@ -28,7 +28,7 @@ import { forwardRef, type ReactNode } from 'react'
  * ═══════════════════════════════════════════════════════════════ */
 
 type ButtonSize = 'hero' | 'standard' | 'compact' | 'icon'
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'inverse' | 'inverseOutline'
 
 /** Props that Button consumes internally. */
 interface ButtonOwnProps {
@@ -108,6 +108,18 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost: cn(
     'bg-transparent text-text',
     'hover:bg-accent-soft hover:text-text',
+  ),
+  /* For use on the teal CTA banner (footer-bg). A teal `primary` would vanish
+   * on teal — these read as a solid white pill / a white outline instead. */
+  inverse: cn(
+    // Fixed brand teal (NOT text-accent — that flips to light teal in dark mode
+    // and would be unreadable on the white pill). Always high-contrast on white.
+    'bg-white text-[#0f5c63] shadow-sm',
+    'hover:bg-white/90 hover:text-[#0b4b51]',
+  ),
+  inverseOutline: cn(
+    'border border-white/50 text-white',
+    'hover:bg-white/10 hover:text-white',
   ),
 }
 

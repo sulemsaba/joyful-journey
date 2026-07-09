@@ -4,14 +4,16 @@ import type { ReactNode } from 'react';
 import { Container } from './primitives/Container';
 
 /**
- * UnifiedCtaSection - One consistent CTA card design across all pages.
+ * UnifiedCtaSection - One consistent CTA banner across all pages.
  *
- * Same shell everywhere: full-width card with teal radial gradient glow,
- * border, rounded corners. Only the content (eyebrow, heading,
- * description, action area) changes per page via props.
+ * A wide horizontal banner in the footer background colour (brand teal
+ * #0f5c63 light / #152629 dark), full content width, rounded corners.
+ * Copy sits on the left, the action area (newsletter form or buttons) on
+ * the right; it stacks on mobile. Actions should use the Button `inverse`
+ * / `inverseOutline` variants so they read against the teal.
  *
- * Brand accent: #0f5c63 teal - the radial gradient glow at the top
- * of the card is the signature brand element.
+ * Only the content (eyebrow, heading, description, action area) changes per
+ * page via props — the shell is identical everywhere.
  */
 
 export interface UnifiedCtaSectionProps {
@@ -41,37 +43,41 @@ export function UnifiedCtaSection({
     <section aria-label={ariaLabel} className={`py-8 sm:py-12 md:py-16 ${className ?? ''}`}>
       <Container>
         <div
-          className="relative overflow-hidden border border-border-soft rounded-2xl p-5 sm:p-8 md:p-10 text-center max-w-[42rem] mx-auto"
-          style={{
-            background:
-              'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
-          }}
+          className="relative overflow-hidden rounded-[1.75rem] md:rounded-[2rem] bg-footer-bg px-6 py-9 sm:px-10 sm:py-11 md:px-14 md:py-12 flex flex-col gap-7 text-left md:flex-row md:items-center md:justify-between md:gap-12"
           data-reveal
         >
-          {/* Eyebrow */}
-          {eyebrow && (
-            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-accent">
-              {eyebrow.icon}
-              {eyebrow.text}
-            </span>
-          )}
+          {/* Soft brand glow, top-right — subtle depth without clutter */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-1/2 right-0 h-[200%] w-2/3 opacity-[0.16]"
+            style={{
+              background:
+                'radial-gradient(55% 45% at 80% 40%, var(--color-accent-secondary), transparent 70%)',
+            }}
+          />
 
-          {/* Heading */}
-          <h2
-            className={`${eyebrow ? 'mt-2 sm:mt-3' : ''} text-[clamp(1.25rem,4vw,2rem)] font-semibold leading-tight tracking-tight text-text`}
-          >
-            {heading}
-          </h2>
-
-          {/* Description */}
-          {description && (
-            <p className="mx-auto mt-2 sm:mt-3 max-w-md text-xs sm:text-sm leading-relaxed text-text-muted">
-              {description}
-            </p>
-          )}
+          {/* Copy */}
+          <div className="relative max-w-xl">
+            {eyebrow && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-accent-secondary">
+                {eyebrow.icon}
+                {eyebrow.text}
+              </span>
+            )}
+            <h2
+              className={`${eyebrow ? 'mt-2 sm:mt-3' : ''} text-[clamp(1.35rem,3.4vw,2.15rem)] font-semibold leading-tight tracking-tight text-footer-heading`}
+            >
+              {heading}
+            </h2>
+            {description && (
+              <p className="mt-2 sm:mt-3 max-w-lg text-sm leading-relaxed text-footer-text-muted">
+                {description}
+              </p>
+            )}
+          </div>
 
           {/* Action area */}
-          <div className="mt-4 sm:mt-6">{children}</div>
+          <div className="relative w-full md:w-auto md:shrink-0">{children}</div>
         </div>
       </Container>
     </section>

@@ -3,6 +3,7 @@
 import { Home, ArrowRight, Target, Eye, User, Building2, Globe, HeartHandshake, Landmark } from 'lucide-react';
 import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
+import { UnifiedCtaSection } from '@/exxonim/components/UnifiedCtaSection';
 import { routes } from '@/exxonim/routes';
 import { usePage } from '@/exxonim/hooks/usePage';
 import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
@@ -231,42 +232,23 @@ export function AboutPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 5: CTA - accent gradient card.
+       *  SECTION 5: CTA — unified teal banner.
        * ────────────────────────────────────────────────────────────── */}
-      <section
-        className="py-14 md:py-20"
-        aria-labelledby="about-cta-title"
+      <UnifiedCtaSection
+        ariaLabel="Get started with Exxonim"
+        heading={content.cta.title}
+        description={content.cta.description}
       >
-        <div className="max-w-[1240px] px-8 mx-auto">
-          <div
-            className="max-w-[42rem] mx-auto rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-12 text-center"
-            style={{
-              background:
-                'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
-            }}
-            data-reveal
-          >
-            <h2
-              id="about-cta-title"
-              className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
-            >
-              {content.cta.title}
-            </h2>
-            <p className="mt-3 text-text-muted text-sm leading-relaxed max-w-[min(48ch,90%)] mx-auto">
-              {content.cta.description}
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button size="standard" variant="primary" href={content.cta.primary.href}>
-                {content.cta.primary.label}
-                <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Button>
-              <Button size="standard" variant="secondary" href={content.cta.secondary.href}>
-                {content.cta.secondary.label}
-              </Button>
-            </div>
-          </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <Button size="standard" variant="inverse" href={content.cta.primary.href}>
+            {content.cta.primary.label}
+            <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+          </Button>
+          <Button size="standard" variant="inverseOutline" href={content.cta.secondary.href}>
+            {content.cta.secondary.label}
+          </Button>
         </div>
-      </section>
+      </UnifiedCtaSection>
     </>
   );
 }
