@@ -270,6 +270,12 @@ section[aria-label="Service guidance overview"] h2 {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
+/* Pause the logo marquee while the pointer is over it; resumes on leave. Pure
+ * CSS on the stationary wrapper — no JS, no re-render. (The old resume stutter
+ * was main-thread contention from an off-screen animation loop, now fixed.) */
+.provider-marquee-wrap:hover .provider-marquee-track {
+  animation-play-state: paused;
+}
 @keyframes call-shimmer {
   0% { transform: translateX(0) skewX(-22deg); }
   100% { transform: translateX(420%) skewX(-22deg); }

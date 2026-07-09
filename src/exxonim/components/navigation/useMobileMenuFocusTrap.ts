@@ -10,8 +10,8 @@ function getFocusableElements(node: HTMLElement) {
 
 export function useMobileMenuFocusTrap(
   isOpen: boolean,
-  panelRef: RefObject<HTMLDivElement>,
-  fallbackRef: RefObject<HTMLButtonElement>
+  panelRef: RefObject<HTMLDivElement | null>,
+  fallbackRef: RefObject<HTMLButtonElement | null>
 ) {
   useEffect(() => {
     if (!isOpen) {
