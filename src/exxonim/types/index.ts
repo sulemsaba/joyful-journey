@@ -25,6 +25,7 @@ export type {
   PageRecord,
   PricingFeature,
   PricingPlan,
+  SegmentPackage,
   ProviderLogo,
   ProviderSectionContent,
   RequestConsultationPageContent,

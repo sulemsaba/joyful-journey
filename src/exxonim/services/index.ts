@@ -27,7 +27,7 @@ export {
 export { lookupTrackingCode, submitPublicConsultation } from "./consultationService";
 export { getPublishedJobs } from "./jobsService";
 export { getPageBySlug } from "./pageService";
-export { getPricingPlans } from "./pricingService";
+export { getPricingPlans, getServicePackages } from "./pricingService";
 export {
   PRIVACY_CONSENT_EVENT,
   getPrivacyConsent,

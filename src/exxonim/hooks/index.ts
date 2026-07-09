@@ -4,6 +4,7 @@ export { useBlogPosts } from "./useBlogPosts";
 export { useFaqItems } from "./useFaqItems";
 export { usePage } from "./usePage";
 export { usePricingPlans } from "./usePricingPlans";
+export { useServicePackages } from "./useServicePackages";
 export { usePublicShell } from "./usePublicShell";
 export { useResolvedBlogSeo, useResolvedPageSeo } from "./useResolvedSeo";
 export { useRevealOnScroll } from "./useRevealOnScroll";

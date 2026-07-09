@@ -230,6 +230,10 @@ export const apiRoutes = {
       plans: {
         list: "/pricing/plans",
       },
+      // Segment × tier packages — admin-managed (service_packages table).
+      packages: {
+        list: "/pricing/packages",
+      },
     },
     testimonials: {
       list: "/testimonials",

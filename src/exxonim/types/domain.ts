@@ -189,6 +189,25 @@ export interface PricingPlan {
   features: PricingFeature[];
 }
 
+/**
+ * A service package (one tier card) as served by the public
+ * /pricing/packages endpoint, which reads the admin-managed
+ * `service_packages` table. Carries its segment slug so the site can
+ * group packages under its fixed segment tabs.
+ */
+export interface SegmentPackage {
+  id: string;
+  name: string;
+  badge: string | null;
+  description: string;
+  recommended: boolean;
+  cta: string;
+  segment_slug: string;
+  segment_name: string;
+  sort_order: number;
+  features: PricingFeature[];
+}
+
 export interface ServiceSignal {
   value: string;
   label: string;

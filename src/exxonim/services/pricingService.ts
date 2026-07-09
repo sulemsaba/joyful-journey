@@ -32,10 +32,25 @@
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
 import { mapPricingPlan } from "@/exxonim/utils/contentMappers";
-import type { PricingPlan } from '@/exxonim/types';
+import type { PricingPlan, SegmentPackage } from '@/exxonim/types';
 import type { ApiPricingPlan } from "@/exxonim/types/api";
 
 export async function getPricingPlans() {
   const response = await api.get<ApiPricingPlan[]>(apiRoutes.public.pricing.plans.list);
   return response.data.map(mapPricingPlan) as PricingPlan[];
+}
+
+/**
+ * Segment × tier packages served from the admin-managed `service_packages`
+ * table (only published + active). The backend already returns the public
+ * shape (SegmentPackage) so no mapping is needed — we just normalise nulls.
+ * Grouped by segment on the client via `segment_slug`.
+ */
+export async function getServicePackages(): Promise<SegmentPackage[]> {
+  const response = await api.get<SegmentPackage[]>(apiRoutes.public.pricing.packages.list);
+  return (response.data ?? []).map((p) => ({
+    ...p,
+    badge: p.badge ?? null,
+    features: Array.isArray(p.features) ? p.features : [],
+  }));
 }
