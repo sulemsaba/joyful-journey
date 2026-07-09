@@ -11,14 +11,17 @@
  *
  * See: src/exxonim/services/privacyService.ts for privacy consent endpoints.
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Theme } from '@/exxonim/types';
 import { PRIVACY_CONSENT_EVENT } from "@/exxonim/services/privacyService";
 
 const STORAGE_KEY = "exxonim-theme";
 const LEGACY_STORAGE_KEY = "koro-theme";
-const TRANSITION_CLASS = "theme-transition";
-const TRANSITION_DURATION = 400; // ms - must match globals.css
+
+/** Document augmented with the View Transitions API (not in every TS lib yet). */
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void) => unknown;
+};
 
 function getStoredTheme(): Theme | null {
   if (typeof window === "undefined") {
@@ -132,47 +135,33 @@ export function useTheme() {
     }
   }, [canPersistPreference, theme]);
 
-  const cleanupRef = useRef<(() => void) | null>(null);
-
   return {
     theme,
     toggleTheme: () => {
-      if (cleanupRef.current) {
-        cleanupRef.current();
-      }
-
-      const next = theme === "dark" ? "light" : "dark";
+      const next: Theme = theme === "dark" ? "light" : "dark";
       const root = document.documentElement;
 
-      root.classList.add(TRANSITION_CLASS);
-      setTheme(next);
-
-      let settled = false;
-      const settle = () => {
-        if (settled) return;
-        settled = true;
-        cleanupRef.current = null;
-        root.classList.remove(TRANSITION_CLASS);
+      // data-theme drives every colour token in CSS. Set it imperatively (not
+      // only via React state) so the change is applied synchronously — that's
+      // what lets the View Transition capture the new colours in its callback.
+      const applyTheme = () => {
+        root.dataset.theme = next;
+        setTheme(next);
       };
 
-      const timeout = setTimeout(settle, TRANSITION_DURATION + 100);
+      const doc = document as ViewTransitionDocument;
+      const prefersReducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      const onTransitionEnd = (event: TransitionEvent) => {
-        if (event.target === root && event.propertyName.startsWith("--")) {
-          clearTimeout(timeout);
-          settle();
-        }
-      };
-
-      root.addEventListener("transitionend", onTransitionEnd);
-
-      cleanupRef.current = () => {
-        clearTimeout(timeout);
-        root.removeEventListener("transitionend", onTransitionEnd);
-        if (!settled) {
-          root.classList.remove(TRANSITION_CLASS);
-        }
-      };
+      // View Transitions API: the browser crossfades a snapshot of the whole
+      // page on the compositor — uniform AND cheap (no per-element transitions).
+      // Falls back to an instant swap where unsupported (Firefox) or reduced-motion.
+      if (typeof doc.startViewTransition === "function" && !prefersReducedMotion) {
+        doc.startViewTransition(applyTheme);
+      } else {
+        applyTheme();
+      }
     },
   };
 }
