@@ -256,8 +256,23 @@ section[aria-label="Service guidance overview"] h2 {
   50% { transform: rotate(0deg); }
 }
 @keyframes provider-marquee {
+  /* The track renders 3 identical copies of the logos. To loop seamlessly the
+   * transform must move by EXACTLY one copy (-33.3333%). The old -50% moved 1.5
+   * copies, so each cycle restarted mid-pattern → a visible jump/step. */
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(-33.3333%, 0, 0); }
+}
+/* Promote the marquee track to its own compositor layer so the transform
+ * animation stays on the GPU and doesn't get re-rasterised on the main thread. */
+.provider-marquee-track {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Pause the marquee during the theme toggle so the 0.4s colour fade has the
+ * main thread to itself instead of competing with the animation for frames. */
+html.theme-transition .provider-marquee-track {
+  animation-play-state: paused;
 }
 @keyframes call-shimmer {
   0% { transform: translateX(0) skewX(-22deg); }
@@ -621,10 +636,13 @@ html[data-theme="dark"] {
  * background-color, so their driving vars must interpolate here. */
 html.theme-transition {
   transition:
-    --color-page 0.4s ease,
+    /* ONLY vars consumed inside gradients. Solid-color vars (--color-page,
+     * --color-accent, …) are intentionally NOT here: they are handled by the
+     * per-element rule below. Listing them here too made every surface animate
+     * twice (a background-color transition chasing an interpolating var), which
+     * double-eased the largest areas and made the fade feel slow/laggy. */
     --color-hero-bg 0.4s ease,
     --color-hero-bg-fade 0.4s ease,
-    --color-accent 0.4s ease,
     --color-accent-secondary 0.4s ease;
 }
 
