@@ -305,10 +305,14 @@ export function Navigation({
       <header
         data-over-hero={headerOverHero ? "" : undefined}
         className={cn(
-          "hidden md:block fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color,backdrop-filter] duration-300",
+          // Transition ONLY background-color. Animating backdrop-filter (and even
+          // a static backdrop-blur) forces a full-width blur repaint on every
+          // scroll frame — the main cause of scroll jank on the home page. A
+          // near-opaque solid background reads the same and stays smooth.
+          "hidden md:block fixed top-0 inset-x-0 z-50 h-[68px] [--header-height:68px] transition-[background-color] duration-300",
           headerOverHero
             ? "bg-transparent"
-            : "bg-page/95 backdrop-blur-xl"
+            : "bg-page/98"
         )}
       >
         <div className="h-full w-full px-[clamp(12px,2vw,24px)] grid md:grid-cols-[1fr_auto_1fr] items-center justify-between md:justify-center gap-4">

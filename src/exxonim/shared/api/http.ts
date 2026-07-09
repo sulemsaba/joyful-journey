@@ -4,7 +4,7 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 
-export function createHttpClient(baseURL: string, timeout = 800): AxiosInstance {
+export function createHttpClient(baseURL: string, timeout = 4000): AxiosInstance {
   return axios.create({
     baseURL,
     timeout,
