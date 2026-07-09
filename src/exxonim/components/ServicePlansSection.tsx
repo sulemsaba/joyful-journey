@@ -29,10 +29,10 @@ import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
 import { CardDeckCarousel } from "./CardDeckCarousel";
 import { PlanInquiryModal } from "./PlanInquiryModal";
-import { usePricingPlans } from "@/exxonim/hooks/usePricingPlans";
+import { useServicePackages } from "@/exxonim/hooks/useServicePackages";
 import { useTestimonials } from "@/exxonim/hooks/useTestimonials";
 import { cn } from "@/exxonim/utils/cn";
-import type { PricingPlan, Testimonial } from '@/exxonim/types';
+import type { SegmentPackage, Testimonial } from '@/exxonim/types';
 
 type ServicePackagesSectionProps = {
   variant?: "home" | "page";
@@ -48,7 +48,12 @@ const segments: { key: SegmentKey; label: string; shortLabel: string; icon: Reac
   { key: 'ngos', label: 'NGOs & Non-Profits', shortLabel: 'NGO', icon: Heart },
 ];
 
-/* ── Plan data per segment (static, no prices) ──────────────── */
+/* ── Plan data per segment ──────────────────────────────────
+ * The `segmentPlans` object below is the BUNDLED FALLBACK — it renders
+ * instantly and whenever a segment has no admin-published packages, so the
+ * section is never empty (empty DB or API outage). When the admin publishes
+ * packages for a segment (via /admin/service-packages → /api/v1/pricing/packages),
+ * those override the fallback for that segment. See resolvePlans() below. */
 interface SegmentPlan {
   name: string;
   badge: string | null;
@@ -56,6 +61,10 @@ interface SegmentPlan {
   features: { label: string; included: boolean }[];
   cta: string;
 }
+
+/* A plan ready to render: either a bundled fallback or an admin package,
+ * with `featured` resolved (fallback: has a badge; admin: recommended flag). */
+type ResolvedPlan = SegmentPlan & { featured: boolean };
 
 const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
   'local-entrepreneurs': [
@@ -517,9 +526,12 @@ export function ServicePackagesSection({
   const {
     data: testimonials = [],
   } = useTestimonials();
+  /* Admin-managed packages from /api/v1/pricing/packages (service_packages
+   * table). Grouped by segment slug; segments with no packages fall back to
+   * the bundled `segmentPlans` defaults. */
   const {
-    data: plans = [],
-  } = usePricingPlans();
+    data: apiPackages = [],
+  } = useServicePackages();
 
   /* ── Modal state ── */
   const [modalOpen, setModalOpen] = useState(false);
@@ -543,7 +555,41 @@ export function ServicePackagesSection({
     setModalOpen(false);
   }, []);
 
-  const currentPlans = segmentPlans[activeSegment];
+  /* Group admin packages by their segment slug. */
+  const packagesBySegment = useMemo(() => {
+    const map = new Map<string, SegmentPackage[]>();
+    for (const pkg of apiPackages) {
+      if (!pkg.segment_slug) continue;
+      const arr = map.get(pkg.segment_slug);
+      if (arr) arr.push(pkg);
+      else map.set(pkg.segment_slug, [pkg]);
+    }
+    return map;
+  }, [apiPackages]);
+
+  /* Resolve the cards for a segment: admin packages if any are published,
+   * otherwise the bundled fallback. Admin packages win per-segment. */
+  const resolvePlans = useCallback((key: SegmentKey): ResolvedPlan[] => {
+    const fromApi = packagesBySegment.get(key);
+    if (fromApi && fromApi.length > 0) {
+      return [...fromApi]
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((p) => ({
+          name: p.name,
+          badge: p.badge,
+          description: p.description,
+          features: p.features,
+          cta: p.cta || "Get Started",
+          featured: p.recommended,
+        }));
+    }
+    return segmentPlans[key].map((p) => ({ ...p, featured: p.badge !== null }));
+  }, [packagesBySegment]);
+
+  const currentPlans = useMemo(
+    () => resolvePlans(activeSegment),
+    [resolvePlans, activeSegment]
+  );
 
   /* ── Stable per-plan callbacks for memoized SegmentPlanCard ── */
   const cardCtaRefs = useRef<Map<string, () => void>>(new Map());
@@ -561,7 +607,7 @@ export function ServicePackagesSection({
   const carouselCards = useMemo(
     () =>
       currentPlans.map((plan) => {
-        const featured = plan.badge !== null;
+        const featured = plan.featured;
         return {
           key: `${activeSegment}-${plan.name}`,
           content: (
@@ -579,7 +625,7 @@ export function ServicePackagesSection({
 
   /* ── Default to middle card (Growth / "Most Popular") ── */
   const defaultCarouselIndex = useMemo(() => {
-    const idx = currentPlans.findIndex((p) => p.badge !== null);
+    const idx = currentPlans.findIndex((p) => p.featured);
     return idx >= 0 ? idx : Math.floor(currentPlans.length / 2);
   }, [currentPlans]);
 
@@ -657,7 +703,7 @@ export function ServicePackagesSection({
             {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
             <div className="hidden lg:grid gap-6 lg:grid-cols-3 lg:max-w-[1100px] lg:mx-auto">
               {currentPlans.map((plan) => {
-                const featured = plan.badge !== null;
+                const featured = plan.featured;
                 return (
                 <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
                   <div className="w-full max-w-[320px]">
