@@ -632,6 +632,19 @@ html[data-theme="dark"] {
   }
 }
 
+/* While the theme view-transition is in flight, force every element to adopt
+ * the new theme INSTANTLY. Elements with their own transition-colors /
+ * transition-all (blog card borders, links, inputs, …) would otherwise still be
+ * showing the old colour when the browser snapshots the "after" state, then
+ * finish transitioning after the crossfade — so they'd visibly change a beat
+ * late and look inconsistent with the rest of the page. The crossfade is the
+ * only animation we want here. */
+html.theme-swapping *,
+html.theme-swapping *::before,
+html.theme-swapping *::after {
+  transition: none !important;
+}
+
 /* ── Logo crossfade during theme transition ───────────
  * Both logos are always rendered - one visible, one hidden
  * via opacity. During theme transitions, opacity smoothly

@@ -19,9 +19,13 @@ const STORAGE_KEY = "exxonim-theme";
 const LEGACY_STORAGE_KEY = "koro-theme";
 
 /** Document augmented with the View Transitions API (not in every TS lib yet). */
+type ViewTransitionHandle = { finished: Promise<unknown> };
 type ViewTransitionDocument = Document & {
-  startViewTransition?: (callback: () => void) => unknown;
+  startViewTransition?: (callback: () => void) => ViewTransitionHandle;
 };
+
+/** Class on <html> while a theme view-transition is in flight (see globals.css). */
+const SWAP_CLASS = "theme-swapping";
 
 function getStoredTheme(): Theme | null {
   if (typeof window === "undefined") {
@@ -158,7 +162,20 @@ export function useTheme() {
       // page on the compositor — uniform AND cheap (no per-element transitions).
       // Falls back to an instant swap where unsupported (Firefox) or reduced-motion.
       if (typeof doc.startViewTransition === "function" && !prefersReducedMotion) {
-        doc.startViewTransition(applyTheme);
+        // Suppress per-element colour transitions for the duration of the swap
+        // (SWAP_CLASS → transition:none in globals.css). Otherwise elements with
+        // their own transition-colors/transition-all (blog card borders, links,
+        // inputs) would still show the OLD colour when the view transition
+        // snapshots the new state, then finish changing after the crossfade —
+        // appearing to switch a beat late / inconsistently.
+        root.classList.add(SWAP_CLASS);
+        const clearSwap = () => root.classList.remove(SWAP_CLASS);
+        const transition = doc.startViewTransition(applyTheme);
+        transition.finished.finally(clearSwap);
+        // Safety net: if `finished` never settles (some engines/headless), remove
+        // the class anyway so `transition: none` is never left on the page —
+        // otherwise all hover/colour transitions would be dead after one toggle.
+        setTimeout(clearSwap, 500);
       } else {
         applyTheme();
       }
