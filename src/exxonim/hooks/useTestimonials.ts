@@ -43,9 +43,16 @@ export function useTestimonials() {
     retry: 1,
   });
 
+  // Use the bundled fallback when there is no data — including an EMPTY array.
+  // `?? ` only catches null/undefined, so a successful empty API response ([])
+  // would otherwise override the fallback and hide the whole testimonials
+  // section (the API currently returns [] until testimonials are added in admin).
+  const data =
+    query.data && query.data.length > 0 ? query.data : fallbackTestimonials;
+
   return {
     ...query,
-    data: query.data ?? fallbackTestimonials,
+    data,
     isPending: query.isPending && !fallbackTestimonials.length,
   };
 }
