@@ -122,7 +122,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
        * Reference: Linear, Vercel, Figma, and Intercom all use padding-
        * based spacing for their logo trust bars for this exact reason. */}
       <div
-        className="full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page [-webkit-mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
+        className="full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page"
         aria-label="Partner logos"
       >
         <div className="provider-marquee-track flex items-center w-max animate-provider-marquee hover:[animation-play-state:paused]">
@@ -163,6 +163,19 @@ export function ProviderSection({ content }: ProviderSectionProps) {
             );
           })}
         </div>
+
+        {/* Edge fades as overlays instead of mask-image. A mask over the moving
+            track de-composites it (main-thread re-raster each frame → stutter);
+            gradient overlays keep the track on its own GPU layer. from-page
+            matches the section background in both themes. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[12%] bg-gradient-to-r from-page to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-[12%] bg-gradient-to-l from-page to-transparent"
+        />
       </div>
     </section>
   );
