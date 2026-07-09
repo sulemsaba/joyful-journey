@@ -7,6 +7,7 @@ import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 import { Container } from '@/exxonim/components/primitives/Container';
+import { UnifiedCtaSection } from '@/exxonim/components/UnifiedCtaSection';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import { routes, serviceDetailPath } from '@/exxonim/routes';
@@ -309,40 +310,24 @@ export function ServiceDetailPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 6: Final CTA
+       *  SECTION 6: Final CTA — unified teal banner.
        * ────────────────────────────────────────────────────────────── */}
-      <section className="py-12 md:py-20" aria-labelledby="service-cta-title">
-        <Container>
-          <div
-            className="max-w-[42rem] mx-auto rounded-2xl md:rounded-[2rem] border border-border-soft bg-surface-elevated p-6 md:p-12 text-center"
-            style={{
-              background:
-                'radial-gradient(80% 100% at 50% 0%, var(--color-accent-gradient-subtle), transparent 70%), var(--color-surface-elevated)',
-            }}
-            data-reveal
-          >
-            <h2
-              id="service-cta-title"
-              className="text-[clamp(1.8rem,3.2vw,2.6rem)] font-semibold leading-tight tracking-tight text-text"
-            >
-              Ready to start {service.title.toLowerCase()}?
-            </h2>
-            <p className="mt-3 text-text-muted text-sm leading-relaxed max-w-[min(48ch,90%)] mx-auto">
-              Book a free consultation. We'll review your needs and guide you through every step.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button size="standard" variant="primary" href={ctaLink}>
-                {ctaText}
-                <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Button>
-              <Button size="standard" variant="secondary" href={routes.services}>
-                <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden="true" />
-                All services
-              </Button>
-            </div>
-          </div>
-        </Container>
-      </section>
+      <UnifiedCtaSection
+        ariaLabel="Book a consultation"
+        heading={`Ready to start ${service.title.toLowerCase()}?`}
+        description="Book a free consultation. We'll review your needs and guide you through every step."
+      >
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <Button size="standard" variant="inverse" href={ctaLink}>
+            {ctaText}
+            <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+          </Button>
+          <Button size="standard" variant="inverseOutline" href={routes.services}>
+            <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden="true" />
+            All services
+          </Button>
+        </div>
+      </UnifiedCtaSection>
     </>
   );
 }

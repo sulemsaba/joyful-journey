@@ -66,14 +66,14 @@ export function ServicesPage() {
 
       {/* 5. Final CTA */}
       <UnifiedCtaSection heading="Ready to get started?">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Button size="standard" variant="primary" href={routes.contact}>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <Button size="standard" variant="inverse" href={routes.contact}>
             Book a Free Consultation
             <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
           </Button>
           <Button
             size="standard"
-            variant="secondary"
+            variant="inverseOutline"
             href="tel:+255794689099"
           >
             <Phone className="mr-1.5 h-4 w-4" aria-hidden="true" />

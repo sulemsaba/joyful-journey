@@ -55,15 +55,15 @@ export function NewsletterForm() {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center gap-2">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-4 py-2 text-accent">
+      <div className="flex flex-col items-center gap-2 md:items-start">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-accent">
           <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
           <span className="text-xs sm:text-sm font-semibold">Subscribed!</span>
         </div>
         <button
           type="button"
           onClick={handleReset}
-          className="text-xs text-text-soft underline-offset-2 hover:underline hover:text-accent transition-colors"
+          className="text-xs text-footer-text-muted underline-offset-2 hover:underline hover:text-footer-heading transition-colors"
         >
           Use a different email
         </button>
@@ -74,7 +74,7 @@ export function NewsletterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-wrap w-full max-w-md mx-auto items-center gap-2 sm:gap-3"
+      className="flex flex-wrap w-full sm:w-auto md:min-w-[22rem] items-center gap-2 sm:gap-3"
     >
       <label htmlFor="newsletter-email" className="sr-only">
         Email address
@@ -97,7 +97,7 @@ export function NewsletterForm() {
       </div>
       <Button
         size="standard"
-        variant="primary"
+        variant="inverse"
         type="submit"
         isLoading={isSubmitting}
         disabled={isSubmitting}
@@ -110,7 +110,7 @@ export function NewsletterForm() {
 
       {/* Inline error - shown below the form row */}
       {submitError && (
-        <p role="alert" className="w-full text-center text-xs text-accent-hover mt-1">
+        <p role="alert" className="w-full text-xs text-footer-heading mt-1">
           {submitError}
         </p>
       )}
