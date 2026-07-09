@@ -202,9 +202,18 @@ export function HeroAurora() {
     const handler = () => refreshCache();
     mql.addEventListener("change", handler);
     window.addEventListener("resize", refreshCache);
+    // Manual theme toggle flips data-theme on <html> without a resize or a
+    // system-scheme change — observe it so the aurora re-reads accent + isDark
+    // immediately (otherwise it keeps drawing with stale colours until a resize).
+    const themeObserver = new MutationObserver(refreshCache);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
     return () => {
       mql.removeEventListener("change", handler);
       window.removeEventListener("resize", refreshCache);
+      themeObserver.disconnect();
     };
   }, [refreshCache]);
 
