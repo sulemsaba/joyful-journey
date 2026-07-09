@@ -40,13 +40,12 @@ const ORIGIN_API = (() => {
 
 function resolveLogoSrc(src: string): string {
   const trimmed = src?.trim?.() ? src.trim() : "";
-  if (!trimmed) return "/placeholder.svg";
+  if (!trimmed) return "";
   if (/^(https?:)?\/\//i.test(trimmed)) return trimmed;
   if (/^(data|blob):/i.test(trimmed)) return trimmed;
   if (
     trimmed.startsWith("/assets/") ||
     trimmed.startsWith("/src/") ||
-    trimmed.startsWith("/placeholder") ||
     trimmed.startsWith("/favicon")
   ) {
     return trimmed;
@@ -130,12 +129,9 @@ export function ProviderSection({ content }: ProviderSectionProps) {
             return (
               <div
                 key={`${logo.alt}-${index}`}
-                className={cn(
-                  "provider-logo-item group flex items-center justify-center flex-none",
-                  logo.opticalWeight === "solid"
-                    ? "h-8 sm:h-10 md:h-12 px-3 md:px-5"
-                    : "h-10 sm:h-12 md:h-16 px-4 md:px-6"
-                )}
+                /* Uniform height for every logo (same visual size, centered,
+                   object-contain) so the row reads as one consistent strip. */
+                className="provider-logo-item group flex flex-none items-center justify-center h-9 sm:h-10 md:h-12 px-5 md:px-8"
                 aria-label={logo.alt}
                 role="img"
               >
@@ -149,14 +145,19 @@ export function ProviderSection({ content }: ProviderSectionProps) {
                   alt={`${logo.alt} logo`}
                   width="176"
                   height="64"
-                  loading="lazy"
+                  /* Eager (not lazy): the 3 marquee copies are the same 10 small
+                     files, so loading them upfront keeps every logo's width stable
+                     as it scrolls in — a lazy load mid-scroll shifts widths and
+                     makes the marquee jump / scroll inconsistently. */
+                  loading="eager"
                   fetchPriority="low"
                   decoding="async"
                   onError={(event) => {
+                    // A failed logo simply disappears — never show a placeholder.
                     const img = event.currentTarget;
-                    if (img.dataset.fallbackApplied) return;
-                    img.dataset.fallbackApplied = "true";
-                    img.src = "/placeholder.svg";
+                    const item = img.closest(".provider-logo-item") as HTMLElement | null;
+                    if (item) item.style.display = "none";
+                    else img.style.display = "none";
                   }}
                 />
               </div>

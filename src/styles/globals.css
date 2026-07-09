@@ -209,7 +209,7 @@ section[aria-label="Service guidance overview"] h2 {
 
   --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
   --animate-phone-ring: phone-ring 2s ease-in-out infinite;
-  --animate-provider-marquee: provider-marquee 30s linear infinite;
+  --animate-provider-marquee: provider-marquee 44s linear infinite;
   --animate-code-pan: code-pan 12s linear infinite alternate;
   --animate-call-shimmer: call-shimmer 4.5s linear infinite;
   --animate-call-ping: call-ping 1.85s ease-out infinite;
@@ -257,10 +257,11 @@ section[aria-label="Service guidance overview"] h2 {
 }
 @keyframes provider-marquee {
   /* The track renders 3 identical copies of the logos. To loop seamlessly the
-   * transform must move by EXACTLY one copy (-33.3333%). The old -50% moved 1.5
-   * copies, so each cycle restarted mid-pattern → a visible jump/step. */
+   * transform must move by EXACTLY one copy = one third of the track. calc(-100%/3)
+   * is exact; the old rounded -33.3333% drifted a hair each cycle, and -50% before
+   * that moved 1.5 copies (restarted mid-pattern → a visible jump/step). */
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-33.3333%, 0, 0); }
+  to { transform: translate3d(calc(-100% / 3), 0, 0); }
 }
 /* Promote the marquee track to its own compositor layer so the transform
  * animation stays on the GPU and doesn't get re-rasterised on the main thread. */
