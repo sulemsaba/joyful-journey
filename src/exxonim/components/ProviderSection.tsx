@@ -124,7 +124,7 @@ export function ProviderSection({ content }: ProviderSectionProps) {
         className="full-bleed overflow-hidden relative pb-6 md:pb-8 bg-page"
         aria-label="Partner logos"
       >
-        <div className="provider-marquee-track flex items-center w-max animate-provider-marquee hover:[animation-play-state:paused]">
+        <div className="provider-marquee-track flex items-center w-max animate-provider-marquee">
           {repeatedLogos.map((logo, index) => {
             return (
               <div
