@@ -96,6 +96,7 @@ export function HeroAurora() {
   const lastFrameRef = useRef(0);
   const rafIdRef = useRef<number>(0);
   const isVisibleRef = useRef(true);
+  const isScrollingRef = useRef(false);
 
   const cachedAccentRef = useRef("#0f5c63");
   const cachedIsDarkRef = useRef(false);
@@ -162,6 +163,15 @@ export function HeroAurora() {
       }
       rafIdRef.current = requestAnimationFrame(animate);
 
+      // Freeze the aurora during active scroll: redrawing the canvas on the main
+      // thread while scrolling is what makes scroll-up feel laggy. Holding the
+      // last frame frees the main thread for a smooth scroll; it resumes the
+      // instant scrolling stops (imperceptible pause given the slow drift).
+      if (isScrollingRef.current) {
+        lastFrameRef.current = ts;
+        return;
+      }
+
       const elapsed = ts - lastFrameRef.current;
       if (elapsed < FRAME_INTERVAL) return;
 
@@ -188,8 +198,26 @@ export function HeroAurora() {
 
     rafIdRef.current = requestAnimationFrame(animate);
 
+    // Mark active scrolling so animate() can freeze; clear shortly after scroll
+    // stops and make sure the loop is running again.
+    let scrollIdleTimer: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      isScrollingRef.current = true;
+      if (scrollIdleTimer) clearTimeout(scrollIdleTimer);
+      scrollIdleTimer = setTimeout(() => {
+        isScrollingRef.current = false;
+        if (isVisibleRef.current && !document.hidden && !rafIdRef.current) {
+          lastFrameRef.current = 0;
+          rafIdRef.current = requestAnimationFrame(animate);
+        }
+      }, 140);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", onScroll);
+      if (scrollIdleTimer) clearTimeout(scrollIdleTimer);
       visibilityObserver.disconnect();
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
