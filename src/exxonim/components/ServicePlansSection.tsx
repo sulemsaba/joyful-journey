@@ -437,6 +437,10 @@ const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact,
     <article
       className={cn(
         "group relative flex h-full w-full flex-col rounded-2xl border transition-transform transition-shadow duration-300",
+        /* ── Portrait height floor: keeps short cards tall (never squat) while the
+         *    grid still stretches all three to the tallest as features are added.
+         *    Width is capped by the wrapper (SHARED_CARD_WIDTH) so growth is vertical. ── */
+        !compact && "min-h-[460px]",
         /* ── Padding - extra top room for floating badge ── */
         compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
         /* ── Featured vs normal ── */
@@ -721,12 +725,15 @@ export function ServicePackagesSection({
              * Wider container + 8pt gap + larger cards so the pricing tiers read
              * as the prominent conversion element (they were boxed to 1100px /
              * 320px, making them feel smaller than the full-width insights rail). */}
-            <div className="hidden lg:grid gap-8 lg:grid-cols-3 lg:max-w-[1240px] lg:mx-auto">
+            <div className="hidden lg:grid gap-8 lg:grid-cols-3 lg:max-w-[1180px] lg:mx-auto">
               {currentPlans.map((plan) => {
                 const featured = plan.featured;
                 return (
                 <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
-                  <div className="w-full max-w-[400px]">
+                  {/* SHARED_CARD_WIDTH = 360px — the portrait width cap. Keep this IDENTICAL
+                      to the admin card (consult-admin package preview/editor) so what you
+                      edit is the exact size that ships. Growth is vertical, never wider. */}
+                  <div className="w-full max-w-[360px]">
                     <SegmentPlanCard
                       plan={plan}
                       featured={featured}
