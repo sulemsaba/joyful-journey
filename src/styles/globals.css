@@ -7,6 +7,12 @@ html, body {
   overflow-x: hidden; /* fallback for older browsers */
   overflow-x: clip;   /* modern: clips without creating a stacking context */
 }
+/* Reserve the scrollbar gutter always, so the vertical scrollbar APPEARING once
+ * the page content mounts doesn't shrink the viewport and shift centred content
+ * (e.g. the boot loader) to the left. */
+html {
+  scrollbar-gutter: stable;
+}
 
 /* ── Prevent orphaned words in hero and section headings ──
  * Widows (single word alone on last line) look like text
