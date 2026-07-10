@@ -2041,6 +2041,93 @@ export const fallbackTermsPage: PageRecord<InfoPageContent> = createFallbackPage
   }
 );
 
+// NOTE: these are only shown if the API is unreachable — the live content comes
+// from the DB (pages table, editable in admin) via GET /api/v1/pages/{slug}.
+export const fallbackPrivacyPage: PageRecord<InfoPageContent> = createFallbackPage(
+  "privacy",
+  "Privacy Policy",
+  {
+    hero: {
+      eyebrow: "Privacy",
+      title: "How Exxonim Consult handles your information.",
+      description:
+        "We collect only what we need to deliver registration, licensing, and compliance services, and we keep it secure.",
+    },
+    sections: [
+      {
+        title: "Information we collect",
+        paragraphs: [
+          "We collect the contact and business details you provide through our forms and during an engagement, and basic usage data to improve the site.",
+        ],
+      },
+      {
+        title: "How we use it",
+        paragraphs: [
+          "Your information is used to deliver the services you request, communicate with you, and meet our legal and regulatory obligations.",
+          "We do not sell your personal information.",
+        ],
+      },
+    ],
+    next_step: {
+      title: "Questions about your privacy?",
+      description: "Contact us and we'll explain how your information is handled.",
+      primary_action: { label: "Contact Exxonim", href: routes.contact },
+    },
+  }
+);
+
+export const fallbackCookiesPage: PageRecord<InfoPageContent> = createFallbackPage(
+  "cookies",
+  "Cookie Policy",
+  {
+    hero: {
+      eyebrow: "Cookies",
+      title: "How Exxonim Consult uses cookies.",
+      description:
+        "We use a small number of cookies to keep the site working and to understand how it is used.",
+    },
+    sections: [
+      {
+        title: "What cookies we use",
+        paragraphs: [
+          "Essential cookies keep the site functioning, and optional analytics cookies help us improve it. You can control optional cookies at any time.",
+        ],
+      },
+    ],
+    next_step: {
+      title: "Questions about cookies?",
+      description: "Reach out and we'll help.",
+      primary_action: { label: "Contact Exxonim", href: routes.contact },
+    },
+  }
+);
+
+export const fallbackDataRightsPage: PageRecord<InfoPageContent> = createFallbackPage(
+  "data-rights",
+  "Your Data Rights",
+  {
+    hero: {
+      eyebrow: "Data rights",
+      title: "Your rights over your information.",
+      description:
+        "You can request access to, correction of, or deletion of the personal information we hold about you.",
+    },
+    sections: [
+      {
+        title: "Exercising your rights",
+        paragraphs: [
+          "To make a request about your data, contact us and we will respond within a reasonable time in line with applicable law.",
+        ],
+      },
+    ],
+    next_step: {
+      title: "Make a data request",
+      description: "Get in touch and we'll take it from there.",
+      primary_action: { label: "Contact Exxonim", href: routes.contact },
+    },
+  }
+);
+
 export function getFallbackPage(slug: string) {
   switch (slug) {
     case "home":
@@ -2061,6 +2148,12 @@ export function getFallbackPage(slug: string) {
       return fallbackSupportPage;
     case "terms":
       return fallbackTermsPage;
+    case "privacy":
+      return fallbackPrivacyPage;
+    case "cookies":
+      return fallbackCookiesPage;
+    case "data-rights":
+      return fallbackDataRightsPage;
     case "track-consultation":
       return fallbackTrackConsultationPage;
     default:

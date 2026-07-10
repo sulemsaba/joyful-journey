@@ -45,6 +45,9 @@ import {
   loadServiceDetailPage,
   loadSupportPage,
   loadTermsPage,
+  loadPrivacyPage,
+  loadCookiesPage,
+  loadDataRightsPage,
   loadTrackConsultationPage,
 } from "@/exxonim/preloadRoutes";
 
@@ -60,6 +63,9 @@ const ServicesPage = lazy(loadServicesPage);
 const ServiceDetailPage = lazy(loadServiceDetailPage);
 const SupportPage = lazy(loadSupportPage);
 const TermsPage = lazy(loadTermsPage);
+const PrivacyPage = lazy(loadPrivacyPage);
+const CookiesPage = lazy(loadCookiesPage);
+const DataRightsPage = lazy(loadDataRightsPage);
 const TrackConsultationPage = lazy(loadTrackConsultationPage);
 
 // ── Type helper for requestIdleCallback ────────────────
@@ -280,6 +286,9 @@ export function App({ onReady }: { onReady?: () => void }) {
                 <Route path="/contact" element={<><PageReady onReady={handlePageReady} /><ContactPage /></>} />
                 <Route path="/support" element={<><PageReady onReady={handlePageReady} /><SupportPage /></>} />
                 <Route path="/terms" element={<><PageReady onReady={handlePageReady} /><TermsPage /></>} />
+                <Route path="/privacy" element={<><PageReady onReady={handlePageReady} /><PrivacyPage /></>} />
+                <Route path="/cookies" element={<><PageReady onReady={handlePageReady} /><CookiesPage /></>} />
+                <Route path="/data-rights" element={<><PageReady onReady={handlePageReady} /><DataRightsPage /></>} />
                 <Route path="/track-consultation" element={<><PageReady onReady={handlePageReady} /><TrackConsultationPage /></>} />
                 <Route path="*" element={<><PageReady onReady={handlePageReady} /><NotFoundPage pathname={location.pathname} /></>} />
               </Routes>
