@@ -49,11 +49,21 @@ const segments: { key: SegmentKey; label: string; shortLabel: string; icon: Reac
 ];
 
 /* ── Plan data per segment ──────────────────────────────────
- * The `segmentPlans` object below is the BUNDLED FALLBACK — it renders
- * instantly and whenever a segment has no admin-published packages, so the
- * section is never empty (empty DB or API outage). When the admin publishes
- * packages for a segment (via /admin/service-packages → /api/v1/pricing/packages),
- * those override the fallback for that segment. See resolvePlans() below. */
+ * The `segmentPlans` object below is the LAST-RESORT (Layer 4) fallback — it
+ * renders instantly and whenever a segment has no admin-published packages, so
+ * the section is never empty. When the admin publishes packages for a segment
+ * (via /admin/service-packages → /api/v1/pricing/packages) those override this
+ * per segment (resolvePlans() below). The real "last admin-approved snapshot"
+ * fallback is the Layer 3 file public/fallback/service-packages.json, generated
+ * from live data by scripts/refresh-fallbacks.mjs and served whenever the API
+ * throws (backend/DB down); this bundled object only shows if that file is also
+ * missing (e.g. a fresh deploy before the first snapshot).
+ *
+ * KEEP IN SYNC WITH THE BACKEND SEED: these values mirror
+ * exxonim_backend/app/seed_data.py SERVICE_SEGMENTS (same features, included
+ * flags, badges, and CTA rule — recommended → "Book a Consultation", else
+ * "Get Started") so the last-resort content matches the live baseline and
+ * never silently drifts from what visitors see when the backend is up. */
 interface SegmentPlan {
   name: string;
   badge: string | null;
@@ -77,8 +87,8 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
         { label: 'TIN Application', included: true },
         { label: 'Business License (1 sector)', included: true },
         { label: 'Annual Returns Filing', included: true },
-        { label: 'Statutory Filings (PAYE/SDL)', included: false },
-        { label: 'Dedicated Compliance Advisor', included: false },
+        { label: 'Statutory Filings (PAYE/SDL)', included: true },
+        { label: 'Dedicated Compliance Advisor', included: true },
       ],
       cta: 'Get Started',
     },
@@ -88,13 +98,11 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
       description: 'Full registration, ongoing compliance, and filing support for growing businesses.',
       features: [
         { label: 'Company Registration (COI)', included: true },
-        { label: 'TIN + Business License', included: true },
-        { label: 'Annual Returns + Beneficial Ownership', included: true },
-        { label: 'Statutory Filings (PAYE/SDL/WCF)', included: true },
-        { label: 'Regulatory Renewals Tracking', included: true },
+        { label: 'TIN plus Business License', included: true },
+        { label: 'Annual Returns and Beneficial Ownership', included: true },
         { label: 'Dedicated Compliance Advisor', included: false },
       ],
-      cta: 'Get Started',
+      cta: 'Book a Consultation',
     },
     {
       name: 'Premium',
@@ -104,11 +112,11 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
         { label: 'Everything in Growth', included: true },
         { label: 'Trademark Registration', included: true },
         { label: 'Statutory Filings (all obligations)', included: true },
-        { label: 'Regulatory Renewals + Reminders', included: true },
+        { label: 'Regulatory Renewals and Reminders', included: true },
         { label: 'Dedicated Compliance Advisor', included: true },
         { label: 'Quarterly Compliance Review', included: true },
       ],
-      cta: 'Book Consultation',
+      cta: 'Get Started',
     },
   ],
   'foreign-investors': [
@@ -132,13 +140,13 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
       description: 'Full registration, work permits, and investment centre compliance.',
       features: [
         { label: 'Company Registration (COI)', included: true },
-        { label: 'TIN + Business License', included: true },
+        { label: 'TIN plus Business License', included: true },
         { label: 'Work Permit Application', included: true },
         { label: 'TIC/TISEZA Registration', included: true },
-        { label: 'Annual Returns + Renewals', included: true },
+        { label: 'Annual Returns and Renewals', included: true },
         { label: 'Cross-border Document Support', included: false },
       ],
-      cta: 'Get Started',
+      cta: 'Book a Consultation',
     },
     {
       name: 'Premium',
@@ -148,11 +156,11 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
         { label: 'Everything in Growth', included: true },
         { label: 'Foreign Company Registration', included: true },
         { label: 'Cross-border Document Legalisation', included: true },
-        { label: 'Regulatory Renewals + Reminders', included: true },
+        { label: 'Regulatory Renewals and Reminders', included: true },
         { label: 'Dedicated Compliance Advisor', included: true },
         { label: 'Quarterly Compliance Review', included: true },
       ],
-      cta: 'Book Consultation',
+      cta: 'Get Started',
     },
   ],
   'enterprises': [
@@ -162,7 +170,7 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
       description: 'Core registration and statutory filings for established businesses.',
       features: [
         { label: 'Company Registration', included: true },
-        { label: 'TIN + Business License', included: true },
+        { label: 'TIN plus Business License', included: true },
         { label: 'Annual Returns Filing', included: true },
         { label: 'Statutory Filings (PAYE/SDL/WCF)', included: true },
         { label: 'Operational Advisory', included: false },
@@ -177,12 +185,12 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
       features: [
         { label: 'Full Registration Suite', included: true },
         { label: 'All Statutory Filings', included: true },
-        { label: 'Annual Returns + Beneficial Ownership', included: true },
+        { label: 'Annual Returns and Beneficial Ownership', included: true },
         { label: 'Regulatory Renewals Tracking', included: true },
         { label: 'Trademark Protection', included: true },
         { label: 'Dedicated Compliance Advisor', included: false },
       ],
-      cta: 'Get Started',
+      cta: 'Book a Consultation',
     },
     {
       name: 'Premium',
@@ -196,7 +204,7 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
         { label: 'Quarterly Compliance Review', included: true },
         { label: 'Forward-looking Strategy', included: true },
       ],
-      cta: 'Book Consultation',
+      cta: 'Get Started',
     },
   ],
   'ngos': [
@@ -220,13 +228,13 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
       description: 'Complete NGO setup with donor compliance and governance documentation.',
       features: [
         { label: 'NGO Registration (Enhanced)', included: true },
-        { label: 'Constitution + Governance Framework', included: true },
+        { label: 'Constitution plus Governance Framework', included: true },
         { label: 'Tax Exemption Certificate Guidance', included: true },
         { label: 'Donor-readiness Pack', included: true },
         { label: 'Annual Compliance Reporting', included: true },
         { label: 'Board Meeting Templates', included: false },
       ],
-      cta: 'Get Started',
+      cta: 'Book a Consultation',
     },
     {
       name: 'Premium',
@@ -234,13 +242,13 @@ const segmentPlans: Record<SegmentKey, SegmentPlan[]> = {
       description: 'Full NGO compliance management with ongoing reporting and governance support.',
       features: [
         { label: 'Everything in Growth', included: true },
-        { label: 'Annual Activity & Financial Reports', included: true },
+        { label: 'Annual Activity and Financial Reports', included: true },
         { label: 'Donor Compliance Attestation', included: true },
-        { label: 'Board Minutes & Governance File', included: true },
+        { label: 'Board Minutes and Governance File', included: true },
         { label: 'Tax Exemption Renewal Support', included: true },
         { label: 'Dedicated NGO Compliance Advisor', included: true },
       ],
-      cta: 'Book Consultation',
+      cta: 'Get Started',
     },
   ],
 };
@@ -440,7 +448,7 @@ const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact,
         /* ── Portrait height floor: keeps short cards tall (never squat) while the
          *    grid still stretches all three to the tallest as features are added.
          *    Width is capped by the wrapper (SHARED_CARD_WIDTH) so growth is vertical. ── */
-        !compact && "min-h-[460px]",
+        !compact && "min-h-[520px]",
         /* ── Padding - extra top room for floating badge ── */
         compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
         /* ── Featured vs normal ── */
