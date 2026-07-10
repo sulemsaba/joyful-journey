@@ -512,6 +512,7 @@ const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact,
               }
             </span>
             <span className={cn(
+              "line-clamp-2 min-w-0",
               feature.included ? "text-text font-medium" : "text-text-muted",
               feature.label.startsWith("Everything") && "font-semibold"
             )}>
