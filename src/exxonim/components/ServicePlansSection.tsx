@@ -255,19 +255,31 @@ const TestimonialCard = memo(function TestimonialCard({
 }) {
   return (
     <article
-      className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1"
+      /* Same card shell + hover as the insights/package cards, full height, so the
+         three sections read as one system (testimonials were half-height before). */
+      className="group flex h-[420px] w-full flex-col rounded-2xl border border-border-soft bg-surface p-6 md:p-7 mx-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
-      <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
+      {/* Decorative quote mark */}
+      <span aria-hidden="true" className="select-none font-serif text-5xl leading-[0.5] text-accent/25">
+        &ldquo;
+      </span>
+
+      {/* Star rating */}
+      <p className="mt-5 flex items-center gap-1 text-star" aria-label="5 out of 5 stars">
         {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
+          <Star key={i} className="w-4 h-4 fill-current" aria-hidden="true" />
         ))}
       </p>
-      <p className="text-sm leading-relaxed text-text-muted flex-1">
-        &ldquo;{testimonial.quote}&rdquo;
+
+      {/* Quote — larger, grows to fill the card */}
+      <p className="mt-4 flex-1 text-base md:text-lg leading-relaxed text-text">
+        {testimonial.quote}
       </p>
-      <div className="mt-auto flex items-center gap-2.5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-contrast">
+
+      {/* Author — pinned to the bottom, divided from the quote */}
+      <div className="mt-auto flex items-center gap-3 border-t border-border-soft pt-5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-contrast">
           {testimonial.initials}
         </div>
         <div>
@@ -436,13 +448,14 @@ const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact,
   return (
     <article
       className={cn(
-        "group relative flex h-full w-full flex-col rounded-2xl border transition-transform transition-shadow duration-300",
+        "group relative flex h-full w-full flex-col rounded-2xl border transition-all duration-300",
         /* ── Padding - extra top room for floating badge ── */
         compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
-        /* ── Featured vs normal ── */
+        /* ── Featured vs normal — non-featured matches the insights/testimonial
+              card hover exactly; featured keeps its accent glow for emphasis. ── */
         featured
           ? "border-accent/40 bg-surface shadow-lg shadow-accent/10 hover:shadow-xl hover:shadow-accent/15"
-          : "border-border-soft bg-surface shadow-sm hover:shadow-md",
+          : "border-border-soft bg-surface hover:border-border-strong hover:shadow-lg hover:shadow-accent/5",
         /* ── Hover lift ── */
         "hover:-translate-y-1",
       )}
