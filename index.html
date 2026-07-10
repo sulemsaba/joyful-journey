@@ -67,10 +67,13 @@
         --color-border-soft: rgba(127, 188, 193, 0.20);
       }
 
-      .sk-logo-light { opacity: 1; }
-      .sk-logo-dark  { opacity: 0; position: absolute; top: 0; left: 0; }
-      html[data-theme="dark"] .sk-logo-light { opacity: 0; }
-      html[data-theme="dark"] .sk-logo-dark  { opacity: 1; }
+      /* Toggle by display (not opacity) so only ONE logo is ever in the layout.
+         The theme is fixed by the blocking script before this paints, so there's
+         no swap — and no chance of both flashing at once. */
+      .boot-loader__favicon img.sk-logo-light { display: block; }
+      .boot-loader__favicon img.sk-logo-dark  { display: none; }
+      html[data-theme="dark"] .boot-loader__favicon img.sk-logo-light { display: none; }
+      html[data-theme="dark"] .boot-loader__favicon img.sk-logo-dark  { display: block; }
 
       /* ── Boot / Emergency Loader ─────────────────────
        * CSS-only loader shown between HTML parse and React mount.
@@ -91,8 +94,11 @@
         100% { opacity: 0; }
       }
       @keyframes boot-fade-in {
-        from { opacity: 0; transform: translateY(4px); }
-        to { opacity: 1; transform: translateY(0); }
+        /* Opacity-only: a translateY here made the logo visibly slide ~4px as it
+           faded in (janky because the JS bundle loads at the same moment). No
+           movement now — it just fades. */
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
       .boot-loader {
         position: fixed;
