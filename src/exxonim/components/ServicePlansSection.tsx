@@ -717,13 +717,16 @@ export function ServicePackagesSection({
               defaultIndex={defaultCarouselIndex}
             />
 
-            {/* ─── DESKTOP: 3-column grid with portrait cards ─── */}
-            <div className="hidden lg:grid gap-6 lg:grid-cols-3 lg:max-w-[1100px] lg:mx-auto">
+            {/* ─── DESKTOP: 3-column grid with portrait cards ───
+             * Wider container + 8pt gap + larger cards so the pricing tiers read
+             * as the prominent conversion element (they were boxed to 1100px /
+             * 320px, making them feel smaller than the full-width insights rail). */}
+            <div className="hidden lg:grid gap-8 lg:grid-cols-3 lg:max-w-[1240px] lg:mx-auto">
               {currentPlans.map((plan) => {
                 const featured = plan.featured;
                 return (
                 <div key={`${activeSegment}-${plan.name}`} className="flex justify-center">
-                  <div className="w-full max-w-[320px]">
+                  <div className="w-full max-w-[400px]">
                     <SegmentPlanCard
                       plan={plan}
                       featured={featured}
