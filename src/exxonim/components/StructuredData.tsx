@@ -69,24 +69,40 @@ export function StructuredData({
     schemas.push({
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
+      "@id": `${siteOrigin}/#business`,
       name: "Exxonim Consult",
       description:
         heroDescription ??
         "Business registration, compliance, licensing, and advisory support in Tanzania.",
       url: siteOrigin,
+      image: `${siteOrigin}/og-image.png`,
       telephone: "+255794689099",
       email: "info@exxonim.tz",
+      priceRange: "$$",
       address: {
         "@type": "PostalAddress",
-        streetAddress: "Dar es Salaam",
+        streetAddress: "House No. 9, Block H, Mbezi Beach B, Africana, Bagamoyo Road",
         addressLocality: "Dar es Salaam",
         addressRegion: "Dar es Salaam",
         addressCountry: "TZ",
       },
-      geographicArea: {
-        "@type": "Place",
-        name: "Tanzania",
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: -6.722,
+        longitude: 39.187,
       },
+      areaServed: [
+        { "@type": "Country", name: "Tanzania" },
+        { "@type": "City", name: "Dar es Salaam" },
+      ],
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "08:00",
+          closes: "16:30",
+        },
+      ],
       serviceType: [
         "Business Registration",
         "Company Incorporation",
@@ -135,7 +151,12 @@ export function StructuredData({
   }
 
   /* ── BreadcrumbList schema (all pages) ───────────────────── */
-  const breadcrumbEntries = [
+  const breadcrumbEntries: Array<{
+    "@type": string;
+    position: number;
+    name: string;
+    item?: string;
+  }> = [
     {
       "@type": "ListItem",
       position: 1,

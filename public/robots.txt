@@ -1,5 +1,5 @@
 # Exxonim Consult — robots.txt
-# https://exxonim.tz
+# https://consult.exxonim.tz
 
 User-agent: Googlebot
 Allow: /
@@ -18,4 +18,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /admin/login/
 
-Sitemap: https://exxonim.tz/sitemap.xml
+Sitemap: https://consult.exxonim.tz/sitemap.xml

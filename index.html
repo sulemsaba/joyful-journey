@@ -10,9 +10,18 @@
     <meta property="og:description" content="From registration to compliance. Company setup, TIN, licensing, work permits, NGO registration, and annual returns, all under one roof." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Exxonim Consult" />
-    <meta property="og:url" content="https://exxonim.tz" />
+    <meta property="og:url" content="https://consult.exxonim.tz/" />
+    <meta property="og:image" content="https://consult.exxonim.tz/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Exxonim Consult — Business Setup, Compliance & Permits in Tanzania" />
+    <meta property="og:locale" content="en_TZ" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@exxonim" />
+    <meta name="twitter:title" content="Business Setup, Compliance & Permits Tanzania | Exxonim Consult" />
+    <meta name="twitter:description" content="From registration to compliance. Company setup, TIN, licensing, work permits, NGO registration, and annual returns, all under one roof." />
+    <meta name="twitter:image" content="https://consult.exxonim.tz/og-image.png" />
+    <link rel="canonical" href="https://consult.exxonim.tz/" />
     <title>Business Setup, Compliance & Permits Tanzania | Exxonim Consult</title>
 
     <!-- Blocking script: read saved theme from localStorage and set data-theme
@@ -30,9 +39,6 @@
     <link rel="icon" type="image/png" href="/branding/exxonim-favicon-light.png" id="favicon-light" />
     <link rel="icon" type="image/png" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
     <link rel="apple-touch-icon" href="/branding/exxonim-favicon-light.png" />
-
-    <!-- RSS auto-discovery -->
-    <link rel="alternate" type="application/rss+xml" title="Exxonim Consult Blog" href="/blog/rss.xml" />
 
     <!-- Google Fonts: loaded async (no preconnect, no preload — minimal blocking) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
@@ -151,6 +157,51 @@
         opacity: 0.6;
       }
     </style>
+
+    <!-- Local business structured data — static so non-JS social/search crawlers
+         see it (local/geo SEO: address, geo, area served, opening hours). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "@id": "https://consult.exxonim.tz/#business",
+      "name": "Exxonim Consult",
+      "url": "https://consult.exxonim.tz/",
+      "image": "https://consult.exxonim.tz/og-image.png",
+      "logo": "https://consult.exxonim.tz/branding/exxonim-favicon-light.png",
+      "description": "Company registration, TIN, licensing, work permits, NGO registration, statutory filing and annual compliance in Tanzania — handled end to end.",
+      "telephone": "+255794689099",
+      "email": "info@exxonim.tz",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "House No. 9, Block H, Mbezi Beach B, Africana, Bagamoyo Road",
+        "addressLocality": "Dar es Salaam",
+        "addressRegion": "Dar es Salaam",
+        "addressCountry": "TZ"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -6.7220,
+        "longitude": 39.1870
+      },
+      "areaServed": [
+        { "@type": "Country", "name": "Tanzania" },
+        { "@type": "City", "name": "Dar es Salaam" }
+      ],
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "16:30"
+      }],
+      "sameAs": [
+        "https://x.com/exxonim",
+        "https://linkedin.com/company/exxonim",
+        "https://instagram.com/exxonim"
+      ]
+    }
+    </script>
   </head>
   <body class="antialiased bg-page text-text font-sans" style="background-color:var(--color-page)">
     <div id="root" style="background-color:var(--color-page)">
