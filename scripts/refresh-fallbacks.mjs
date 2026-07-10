@@ -62,6 +62,11 @@ const ENDPOINTS = [
   { key: "blog-posts", path: "/api/v1/blog/posts?page=1&limit=50" },
   { key: "blog-categories", path: "/api/v1/blog/categories" },
   { key: "pricing-plans", path: "/api/v1/pricing/plans" },
+  // The admin-driven plan section (ServicePackagesSection). Key MUST be
+  // "service-packages" to match useServicePackages' fetchWithJsonFallback().
+  // Without this, the packages path had no Layer-3 snapshot and fell straight
+  // through to the hardcoded bundled defaults when the API/DB was down.
+  { key: "service-packages", path: "/api/v1/pricing/packages" },
   { key: "testimonials", path: "/api/v1/testimonials" },
   { key: "faq-items", path: "/api/v1/faq" },
   { key: "navigation", path: "/api/v1/navigation" },
