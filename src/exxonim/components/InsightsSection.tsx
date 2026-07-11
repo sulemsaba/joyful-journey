@@ -21,14 +21,12 @@
  * See: src/exxonim/services/blogService.ts for full endpoint documentation.
  */
 
-import { useCallback, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { resourceArticlePath, routes } from "@/exxonim/routes";
+import { routes } from "@/exxonim/routes";
 import type { BlogPost, HomeInsightsContent } from '@/exxonim/types';
-import { formatBlogDate, getAuthorInitials } from "@/exxonim/utils/blog";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
-import { SmartLink } from "./primitives/SmartLink";
+import { BlogCard } from "./BlogCard";
 import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
 
 /**
@@ -50,8 +48,8 @@ import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
  *     justify-center. All 4 visible at once. Arrow buttons hidden (no scroll).
  *   - Mobile/tablet (<xl): same card size, rail scrolls horizontally with
  *     snap. Users can swipe or tap ← → arrows.
- *   - Card width: clamp(260px,22vw,360px) - sized so 4 fit on ≥1280px.
- *     Mobile cards: min(84vw, 360px) for comfortable swipe width.
+ *   - Card width: clamp(240px,20vw,320px) - compact, sized so 4 fit on ≥1280px.
+ *     Mobile cards: min(76vw, 300px) for comfortable swipe width.
  *
  * ADMIN - HOW MANY POSTS TO FEATURE:
  *   - 4 posts = full row on desktop. Best visual balance.
@@ -75,56 +73,6 @@ interface InsightsSectionProps {
   railRef: React.RefObject<HTMLDivElement>;
   onPrev: () => void;
   onNext: () => void;
-}
-
-function Tag({ label }: { label: string }) {
-  return (
-    <span className="absolute left-[14px] top-[14px] z-[2] inline-flex min-h-[28px] items-center rounded-full bg-accent px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-accent-contrast shadow-sm">
-      {label}
-    </span>
-  );
-}
-
-
-
-function renderMedia(post: BlogPost, categoryLabel?: string) {
-  if (post.coverImageSrc) {
-    return (
-      <>
-        {categoryLabel ? <Tag label={categoryLabel} /> : null}
-        <img
-          className="img-placeholder h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
-          src={post.coverImageSrc}
-          alt={post.coverAlt ?? post.title}
-          width={360}
-          height={225}
-          loading="lazy"
-        />
-      </>
-    );
-  }
-
-  return (
-    <>
-      {categoryLabel ? <Tag label={categoryLabel} /> : null}
-      <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
-        <span
-          aria-hidden="true"
-          className="absolute right-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-contrast/20 bg-accent-contrast/30 text-xl font-bold tracking-tight text-accent-contrast/90"
-        >
-          E
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute left-5 top-16 h-4 w-28 rounded-full bg-accent-contrast/15"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute left-5 top-[88px] h-4 w-20 rounded-full bg-accent-contrast/15"
-        />
-      </div>
-    </>
-  );
 }
 
 function RailButton({
@@ -192,71 +140,14 @@ export function InsightsSection({
             ref={railRef}
             className="flex gap-5 overflow-x-auto pl-[clamp(24px,5vw,48px)] pr-[clamp(24px,5vw,48px)] py-2 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [scroll-padding-left:clamp(24px,5vw,48px)] [overscroll-behavior-x:contain] [&::-webkit-scrollbar]:hidden xl:justify-center xl:px-0"
           >
-            {posts.map((post) => {
-              const categoryLabel = post.category?.label;
-              const metaParts = [formatBlogDate(post.publishedAt)];
-              if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
-
-              return (
-                <article
-                  key={post.slug}
-                  className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong [scroll-snap-align:start] flex-[0_0_clamp(260px,22vw,360px)] max-xl:flex-[0_0_min(78vw,320px)]"
-                >
-                  <div
-                    className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft"
-                  >
-                    {renderMedia(post, categoryLabel)}
-                  </div>
-
-                  <div className="flex flex-1 flex-col bg-surface p-5 pb-4 max-md:p-4">
-                    <div className="flex flex-wrap items-center gap-2 mb-3">
-                      <span className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
-                        {metaParts.join(" · ")}
-                      </span>
-                    </div>
-                    <h3 className="m-0 mb-2 text-[clamp(1.05rem,1.4vw,1.3rem)] font-semibold leading-snug tracking-tight text-text">
-                      {post.title}
-                    </h3>
-                    <p className="m-0 text-sm leading-relaxed text-text-muted line-clamp-2">
-                      {post.excerpt}
-                    </p>
-
-                    <div className="mt-auto flex items-center justify-between gap-3 pt-4 max-md:flex-col max-md:items-start max-md:gap-2">
-                      {post.author ? (
-                        <div className="inline-flex min-w-0 items-center gap-2.5">
-                          <span
-                            aria-hidden="true"
-                            className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-xs font-bold tracking-wide text-text"
-                          >
-                            {getAuthorInitials(post.author.name)}
-                          </span>
-                          <span className="grid min-w-0 gap-[2px]">
-                            <span className="truncate text-xs font-bold text-text">
-                              {post.author.name}
-                            </span>
-                            {post.author.role ? (
-                              <span className="truncate text-[11px] text-text-soft">
-                                {post.author.role}
-                              </span>
-                            ) : null}
-                          </span>
-                        </div>
-                      ) : null}
-
-                      <SmartLink
-                        href={resourceArticlePath(post.slug)}
-                        className="inline-flex items-center gap-2 min-h-10 py-1.5 relative before:absolute before:-top-2 before:-bottom-2 before:left-0 before:right-0 whitespace-nowrap text-sm font-bold text-accent transition-colors hover:text-accent-hover"
-                      >
-                        Read article
-                        <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[3px]">
-                          &rarr;
-                        </span>
-                      </SmartLink>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+            {posts.map((post) => (
+              <div
+                key={post.slug}
+                className="flex-[0_0_clamp(260px,20vw,340px)] max-xl:flex-[0_0_min(80vw,340px)] [scroll-snap-align:start]"
+              >
+                <BlogCard post={post} />
+              </div>
+            ))}
           </div>
         </div>
 

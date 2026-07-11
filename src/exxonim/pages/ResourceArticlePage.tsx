@@ -206,12 +206,13 @@ function TableOfContents({
                 <button
                   type="button"
                   onClick={() => onItemClick(item.id)}
+                  aria-current={isActive ? "true" : undefined}
                   className={`
-                    block w-full text-left text-[0.82rem] leading-snug py-1 pl-3 border-l-2
-                    transition-colors duration-200
+                    block w-full text-left text-[0.82rem] leading-snug py-1.5 pl-3 pr-2 border-l-2 rounded-r-md
+                    transition-all duration-200
                     ${isActive
-                      ? "border-accent text-accent font-medium"
-                      : "border-transparent text-text-muted hover:text-text hover:border-border-strong"
+                      ? "border-accent text-accent font-semibold bg-accent-soft"
+                      : "border-transparent text-text-muted hover:text-text hover:border-border-strong hover:bg-surface-elevated/60"
                     }
                   `}
                 >
@@ -459,24 +460,25 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                 ]} />
               </div>
 
-              {/* ── 2-Column Grid: Article (wide, left) | Sidebar (right, sticky) ──
+              {/* ── 3-Column Grid: gutter | Article (centered) | Sidebar (right, sticky) ──
                *
                * LAYOUT RATIONALE:
-               * The grid uses [1fr_240px] so the article column takes all available
-               * space while the TOC sidebar is fixed at 240px. The article text
-               * has a max-w-[56rem] (~896px) for comfortable reading width, wider
-               * than before. The article stays on the LEFT side of the viewport -
-               * it is NOT centered on the full screen.
+               * Columns are [minmax(0,1fr) minmax(0,54rem) 240px]. The reading column
+               * is capped at ~54rem (~864px), body text justified, and sits in the
+               * MIDDLE: the flexible 1fr left gutter balances the fixed 240px sidebar on
+               * the right, so the article reads as centered while the share + TOC stay
+               * pinned to the right and never touch it. On narrower screens the left
+               * gutter collapses to 0 and the article fills the space beside the sidebar.
                *
                * BACKEND: No layout configuration needed. The TOC auto-shows/hides
                * based on the number of h2 headings in the article (min 2 required).
                */}
               <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-8 lg:gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,54rem)_240px] gap-8 lg:gap-12">
 
-                  {/* ═══ LEFT: Article Content (wide) ═══ */}
-                  <main className="min-w-0">
-                    <div className="max-w-[56rem]">
+                  {/* ═══ MIDDLE: Article Content (centered reading column) ═══ */}
+                  <main className="min-w-0 lg:col-start-2">
+                    <div className="max-w-none">
                       {/* Category badge */}
                       {categoryLabel ? (
                         <span className="inline-block px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4
@@ -542,6 +544,32 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                         )}
                       </div>
 
+                      {/* ── Key highlights ── author-written takeaways from
+                           content.highlights; shown to readers (previously only
+                           used to derive tags). */}
+                      {article.highlights && article.highlights.length > 0 ? (
+                        <aside
+                          className="mb-8 rounded-2xl border border-accent/15 bg-accent/[0.04] p-5 sm:p-6"
+                          aria-label="Key highlights"
+                        >
+                          <p className="m-0 mb-3 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-accent">
+                            Key highlights
+                          </p>
+                          <ul className="m-0 grid list-none gap-2.5 p-0">
+                            {article.highlights.map((h) => (
+                              <li key={h} className="flex items-start gap-2.5 text-sm leading-snug text-text sm:text-[0.95rem]">
+                                <span className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent/15 text-accent">
+                                  <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M20 6 9 17l-5-5" />
+                                  </svg>
+                                </span>
+                                <span className="min-w-0 break-words">{h}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </aside>
+                      ) : null}
+
                       {/* ── Article Body ──
                        *
                        * INLINE IMAGE RULES:
@@ -565,9 +593,9 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                         {articleHtml ? (
                           <div
                             className="text-sm sm:text-base text-text-muted leading-relaxed max-w-none
-                              [&_h2]:text-xl [&_h2]:sm:text-2xl [&_h2]:font-semibold [&_h2]:text-text [&_h2]:mt-10 [&_h2]:mb-4
+                              [&_h2]:scroll-mt-24 [&_h2]:text-xl [&_h2]:sm:text-2xl [&_h2]:font-semibold [&_h2]:text-text [&_h2]:mt-10 [&_h2]:mb-4
                               [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-text [&_h3]:mt-8 [&_h3]:mb-3
-                              [&_p]:mb-4 [&_p]:leading-relaxed
+                              [&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-justify [&_p]:hyphens-auto
                               [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-6 [&_ul]:space-y-2
                               [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-6 [&_ol]:space-y-2
                               [&_li]:text-text-muted [&_li]:leading-relaxed
@@ -580,7 +608,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                         ) : (
                           <>
                             {/* Lead paragraph */}
-                            <p className="text-base sm:text-lg text-text/85 leading-relaxed mb-6 font-medium">
+                            <p className="text-base sm:text-lg text-text/85 leading-relaxed mb-6 font-medium text-justify hyphens-auto">
                               {introText}
                             </p>
 
@@ -588,12 +616,12 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                             {articleSections.map((section, idx) => {
                               const sectionId = `section-${idx + 1}`;
                               return (
-                                <section key={sectionId} id={sectionId}>
-                                  <h2 className="text-xl sm:text-2xl font-semibold text-text mb-4 mt-10">
+                                <section key={sectionId}>
+                                  <h2 id={sectionId} className="scroll-mt-24 text-xl sm:text-2xl font-semibold text-text mb-4 mt-10">
                                     {section.heading}
                                   </h2>
                                   {section.paragraphs.map((paragraph) => (
-                                    <p key={paragraph} className="text-sm sm:text-base text-text-muted leading-relaxed mb-4">
+                                    <p key={paragraph} className="text-sm sm:text-base text-text-muted leading-relaxed mb-4 text-justify hyphens-auto">
                                       {paragraph}
                                     </p>
                                   ))}
@@ -661,7 +689,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                    * the TOC section is hidden but share buttons remain.
                    */}
                   <aside
-                    className="hidden lg:flex flex-col gap-6 lg:sticky lg:top-[76px]
+                    className="hidden lg:flex lg:col-start-3 flex-col gap-6 lg:sticky lg:top-[76px]
                                lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2
                                [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent
                                [&::-webkit-scrollbar-thumb]:bg-border-soft [&::-webkit-scrollbar-thumb]:rounded-full"
