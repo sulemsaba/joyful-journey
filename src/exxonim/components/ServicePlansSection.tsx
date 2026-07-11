@@ -448,7 +448,7 @@ const SegmentPlanCard = memo(function SegmentPlanCard({ plan, featured, compact,
         /* ── Portrait height floor: keeps short cards tall (never squat) while the
          *    grid still stretches all three to the tallest as features are added.
          *    Width is capped by the wrapper (SHARED_CARD_WIDTH) so growth is vertical. ── */
-        !compact && "min-h-[520px]",
+        !compact && "min-h-[540px]",
         /* ── Padding - extra top room for floating badge ── */
         compact ? "p-6 pt-8" : "p-6 pt-8 md:p-7 md:pt-9 lg:p-8 lg:pt-10",
         /* ── Featured vs normal ── */

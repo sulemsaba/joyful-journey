@@ -72,6 +72,7 @@ import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { resourceArticlePath, routes } from "@/exxonim/routes";
 import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
+import { BlogCard } from "@/exxonim/components/BlogCard";
 import type {
   BlogCategoryId,
   BlogFeaturedSlot,
@@ -79,11 +80,11 @@ import type {
   ResourcesPageContent,
 } from '@/exxonim/types';
 import { StructuredData } from '@/exxonim/components/StructuredData';
-import { buildResourcesBlogLayout, formatBlogDate, getAuthorInitials, getVisibleBlogPosts } from "@/exxonim/utils/blog";
+import { buildResourcesBlogLayout, formatBlogDate, getAuthorInitials, getBlogSearchText, getVisibleBlogPosts } from "@/exxonim/utils/blog";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
 
-const INITIAL_VISIBLE_COUNT = 6;
+const INITIAL_VISIBLE_COUNT = 9;
 type ActiveCategory = BlogCategoryId | "all";
 type SortMode = "latest" | "popular";
 
@@ -115,6 +116,7 @@ const RESOURCE_CARDS = [
     title: "Guides & Articles",
     description: "Step-by-step guides, checklists, and practical notes for registration, compliance, and operations.",
     href: "#articles",
+    cta: "Browse articles",
     accent: "bg-accent/10 text-accent",
   },
   {
@@ -126,6 +128,7 @@ const RESOURCE_CARDS = [
     title: "FAQ",
     description: "Quick answers to the most common questions about business setup, licensing, and compliance in Tanzania.",
     href: routes.faq,
+    cta: "View FAQ",
     accent: "bg-accent/10 text-accent",
   },
   {
@@ -137,118 +140,10 @@ const RESOURCE_CARDS = [
     title: "Support",
     description: "Get direct help from Exxonim - WhatsApp, email, or phone. We respond during business hours.",
     href: routes.support,
+    cta: "Get help",
     accent: "bg-accent/10 text-accent",
   },
 ];
-
-/* ── Shared card components ── */
-
-function Tag({ label }: { label: string }) {
-  return (
-    <span className="absolute left-4 top-4 z-[2] inline-flex min-h-[28px] items-center rounded-full bg-accent px-3.5 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-accent-contrast shadow-sm">
-      {label}
-    </span>
-  );
-}
-
-
-
-function renderCardMedia(post: BlogPost, categoryLabel?: string) {
-  if (post.coverImageSrc) {
-    return (
-      <>
-        {categoryLabel ? <Tag label={categoryLabel} /> : null}
-        <img
-          className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
-          src={post.coverImageSrc}
-          alt={post.coverAlt ?? post.title}
-          loading="lazy"
-        />
-      </>
-    );
-  }
-
-  return (
-    <>
-      {categoryLabel ? <Tag label={categoryLabel} /> : null}
-      <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_15%_18%,var(--color-accent-soft-strong),transparent_28%),radial-gradient(circle_at_88%_82%,var(--color-surface-elevated),transparent_24%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]">
-        <span
-          aria-hidden="true"
-          className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-accent-contrast/20 bg-accent-contrast/30 text-lg font-bold tracking-tight text-accent-contrast/90"
-        >
-          E
-        </span>
-        <span aria-hidden="true" className="absolute left-5 top-16 h-3.5 w-24 rounded-full bg-accent-contrast/15" />
-        <span aria-hidden="true" className="absolute left-5 top-[84px] h-3.5 w-16 rounded-full bg-accent-contrast/15" />
-      </div>
-    </>
-  );
-}
-
-function renderAuthor(post: BlogPost) {
-  if (!post.author) return null;
-  return (
-    <div className="inline-flex min-w-0 items-center gap-2.5">
-      {post.author.avatarSrc ? (
-        <img className="w-8 h-8 rounded-full object-cover" src={post.author.avatarSrc} alt={post.author.name} loading="lazy" />
-      ) : (
-        <span
-          className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent/15 to-accent/30 text-[0.75rem] font-bold text-text"
-          aria-hidden="true"
-        >
-          {getAuthorInitials(post.author.name)}
-        </span>
-      )}
-      <span className="grid min-w-0 gap-[2px]">
-        <span className="truncate text-[0.82rem] font-bold text-text">{post.author.name}</span>
-        {post.author.role ? (
-          <span className="truncate text-[0.72rem] text-text-soft">{post.author.role}</span>
-        ) : null}
-      </span>
-    </div>
-  );
-}
-
-/* ── Grid card ── */
-function renderGridCard(post: BlogPost) {
-  const categoryLabel = post.category?.label;
-  const articleLink = resourceArticlePath(post.slug);
-  const metaParts = [formatBlogDate(post.publishedAt)];
-  if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
-
-  return (
-    <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong">
-      <div className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft">
-        {renderCardMedia(post, categoryLabel)}
-      </div>
-      <div className="flex flex-1 flex-col bg-surface p-5 pb-5">
-        <div className="flex flex-wrap items-center gap-2 mb-2.5">
-          <span className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
-            {metaParts.join(" · ")}
-          </span>
-        </div>
-        <h3 className="m-0 mb-2.5 text-[clamp(1.1rem,1.8vw,1.35rem)] font-semibold leading-snug tracking-tight text-text line-clamp-2">
-          {post.title}
-        </h3>
-        <p className="m-0 text-[0.85rem] leading-relaxed text-text-muted line-clamp-2">
-          {post.excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between gap-3 pt-4 max-md:flex-col max-md:items-start max-md:gap-3">
-          {renderAuthor(post)}
-          <SmartLink
-            href={articleLink}
-            className="inline-flex items-center gap-1.5 whitespace-nowrap text-[0.85rem] font-bold text-accent transition-colors hover:text-accent-hover"
-          >
-            Read article
-            <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[2px]">
-              &rarr;
-            </span>
-          </SmartLink>
-        </div>
-      </div>
-    </article>
-  );
-}
 
 /* ── Top section: hero post + trending rail ── */
 function renderTopHeroByline(post: BlogPost) {
@@ -277,44 +172,58 @@ function renderTopHeroByline(post: BlogPost) {
   );
 }
 
-function renderTopListItem(post: BlogPost, index: number, trendingMedia: string[] = []) {
-  const categoryLabel = post.category?.label;
+/* Thumbnail with the same branded monogram + broken-image fallback as BlogCard,
+   so a missing/failed cover never shows the img's alt text (which was blowing up
+   the trending rows). alt="" because the surrounding link already names the post. */
+function ArticleThumb({ post, className }: { post: BlogPost; className?: string }) {
+  return (
+    <div className={`relative overflow-hidden bg-surface-soft ${className ?? ""}`}>
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_18%_20%,var(--color-accent-soft-strong),transparent_30%),radial-gradient(circle_at_85%_85%,var(--color-surface-elevated),transparent_26%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]"
+      >
+        <span className="grid h-9 w-9 place-items-center rounded-lg border border-border-soft bg-surface/60 text-sm font-bold text-accent">
+          E
+        </span>
+      </span>
+      {post.coverImageSrc ? (
+        <img
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src={post.coverImageSrc}
+          alt=""
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/* Trending rail item — fixed height so all three are identical, with a properly
+   sized image column that never collapses or blows up on a missing cover. */
+function renderTopListItem(post: BlogPost) {
   const articleLink = resourceArticlePath(post.slug);
+  const categoryLabel = post.category?.label;
   const metaParts = [formatBlogDate(post.publishedAt)];
-  const thumbnailSrc = post.coverImageSrc ?? trendingMedia[index] ?? trendingMedia[trendingMedia.length - 1];
   if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min`);
 
   return (
     <SmartLink
       href={articleLink}
-      className="group flex overflow-hidden rounded-md border border-border-soft bg-surface/50 hover:bg-surface-elevated hover:border-accent/30 transition-shadow duration-300"
+      aria-label={post.title}
+      className="group grid h-[116px] grid-cols-[150px_1fr] overflow-hidden rounded-xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
-      {/* LEFT: Full-height image (matches RelatedArticleCard design) */}
-      <div className="w-[110px] sm:w-[130px] shrink-0 overflow-hidden bg-accent/5">
-        <img
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          src={thumbnailSrc}
-          alt={post.coverAlt ?? post.title}
-          loading="lazy"
-        />
-      </div>
-
-      {/* RIGHT: Content (matches RelatedArticleCard design) */}
-      <div className="flex flex-col justify-center min-w-0 flex-1 p-2.5 sm:p-3">
-        <h3 className="text-[0.8rem] sm:text-[0.85rem] font-semibold text-text leading-snug mb-1 group-hover:text-accent transition-colors line-clamp-2">
+      <ArticleThumb post={post} className="h-full w-full" />
+      <div className="flex min-w-0 flex-col justify-center gap-2 p-3.5">
+        <h3 className="m-0 text-[0.9rem] font-semibold leading-snug tracking-tight text-text line-clamp-2 break-words transition-colors group-hover:text-accent">
           {post.title}
         </h3>
-        {post.excerpt && (
-          <p className="text-[10px] sm:text-[11px] text-text-muted leading-relaxed line-clamp-2 mb-1">
-            {post.excerpt}
-          </p>
-        )}
-        <div className="flex items-center gap-2 mt-auto">
-          <span className="text-[10px] text-text-muted">
-            {metaParts.join(" · ")}
-          </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-text-soft">{metaParts.join(" · ")}</span>
           {categoryLabel ? (
-            <span className="px-1.5 py-0.5 rounded-full bg-accent/10 text-accent text-[0.6rem] font-bold uppercase tracking-wider">
+            <span className="rounded-full bg-accent-soft px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-accent">
               {categoryLabel}
             </span>
           ) : null}
@@ -432,7 +341,7 @@ function SearchBar({
         placeholder="Search articles..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-9 pl-10 pr-4 rounded-full border border-border-soft bg-surface-elevated text-text placeholder:text-text-soft text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
+        className="w-full h-9 pl-10 pr-4 rounded-full border border-border-soft bg-surface-elevated text-text placeholder:text-text-soft text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden"
         aria-label="Search articles by title or content"
       />
       {value ? (
@@ -517,14 +426,13 @@ export function ResourcesPage() {
     excludeSlugs: topSectionSlugs,
   });
 
-  // Apply search filter on top of category filter
+  // Apply search filter on top of category filter — matches title, excerpt,
+  // category AND the full article body (see getBlogSearchText).
   const searchFilteredPosts = useMemo(() => {
     if (!isSearchActive) return categoryFilteredPosts;
-    return categoryFilteredPosts.filter((post) => {
-      const titleMatch = post.title?.toLowerCase().includes(normalizedQuery) ?? false;
-      const excerptMatch = post.excerpt?.toLowerCase().includes(normalizedQuery) ?? false;
-      return titleMatch || excerptMatch;
-    });
+    return categoryFilteredPosts.filter((post) =>
+      getBlogSearchText(post).includes(normalizedQuery)
+    );
   }, [categoryFilteredPosts, isSearchActive, normalizedQuery]);
 
   // Apply sort
@@ -613,48 +521,51 @@ export function ResourcesPage() {
              * Mobile: vertical stack of compact horizontal cards (all 3 visible, no scroll)
              * Desktop: 3-column grid of centered cards */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-16">
-              {/* Mobile: vertical stack — all 3 cards visible without scrolling */}
+              {/* Mobile: vertical stack — compact footer-teal rows. */}
               <div className="flex flex-col gap-2.5 sm:hidden">
                 {RESOURCE_CARDS.map((card) => (
                   <SmartLink
                     key={card.title}
                     href={card.href}
-                    className="group flex items-center gap-3 p-3 rounded-xl border border-accent/10 bg-accent/[0.04] transition-colors duration-300 hover:bg-accent/[0.12] hover:border-accent/25"
+                    className="group flex items-center gap-3 p-3 rounded-xl border border-footer-border bg-footer-bg transition-transform duration-300 hover:-translate-y-0.5"
                   >
-                    <span className={`inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-lg ${card.accent} transition-transform duration-300 group-hover:scale-110`}>
+                    <span className="inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-lg bg-white/10 text-footer-heading transition-transform duration-300 group-hover:scale-105 [&_svg]:h-5 [&_svg]:w-5">
                       {card.icon}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <strong className="text-text text-sm block leading-tight">{card.title}</strong>
-                      <p className="m-0 text-text-muted text-[0.7rem] leading-snug line-clamp-1 mt-0.5">
+                      <strong className="text-footer-heading text-sm block font-bold leading-tight">{card.title}</strong>
+                      <p className="m-0 text-footer-text text-[0.7rem] leading-snug line-clamp-1 mt-0.5">
                         {card.description}
                       </p>
                     </div>
-                    <span className="inline-flex items-center text-accent text-sm font-bold shrink-0">
+                    <span className="inline-flex items-center text-footer-heading text-sm font-bold shrink-0">
                       &rarr;
                     </span>
                   </SmartLink>
                 ))}
               </div>
 
-              {/* Desktop: 3-column grid of centered cards */}
-              <div className="hidden sm:grid grid-cols-3 gap-4">
+              {/* Desktop: 3-column grid — compact, footer-teal quick-access cards. */}
+              <div className="hidden sm:grid grid-cols-3 gap-3.5">
                 {RESOURCE_CARDS.map((card) => (
                   <SmartLink
                     key={card.title}
                     href={card.href}
-                    className="group p-5 rounded-[1.35rem] border border-accent/10 bg-accent/[0.04] text-center transition-transform duration-300 hover:bg-accent/[0.12] hover:border-accent/25 hover:-translate-y-0.5 flex flex-col items-center gap-2.5"
+                    className="group flex h-full flex-col items-start gap-2.5 rounded-xl border border-footer-border bg-footer-bg p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                   >
-                    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${card.accent} transition-transform duration-300 group-hover:scale-110`}>
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-footer-heading transition-transform duration-300 group-hover:scale-105 [&_svg]:h-5 [&_svg]:w-5">
                       {card.icon}
                     </span>
-                    <strong className="text-text text-base">{card.title}</strong>
-                    <p className="m-0 text-text-muted text-sm leading-relaxed line-clamp-2 max-w-[26ch]">
-                      {card.description}
-                    </p>
-                    <span className="inline-flex items-center gap-1 text-accent text-sm font-bold group-hover:gap-2 transition-colors duration-200">
-                      Go <span aria-hidden="true">&rarr;</span>
-                    </span>
+                    <div className="flex flex-1 flex-col">
+                      <strong className="text-sm font-bold text-footer-heading">{card.title}</strong>
+                      <p className="m-0 mt-1 text-xs leading-relaxed text-footer-text line-clamp-2">
+                        {card.description}
+                      </p>
+                      <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-footer-heading">
+                        {card.cta}
+                        <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">&rarr;</span>
+                      </span>
+                    </div>
                   </SmartLink>
                 ))}
               </div>
@@ -675,11 +586,14 @@ export function ResourcesPage() {
                     href={resourceArticlePath(heroPost!.slug)}
                     className="group block rounded-[8px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-shadow hover:-translate-y-1"
                   >
-                    <div className="aspect-[16/9] overflow-hidden">
+                    <div className="aspect-[16/9] overflow-hidden bg-surface-soft">
                       <img
                         className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
                         src={heroMediaSrc}
                         alt={heroMediaAlt}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
                       />
                     </div>
                     <div className="p-5 md:p-7">
@@ -695,9 +609,9 @@ export function ResourcesPage() {
 
                   {/* Trending rail */}
                   <aside className="space-y-3" aria-label={page.content.trending_label ?? "Trending articles"}>
-                    {topRailPosts.map((post, index) => (
+                    {topRailPosts.map((post) => (
                       <div key={post.slug}>
-                        {renderTopListItem(post, index, topMedia?.trending)}
+                        {renderTopListItem(post)}
                       </div>
                     ))}
                   </aside>
@@ -738,7 +652,7 @@ export function ResourcesPage() {
               {visiblePosts.length > 0 ? (
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {visiblePosts.map((post) => (
-                    <div key={post.slug}>{renderGridCard(post)}</div>
+                    <BlogCard key={post.slug} post={post} />
                   ))}
                 </div>
               ) : isSearchActive ? (

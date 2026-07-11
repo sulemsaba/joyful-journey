@@ -9,6 +9,29 @@ function toUtcDateValue(date: string) {
   return new Date(`${date}T00:00:00Z`).getTime();
 }
 
+/**
+ * Flattens everything searchable about a post — title, excerpt, category label,
+ * and the FULL article body (introduction, highlights, every section heading and
+ * paragraph, plus any raw HTML with its tags stripped) — into one lowercased
+ * string, so search matches terms that appear only inside the article content,
+ * not just the title or excerpt.
+ */
+export function getBlogSearchText(post: BlogPost): string {
+  const parts: string[] = [post.title ?? "", post.excerpt ?? ""];
+  if (post.category?.label) parts.push(post.category.label);
+  const content: BlogArticleContent | undefined = post.content;
+  if (content) {
+    if (content.introduction) parts.push(content.introduction);
+    if (content.highlights?.length) parts.push(content.highlights.join(" "));
+    for (const section of content.sections ?? []) {
+      if (section.heading) parts.push(section.heading);
+      if (section.paragraphs?.length) parts.push(section.paragraphs.join(" "));
+    }
+    if (content.html) parts.push(content.html.replace(/<[^>]+>/g, " "));
+  }
+  return parts.join(" ").toLowerCase();
+}
+
 /* ── Shared formatters ────────────────────────────────── */
 
 const blogDateFormatter = new Intl.DateTimeFormat("en-US", {
