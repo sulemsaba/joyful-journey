@@ -268,7 +268,7 @@ export function App({ onReady }: { onReady?: () => void }) {
           Suspense only wraps <main> so the nav + footer shell
           stays mounted during chunk loading.
         */}
-        <main id="top" className={`relative isolate overflow-x-clip flex-1 pt-[60px] xl:pt-[68px]${pageAnimating ? " page-transition-enter" : ""}`}>
+        <main id="top" className={`relative isolate overflow-x-clip flex-1 min-h-screen pt-[60px] xl:pt-[68px]${pageAnimating ? " page-transition-enter" : ""}`}>
           <ScrollToTop />
           <ErrorBoundary>
             <Suspense fallback={null}>
