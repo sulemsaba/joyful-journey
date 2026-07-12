@@ -177,6 +177,7 @@ interface StackItemRowProps {
 function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
   const badge = item.windowTag || undefined;
   const hasVideo = item.videoSources.length > 0;
+  const hasImage = !hasVideo && !!item.imageSrc;
 
   // Mobile copy (falls back to desktop copy if not set)
   const mobileTitle = item.mobileTitle || item.title;
@@ -281,6 +282,21 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                   aspectRatio: "0.462",
                 }}
               />
+            ) : hasImage ? (
+              /* ── Photo surface — portrait card centered in the surface (matches the
+                    "device in a light surface" look; same at all breakpoints) ── */
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
+                style={{ height: "88%", aspectRatio: "3 / 4" }}
+              >
+                <img
+                  src={item.imageSrc}
+                  alt={item.imageAlt || item.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover"
+                />
+              </div>
             ) : (
               /* ── Placeholder surface - no video ── */
               <>
