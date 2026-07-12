@@ -252,6 +252,12 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Compliance",
           windowTag: "",
           videoSources: [],
+          images: [
+            {
+              src: "/images/home-compliance-checklist.webp",
+              alt: "An Annual Compliance Checklist stamped Approved and Filed, with a Certificate of Incorporation and Tax Clearance Certificate fanned out on a desk",
+            },
+          ],
           mobileTitle: "Annual Compliance",
           mobileDescription:
             "Avoid costly late fines. We track deadlines, file your returns, and remind you before every due date.",
