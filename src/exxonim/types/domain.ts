@@ -73,6 +73,10 @@ export interface StackItem {
   /** Video sources in preference order (e.g. webm first for smaller size, mp4 as fallback).
    *  Empty array = no video (shows placeholder graphic). */
   videoSources: { src: string; type: string }[];
+  /** Optional photo shown in the media half instead of the placeholder graphic
+   *  (takes precedence over the placeholder, but a video still wins). */
+  imageSrc?: string;
+  imageAlt?: string;
   /** When true, the item is hidden from the stack section (e.g., consultation tracking card) */
   isHidden?: boolean;
   /** Mobile-specific copy (conversational, high clarity). Falls back to desktop copy if not set. */

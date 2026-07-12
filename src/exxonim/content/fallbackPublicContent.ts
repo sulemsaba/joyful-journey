@@ -219,6 +219,8 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Setup",
           windowTag: "",
           videoSources: [],
+          imageSrc: "/images/home-registration.webp",
+          imageAlt: "A new business owner holding her BRELA Certificate of Incorporation",
           mobileTitle: "Registration & Licensing",
           mobileDescription:
             "Skip the government queues. We register your business, secure licences and permits, and deliver your certificates.",
@@ -234,6 +236,8 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Compliance",
           windowTag: "",
           videoSources: [],
+          imageSrc: "/images/home-compliance.webp",
+          imageAlt: "A client holding her renewed business licence and Certificate of Incorporation",
           mobileTitle: "Annual Compliance",
           mobileDescription:
             "Avoid costly late fines. We track deadlines, file your returns, and remind you before every due date.",
@@ -1713,7 +1717,7 @@ export const fallbackTestimonials: Testimonial[] = [
  */
 export const fallbackJobs: ApiCareerJob[] = [
   {
-    id: 1,
+    id: "fallback-1",
     title: "Client Operations Coordinator",
     slug: "client-operations-coordinator",
     department: "Operations",
@@ -1744,7 +1748,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     updated_at: "2026-04-01T00:00:00Z",
   },
   {
-    id: 2,
+    id: "fallback-2",
     title: "Compliance Support Analyst",
     slug: "compliance-support-analyst",
     department: "Compliance",
@@ -1775,7 +1779,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     updated_at: "2026-04-02T00:00:00Z",
   },
   {
-    id: 3,
+    id: "fallback-3",
     title: "Tax & Filing Assistant",
     slug: "tax-filing-assistant",
     department: "Accounting",
@@ -1806,7 +1810,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     updated_at: "2026-04-03T00:00:00Z",
   },
   {
-    id: 4,
+    id: "fallback-4",
     title: "Business Setup Consultant",
     slug: "business-setup-consultant",
     department: "Advisory",
@@ -1837,7 +1841,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     updated_at: "2026-03-28T00:00:00Z",
   },
   {
-    id: 5,
+    id: "fallback-5",
     title: "Systems & Tools Coordinator",
     slug: "systems-tools-coordinator",
     department: "IT",
@@ -1868,7 +1872,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     updated_at: "2026-04-04T00:00:00Z",
   },
   {
-    id: 6,
+    id: "fallback-6",
     title: "Document Readiness Associate",
     slug: "document-readiness-associate",
     department: "Operations",
@@ -1899,7 +1903,7 @@ export const fallbackJobs: ApiCareerJob[] = [
     updated_at: "2026-04-05T00:00:00Z",
   },
   {
-    id: 7,
+    id: "fallback-7",
     title: "Regulatory Renewals Officer",
     slug: "regulatory-renewals-officer",
     department: "Compliance",
