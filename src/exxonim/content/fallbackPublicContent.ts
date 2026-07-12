@@ -219,8 +219,20 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Setup",
           windowTag: "",
           videoSources: [],
-          imageSrc: "/images/home-registration.webp",
-          imageAlt: "A new business owner holding her BRELA Certificate of Incorporation",
+          images: [
+            {
+              src: "/images/home-registration.webp",
+              alt: "A new business owner seated with her BRELA Certificate of Incorporation",
+            },
+            {
+              src: "/images/home-registration-2.webp",
+              alt: "A client in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
+            },
+            {
+              src: "/images/home-registration-3.webp",
+              alt: "A client outdoors holding her newly issued registration certificate",
+            },
+          ],
           mobileTitle: "Registration & Licensing",
           mobileDescription:
             "Skip the government queues. We register your business, secure licences and permits, and deliver your certificates.",

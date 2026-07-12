@@ -77,6 +77,10 @@ export interface StackItem {
    *  (takes precedence over the placeholder, but a video still wins). */
   imageSrc?: string;
   imageAlt?: string;
+  /** Optional set of photos rendered as an auto-advancing slideshow in the media
+   *  half. When two or more are provided they cross-fade; a single entry renders
+   *  as a static photo. Takes precedence over imageSrc; a video still wins. */
+  images?: { src: string; alt: string }[];
   /** When true, the item is hidden from the stack section (e.g., consultation tracking card) */
   isHidden?: boolean;
   /** Mobile-specific copy (conversational, high clarity). Falls back to desktop copy if not set. */

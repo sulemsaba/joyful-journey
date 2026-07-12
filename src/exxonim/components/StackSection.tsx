@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { StackItem } from "@/exxonim/types";
 import { cn } from "@/exxonim/utils/cn";
 import { Button } from "@/exxonim/components/primitives/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 /* ── Animation is handled by the existing [data-reveal] CSS system ──
  * (globals.css: html.js [data-reveal]:not(.revealed) → reveal-up transition)
@@ -168,6 +168,119 @@ export function StackSection({ items }: StackSectionProps) {
 
 /* ── Single row: text half + video surface half ─────── */
 
+/* ── Photo slideshow ──
+ * Cross-fades through a set of photos inside the media surface. Auto-advances,
+ * pauses on hover/focus/touch, supports swipe + arrow keys + dot navigation,
+ * and honours prefers-reduced-motion (no auto-advance, instant swap). A single
+ * photo renders statically with no controls. */
+const SLIDE_DWELL_MS = 5000;
+
+function ImageSlideshow({ images }: { images: { src: string; alt: string }[] }) {
+  const count = images.length;
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const reducedMotion = useRef(false);
+  const touchX = useRef<number | null>(null);
+
+  useEffect(() => {
+    reducedMotion.current =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  const go = (next: number) => setActive(((next % count) + count) % count);
+
+  // Auto-advance (skipped when a single slide, paused, or reduced-motion).
+  useEffect(() => {
+    if (count <= 1 || paused || reducedMotion.current) return;
+    const t = setTimeout(() => setActive((i) => (i + 1) % count), SLIDE_DWELL_MS);
+    return () => clearTimeout(t);
+  }, [active, paused, count]);
+
+  return (
+    <div
+      className="group/slides relative size-full"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+      onTouchStart={(e) => {
+        setPaused(true);
+        touchX.current = e.touches[0]?.clientX ?? null;
+      }}
+      onTouchEnd={(e) => {
+        const start = touchX.current;
+        const end = e.changedTouches[0]?.clientX ?? null;
+        if (start !== null && end !== null && Math.abs(end - start) > 40) {
+          go(active + (end < start ? 1 : -1));
+        }
+        touchX.current = null;
+      }}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Client success photos"
+    >
+      {images.map((img, i) => (
+        <img
+          key={img.src}
+          src={img.src}
+          alt={img.alt}
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+          aria-hidden={i !== active}
+          className={cn(
+            "absolute inset-0 size-full object-cover object-top",
+            "transition-opacity ease-out motion-reduce:transition-none",
+            i === active ? "opacity-100 duration-700" : "opacity-0 duration-500"
+          )}
+        />
+      ))}
+
+      {count > 1 && (
+        <>
+          {/* Bottom scrim so dots stay legible over any photo */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/45 to-transparent" />
+
+          {/* Prev / next — appear on hover (desktop) */}
+          <button
+            type="button"
+            aria-label="Previous photo"
+            onClick={() => go(active - 1)}
+            className="absolute left-2 top-1/2 hidden -translate-y-1/2 rounded-full bg-black/35 p-1.5 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/55 focus-visible:opacity-100 md:block md:group-hover/slides:opacity-100"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next photo"
+            onClick={() => go(active + 1)}
+            className="absolute right-2 top-1/2 hidden -translate-y-1/2 rounded-full bg-black/35 p-1.5 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/55 focus-visible:opacity-100 md:block md:group-hover/slides:opacity-100"
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+
+          {/* Dots */}
+          <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-1.5">
+            {images.map((img, i) => (
+              <button
+                key={img.src}
+                type="button"
+                aria-label={`Show photo ${i + 1} of ${count}`}
+                aria-current={i === active}
+                onClick={() => go(i)}
+                className={cn(
+                  "h-1.5 rounded-full transition-all",
+                  i === active ? "w-5 bg-white" : "w-1.5 bg-white/60 hover:bg-white/80"
+                )}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 interface StackItemRowProps {
   item: StackItem;
   index: number;
@@ -177,7 +290,15 @@ interface StackItemRowProps {
 function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
   const badge = item.windowTag || undefined;
   const hasVideo = item.videoSources.length > 0;
-  const hasImage = !hasVideo && !!item.imageSrc;
+  // Normalise to a photo list: the `images` array wins, else a single imageSrc.
+  const photos = !hasVideo
+    ? item.images && item.images.length > 0
+      ? item.images
+      : item.imageSrc
+        ? [{ src: item.imageSrc, alt: item.imageAlt || item.title }]
+        : []
+    : [];
+  const hasImage = photos.length > 0;
 
   // Mobile copy (falls back to desktop copy if not set)
   const mobileTitle = item.mobileTitle || item.title;
@@ -251,55 +372,48 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           isReversed && "md:[direction:ltr]"
         )}
       >
-        {/* Surface (background container) */}
-        <div
-          className={cn(
-            "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
-            "bg-page",
-            /* NO portrait on mobile - landscape always */
-            "aspect-[1.22]",
-            "md:aspect-[1.22]",
-            "xl:aspect-[1.22]"
-          )}
-        >
-          <div className="relative size-full contain-paint">
-            {hasVideo ? (
-              <LazyVideo
-                sources={item.videoSources}
-                poster="/videos/track-consultation-poster.webp"
-                playbackRate={0.7}
-                className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
-                mobileStyle={{
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-                desktopStyle={{
-                  top: "var(--video-y-offset)",
-                  left: "calc((100% - var(--video-width)) / 2)",
-                  width: "var(--video-width)",
-                  aspectRatio: "0.462",
-                }}
-              />
-            ) : hasImage ? (
-              /* ── Photo surface — portrait card centered in the surface (matches the
-                    "device in a light surface" look; same at all breakpoints) ── */
-              <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
-                style={{ height: "88%", aspectRatio: "3 / 4" }}
-              >
-                <img
-                  src={item.imageSrc}
-                  alt={item.imageAlt || item.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 size-full object-cover"
+        {hasImage ? (
+          /* ── Photo surface — a full-bleed portrait card that FILLS the media box
+                (no more small photo floating in a wide frame). Renders a slideshow
+                when several photos are supplied, a static image for one. ── */
+          <div className="mx-auto w-full max-w-[400px] overflow-hidden rounded-2xl ring-1 ring-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] aspect-[3/4]">
+            <ImageSlideshow images={photos} />
+          </div>
+        ) : (
+          /* Surface (background container) */
+          <div
+            className={cn(
+              "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
+              "bg-page",
+              /* NO portrait on mobile - landscape always */
+              "aspect-[1.22]",
+              "md:aspect-[1.22]",
+              "xl:aspect-[1.22]"
+            )}
+          >
+            <div className="relative size-full contain-paint">
+              {hasVideo ? (
+                <LazyVideo
+                  sources={item.videoSources}
+                  poster="/videos/track-consultation-poster.webp"
+                  playbackRate={0.7}
+                  className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
+                  mobileStyle={{
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  desktopStyle={{
+                    top: "var(--video-y-offset)",
+                    left: "calc((100% - var(--video-width)) / 2)",
+                    width: "var(--video-width)",
+                    aspectRatio: "0.462",
+                  }}
                 />
-              </div>
-            ) : (
-              /* ── Placeholder surface - no video ── */
-              <>
+              ) : (
+                /* ── Placeholder surface - no video ── */
+                <>
                 {/* Mobile: landscape, fills container */}
                 <div
                   className="pointer-events-none absolute inset-0 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden md:hidden"
@@ -318,10 +432,11 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                 >
                   <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
                 </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
