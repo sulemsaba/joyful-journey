@@ -372,48 +372,50 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           isReversed && "md:[direction:ltr]"
         )}
       >
-        {hasImage ? (
-          /* ── Photo surface — a full-bleed portrait card that FILLS the media box
-                (no more small photo floating in a wide frame). Renders a slideshow
-                when several photos are supplied, a static image for one. ── */
-          <div className="mx-auto w-full max-w-[400px] overflow-hidden rounded-2xl ring-1 ring-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] aspect-[3/4]">
-            <ImageSlideshow images={photos} />
-          </div>
-        ) : (
-          /* Surface (background container) */
-          <div
-            className={cn(
-              "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
-              "bg-page",
-              /* NO portrait on mobile - landscape always */
-              "aspect-[1.22]",
-              "md:aspect-[1.22]",
-              "xl:aspect-[1.22]"
-            )}
-          >
-            <div className="relative size-full contain-paint">
-              {hasVideo ? (
-                <LazyVideo
-                  sources={item.videoSources}
-                  poster="/videos/track-consultation-poster.webp"
-                  playbackRate={0.7}
-                  className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
-                  mobileStyle={{
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  desktopStyle={{
-                    top: "var(--video-y-offset)",
-                    left: "calc((100% - var(--video-width)) / 2)",
-                    width: "var(--video-width)",
-                    aspectRatio: "0.462",
-                  }}
-                />
-              ) : (
-                /* ── Placeholder surface - no video ── */
-                <>
+        {/* Surface (background container) */}
+        <div
+          className={cn(
+            "relative w-full overflow-hidden rounded-2xl ring-1 ring-border-soft",
+            "bg-page",
+            /* NO portrait on mobile - landscape always */
+            "aspect-[1.22]",
+            "md:aspect-[1.22]",
+            "xl:aspect-[1.22]"
+          )}
+        >
+          <div className="relative size-full contain-paint">
+            {hasVideo ? (
+              <LazyVideo
+                sources={item.videoSources}
+                poster="/videos/track-consultation-poster.webp"
+                playbackRate={0.7}
+                className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
+                mobileStyle={{
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+                desktopStyle={{
+                  top: "var(--video-y-offset)",
+                  left: "calc((100% - var(--video-width)) / 2)",
+                  width: "var(--video-width)",
+                  aspectRatio: "0.462",
+                }}
+              />
+            ) : hasImage ? (
+              /* ── Photo surface — a centered portrait card inside the surface
+                    (same framing as before: a card within the light surface).
+                    Renders a slideshow of several photos, or a static image for one. ── */
+              <div
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
+                style={{ height: "88%", aspectRatio: "3 / 4" }}
+              >
+                <ImageSlideshow images={photos} />
+              </div>
+            ) : (
+              /* ── Placeholder surface - no video ── */
+              <>
                 {/* Mobile: landscape, fills container */}
                 <div
                   className="pointer-events-none absolute inset-0 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden md:hidden"
@@ -432,11 +434,10 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                 >
                   <PlaceholderGraphic index={index} label={item.windowTitle || item.title} />
                 </div>
-                </>
-              )}
-            </div>
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
