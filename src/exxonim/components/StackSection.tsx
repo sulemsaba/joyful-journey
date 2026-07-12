@@ -404,12 +404,13 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
                 }}
               />
             ) : hasImage ? (
-              /* ── Photo surface — a centered portrait card inside the surface
-                    (same framing as before: a card within the light surface).
-                    Renders a slideshow of several photos, or a static image for one. ── */
+              /* ── Photo surface — a centered landscape (4:3) card inside the
+                    surface, so the photo matches the card's landscape shape and
+                    sits naturally in it. Renders a slideshow of several photos,
+                    or a static image for one. ── */
               <div
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[20px] border border-border-soft bg-page shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
-                style={{ height: "88%", aspectRatio: "3 / 4" }}
+                style={{ width: "94%", aspectRatio: "4 / 3" }}
               >
                 <ImageSlideshow images={photos} />
               </div>
