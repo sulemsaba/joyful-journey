@@ -221,20 +221,16 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           videoSources: [],
           images: [
             {
-              src: "/images/home-registration-office.webp",
-              alt: "A business owner in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
+              src: "/images/home-registration-slide1.webp",
+              alt: "A team of business owners celebrating with their newly issued company registration certificates in the office",
             },
             {
-              src: "/images/home-registration-team.webp",
-              alt: "A team celebrating with their newly issued company registration certificates",
+              src: "/images/home-registration-slide2.webp",
+              alt: "A business owner seated in her office holding her BRELA Certificate of Incorporation",
             },
             {
-              src: "/images/home-registration-outdoor.webp",
-              alt: "A client standing outside holding her company registration certificates",
-            },
-            {
-              src: "/images/home-registration-brela.webp",
-              alt: "A business owner seated with her BRELA Certificate of Incorporation",
+              src: "/images/home-registration-slide3.webp",
+              alt: "A business owner standing in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
             },
           ],
           mobileTitle: "Registration & Licensing",
