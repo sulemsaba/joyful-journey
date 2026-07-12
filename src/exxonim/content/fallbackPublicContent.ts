@@ -221,19 +221,19 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           videoSources: [],
           images: [
             {
-              src: "/images/home-registration-1.webp",
+              src: "/images/home-registration-office.webp",
               alt: "A business owner in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
             },
             {
-              src: "/images/home-registration-2.webp",
+              src: "/images/home-registration-team.webp",
               alt: "A team celebrating with their newly issued company registration certificates",
             },
             {
-              src: "/images/home-registration-3.webp",
+              src: "/images/home-registration-outdoor.webp",
               alt: "A client standing outside holding her company registration certificates",
             },
             {
-              src: "/images/home-registration-4.webp",
+              src: "/images/home-registration-brela.webp",
               alt: "A business owner seated with her BRELA Certificate of Incorporation",
             },
           ],
