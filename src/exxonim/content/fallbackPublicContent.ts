@@ -221,16 +221,20 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           videoSources: [],
           images: [
             {
-              src: "/images/home-registration.webp",
-              alt: "A new business owner seated with her BRELA Certificate of Incorporation",
+              src: "/images/home-registration-1.webp",
+              alt: "A business owner in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
             },
             {
               src: "/images/home-registration-2.webp",
-              alt: "A client in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
+              alt: "A team celebrating with their newly issued company registration certificates",
             },
             {
               src: "/images/home-registration-3.webp",
-              alt: "A client outdoors holding her newly issued registration certificate",
+              alt: "A client standing outside holding her company registration certificates",
+            },
+            {
+              src: "/images/home-registration-4.webp",
+              alt: "A business owner seated with her BRELA Certificate of Incorporation",
             },
           ],
           mobileTitle: "Registration & Licensing",
@@ -248,8 +252,6 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Compliance",
           windowTag: "",
           videoSources: [],
-          imageSrc: "/images/home-compliance.webp",
-          imageAlt: "A client holding her renewed business licence and Certificate of Incorporation",
           mobileTitle: "Annual Compliance",
           mobileDescription:
             "Avoid costly late fines. We track deadlines, file your returns, and remind you before every due date.",
