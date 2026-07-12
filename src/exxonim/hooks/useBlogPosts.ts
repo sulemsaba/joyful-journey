@@ -30,22 +30,40 @@
  *   Always returns hardcoded fallback as `data` when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
-import { listPublicBlogPosts } from "@/exxonim/services/blogService";
+import { fetchPublicBlogPostsRaw } from "@/exxonim/services/blogService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { mapBlogPost } from "@/exxonim/utils/contentMappers";
 import { fallbackBlogPosts } from "@/exxonim/content/fallbackPublicContent";
 
 export function useBlogPosts() {
   const query = useQuery({
     queryKey: ["blog", "posts"],
-    queryFn: () => fetchWithJsonFallback(listPublicBlogPosts, "blog-posts"),
+    // The live API and the Layer-3 snapshot share ONE raw shape
+    // ({ items: [...] } from /blog/posts). Map both through mapBlogPost so a
+    // populated snapshot is consumed identically to the API — previously only
+    // the API path was mapped, so the snapshot silently didn't apply.
+    queryFn: async () => {
+      const raw = await fetchWithJsonFallback(fetchPublicBlogPostsRaw, "blog-posts");
+      const items = Array.isArray(raw) ? raw : raw?.items ?? [];
+      return items.map(mapBlogPost);
+    },
     placeholderData: fallbackBlogPosts,
     staleTime: 1000 * 30, // 30 seconds — blog updates propagate fast
     retry: 1,
   });
 
+  // FALLBACK GUARANTEE: the API (or JSON fallback) can resolve to an EMPTY
+  // list — backend down, unseeded DB, or an empty /fallback/blog-posts.json
+  // ({ "data": [] }). An empty array is not nullish, so `?? fallback` does NOT
+  // catch it: the hardcoded posts (with covers) flash in, then get wiped by the
+  // empty resolve — the covers appear on reload, then disappear. Keep the
+  // hardcoded fallback whenever the resolved list has no posts.
+  const resolved = query.data;
+  const hasPosts = Array.isArray(resolved) && resolved.length > 0;
+
   return {
     ...query,
-    data: query.data ?? fallbackBlogPosts,
+    data: hasPosts ? resolved : fallbackBlogPosts,
     isPending: query.isPending && !fallbackBlogPosts.length,
   };
 }

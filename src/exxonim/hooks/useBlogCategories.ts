@@ -30,22 +30,37 @@
  *   Always returns hardcoded fallback as `data` when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
-import { listPublicBlogCategories } from "@/exxonim/services/blogService";
+import { fetchPublicBlogCategoriesRaw } from "@/exxonim/services/blogService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { mapBlogCategory } from "@/exxonim/utils/contentMappers";
+import type { BlogCategory } from "@/exxonim/types";
 import { fallbackBlogCategories } from "@/exxonim/content/fallbackPublicContent";
 
 export function useBlogCategories() {
   const query = useQuery({
     queryKey: ["blog", "categories"],
-    queryFn: () => fetchWithJsonFallback(listPublicBlogCategories, "blog-categories"),
+    // Map both the API and the Layer-3 snapshot (both raw ApiBlogCategory[])
+    // through mapBlogCategory so a populated snapshot applies identically.
+    queryFn: async () => {
+      const raw = await fetchWithJsonFallback(fetchPublicBlogCategoriesRaw, "blog-categories");
+      const arr = Array.isArray(raw) ? raw : [];
+      return arr.map((c) => mapBlogCategory(c) as BlogCategory);
+    },
     placeholderData: fallbackBlogCategories,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 1,
   });
 
+  // FALLBACK GUARANTEE: same as useBlogPosts — an empty resolved array
+  // ([] from an empty /fallback/blog-categories.json) is not nullish, so
+  // `?? fallback` won't catch it and the category chips flash then vanish.
+  // Keep the hardcoded fallback whenever the resolved list is empty.
+  const resolved = query.data;
+  const hasCategories = Array.isArray(resolved) && resolved.length > 0;
+
   return {
     ...query,
-    data: query.data ?? fallbackBlogCategories,
+    data: hasCategories ? resolved : fallbackBlogCategories,
     isPending: query.isPending && !fallbackBlogCategories.length,
   };
 }
