@@ -221,16 +221,20 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           videoSources: [],
           images: [
             {
-              src: "/images/home-registration-slide1.webp",
-              alt: "A team of business owners celebrating with their newly issued company registration certificates in the office",
+              src: "/images/home-registration-team.webp",
+              alt: "A team of four business owners smiling in their office, each holding their newly issued Tanzanian company registration and licensing certificates",
             },
             {
-              src: "/images/home-registration-slide2.webp",
+              src: "/images/home-registration-seated.webp",
               alt: "A business owner seated in her office holding her BRELA Certificate of Incorporation",
             },
             {
-              src: "/images/home-registration-slide3.webp",
-              alt: "A business owner standing in her office holding her Certificate of Incorporation and TRA taxpayer certificate",
+              src: "/images/home-registration-office.webp",
+              alt: "A business owner standing in her office holding her BRELA Certificate of Incorporation and TRA Taxpayer Identification Number certificate",
+            },
+            {
+              src: "/images/home-registration-outdoor.webp",
+              alt: "A business owner standing outside a Dar es Salaam office tower holding her BRELA company incorporation documents",
             },
           ],
           mobileTitle: "Registration & Licensing",
