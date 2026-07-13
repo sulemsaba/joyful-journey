@@ -10,6 +10,7 @@ import { Container } from '@/exxonim/components/primitives/Container';
 import { UnifiedCtaSection } from '@/exxonim/components/UnifiedCtaSection';
 import { StructuredData } from '@/exxonim/components/StructuredData';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
+import { useFaqItems } from '@/exxonim/hooks/useFaqItems';
 import { routes, serviceDetailPath } from '@/exxonim/routes';
 
 /**
@@ -30,6 +31,8 @@ export function ServiceDetailPage() {
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
   const { data: catalog } = useServiceCatalog();
+  // This service's FAQs from the single FAQ manager (tagged page="service:<slug>").
+  const { items: managedFaq } = useFaqItems(slug ? `service:${slug}` : undefined);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   // Find this service in the catalog
@@ -58,6 +61,17 @@ export function ServiceDetailPage() {
 
   const ctaLink = service.cta_link || routes.contact;
   const ctaText = service.cta_text || 'Get Started';
+
+  // FAQs from the manager (tagged for this service); fall back to sensible
+  // generic questions until the admin adds service-specific ones.
+  const serviceFaqs = managedFaq.length > 0
+    ? managedFaq.map((f) => ({ q: f.question, a: f.answer }))
+    : [
+        { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
+        { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
+        { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates - no login required.' },
+        { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
+      ];
 
   return (
     <>
@@ -212,15 +226,10 @@ export function ServiceDetailPage() {
 
           {/* FAQ accordion - flat list with dividers, Plus/X toggle (matches main FAQ page) */}
           <div className="max-w-2xl mx-auto" data-reveal>
-            {[
-              { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
-              { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
-              { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates - no login required.' },
-              { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
-            ].map((faq, i) => (
+            {serviceFaqs.map((faq, i) => (
               <div
                 key={i}
-                className={i < 3 ? "border-b border-border-soft" : ""}
+                className={i < serviceFaqs.length - 1 ? "border-b border-border-soft" : ""}
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
