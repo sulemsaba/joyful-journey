@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { ServicePackagesSection } from "@/exxonim/components/ServicePlansSection";
 import { usePage } from "@/exxonim/hooks/usePage";
+import { useFaqItems } from "@/exxonim/hooks/useFaqItems";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
 import type { ServicesPageContent } from '@/exxonim/types';
@@ -32,11 +33,17 @@ import { StructuredData } from '@/exxonim/components/StructuredData';
 export function ServicesPage() {
   const { data: page } = usePage<ServicesPageContent>("services");
   useResolvedPageSeo(page, routes.services);
+  // FAQs now come from the single FAQ manager (tagged page="services").
+  // Fall back to the page's own content while the manager has no items yet.
+  const { items: managedFaq } = useFaqItems("services");
 
   if (!page) return null;
   if (!page.content) return null;
 
   const { overview, catalog, faq } = page.content;
+  const faqItems = managedFaq.length > 0
+    ? managedFaq.map((f) => ({ question: f.question, answer: f.answer }))
+    : (faq ?? []);
 
   return (
     <>
@@ -60,8 +67,8 @@ export function ServicesPage() {
       <ServicePackagesSection variant="page" />
 
       {/* 4. FAQ */}
-      {faq && faq.length > 0 && (
-        <ServicesFaqSection items={faq} />
+      {faqItems.length > 0 && (
+        <ServicesFaqSection items={faqItems} />
       )}
 
       {/* 5. Final CTA */}

@@ -6,6 +6,7 @@ import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
 import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { Sparkles, Home, Search, Plus, X, MessageCircle } from "lucide-react";
 import { usePage } from "@/exxonim/hooks/usePage";
+import { useFaqItems } from "@/exxonim/hooks/useFaqItems";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
 import type { FaqPageContent } from '@/exxonim/types';
@@ -198,8 +199,14 @@ function EmptyState({ searchQuery, onClear }: { searchQuery: string; onClear: ()
 export function FaqPage() {
   const { data: page } = usePage<FaqPageContent>("faq");
   useResolvedPageSeo(page, routes.faq);
+  // FAQs come from the single FAQ manager (tagged page="faq"); fall back to the
+  // page's own content while the manager has no items yet.
+  const { items: managedFaq } = useFaqItems("faq");
 
   const content = page?.content;
+  const faqItems = managedFaq.length > 0
+    ? managedFaq.map((f) => ({ question: f.question, answer: f.answer }))
+    : (content?.items ?? []);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -209,8 +216,7 @@ export function FaqPage() {
 
   /* ── Filter items by search ── */
   const filteredItems = useMemo(() => {
-    if (!content) return [];
-    let items = content.items;
+    let items = faqItems;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       items = items.filter(
@@ -220,7 +226,7 @@ export function FaqPage() {
       );
     }
     return items;
-  }, [content, searchQuery]);
+  }, [faqItems, searchQuery]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchQuery(value);
@@ -231,7 +237,7 @@ export function FaqPage() {
 
   return (
     <>
-            <FaqStructuredData items={content.items} />
+            <FaqStructuredData items={faqItems} />
             <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'FAQ', path: routes.faq }]} pageType="FAQPage" />
 
             {/* ─── Breadcrumb ─── */}
