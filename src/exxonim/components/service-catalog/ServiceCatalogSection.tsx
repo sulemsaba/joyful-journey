@@ -3,6 +3,7 @@ import { AlertCircle, RefreshCw, ArrowRight, Briefcase, ShieldCheck, Plane, Hear
 import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
 import { Button } from '@/exxonim/components/primitives/Button';
+import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 import { serviceDetailPath } from '@/exxonim/routes';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
@@ -143,7 +144,7 @@ function ServiceCardExact({
 
   return (
     <div
-      className="service-card-exact group relative overflow-hidden cursor-default"
+      className="service-card-exact group relative overflow-hidden cursor-pointer"
       style={{
         height: '320px',
         backgroundColor: '#08181b',
@@ -156,6 +157,17 @@ function ServiceCardExact({
         transition: 'transform 0.4s ease, box-shadow 0.4s ease',
       }}
     >
+      {/* Whole-card link → service detail. Sits BENEATH the CTAs (which re-enable
+          pointer events), so a click anywhere on the card opens the detail page
+          while "Get Started"/"Details" keep their own targets. Also makes the
+          card keyboard-focusable — it was a mouse-hover-only dead zone. */}
+      <SmartLink
+        href={detailLink}
+        aria-label={`${service.title} — view details`}
+        className="absolute inset-0 z-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fbcc1] focus-visible:ring-inset"
+        style={{ borderRadius: '12px' }}
+      />
+
       {/* Background arc — white sweep from bottom-left on hover.
           Also a solid white bg that fades in to cover the full card
           (so top corners stay rounded, not box-like). */}
@@ -187,7 +199,7 @@ function ServiceCardExact({
 
       {/* Default content — visible by default, hidden on hover.
           Icon is in-flow (NOT absolute) so it never overlaps the title. */}
-      <div className="service-card-default relative z-10 flex flex-col gap-3">
+      <div className="service-card-default pointer-events-none relative z-10 flex flex-col gap-3">
         {/* Icon — in-flow, top of content. Color set on wrapper so currentColor works */}
         <div style={{ color: '#7fbcc1' }}>
           <Icon
@@ -225,7 +237,7 @@ function ServiceCardExact({
       {/* Expanded content — hidden by default, visible on hover.
           overflow-y: auto so long deliverable lists scroll instead of clipping. */}
       <div
-        className="service-card-expanded absolute inset-0 flex flex-col"
+        className="service-card-expanded pointer-events-none absolute inset-0 flex flex-col"
         style={{
           zIndex: 3,
           padding: '28px',
@@ -292,7 +304,7 @@ function ServiceCardExact({
         {/* Button group — HORIZONTAL: deep teal bg (not theme accent) for white arc bg.
             Using inline style override because Button primitive uses theme colors
             which resolve to light teal in dark mode — wrong for the white card bg. */}
-        <div className="mt-auto flex flex-row gap-2.5 shrink-0">
+        <div className="pointer-events-auto relative z-[1] mt-auto flex flex-row gap-2.5 shrink-0">
           <Button
             size="standard"
             variant="primary"

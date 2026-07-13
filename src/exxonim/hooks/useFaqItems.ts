@@ -32,6 +32,7 @@
  * FALLBACK GUARANTEE:
  *   Always returns empty FAQ items as `data` when no real data is available.
  */
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
@@ -41,14 +42,25 @@ interface FaqItemFromApi {
   id: string;
   question: string;
   answer: string;
-  category: string;
-  sort_order: number;
-  is_active: boolean;
+  category?: string | null;
+  /** Which public surface this FAQ shows on: "faq" | "services" | "service:<slug>". */
+  page?: string | null;
+  sortOrder?: number;
+  isActive?: boolean;
 }
 
 interface FaqApiResponse {
   items: FaqItemFromApi[];
   total: number;
+}
+
+/** Normalised FAQ item for public rendering. */
+export interface PublicFaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  category?: string | null;
+  page: string;
 }
 
 const EMPTY_FAQ: FaqApiResponse = { items: [], total: 0 };
@@ -58,7 +70,16 @@ async function fetchFaqItems(): Promise<FaqApiResponse> {
   return response.data;
 }
 
-export function useFaqItems() {
+/**
+ * FAQ items from the single admin FAQ manager, tagged by page.
+ *
+ * We fetch the FULL list once (one cache entry + one Layer-3 snapshot serves
+ * every page) and filter by `page` on the client. Pass a page tag ("faq",
+ * "services", "service:<slug>") to get just that surface's items; omit it for
+ * all. Consumers should fall back to their existing page content while the
+ * manager is empty (pre-migration) so nothing disappears.
+ */
+export function useFaqItems(page?: string) {
   const query = useQuery({
     queryKey: ["faq-items"],
     queryFn: () => fetchWithJsonFallback(fetchFaqItems, "faq-items"),
@@ -67,8 +88,20 @@ export function useFaqItems() {
     retry: 1,
   });
 
-  return {
-    ...query,
-    data: query.data ?? EMPTY_FAQ,
-  };
+  const all = (query.data ?? EMPTY_FAQ).items ?? [];
+  const items = useMemo<PublicFaqItem[]>(
+    () =>
+      all
+        .map((i) => ({
+          id: i.id,
+          question: i.question,
+          answer: i.answer,
+          category: i.category ?? null,
+          page: i.page || "faq",
+        }))
+        .filter((i) => !page || i.page === page),
+    [all, page]
+  );
+
+  return { ...query, items, data: query.data ?? EMPTY_FAQ };
 }
