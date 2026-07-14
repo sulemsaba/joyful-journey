@@ -73,6 +73,7 @@ import {
   MessageCircle,
   X,
   RotateCcw,
+  Check,
 } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { routes } from "@/exxonim/routes";
@@ -115,6 +116,7 @@ function formatTrackingCode(code: string): string {
 function formatDate(isoString: string): string {
   try {
     const d = new Date(isoString);
+    if (!isoString || isNaN(d.getTime())) return "recently";
     const now = new Date();
     const diffMs = now.getTime() - d.getTime();
     const diffMins = Math.floor(diffMs / 60000);
@@ -151,52 +153,6 @@ function formatAbsoluteDate(isoString: string): string {
     });
   } catch {
     return isoString;
-  }
-}
-
-/** Returns progress bar color class based on case status. */
-function getProgressBarClass(status: ApiTrackingCaseStatus): string {
-  switch (status) {
-    case "completed":
-      return "bg-success";
-    case "on_hold":
-      return "bg-warning";
-    case "active":
-    default:
-      return "bg-accent";
-  }
-}
-
-function getStatusDisplay(
-  status: ApiTrackingCaseStatus
-): { label: string; colorClass: string; dotClass: string } {
-  switch (status) {
-    case "active":
-      return {
-        label: "In Progress",
-        colorClass: "bg-accent-soft text-accent",
-        dotClass: "bg-accent",
-      };
-    case "completed":
-      return {
-        label: "Completed",
-        colorClass: "bg-success-soft text-success",
-        dotClass: "bg-success",
-      };
-    case "on_hold":
-      return {
-        label: "On Hold",
-        colorClass: "bg-warning-soft text-warning",
-        dotClass: "bg-warning",
-      };
-    default:
-      // Any other status (new, assigned, pending_settlement…) renders as
-      // "In Progress" instead of crashing the whole page.
-      return {
-        label: "In Progress",
-        colorClass: "bg-accent-soft text-accent",
-        dotClass: "bg-accent",
-      };
   }
 }
 
@@ -237,6 +193,64 @@ const HOW_IT_WORKS_STEPS = [
 /* ─────────────────────────────────────────────────────────
  * TRACKING RESULT COMPONENT
  * ───────────────────────────────────────────────────────── */
+/* Confetti burst for the completed celebration — a canvas overlay over its
+ * parent. Runs once when `active` becomes true; skipped for reduced-motion. */
+function useCelebration(active: boolean) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    if (!active) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const cv = ref.current;
+    const parent = cv?.parentElement;
+    if (!cv || !parent) return;
+    const rect = parent.getBoundingClientRect();
+    cv.width = rect.width;
+    cv.height = rect.height;
+    const ctx = cv.getContext("2d");
+    if (!ctx) return;
+    const cols = ["#1a8f5a", "#0f5c63", "#7fbcc1", "#f0b429", "#e8617d", "#3f8f95"];
+    const parts = Array.from({ length: 90 }, (_, i) => ({
+      x: cv.width / 2 + Math.sin(i) * 40,
+      y: cv.height * 0.22,
+      vx: (i % 2 ? 1 : -1) * (1 + Math.cos(i) * 3.2),
+      vy: -(4 + (i % 7)) * 1.1,
+      g: 0.16 + (i % 3) * 0.03,
+      s: 5 + (i % 4) * 2,
+      rot: i,
+      vr: (i % 2 ? 1 : -1) * 0.2,
+      c: cols[i % cols.length],
+      life: 0,
+    }));
+    let raf = 0;
+    const loop = () => {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      let alive = false;
+      for (const p of parts) {
+        p.vy += p.g;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.life++;
+        if (p.y < cv.height + 20) alive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.max(0, 1 - p.life / 120);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+        ctx.restore();
+      }
+      if (alive) raf = requestAnimationFrame(loop);
+      else ctx.clearRect(0, 0, cv.width, cv.height);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [active]);
+  return ref;
+}
+
+const WA_HREF = "https://wa.me/255794689099";
+
 function TrackingResultCard({
   result,
   onReset,
@@ -244,199 +258,284 @@ function TrackingResultCard({
   result: ApiTrackingLookupResponse;
   onReset: () => void;
 }) {
-  const statusDisplay = getStatusDisplay(result.status);
+  const isCompleted = result.status === "completed";
+  const isOnHold = result.status === "on_hold";
   const hasMilestones =
-    result.visibleMilestones && result.visibleMilestones.length > 0;
+    !!result.visibleMilestones && result.visibleMilestones.length > 0;
   const completedCount = result.completedSteps ?? 0;
   const totalCount = result.totalSteps ?? 0;
   const progressPercent =
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
+  // ── Behavioral polish ───────────────────────────────────────────────
+  // Zeigarnik effect: an in-progress journey needs a visible ACTIVE step to
+  // pull the eye forward. When the data hasn't flagged a "current" milestone
+  // (common for a freshly opened case), promote the first upcoming one so the
+  // timeline is never a lifeless row of grey dots.
+  const rawMilestones = result.visibleMilestones ?? [];
+  const displayMilestones =
+    isCompleted || rawMilestones.some((m) => m.status === "current")
+      ? rawMilestones
+      : (() => {
+          const i = rawMilestones.findIndex((m) => m.status === "upcoming");
+          if (i === -1) return rawMilestones;
+          return rawMilestones.map((m, idx) =>
+            idx === i ? { ...m, status: "current" as const } : m,
+          );
+        })();
+
+  // Endowed-progress + goal-gradient: an open case has already *started*, so we
+  // never render a demotivating 0%. We floor the bar at a small head start and
+  // frame progress as distance travelled toward the goal (more motivating than
+  // "% done"), with encouragement that intensifies as the finish nears.
+  const displayPercent = isCompleted
+    ? 100
+    : totalCount > 0
+      ? Math.max(progressPercent, 8)
+      : 0;
+  const momentum = isCompleted
+    ? ""
+    : displayPercent >= 67
+      ? "Almost there — the finish line is in sight."
+      : displayPercent >= 34
+        ? "Good momentum — this is moving."
+        : "Underway — we've got it from here.";
+
+  const confettiRef = useCelebration(isCompleted);
+  const [popped, setPopped] = useState(false);
+  useEffect(() => {
+    if (!isCompleted) return;
+    const t = setTimeout(() => setPopped(true), 60);
+    return () => clearTimeout(t);
+  }, [isCompleted]);
+
+  // Plain-language "what's happening now": prefer the real backend message,
+  // otherwise template it from the current + next milestone.
+  const plainStatus =
+    result.message ||
+    (result.milestone
+      ? `We're working on ${result.milestone}.${result.nextMilestone ? ` Next up: ${result.nextMilestone}.` : ""}`
+      : "Your case is open and moving through our process. We'll update this the moment each step is reached.");
+
+  const timeline = hasMilestones ? (
+    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-7">
+      <div className="mb-5 flex items-center justify-between">
+        <h3 className="m-0 text-base font-semibold text-text">Your journey</h3>
+        <span className="font-mono text-xs text-text-muted">
+          {completedCount}/{totalCount}
+        </span>
+      </div>
+      <div className="grid gap-0">
+        {displayMilestones.map((milestone, index) => (
+          <MilestoneItem
+            key={milestone.label}
+            milestone={milestone}
+            isLast={index === displayMilestones.length - 1}
+            prevCompleted={
+              index > 0 ? displayMilestones[index - 1].status === "completed" : false
+            }
+          />
+        ))}
+      </div>
+    </div>
+  ) : null;
+
   return (
     <div className="grid gap-6">
-      {/* ── Status header card ── */}
-      <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated overflow-hidden">
-        {/* Progress bar - color matches status */}
-        {totalCount > 0 && (
-          <div className="h-1.5 bg-surface-soft">
-            <div
-              className={`h-full ${getProgressBarClass(result.status)} transition-opacity duration-700 ease-out rounded-r-full`}
-              style={{ width: `${progressPercent}%` }}
+      {isCompleted ? (
+        /* ─────────── COMPLETED — the cheerful payoff ─────────── */
+        <>
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-success/25 bg-gradient-to-b from-success-soft/40 to-surface-elevated p-8 text-center md:p-12">
+            <canvas
+              ref={confettiRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
             />
-          </div>
-        )}
-
-        <div className="p-6 md:p-8 grid gap-5">
-          {/* Row 1: Tracking code + Status badge + Instant badge */}
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="grid gap-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[0.68rem] font-extrabold tracking-[0.18em] uppercase text-text-muted">
-                  Tracking Code
-                </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/10 text-[0.58rem] font-bold text-accent tracking-wide uppercase">
-                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                  Instant Result
-                </span>
-              </div>
-              <span className="text-2xl md:text-3xl font-mono font-bold text-text tracking-[0.15em]">
-                {result.trackingCode
-                  ? formatTrackingCode(result.trackingCode)
-                  : "-- -- --"}
-              </span>
-            </div>
-            <span
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-extrabold ${statusDisplay.colorClass}`}
-            >
-              {result.status === "active" && (
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
-                </span>
-              )}
-              {result.status !== "active" && (
-                <span
-                  className={`w-2 h-2 rounded-full ${statusDisplay.dotClass}`}
-                />
-              )}
-              {statusDisplay.label}
-            </span>
-          </div>
-
-          {/* Row 2: Key details - responsive grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y border-border-soft">
-            {result.serviceType && (
-              <DetailItem label="Service" value={result.serviceType} />
-            )}
-            <DetailItem label="Current Stage" value={result.milestone} />
-            <DetailItem
-              label="Last Updated"
-              value={formatDate(result.lastUpdated)}
-              tooltip={formatAbsoluteDate(result.lastUpdated)}
-            />
-            <DetailItem
-              label="Next Step"
-              value={result.nextMilestone ?? "-"}
-            />
-          </div>
-
-          {/* Row 3: Message (on_hold or completed) */}
-          {result.message && (
-            <div
-              className={`grid gap-2 p-4 rounded-xl border ${
-                result.status === "on_hold"
-                  ? "bg-warning-soft/30 border-warning/10"
-                  : result.status === "completed"
-                    ? "bg-success-soft/30 border-success/10"
-                    : "bg-accent-soft/40 border-accent/10"
-              }`}
-            >
-              <span
-                className={`text-[0.68rem] font-extrabold tracking-[0.16em] uppercase ${
-                  result.status === "on_hold"
-                    ? "text-warning"
-                    : result.status === "completed"
-                      ? "text-success"
-                      : "text-accent"
+            <div className="relative">
+              <div
+                className={`mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-success text-white shadow-lg shadow-success/30 transition-all duration-500 ease-out ${
+                  popped ? "scale-100 opacity-100" : "scale-50 opacity-0"
                 }`}
               >
-                {result.status === "on_hold"
-                  ? "Action Needed"
-                  : result.status === "completed"
-                    ? "Completed"
-                    : "Update"}
-              </span>
-              <p className="m-0 text-text text-sm leading-relaxed">
-                {result.message}
+                <Check className="h-10 w-10" strokeWidth={3} />
+              </div>
+              <h2 className="m-0 text-3xl font-bold tracking-tight text-text md:text-4xl">
+                It&rsquo;s done! 🎉
+              </h2>
+              <p className="mt-2 text-lg text-text-muted">
+                Your{" "}
+                <span className="font-semibold text-text">
+                  {result.serviceType ?? "consultation"}
+                </span>{" "}
+                is ready.
               </p>
-              {result.status === "on_hold" && (
+              <p className="mt-1 text-sm text-text-soft">
+                All {totalCount} steps completed
+                {result.trackingCode ? ` · ${formatTrackingCode(result.trackingCode)}` : ""}
+              </p>
+              <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
                 <a
-                  href="https://wa.me/255794689099"
+                  href={WA_HREF}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1ebe57] transition-colors w-fit"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 text-sm font-bold text-white transition-colors hover:bg-[#1ebe57]"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="h-4 w-4" />
+                  Get your documents
+                </a>
+                <Button size="standard" variant="outline" href={routes.contact}>
+                  Talk about what&rsquo;s next
+                </Button>
+              </div>
+              <p className="mt-6 text-sm text-text-soft">
+                Thank you for trusting Exxonim with your paperwork 💚
+              </p>
+            </div>
+          </div>
+          {timeline}
+          {/* Gentle next-step nudge — keep the relationship going past the win. */}
+          <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-7">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-accent-soft text-accent">
+                <Bell className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="m-0 text-sm font-bold text-text">Keep it that way</p>
+                <p className="m-0 mt-0.5 text-[0.85rem] text-text-muted">
+                  Staying compliant means annual filings and renewals — we can handle those too,
+                  and remind you before every deadline.
+                </p>
+              </div>
+            </div>
+            <Button size="standard" variant="outline" href={routes.services} className="mt-4">
+              See ongoing compliance
+            </Button>
+          </div>
+        </>
+      ) : (
+        /* ─────────── ACTIVE / ON HOLD — calm &amp; reassuring ─────────── */
+        <>
+          {/* Status hero */}
+          <div className="rounded-[1.5rem] border border-border-soft bg-surface-elevated p-6 md:p-8">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="m-0 text-sm text-text-muted">
+                  {result.serviceType ?? "Your consultation"}
+                </p>
+                <div className="mt-1.5 flex items-center gap-2.5">
+                  <span className="relative flex h-3 w-3">
+                    {!isOnHold && (
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success/70" />
+                    )}
+                    <span
+                      className={`relative inline-flex h-3 w-3 rounded-full ${isOnHold ? "bg-warning" : "bg-success"}`}
+                    />
+                  </span>
+                  <h2 className="m-0 text-2xl font-bold tracking-tight text-text md:text-3xl">
+                    {isOnHold ? "Paused for now" : "On track"}
+                  </h2>
+                </div>
+                <p className="m-0 mt-1.5 text-xs text-text-soft">
+                  Updated {formatDate(result.lastUpdated)}
+                </p>
+              </div>
+              <span
+                className="inline-flex items-center rounded-full bg-accent/10 px-3.5 py-1.5 font-mono text-sm font-bold tracking-[0.15em] text-accent"
+                title={formatAbsoluteDate(result.lastUpdated)}
+              >
+                {result.trackingCode ? formatTrackingCode(result.trackingCode) : "-- -- --"}
+              </span>
+            </div>
+          </div>
+
+          {/* The hero answer: do I need to do anything? */}
+          <div
+            className={`flex items-center gap-3.5 rounded-[1.35rem] border p-4 md:p-5 ${
+              isOnHold
+                ? "border-warning/25 bg-warning-soft/30"
+                : "border-success/25 bg-success-soft/30"
+            }`}
+          >
+            <span
+              className={`flex h-11 w-11 flex-none items-center justify-center rounded-xl text-white ${isOnHold ? "bg-warning" : "bg-success"}`}
+            >
+              {isOnHold ? <Bell className="h-5 w-5" /> : <Check className="h-5 w-5" strokeWidth={3} />}
+            </span>
+            <div>
+              <p className="m-0 text-[0.95rem] font-bold text-text">
+                {isOnHold ? "We may need something from you" : "Nothing needed from you right now"}
+              </p>
+              <p className="m-0 text-[0.8rem] text-text-muted">
+                {isOnHold
+                  ? "See the note below or message us — we'll sort it fast."
+                  : "We'll message you the moment anything changes."}
+              </p>
+            </div>
+          </div>
+
+          {/* Details + timeline — two columns on large screens, stacked below */}
+          <div className="grid items-start gap-6 lg:grid-cols-2">
+            <div className="grid gap-6">
+              <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-7">
+                <p className="m-0 mb-2 text-[0.68rem] font-extrabold uppercase tracking-[0.16em] text-text-muted">
+                  What&rsquo;s happening now
+                </p>
+                <p className="m-0 text-[0.98rem] leading-relaxed text-text">{plainStatus}</p>
+              </div>
+
+              {totalCount > 0 && (
+                <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-7">
+                  <div className="mb-2.5 flex items-center justify-between text-xs font-semibold">
+                    <span className="text-text-muted">
+                      Step {Math.min(completedCount + 1, totalCount)} of {totalCount}
+                    </span>
+                    <span className="text-accent">{displayPercent}% of the way there</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-accent-soft">
+                    <div
+                      className="h-full rounded-full bg-accent transition-[width] duration-1000 ease-out"
+                      style={{ width: `${displayPercent}%` }}
+                    />
+                  </div>
+                  {momentum && (
+                    <p className="m-0 mt-2.5 text-xs text-text-muted">{momentum}</p>
+                  )}
+                </div>
+              )}
+
+              <div className="grid gap-4 rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-7">
+                <a
+                  href={WA_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] text-sm font-bold text-white transition-colors hover:bg-[#1ebe57]"
+                >
+                  <MessageCircle className="h-4 w-4" />
                   Message us on WhatsApp
                 </a>
-              )}
+                <p className="m-0 flex items-center gap-2.5 text-[0.85rem] text-text-muted">
+                  <Bell className="h-4 w-4 flex-none text-accent" />
+                  We&rsquo;ll WhatsApp you at every step — no need to keep checking.
+                </p>
+              </div>
             </div>
-          )}
 
-          {/* Row 4: Progress summary */}
-          {totalCount > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-text-muted">
-              <span>
-                {completedCount} of {totalCount} steps completed
-              </span>
-              <span>{progressPercent}% done</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── Milestone timeline ── */}
-      {hasMilestones && (
-        <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="m-0 text-lg font-semibold text-text">Timeline</h3>
-            <span className="text-xs text-text-muted font-mono">
-              {completedCount}/{totalCount}
-            </span>
+            {timeline}
           </div>
-          <div className="grid gap-0">
-            {result.visibleMilestones!.map((milestone, index) => (
-              <MilestoneItem
-                key={milestone.label}
-                milestone={milestone}
-                isLast={index === result.visibleMilestones!.length - 1}
-                /** Track whether the previous milestone was completed for connector style */
-                prevCompleted={
-                  index > 0
-                    ? result.visibleMilestones![index - 1].status === "completed"
-                    : false
-                }
-              />
-            ))}
-          </div>
-        </div>
+        </>
       )}
 
-      {/* ── Look up another code ── */}
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      {/* Look up another code */}
+      <div className="flex justify-center pt-1">
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-hover transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="h-4 w-4" />
           Look up another code
         </button>
       </div>
-    </div>
-  );
-}
-
-function DetailItem({
-  label,
-  value,
-  tooltip,
-}: {
-  label: string;
-  value: string;
-  tooltip?: string;
-}) {
-  return (
-    <div className="grid gap-0.5">
-      <span className="text-[0.68rem] font-extrabold tracking-[0.14em] uppercase text-text-muted">
-        {label}
-      </span>
-      <span
-        className="text-sm font-semibold text-text"
-        title={tooltip}
-      >
-        {value}
-      </span>
     </div>
   );
 }
@@ -545,50 +644,45 @@ function TrackingNotFound({
   onReset: () => void;
 }) {
   return (
-    <div className="rounded-[1.35rem] border border-border-soft bg-surface-elevated p-6 md:p-8 grid gap-6">
-      <div className="text-center grid gap-3">
-        <div className="w-14 h-14 rounded-full bg-surface-soft mx-auto flex items-center justify-center">
-          <Search className="w-7 h-7 text-text-muted" />
+    <div className="mx-auto grid max-w-[30rem] gap-6 rounded-[1.5rem] border border-border-soft bg-surface-elevated p-8 text-center md:p-10">
+      <div className="grid justify-items-center gap-3">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-soft/40 text-warning">
+          <Search className="h-7 w-7" />
         </div>
-        <div className="grid gap-2">
-          <h3 className="m-0 text-lg font-semibold text-text">
-            No consultation found
-          </h3>
-          <p className="m-0 text-text-muted text-sm leading-relaxed max-w-[28rem] mx-auto">
-            Double-check your code and try again. Your code is 6 characters - 5 digits and 1 letter.
-          </p>
-        </div>
+        <h3 className="m-0 text-xl font-bold tracking-tight text-text md:text-2xl">
+          We couldn&rsquo;t find that code
+        </h3>
+        {/* One plain sentence + next step (best practice). Kept vague on *why* —
+            wrong / expired / never existed all read the same — so codes can't be
+            guessed. */}
+        <p className="m-0 max-w-[34ch] text-[0.95rem] leading-relaxed text-text-muted">
+          Double-check the 6-character code from your WhatsApp and try again.
+        </p>
+        <p className="m-0 text-xs text-text-soft">
+          It looks like{" "}
+          <span className="font-mono font-semibold text-text-muted">11&nbsp;11&nbsp;1A</span>{" "}
+          — 5 numbers and 1 letter.
+        </p>
       </div>
-      <div className="rounded-xl border border-border-soft bg-surface-soft/50 p-4 grid gap-3">
-        <span className="text-[0.68rem] font-extrabold tracking-[0.14em] uppercase text-accent">
-          Can&rsquo;t find your code?
-        </span>
-        <div className="grid gap-2 text-sm text-text-muted">
-          <div className="flex items-start gap-2">
-            <MessageCircle className="w-4 h-4 text-[#25D366] mt-0.5 flex-shrink-0" />
-            <span>Check your WhatsApp - we send your code when your consultation starts.</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-            <span>Only you can see your code. We never share it.</span>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Button
-          size="standard"
-          variant="primary"
+
+      <div className="grid gap-2.5">
+        <a
+          href={WA_HREF}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] text-sm font-bold text-white transition-colors hover:bg-[#1ebe57]"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Message us — we&rsquo;ll find it for you
+        </a>
+        <button
+          type="button"
           onClick={onReset}
+          className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent-hover"
         >
-          Try Again
-        </Button>
-        <Button
-          size="standard"
-          variant="outline"
-          href={routes.contact}
-        >
-          Contact Us
-        </Button>
+          <RotateCcw className="h-4 w-4" />
+          Try another code
+        </button>
       </div>
     </div>
   );
@@ -725,6 +819,18 @@ export function TrackConsultationPage() {
       const normalized = normalizeTrackingCode(rawCode);
       if (!normalized) return;
 
+      // Validate the FORMAT client-side (5 digits + 1 letter) BEFORE calling the
+      // API. Mistyped codes used to hit the server and get a 400 (which then
+      // surfaced as a misleading "our server had a problem" error, and spammed
+      // the backend). Now they never leave the browser — the inline hint under
+      // the field turns into a specific, friendly correction instead.
+      if (!isValidTrackingCode(normalized)) {
+        setNotFound(false);
+        setLookupResult(null);
+        setSearchError(null);
+        return;
+      }
+
       setIsSearching(true);
       setNotFound(false);
       setLookupResult(null);
@@ -776,7 +882,12 @@ export function TrackConsultationPage() {
     setSearchError(null);
   }, []);
 
-  const canSearch = rawCode.length === 6;
+  // Only allow submit when the FORMAT is genuinely valid (5 digits + 1 letter),
+  // not merely 6 characters — so invalid codes can't reach the server.
+  const canSearch = isValidTrackingCode(normalizeTrackingCode(rawCode));
+  // 6 characters typed but the format is off → show a gentle, specific hint.
+  const formatLooksOff =
+    rawCode.length === 6 && !isValidTrackingCode(normalizeTrackingCode(rawCode));
 
   /** Fill the input with a demo code */
   const handleDemoFill = useCallback(
@@ -815,7 +926,7 @@ export function TrackConsultationPage() {
           }}
         />
         {/* Breadcrumb - now inside hero for seamless fade */}
-        <div className="max-w-[1240px] px-8 mx-auto pt-4">
+        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
           <Breadcrumb
             items={[
               { label: "Home", href: routes.home, icon: Home },
@@ -823,7 +934,7 @@ export function TrackConsultationPage() {
             ]}
           />
         </div>
-        <div className="max-w-[1240px] px-8 mx-auto pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-8 md:pt-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           {/* Left: Text - on mobile renders AFTER the tracking card */}
           <div className="grid gap-6" style={{ order: 2 }}>
             <p className="inline-flex items-center gap-2 text-accent text-xs font-extrabold tracking-[0.18em] uppercase">
@@ -834,23 +945,41 @@ export function TrackConsultationPage() {
               Consultation Tracking
             </p>
             <h1 className="m-0 text-[clamp(2.4rem,5vw,4.4rem)] font-semibold leading-[1.05] tracking-tight text-text">
-              Track Your Consultation
+              Where does your file stand?
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
-              One code. Full timeline. WhatsApp updates at every step.
+              Enter the code from your WhatsApp and see exactly where things stand —
+              your full timeline, in real time. No login, no waiting on hold. And we
+              message you at every step, so you never have to wonder.
             </p>
-
+            <ul className="m-0 grid gap-2.5 p-0 list-none">
+              {[
+                "See your whole journey — step by step, with dates",
+                "We handle the authorities; you just watch the progress",
+                "Updates come to your WhatsApp automatically",
+              ].map((line) => (
+                <li key={line} className="flex items-start gap-2.5 text-text-muted text-[0.95rem]">
+                  <Check className="mt-0.5 h-4 w-4 flex-none text-accent" strokeWidth={3} />
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Right: Tracking lookup card - on mobile renders FIRST */}
           <div className="relative" style={{ order: 1 }}>
             <div className="rounded-[2rem] border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8 grid gap-5">
-              <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
-                Look up your consultation
-              </span>
+              <div className="grid gap-1">
+                <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
+                  Look up your consultation
+                </span>
+                <p className="m-0 text-sm text-text-muted">
+                  No account, no password — just the code from your WhatsApp.
+                </p>
+              </div>
               <form onSubmit={handleLookup} className="grid gap-3">
-                <label htmlFor="tracking-code" className="sr-only">
-                  Tracking code
+                <label htmlFor="tracking-code" className="text-sm font-semibold text-text">
+                  Your tracking code
                 </label>
                 <TrackingCodeInput
                   value={rawCode}
@@ -858,9 +987,19 @@ export function TrackConsultationPage() {
                   disabled={isSearching}
                   inputRef={inputRef}
                 />
-                {canSearch && !isSearching && (
-                  <p className="text-[0.65rem] text-text-soft text-center">
-                    Press Enter to check
+                {formatLooksOff ? (
+                  <p className="m-0 flex items-start gap-1.5 text-xs text-warning">
+                    <span aria-hidden="true">↳</span>
+                    <span>
+                      Almost — that&rsquo;s 6 characters, but a code is{" "}
+                      <strong>5 numbers + 1 letter</strong> (like 11&nbsp;11&nbsp;1A).
+                      Double-check it.
+                    </span>
+                  </p>
+                ) : (
+                  <p className="m-0 text-xs text-text-muted">
+                    6 characters — 5 numbers + 1 letter (e.g. 11&nbsp;11&nbsp;1A).
+                    {canSearch && !isSearching ? " Press Enter to check." : ""}
                   </p>
                 )}
                 <Button
@@ -951,13 +1090,14 @@ export function TrackConsultationPage() {
       </section>
 
       {/* ── Tracking result ── */}
-      <div ref={resultRef}>
+      <div ref={resultRef} className="scroll-mt-28">
+
         {/* Inline search indicator - subtle, in the result area only.
          * NOT a full-page loader. Shows a minimal "Searching..." message
          * inside the result panel so users know the lookup is in progress. */}
         {isSearching && (
           <section className="pb-16 md:pb-20">
-            <div className="max-w-[1240px] px-8 mx-auto max-w-[52rem]">
+            <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto max-w-[52rem]">
               <div className="rounded-2xl border border-border-soft bg-surface/70 backdrop-blur p-6 md:p-8">
                 <div className="flex items-center justify-center gap-3 py-8 text-text-muted">
                   <svg
@@ -979,7 +1119,7 @@ export function TrackConsultationPage() {
 
         {!isSearching && (lookupResult || notFound) && (
           <section className="pb-16 md:pb-20">
-            <div className="max-w-[1240px] px-8 mx-auto max-w-[52rem]">
+            <div className="max-w-[64rem] px-4 sm:px-6 lg:px-8 mx-auto">
               {lookupResult && (
                 <TrackingResultCard
                   result={lookupResult}
@@ -997,9 +1137,14 @@ export function TrackConsultationPage() {
         )}
       </div>
 
+      {/* First-time / explainer content — hidden once a result (or not-found)
+          is shown, so a visitor who already got their answer isn't buried under
+          "how to track" + "lost your code" content. */}
+      {!lookupResult && !notFound && (
+        <>
       {/* ── How it works ── */}
       <section className="py-16 md:py-20">
-        <div className="max-w-[1240px] px-8 mx-auto grid gap-10">
+        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto grid gap-10">
           <div className="grid gap-3 max-w-[42rem]">
             <span className="text-[0.72rem] font-extrabold tracking-[0.2em] uppercase text-accent">
               How it works
@@ -1030,7 +1175,7 @@ export function TrackConsultationPage() {
 
       {/* ── Privacy + Lost code - combined to reduce redundancy ── */}
       <section id="lost-code" className="py-16 md:py-20 scroll-mt-8">
-        <div className="max-w-[1240px] px-8 mx-auto max-w-[42rem] grid gap-4">
+        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto max-w-[42rem] grid gap-4">
           <div className="flex items-start gap-4 p-5 rounded-[1.35rem] border border-border-soft bg-surface-elevated">
             <span className="text-accent mt-0.5 flex-shrink-0"><ShieldCheck className="w-5 h-5" /></span>
             <div className="grid gap-0.5">
@@ -1052,6 +1197,8 @@ export function TrackConsultationPage() {
           </div>
         </div>
       </section>
+        </>
+      )}
     </main>
   );
 }

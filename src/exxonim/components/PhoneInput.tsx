@@ -23,9 +23,13 @@
  */
 
 import { createPortal } from "react-dom";
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Search, Check, X } from "lucide-react";
 import { cn } from "@/exxonim/utils/cn";
+
+/* useLayoutEffect on the client (measure/position before paint), useEffect on
+ * the server (prerender) to avoid React's SSR warning. */
+const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /* ═══════════════════════════════════════════════════════════════
  * Country data
@@ -394,23 +398,53 @@ export function PhoneInput({
         setSearchQuery("");
       }
     };
+    // Escape closes the dropdown and returns focus to the trigger.
+    const keyHandler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setDropdownOpen(false);
+        setSearchQuery("");
+        triggerRef.current?.focus();
+      }
+    };
     document.addEventListener("mousedown", mouseHandler);
     document.addEventListener("touchstart", touchHandler, { passive: true });
+    document.addEventListener("keydown", keyHandler);
     return () => {
       document.removeEventListener("mousedown", mouseHandler);
       document.removeEventListener("touchstart", touchHandler);
+      document.removeEventListener("keydown", keyHandler);
     };
   }, [dropdownOpen]);
 
-  /* Calculate desktop dropdown position when it opens */
-  useEffect(() => {
-    if (dropdownOpen && triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      setDesktopDropdownPosition({
-        top: rect.bottom + 4,
-        left: rect.left,
-      });
-    }
+  /* Position the desktop dropdown under the trigger.
+   *
+   * BUGFIX (2026-07-13): this used to run in a post-paint useEffect from an
+   * initial {top:0,left:0}, so the fixed-position panel first PAINTED at the
+   * viewport's top-left corner (over the logo) before jumping into place — the
+   * 150ms entry animation made that flash clearly visible. Now it runs in a
+   * useLayoutEffect (coords set synchronously BEFORE paint) and re-positions on
+   * scroll/resize since the panel is position:fixed. Left edge is clamped so a
+   * right-aligned field never pushes the 288px (w-72) panel off-screen. */
+  useIsoLayoutEffect(() => {
+    if (!dropdownOpen) return;
+    const PANEL_W = 288; // matches w-72
+    const place = () => {
+      const el = triggerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const left = Math.max(8, Math.min(rect.left, window.innerWidth - PANEL_W - 8));
+      setDesktopDropdownPosition({ top: rect.bottom + 4, left });
+    };
+    place();
+    // capture:true so scrolls inside any ancestor also reposition the panel
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
+    return () => {
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
+      // Reset so the next open re-gates on a fresh measurement (no stale-spot flash).
+      setDesktopDropdownPosition({ top: 0, left: 0 });
+    };
   }, [dropdownOpen]);
 
   /* Focus search input when dropdown opens */
@@ -425,6 +459,8 @@ export function PhoneInput({
     setCountryCode(c.code);
     setDropdownOpen(false);
     setSearchQuery("");
+    // Return focus to the trigger so the keyboard user keeps their place.
+    triggerRef.current?.focus();
     onCountryChange?.(c.code);
     // Re-emit value with new country code
     const currentLocalDigits = stripNonDigits(localDigits);
@@ -590,8 +626,13 @@ export function PhoneInput({
             )} />
           </button>
 
-          {/* ── Desktop dropdown (popover, portal-rendered to avoid overflow clipping) ── */}
-          {dropdownOpen && createPortal(
+          {/* ── Desktop dropdown (popover, portal-rendered to avoid overflow clipping) ──
+              Gated on a resolved position (top > 0): the panel is only mounted
+              AFTER the layout effect has measured the trigger, so it never
+              paints for a frame at the viewport's top-left (the old "falls from
+              the sky" flash). Position is reset to 0 on close so a reopen after
+              scrolling re-measures instead of flashing at the stale spot. */}
+          {dropdownOpen && desktopDropdownPosition.top > 0 && createPortal(
             <div
               ref={desktopDropdownRef}
               className={cn(

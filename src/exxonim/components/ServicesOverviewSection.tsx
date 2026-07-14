@@ -106,7 +106,7 @@ export function ServicesOverviewSection({
       className="relative pt-6 pb-8 md:pt-10 md:pb-12"
       aria-labelledby="services-overview-title"
     >
-      <div className="max-w-[1240px] px-8 mx-auto relative z-10">
+      <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto relative z-10">
         {/* ── Hero + vertical stats slideshow - 2-column layout ── */}
         <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:gap-12 items-center">
           {/* ── Left: Hero - open, no card, no CTA button (CTA is at bottom of page) ── */}

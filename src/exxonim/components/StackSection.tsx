@@ -327,8 +327,10 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           </div>
         )}
 
-        {/* Heading — mobile copy on small screens, desktop copy on md+ */}
-        <h2 className="text-2xl font-bold tracking-tight text-text sm:text-3xl md:text-4xl">
+        {/* Heading — mobile copy on small screens, desktop copy on md+.
+            Uses the shared section-heading scale (clamp) so it matches every
+            other section heading on the site (Insights, Packages, CTA). */}
+        <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold tracking-tight text-text">
           <span className="md:hidden">{mobileTitle}</span>
           <span className="hidden md:inline">{item.title}</span>
         </h2>
@@ -372,6 +374,9 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
           isReversed && "md:[direction:ltr]"
         )}
       >
+        {/* Inner wrapper carries the scroll-scrubbed parallax (the "unboring
+            scroll"); the outer element owns the shared [data-reveal] entrance. */}
+        <div className="stack-scroll-parallax w-full">
         {hasImage ? (
           /* ── Photo fills the ENTIRE card at 4:3 (no inner margin, no letterbox).
                 Provide 4:3 source images (e.g. 1600×1200) and object-cover shows
@@ -437,6 +442,7 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
 import { cn } from '@/exxonim/utils/cn'
 import { forwardRef, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { preloadRoute } from '@/exxonim/preloadRoutes'
+import { normalizePathname } from '@/exxonim/routes'
 
 /* ═══════════════════════════════════════════════════════════════
  * Button — Exxonim Design System Primitive
@@ -74,7 +77,7 @@ const sizeStyles: Record<ButtonSize, string> = {
     'text-sm font-extrabold tracking-wide',
   ),
   standard: cn(
-    'h-10 px-4 sm:px-5 rounded-full',
+    'h-11 px-4 sm:px-5 rounded-full',
     'text-sm font-bold',
   ),
   compact: cn(
@@ -195,19 +198,42 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
     )
 
     if (href && !isDisabled) {
+      // External / non-routable targets (tel:, mailto:, http(s), #, new tab)
+      // keep a plain <a> — a full navigation is correct there.
+      const isExternal =
+        /^(tel:|mailto:|https?:\/\/|#|javascript:)/.test(href) || target === "_blank"
+      if (isExternal) {
+        return (
+          <a
+            ref={ref as React.Ref<HTMLAnchorElement>}
+            href={href}
+            className={classes}
+            target={target}
+            rel={rel}
+            aria-label={ariaLabel}
+            onClick={onClick}
+            {...rest}
+          >
+            {content}
+          </a>
+        )
+      }
+      // Internal routes: navigate CLIENT-SIDE via the router (no full page
+      // reload / boot loader) and preload the target chunk on hover, exactly
+      // like SmartLink. Fixes CTAs such as the "Track Consultation" button that
+      // used to hard-reload the whole app.
       return (
-        <a
+        <Link
           ref={ref as React.Ref<HTMLAnchorElement>}
-          href={href}
+          to={href}
           className={classes}
-          target={target}
-          rel={rel}
           aria-label={ariaLabel}
           onClick={onClick}
           {...rest}
+          onMouseEnter={() => preloadRoute(normalizePathname(href))}
         >
           {content}
-        </a>
+        </Link>
       )
     }
 

@@ -53,6 +53,7 @@ import type {
   ApiPublicConsultationSubmissionResponse,
   ApiTrackingLookupRequest,
   ApiTrackingLookupResult,
+  ApiTrackingLookupResponse,
 } from "@/exxonim/types/api";
 
 /**
@@ -131,10 +132,62 @@ export async function lookupTrackingCode(
       // BACKEND: Always returns same 404 shape for invalid/expired/non-existent
       // codes to prevent information leakage.
       if (response.status === 404) {
-        return data as ApiTrackingLookupResult;
+        // The backend 404 body is `{ error: "..." }` — it has NO `status` field,
+        // so the page's `result.status === "not_found"` check never fired and a
+        // non-existent code rendered as a blank "active" result. Normalise it to
+        // the not-found shape the UI expects.
+        return {
+          status: "not_found",
+          message:
+            (data as { error?: string; message?: string })?.error ||
+            (data as { message?: string })?.message ||
+            "No consultation found with that code.",
+        } as ApiTrackingLookupResult;
       }
       // Other errors (500, 429 rate-limited, etc.) - throw to show generic error
       throw new Error(data.message || data.detail || "Lookup failed");
+    }
+
+    // ── Shape adapter ──────────────────────────────────────────────
+    // The backend returns a NESTED shape: { customer, case, progress,
+    // milestones[] } with fields like case.serviceType / milestone.title /
+    // milestone.completedAt, and milestone status "pending". The tracker UI,
+    // however, renders a FLAT ApiTrackingLookupResponse (status, serviceType,
+    // milestone, visibleMilestones:[{label,date,status}], …). Without this map
+    // every field is undefined, so a valid 200 rendered as an empty card
+    // ("I see 200 but no response"). Map nested → flat here.
+    if (data && typeof data === "object" && "case" in data && "milestones" in data) {
+      const c = (data as Record<string, any>).case ?? {};
+      const prog = (data as Record<string, any>).progress ?? {};
+      const rawMs: Array<Record<string, any>> = Array.isArray((data as Record<string, any>).milestones)
+        ? (data as Record<string, any>).milestones
+        : [];
+      const mapMsStatus = (s: string): "completed" | "current" | "upcoming" =>
+        s === "completed" ? "completed" : s === "current" ? "current" : "upcoming";
+      const current = rawMs.find((m) => m.status === "current");
+      const nextUp = rawMs.find((m) => m.status === "pending");
+
+      const mapped: ApiTrackingLookupResponse = {
+        status: c.status,
+        trackingCode: payload.trackingNumber,
+        serviceType: c.serviceType,
+        milestone:
+          current?.title ??
+          (c.status === "completed" ? "All steps completed" : c.title || "In progress"),
+        // Backend response has no updatedAt; createdAt is the closest available.
+        lastUpdated: c.updatedAt ?? c.createdAt ?? new Date().toISOString(),
+        nextMilestone: nextUp?.title ?? null,
+        message: (data as Record<string, any>).message ?? null,
+        completedSteps:
+          prog.completedMilestones ?? rawMs.filter((m) => m.status === "completed").length,
+        totalSteps: prog.totalMilestones ?? rawMs.length,
+        visibleMilestones: rawMs.map((m) => ({
+          label: m.title,
+          status: mapMsStatus(m.status),
+          date: m.completedAt ?? null,
+        })),
+      };
+      return mapped;
     }
 
     return data as ApiTrackingLookupResult;

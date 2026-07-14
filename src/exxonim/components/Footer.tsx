@@ -66,7 +66,7 @@ function SocialCircleLink({ platform, url }: { platform: string; url: string }) 
       rel="noreferrer noopener"
       aria-label={`Follow us on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
       title={platform.charAt(0).toUpperCase() + platform.slice(1)}
-      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-footer-border transition-colors duration-200"
+      className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-footer-border text-footer-text-muted hover:text-footer-heading hover:bg-white/10 transition-colors duration-200"
     >
       <span className="w-4 h-4 flex items-center justify-center">
         {renderSocialIcon(platform as SiteSettingSocialLinkValue["platform"])}
@@ -135,7 +135,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   img.dataset.fallbackApplied = "true";
                   img.src = fallbackBrand.darkLogoSrc;
                 }}
-                className="block h-8 sm:h-11 w-auto"
+                className="block h-10 sm:h-11 w-auto"
               />
             </SmartLink>
 

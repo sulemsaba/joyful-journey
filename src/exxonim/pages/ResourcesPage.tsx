@@ -62,6 +62,7 @@
  */
 
 import { useMemo, useState, useEffect, useRef } from "react";
+import { useDebounce } from "@/exxonim/hooks/useDebounce";
 import { Home, Sparkles } from "lucide-react";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
@@ -73,6 +74,7 @@ import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { resourceArticlePath, routes } from "@/exxonim/routes";
 import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { BlogCard } from "@/exxonim/components/BlogCard";
+import { BlogListCard } from "@/exxonim/components/BlogListCard";
 import type {
   BlogCategoryId,
   BlogFeaturedSlot,
@@ -145,91 +147,21 @@ const RESOURCE_CARDS = [
   },
 ];
 
-/* ── Top section: hero post + trending rail ── */
+/* ── Top section: hero post + trending rail ──
+   Byline rendered in WHITE, sitting over the hero's image scrim. */
 function renderTopHeroByline(post: BlogPost) {
-  const metaParts = [formatBlogDate(post.publishedAt)];
-  if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min read`);
-
+  const authorName = post.author?.name ?? "Exxonim Team";
   return (
-    <div className="flex flex-wrap items-center gap-3 mt-4 text-sm text-text-soft">
-      {post.author ? (
-        <div className="flex items-center gap-2.5">
-          {post.author.avatarSrc ? (
-            <img className="w-8 h-8 rounded-full object-cover" src={post.author.avatarSrc} alt={post.author.name} loading="lazy" />
-          ) : (
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-accent font-bold text-xs" aria-hidden="true">
-              {getAuthorInitials(post.author.name)}
-            </span>
-          )}
-          <span className="text-sm font-semibold text-text">{post.author.name}</span>
-        </div>
-      ) : null}
-      {post.author?.role ? (
-        <span className="text-xs text-text-soft">{post.author.role}</span>
-      ) : null}
-      <span className="text-xs text-text-soft">{metaParts.join(" | ")}</span>
-    </div>
-  );
-}
-
-/* Thumbnail with the same branded monogram + broken-image fallback as BlogCard,
-   so a missing/failed cover never shows the img's alt text (which was blowing up
-   the trending rows). alt="" because the surrounding link already names the post. */
-function ArticleThumb({ post, className }: { post: BlogPost; className?: string }) {
-  return (
-    <div className={`relative overflow-hidden bg-surface-soft ${className ?? ""}`}>
-      <span
-        aria-hidden="true"
-        className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_18%_20%,var(--color-accent-soft-strong),transparent_30%),radial-gradient(circle_at_85%_85%,var(--color-surface-elevated),transparent_26%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]"
-      >
-        <span className="grid h-9 w-9 place-items-center rounded-lg border border-border-soft bg-surface/60 text-sm font-bold text-accent">
-          E
+    <div className="mt-4 flex items-center gap-2.5">
+      {post.author?.avatarSrc ? (
+        <img className="h-8 w-8 flex-none rounded-full object-cover ring-2 ring-white/30" src={post.author.avatarSrc} alt="" loading="lazy" />
+      ) : (
+        <span className="inline-flex h-8 w-8 flex-none items-center justify-center rounded-full bg-white/15 text-xs font-bold text-white ring-2 ring-white/20" aria-hidden="true">
+          {getAuthorInitials(authorName)}
         </span>
-      </span>
-      {post.coverImageSrc ? (
-        <img
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src={post.coverImageSrc}
-          alt=""
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-      ) : null}
+      )}
+      <span className="text-sm font-semibold text-white">{authorName}</span>
     </div>
-  );
-}
-
-/* Trending rail item — fixed height so all three are identical, with a properly
-   sized image column that never collapses or blows up on a missing cover. */
-function renderTopListItem(post: BlogPost) {
-  const articleLink = resourceArticlePath(post.slug);
-  const categoryLabel = post.category?.label;
-  const metaParts = [formatBlogDate(post.publishedAt)];
-  if (post.readTimeMinutes) metaParts.push(`${post.readTimeMinutes} min`);
-
-  return (
-    <SmartLink
-      href={articleLink}
-      aria-label={post.title}
-      className="group grid h-[116px] grid-cols-[150px_1fr] overflow-hidden rounded-xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-    >
-      <ArticleThumb post={post} className="h-full w-full" />
-      <div className="flex min-w-0 flex-col justify-center gap-2 p-3.5">
-        <h3 className="m-0 text-[0.9rem] font-semibold leading-snug tracking-tight text-text line-clamp-2 break-words transition-colors group-hover:text-accent">
-          {post.title}
-        </h3>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] text-text-soft">{metaParts.join(" · ")}</span>
-          {categoryLabel ? (
-            <span className="rounded-full bg-accent-soft px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-accent">
-              {categoryLabel}
-            </span>
-          ) : null}
-        </div>
-      </div>
-    </SmartLink>
   );
 }
 
@@ -387,6 +319,7 @@ export function ResourcesPage() {
   const [selectedCategory, setSelectedCategory] = useState<ActiveCategory>("all");
   const [sortMode, setSortMode] = useState<SortMode>("latest");
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -408,8 +341,8 @@ export function ResourcesPage() {
 
   useResolvedPageSeo(page, routes.resources);
 
-  const isSearchActive = searchQuery.trim().length > 0;
-  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const isSearchActive = debouncedSearchQuery.trim().length > 0;
+  const normalizedQuery = debouncedSearchQuery.trim().toLowerCase();
 
   const topMedia = page?.content.top_media;
   const { heroPost, topRailPosts, topSectionSlugs: defaultTopSectionSlugs } =
@@ -494,7 +427,7 @@ export function ResourcesPage() {
     <div>
             <StructuredData heroTitle="Resources & Insights" heroDescription="Practical guidance for registration, compliance, and operational planning." breadcrumbs={[{ name: 'Resources', path: routes.resources }]} pageType="CollectionPage" />
             {/* ── Breadcrumb ── */}
-            <div className="max-w-[1240px] px-8 mx-auto pt-4">
+            <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources" }]} />
             </div>
 
@@ -580,38 +513,64 @@ export function ResourcesPage() {
                   </span>
                   <span className="flex-1 h-px bg-border-soft" />
                 </div>
-                <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 lg:gap-8 items-start">
-                  {/* Hero post */}
+                {/* items-stretch + a fixed hero aspect ratio → the hero's height
+                    is driven by its width, and the rail column stretches to match
+                    it, so the big hero card and the 3 stacked rail rows are always
+                    the exact same total height (aligned top and bottom). */}
+                <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr] lg:gap-5 items-stretch">
+                  {/* Hero post — image-dominant, byline/title overlaid on a scrim */}
                   <SmartLink
                     href={resourceArticlePath(heroPost!.slug)}
-                    className="group block rounded-[8px] overflow-hidden border border-border-soft bg-surface/60 backdrop-blur-sm transition-shadow hover:-translate-y-1"
+                    aria-label={heroPost!.title}
+                    className="group relative isolate flex aspect-[16/10] flex-col justify-end overflow-hidden rounded-2xl bg-surface-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:aspect-[5/4]"
                   >
-                    <div className="aspect-[16/9] overflow-hidden bg-surface-soft">
+                    {/* branded monogram sits underneath a missing/failed cover */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 -z-[2] grid place-items-center bg-[radial-gradient(circle_at_18%_20%,var(--color-accent-soft-strong),transparent_30%),radial-gradient(circle_at_85%_85%,var(--color-surface-elevated),transparent_26%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]"
+                    >
+                      <span className="grid h-16 w-16 place-items-center rounded-2xl border border-border-soft bg-surface/60 text-2xl font-bold text-accent">
+                        E
+                      </span>
+                    </span>
+                    {heroMediaSrc ? (
                       <img
-                        className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                        className="absolute inset-0 -z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                         src={heroMediaSrc}
                         alt={heroMediaAlt}
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
                         }}
                       />
-                    </div>
-                    <div className="p-5 md:p-7">
-                      <h2 className="text-xl md:text-2xl font-bold text-text group-hover:text-accent transition-colors leading-snug">
+                    ) : null}
+                    {/* dark scrim so the overlaid text stays legible on any cover */}
+                    <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                    {heroPost!.category?.label ? (
+                      <span className="absolute left-4 top-4 z-[1] inline-flex items-center rounded-full bg-accent px-3 py-1 text-[0.64rem] font-bold uppercase tracking-[0.12em] text-accent-contrast shadow-sm">
+                        {heroPost!.category.label}
+                      </span>
+                    ) : null}
+                    <div className="relative z-[1] p-7">
+                      <p className="m-0 text-[0.8rem] font-medium text-white/70">
+                        {formatBlogDate(heroPost!.publishedAt)}
+                      </p>
+                      <h2 className="mt-2.5 text-2xl font-bold leading-[1.1] tracking-tight text-white line-clamp-2 md:text-[2.4rem]">
                         {heroPost!.title}
                       </h2>
-                      <p className="mt-2.5 text-text-muted leading-relaxed text-sm md:text-base line-clamp-2">
+                      <p className="mt-3 hidden text-sm leading-relaxed text-white/85 line-clamp-2 sm:block">
                         {heroPost!.excerpt}
                       </p>
                       {renderTopHeroByline(heroPost!)}
                     </div>
                   </SmartLink>
 
-                  {/* Trending rail */}
-                  <aside className="space-y-3" aria-label={page.content.trending_label ?? "Trending articles"}>
+                  {/* Trending rail — 3 borderless rows split by thin divider
+                      lines, spread with space-between so the first row's top and
+                      the last row's bottom align with the hero (same height level). */}
+                  <aside className="flex flex-col justify-between lg:h-full" aria-label={page.content.trending_label ?? "Trending articles"}>
                     {topRailPosts.map((post) => (
-                      <div key={post.slug}>
-                        {renderTopListItem(post)}
+                      <div key={post.slug} className="border-b border-border-soft py-[18px] first:pt-0 last:border-0 last:pb-0">
+                        <BlogListCard post={post} />
                       </div>
                     ))}
                   </aside>
@@ -620,7 +579,7 @@ export function ResourcesPage() {
             ) : null}
 
             {/* ── Articles section with filter + sort ── */}
-            <section id="articles" ref={articlesSectionRef as React.RefObject<HTMLElement>} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
+            <section id="articles" ref={articlesSectionRef as React.RefObject<HTMLElement>} className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
               <div className="flex flex-col gap-4 mb-8">
                 <div className="flex items-center gap-3">
                   <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-tight text-text">

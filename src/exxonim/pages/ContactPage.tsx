@@ -35,6 +35,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Home } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
+import { cn } from "@/exxonim/utils/cn";
 import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { PhoneInput } from "@/exxonim/components/PhoneInput";
@@ -91,7 +92,8 @@ function createSubmissionKey() {
 
 function createInitialFormState() {
   return {
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     company: "",
@@ -165,7 +167,6 @@ export function ContactPage() {
 
   const [formValues, setFormValues] = useState(() => {
     const initial = createInitialFormState();
-    // Pre-fill service type from plan param
     if (planInfo) {
       initial.serviceTypeCode = planInfo.serviceCode;
     }
@@ -175,6 +176,7 @@ export function ContactPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submissionResult, setSubmissionResult] =
     useState<ApiPublicConsultationSubmissionResponse | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const submissionMutation = useMutation({
     mutationFn: submitPublicConsultation,
@@ -183,33 +185,84 @@ export function ContactPage() {
   const isSubmitting = submissionMutation.isPending;
 
   const canSubmit =
-    formValues.fullName.trim().length > 1 &&
+    formValues.firstName.trim().length > 0 &&
+    formValues.lastName.trim().length > 0 &&
     formValues.email.trim().length > 3 &&
     phoneValid &&
     formValues.message.trim().length > 12 &&
     !isSubmitting;
 
   const handleFieldChange = (
-    field: "fullName" | "email" | "phone" | "company" | "serviceTypeCode" | "message",
+    field: "firstName" | "lastName" | "email" | "phone" | "company" | "serviceTypeCode" | "message",
     value: string
   ) => {
     setFormValues((current) => ({ ...current, [field]: value }));
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
+
+  const validateField = (field: string, value: string): string | undefined => {
+    switch (field) {
+      case 'firstName':
+        return value.trim().length < 1 ? 'Please enter your first name.' : undefined;
+      case 'lastName':
+        return value.trim().length < 1 ? 'Please enter your last name.' : undefined;
+      case 'email':
+        if (!value.trim()) return 'Email is required.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return 'Please enter a valid email address.';
+        return undefined;
+      case 'phone':
+        const digits = value.replace(/\D/g, '');
+        return digits.length < 10 ? 'Please enter a valid phone number (at least 10 digits).' : undefined;
+      case 'message':
+        return value.trim().length <= 12 ? 'Please tell us more about your situation (at least 13 characters).' : undefined;
+      default:
+        return undefined;
+    }
+  };
+
+  const handleBlur = (field: string, value: string) => {
+    const error = validateField(field, value);
+    setFieldErrors((prev) => ({
+      ...prev,
+      ...(error ? { [field]: error } : {}),
+    }));
+  };
+
+  const validateAll = (): boolean => {
+    const errors: Record<string, string> = {};
+    const fields = [
+      { key: 'firstName', value: formValues.firstName },
+      { key: 'lastName', value: formValues.lastName },
+      { key: 'email', value: formValues.email },
+      { key: 'phone', value: formValues.phone },
+      { key: 'message', value: formValues.message },
+    ];
+    for (const field of fields) {
+      const error = validateField(field.key, field.value);
+      if (error) errors[field.key] = error;
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!canSubmit) return;
+    if (!validateAll()) return;
     setSubmitError(null);
     try {
       const result = await submissionMutation.mutateAsync({
-        full_name: formValues.fullName.trim(),
+        full_name: `${formValues.firstName.trim()} ${formValues.lastName.trim()}`.trim(),
         email: formValues.email.trim(),
         phone: formValues.phone || null,  // E.164 format from PhoneInput
         company: formValues.company.trim() || null,
         service_type_code: formValues.serviceTypeCode,
         message: formValues.message.trim(),
         idempotency_key: formValues.idempotencyKey,
-        source_channel: planInfo ? `pricing_page_${planParam}` : "public_contact_form",
+        source_channel: planInfo ? "public_consultation_form" : "public_contact_form",
       });
       setSubmissionResult(result);
       setFormValues(createInitialFormState());
@@ -235,7 +288,7 @@ export function ContactPage() {
     <section className="bg-page">
           <StructuredData heroTitle="Contact Exxonim Consult" heroDescription="Reach Exxonim for registration, compliance, and advisory support." breadcrumbs={[{ name: 'Contact', path: routes.contact }]} />
           {/* Breadcrumb */}
-          <div className="max-w-[1240px] px-8 mx-auto pt-4">
+          <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
             <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Contact" }]} />
           </div>
 
@@ -245,7 +298,7 @@ export function ContactPage() {
            * Left side sits on page bg - no card/container.
            * Right side = form in a card (bg-surface + border + shadow).
            * ═══════════════════════════════════════════════════════ */}
-          <div className="max-w-[1240px] px-8 mx-auto pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
+          <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-2 pb-8 sm:pt-4 sm:pb-12 lg:pt-6 lg:pb-14">
             <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-start min-w-0">
 
               {/* ── Left column: Contact info on page bg ── */}
@@ -410,24 +463,25 @@ export function ContactPage() {
                       </div>
                     )}
 
-                    {/* First name + Last name row */}
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
+                    {/* First name + Last name — stack on phones, side-by-side from sm up */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
                       <div>
                         <label htmlFor="contact-first-name" className="block text-xs sm:text-sm font-semibold text-text mb-1.5">
                           First name<span className="text-accent ml-0.5">*</span>
                         </label>
-                        <input
-                          id="contact-first-name"
-                          autoComplete="given-name"
-                          value={formValues.fullName.split(" ")[0] || ""}
-                          onChange={(e) => {
-                            const last = formValues.fullName.split(" ").slice(1).join(" ");
-                            handleFieldChange("fullName", `${e.target.value} ${last}`.trim());
-                          }}
-                          required
-                          placeholder="John"
-                          className={inputCls}
-                        />
+                      <input
+                        id="contact-first-name"
+                        autoComplete="given-name"
+                        value={formValues.firstName}
+                        onChange={(e) => handleFieldChange("firstName", e.target.value)}
+                        onBlur={(e) => handleBlur("firstName", e.target.value)}
+                        required
+                        placeholder="John"
+                        className={cn(inputCls, fieldErrors.firstName ? "border-error focus:border-error focus:ring-error/30" : "")}
+                        aria-invalid={!!fieldErrors.firstName}
+                        aria-describedby={fieldErrors.firstName ? "first-name-error" : undefined}
+                      />
+                      {fieldErrors.firstName && <p id="first-name-error" className="text-error text-xs mt-1">{fieldErrors.firstName}</p>}
                       </div>
                       <div>
                         <label htmlFor="contact-last-name" className="block text-xs sm:text-sm font-semibold text-text mb-1.5">
@@ -436,15 +490,16 @@ export function ContactPage() {
                         <input
                           id="contact-last-name"
                           autoComplete="family-name"
-                          value={formValues.fullName.split(" ").slice(1).join(" ") || ""}
-                          onChange={(e) => {
-                            const first = formValues.fullName.split(" ")[0] || "";
-                            handleFieldChange("fullName", `${first} ${e.target.value}`.trim());
-                          }}
+                          value={formValues.lastName}
+                          onChange={(e) => handleFieldChange("lastName", e.target.value)}
+                          onBlur={(e) => handleBlur("lastName", e.target.value)}
                           required
                           placeholder="Smith"
-                          className={inputCls}
+                          className={cn(inputCls, fieldErrors.lastName ? "border-error focus:border-error focus:ring-error/30" : "")}
+                          aria-invalid={!!fieldErrors.lastName}
+                          aria-describedby={fieldErrors.lastName ? "last-name-error" : undefined}
                         />
+                        {fieldErrors.lastName && <p id="last-name-error" className="text-error text-xs mt-1">{fieldErrors.lastName}</p>}
                       </div>
                     </div>
 
@@ -460,10 +515,14 @@ export function ContactPage() {
                         autoComplete="email"
                         value={formValues.email}
                         onChange={(e) => handleFieldChange("email", e.target.value)}
+                        onBlur={(e) => handleBlur("email", e.target.value)}
                         required
                         placeholder="e.g john@company.com"
-                        className={inputCls}
+                        className={cn(inputCls, fieldErrors.email ? "border-error focus:border-error focus:ring-error/30" : "")}
+                        aria-invalid={!!fieldErrors.email}
+                        aria-describedby={fieldErrors.email ? "email-error" : undefined}
                       />
+                      {fieldErrors.email && <p id="email-error" className="text-error text-xs mt-1">{fieldErrors.email}</p>}
                     </div>
 
                     {/* Company */}
@@ -491,6 +550,7 @@ export function ContactPage() {
                       }}
                       required
                     />
+                    {fieldErrors.phone && <p className="text-error text-xs mt-1">{fieldErrors.phone}</p>}
 
                     {/* Service type */}
                     <div>
@@ -522,11 +582,15 @@ export function ContactPage() {
                         id="contact-message"
                         value={formValues.message}
                         onChange={(e) => handleFieldChange("message", e.target.value)}
+                        onBlur={(e) => handleBlur("message", e.target.value)}
                         required
                         rows={3}
                         placeholder="Tell us about your situation..."
-                        className={`${inputCls} resize-y`}
+                        className={cn(`${inputCls} resize-y`, fieldErrors.message ? "border-error focus:border-error focus:ring-error/30" : "")}
+                        aria-invalid={!!fieldErrors.message}
+                        aria-describedby={fieldErrors.message ? "message-error" : undefined}
                       />
+                      {fieldErrors.message && <p id="message-error" className="text-error text-xs mt-1">{fieldErrors.message}</p>}
                     </div>
 
                     {submitError && (

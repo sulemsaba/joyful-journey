@@ -5,7 +5,7 @@ import type {
 } from "./pagination";
 
 export interface ApiCareerJob {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   department: string;

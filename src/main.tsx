@@ -34,6 +34,18 @@ function dismissBootLoader() {
   }
 }
 
+/**
+ * Keep the browser's NATIVE scroll restoration on, so a refresh (or back /
+ * forward) returns the visitor to exactly where they were. The previous
+ * "top → jump" bounce was NOT the browser — it was <ScrollToTop> resetting to
+ * 0 on every mount and fighting the restore. That component is now
+ * navigation-aware (it only scrolls to top on a real forward navigation, i.e.
+ * navigationType !== "POP"), so nothing competes with the native restore here.
+ */
+if (typeof history !== "undefined" && "scrollRestoration" in history) {
+  history.scrollRestoration = "auto";
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

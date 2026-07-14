@@ -225,7 +225,7 @@ export function Navigation({
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.lightLogoSrc;
               }}
-              className="logo-light block h-8 sm:h-11 w-auto"
+              className="logo-light block h-10 sm:h-11 w-auto"
             />
             <img
               src={brand.darkLogoSrc}
@@ -257,7 +257,7 @@ export function Navigation({
                 setMobileMenuOpen((open) => !open);
               }}
               className={cn(
-                "flex items-center justify-center w-9 h-9",
+                "flex items-center justify-center w-11 h-11",
                 "rounded-full transition-colors duration-200",
                 "hover:bg-accent-soft/40",
                 "text-text"

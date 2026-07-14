@@ -85,7 +85,7 @@ export function ServiceDetailPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="max-w-[1240px] px-8 mx-auto pt-4">
+      <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
         <Breadcrumb
           items={[
             { label: 'Home', href: routes.home, icon: Home },
@@ -100,7 +100,7 @@ export function ServiceDetailPage() {
        *  Centered, clean, with badge if present.
        * ────────────────────────────────────────────────────────────── */}
       <section className="relative pt-8 pb-12 md:pt-14 md:pb-20" aria-labelledby="service-hero-title">
-        <div className="max-w-[1240px] px-8 mx-auto text-center flex flex-col items-center" data-reveal>
+        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto text-center flex flex-col items-center" data-reveal>
           {service.badge && (
             <span className="inline-flex items-center px-3 py-1 mb-5 text-xs font-extrabold uppercase tracking-[0.14em] rounded-full bg-accent-soft text-accent">
               {service.badge}
