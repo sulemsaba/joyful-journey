@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:34:00.098681+00:00",
+    "generatedAt": "2026-07-14T14:24:18.333659+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 1370890492,
+    "id": 1133673461,
     "title": "How to Register a Company in Tanzania",
     "slug": "how-to-register-company-tanzania",
     "excerpt": "Step-by-step guide to registering your business with BRELA.",
@@ -33,14 +33,14 @@
     "is_published": true,
     "published_at": "2026-07-04T15:48:14.847000",
     "category": {
-      "id": 16598416,
+      "id": 616393301,
       "name": "Registration",
       "slug": "registration",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1219117866,
+      "id": 737086391,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

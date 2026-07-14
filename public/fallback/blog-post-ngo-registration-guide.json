@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:34:00.102871+00:00",
+    "generatedAt": "2026-07-14T14:24:18.334882+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 2065952313,
+    "id": 85936999,
     "title": "NGO Registration Guide",
     "slug": "ngo-registration-guide",
     "excerpt": "Complete guide to registering an NGO in Tanzania.",
@@ -33,14 +33,14 @@
     "is_published": true,
     "published_at": "2026-07-04T15:48:14.847000",
     "category": {
-      "id": 758071090,
+      "id": 240886015,
       "name": "NGOs",
       "slug": "ngos",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1219117866,
+      "id": 737086391,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

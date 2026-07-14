@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:34:00.038663+00:00",
+    "generatedAt": "2026-07-14T14:24:18.323328+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 1252294786,
+    "id": 2125425642,
     "title": "Work Permits for Foreign Investors",
     "slug": "stress-long-excerpt-only",
     "excerpt": "Class A, B and C permits each have their own eligibility rules, supporting documents, quotas and renewal cycles, and the immigration department is unforgiving about missing paperwork — here is how to pick the right class the first time, assemble a file that clears review, and avoid the resubmission loop that adds months to your timeline and real money to your budget.",
@@ -73,14 +73,14 @@
     "is_published": true,
     "published_at": "2026-07-10T20:47:13.755000",
     "category": {
-      "id": 464486487,
+      "id": 134591866,
       "name": "Permits",
       "slug": "permits",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1219117866,
+      "id": 737086391,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

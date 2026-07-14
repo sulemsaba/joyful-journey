@@ -1,53 +1,53 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:34:00.200121+00:00",
+    "generatedAt": "2026-07-14T14:24:18.349461+00:00",
     "source": "backend-publish"
   },
   "data": [
     {
-      "id": 907321384,
+      "id": 352010473,
       "name": "Compliance",
       "slug": "compliance",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     {
-      "id": 758071090,
+      "id": 240886015,
       "name": "NGOs",
       "slug": "ngos",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     {
-      "id": 464486487,
+      "id": 134591866,
       "name": "Permits",
       "slug": "permits",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     {
-      "id": 16598416,
+      "id": 616393301,
       "name": "Registration",
       "slug": "registration",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     {
-      "id": 1212894706,
+      "id": 1513240348,
       "name": "Company Registration",
       "slug": "company-registration",
       "description": "Guides on registering your business in Tanzania",
       "created_at": "2026-07-04T16:37:18.195000"
     },
     {
-      "id": 2096584230,
+      "id": 1820522502,
       "name": "Tax & Compliance",
       "slug": "tax-compliance",
       "description": "Tax and compliance information",
       "created_at": "2026-07-04T16:37:18.195000"
     },
     {
-      "id": 814241125,
+      "id": 1496815445,
       "name": "Business Tips",
       "slug": "business-tips",
       "description": "Tips for running your business",

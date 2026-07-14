@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:34:00.083861+00:00",
+    "generatedAt": "2026-07-14T14:24:18.328667+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 1632098903,
+    "id": 2034882743,
     "title": "Understanding Tanzania Tax Compliance",
     "slug": "tanzania-tax-compliance-small-business",
     "excerpt": "Everything you need to know about tax compliance in Tanzania.",
@@ -48,22 +48,22 @@
     "is_published": true,
     "published_at": "2026-07-04T16:37:18.195000",
     "category": {
-      "id": 2096584230,
+      "id": 1820522502,
       "name": "Tax & Compliance",
       "slug": "tax-compliance",
       "description": "Tax and compliance information",
       "created_at": "2026-07-04T16:37:18.195000"
     },
     "author": {
-      "id": 1219117866,
+      "id": 737086391,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,
       "avatar_src": "",
       "bio": null
     },
-    "view_count": 1,
+    "view_count": 2,
     "created_at": "2026-07-04T16:37:18.195000",
-    "updated_at": "2026-07-11T22:26:57.843000"
+    "updated_at": "2026-07-14T09:14:33.402000"
   }
 }

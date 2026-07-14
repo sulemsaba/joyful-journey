@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:34:01.042281+00:00",
+    "generatedAt": "2026-07-14T14:24:18.544932+00:00",
     "source": "backend-publish"
   },
   "data": [
     {
-      "id": 1310357640,
+      "id": 73625842,
       "name": "Basic",
       "badge": null,
       "description": "Essential registration services",
@@ -33,7 +33,7 @@
       "updated_at": "2026-07-04T16:37:18.195276+00:00"
     },
     {
-      "id": 2039316804,
+      "id": 1082688418,
       "name": "Standard",
       "badge": null,
       "description": "Complete registration + compliance",

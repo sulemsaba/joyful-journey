@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-14T08:33:59.645758+00:00",
+    "generatedAt": "2026-07-14T14:24:18.111492+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 751267426,
+    "id": 1152454923,
     "title": "Starting a business in Tanzania is an exciting journey, but it all begins with a crucial step: registration with the Business Registrations and Licensing Agency (BRELA). Whether you're launching a small side hustle or a large multinational operation, unde",
     "slug": "be-matching-let-me-check-exactly-how-login-is-called",
     "excerpt": "be matching. Let me check exactly how login is called.be matching. Let me check exactly how login is called.be matching. Let me check exactly how login is called.",
@@ -61,22 +61,22 @@
     "is_published": true,
     "published_at": "2026-07-13T12:30:14.611000",
     "category": {
-      "id": 907321384,
+      "id": 352010473,
       "name": "Compliance",
       "slug": "compliance",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1219117866,
+      "id": 737086391,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,
       "avatar_src": "",
       "bio": null
     },
-    "view_count": 2,
+    "view_count": 10,
     "created_at": "2026-07-13T12:30:14.592000",
-    "updated_at": "2026-07-13T16:13:35.922000"
+    "updated_at": "2026-07-14T10:24:13.229000"
   }
 }
