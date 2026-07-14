@@ -33,8 +33,9 @@
  *   Returns hardcoded fallback as `data` for known slugs when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
-import { getPublicBlogPostBySlug } from "@/exxonim/services/blogService";
+import { fetchPublicBlogPostBySlugRaw } from "@/exxonim/services/blogService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { mapBlogPost } from "@/exxonim/utils/contentMappers";
 import { fallbackBlogPosts } from "@/exxonim/content/fallbackPublicContent";
 
 function findFallbackBlogPost(slug: string) {
@@ -46,11 +47,18 @@ export function useBlogPost(slug: string | null) {
 
   const query = useQuery({
     queryKey: ["blog", "post", slug],
-    queryFn: () =>
-      fetchWithJsonFallback(
-        () => getPublicBlogPostBySlug(slug as string),
+    // Fetch the raw public shape so the live API response AND the Layer-3 snapshot
+    // (public/fallback/blog-post-*.json, which stores that same raw shape) both flow
+    // through ONE mapping step. Mapping inside the API call left the snapshot path
+    // unmapped, so with the API down the page received `related_slugs` instead of
+    // `relatedSlugs` and crashed on `relatedSlugs.length`.
+    queryFn: async () => {
+      const raw = await fetchWithJsonFallback(
+        () => fetchPublicBlogPostBySlugRaw(slug as string),
         `blog-post-${slug}`
-      ),
+      );
+      return mapBlogPost(raw);
+    },
     enabled: Boolean(slug),
     placeholderData: fallback,
     staleTime: 1000 * 30, // 30 seconds

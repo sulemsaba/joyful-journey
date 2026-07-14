@@ -36,3 +36,17 @@ export async function getPageBySlug<TContent = Record<string, unknown>>(slug: st
   const response = await api.get<ApiPage<TContent>>(apiRoutes.public.pages.bySlug(slug));
   return mapPage(response.data) as PageRecord<TContent>;
 }
+
+/**
+ * Raw (unmapped) fetcher — lets the fallback-aware hook run BOTH the live API
+ * response and the Layer-3 snapshot (public/fallback/pages-*.json, same raw
+ * shape) through one mapping step. Mapping here instead would leave the
+ * snapshot in the API's snake_case shape, silently dropping metaTitle /
+ * isPublished / ogImageUrl whenever the backend is unreachable.
+ */
+export async function fetchPageBySlugRaw<TContent = Record<string, unknown>>(
+  slug: string
+): Promise<ApiPage<TContent>> {
+  const response = await api.get<ApiPage<TContent>>(apiRoutes.public.pages.bySlug(slug));
+  return response.data;
+}

@@ -30,14 +30,20 @@
  *   Always returns hardcoded fallback as `data` when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
-import { getPricingPlans } from "@/exxonim/services/pricingService";
+import { fetchPricingPlansRaw } from "@/exxonim/services/pricingService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { mapPricingPlan } from "@/exxonim/utils/contentMappers";
+import type { PricingPlan } from "@/exxonim/types";
 import { fallbackPricingPlans } from "@/exxonim/content/fallbackPublicContent";
 
 export function usePricingPlans() {
   const query = useQuery({
     queryKey: ["pricing", "plans"],
-    queryFn: () => fetchWithJsonFallback(getPricingPlans, "pricing-plans"),
+    // Map AFTER the fallback so the snapshot lands in the same shape as the API.
+    queryFn: async () => {
+      const raw = await fetchWithJsonFallback(fetchPricingPlansRaw, "pricing-plans");
+      return (Array.isArray(raw) ? raw : []).map(mapPricingPlan) as PricingPlan[];
+    },
     placeholderData: fallbackPricingPlans,
     staleTime: 1000 * 60 * 5, // 5 minutes — pricing changes propagate quickly
     retry: 1,

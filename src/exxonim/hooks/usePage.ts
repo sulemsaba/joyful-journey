@@ -39,8 +39,9 @@
  *   - This eliminates the triple-render flicker (hardcoded → cache → API)
  */
 import { useQuery } from "@tanstack/react-query";
-import { getPageBySlug } from "@/exxonim/services/pageService";
+import { fetchPageBySlugRaw } from "@/exxonim/services/pageService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { mapPage } from "@/exxonim/utils/contentMappers";
 import { getFallbackPage } from "@/exxonim/content/fallbackPublicContent";
 import type { PageRecord } from '@/exxonim/types';
 
@@ -49,11 +50,15 @@ export function usePage<TContent = Record<string, unknown>>(slug: string) {
 
   const query = useQuery({
     queryKey: ["pages-v2", slug],
-    queryFn: () =>
-      fetchWithJsonFallback(
-        () => getPageBySlug<TContent>(slug),
+    // Map AFTER the fallback so the live API response and the Layer-3 snapshot
+    // both land in the same domain shape (see fetchPageBySlugRaw).
+    queryFn: async () => {
+      const raw = await fetchWithJsonFallback(
+        () => fetchPageBySlugRaw<TContent>(slug),
         `pages-${slug}`
-      ),
+      );
+      return mapPage(raw) as PageRecord<TContent>;
+    },
     placeholderData: fallback,
     staleTime: 1000 * 60 * 5, // 5 minutes — pages change via admin
     retry: (failureCount, error) => {

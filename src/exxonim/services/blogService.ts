@@ -63,6 +63,11 @@ export async function fetchPublicBlogCategoriesRaw(): Promise<ApiBlogCategory[]>
   return response.data;
 }
 
+export async function fetchPublicBlogPostBySlugRaw(slug: string): Promise<ApiBlogPost> {
+  const response = await api.get<ApiBlogPost>(apiRoutes.public.blog.posts.bySlug(slug));
+  return response.data;
+}
+
 export async function getPublicBlogPostBySlug(slug: string) {
   const response = await api.get<ApiBlogPost>(apiRoutes.public.blog.posts.bySlug(slug));
   return mapBlogPost(response.data);

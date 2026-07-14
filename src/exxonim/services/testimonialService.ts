@@ -39,3 +39,10 @@ export async function getTestimonials() {
   const response = await api.get<ApiTestimonial[]>(apiRoutes.public.testimonials.list);
   return response.data.map(mapTestimonial) as Testimonial[];
 }
+
+/** Raw (unmapped) fetcher so the API response and the Layer-3 snapshot
+ * (public/fallback/testimonials.json) share one mapping step. */
+export async function fetchTestimonialsRaw(): Promise<ApiTestimonial[]> {
+  const response = await api.get<ApiTestimonial[]>(apiRoutes.public.testimonials.list);
+  return response.data;
+}

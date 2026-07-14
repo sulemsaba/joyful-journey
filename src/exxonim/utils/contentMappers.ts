@@ -1,4 +1,5 @@
 import type {
+  BlogArticleContent,
   BlogAuthor,
   BlogCategory,
   BlogPost,
@@ -55,6 +56,31 @@ export function mapBlogCategory(
   };
 }
 
+/**
+ * BlogArticleContent declares introduction/highlights/sections as required, but the
+ * value arrives from JSON — the API or a Layer-3 snapshot can omit or null any of
+ * them. TypeScript then believes reads like `content.sections.length` are safe when
+ * they are not, so guarantee the shape once here rather than at each reader.
+ */
+function mapBlogArticleContent(content?: BlogArticleContent | null): BlogArticleContent | undefined {
+  if (!content || typeof content !== "object") {
+    return undefined;
+  }
+
+  return {
+    introduction: typeof content.introduction === "string" ? content.introduction : "",
+    highlights: Array.isArray(content.highlights) ? content.highlights.filter(Boolean) : [],
+    sections: Array.isArray(content.sections)
+      ? content.sections.filter(Boolean).map((section) => ({
+          ...section,
+          heading: typeof section.heading === "string" ? section.heading : "",
+          paragraphs: Array.isArray(section.paragraphs) ? section.paragraphs.filter(Boolean) : [],
+        }))
+      : [],
+    ...(typeof content.html === "string" && content.html ? { html: content.html } : {}),
+  };
+}
+
 export function mapBlogPost(post: ApiBlogPost): BlogPost {
   return {
     id: post.id,
@@ -73,7 +99,7 @@ export function mapBlogPost(post: ApiBlogPost): BlogPost {
     relatedSlugs: post.related_slugs ?? [],
     metaTitle: post.meta_title ?? undefined,
     metaDescription: post.meta_description ?? undefined,
-    content: post.content,
+    content: mapBlogArticleContent(post.content),
   };
 }
 

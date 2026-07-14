@@ -30,14 +30,20 @@
  *   Always returns hardcoded fallback as `data` when no real data is available.
  */
 import { useQuery } from "@tanstack/react-query";
-import { getTestimonials } from "@/exxonim/services/testimonialService";
+import { fetchTestimonialsRaw } from "@/exxonim/services/testimonialService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { mapTestimonial } from "@/exxonim/utils/contentMappers";
+import type { Testimonial } from "@/exxonim/types";
 import { fallbackTestimonials } from "@/exxonim/content/fallbackPublicContent";
 
 export function useTestimonials() {
   const query = useQuery({
     queryKey: ["testimonials"],
-    queryFn: () => fetchWithJsonFallback(getTestimonials, "testimonials"),
+    // Map AFTER the fallback so the snapshot lands in the same shape as the API.
+    queryFn: async () => {
+      const raw = await fetchWithJsonFallback(fetchTestimonialsRaw, "testimonials");
+      return (Array.isArray(raw) ? raw : []).map(mapTestimonial) as Testimonial[];
+    },
     placeholderData: fallbackTestimonials,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 1,

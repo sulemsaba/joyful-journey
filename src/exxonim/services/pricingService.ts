@@ -40,6 +40,13 @@ export async function getPricingPlans() {
   return response.data.map(mapPricingPlan) as PricingPlan[];
 }
 
+/** Raw (unmapped) fetcher so the API response and the Layer-3 snapshot
+ * (public/fallback/pricing-plans.json) share one mapping step. */
+export async function fetchPricingPlansRaw(): Promise<ApiPricingPlan[]> {
+  const response = await api.get<ApiPricingPlan[]>(apiRoutes.public.pricing.plans.list);
+  return response.data;
+}
+
 /**
  * Segment × tier packages served from the admin-managed `service_packages`
  * table (only published + active). The backend already returns the public
