@@ -27,7 +27,6 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Star, X, Users, Globe, Building2, Heart } from "lucide-react";
 import { Container } from "./primitives/Container";
 import { Button } from "./primitives/Button";
-import { CardDeckCarousel } from "./CardDeckCarousel";
 import { PlanInquiryModal } from "./PlanInquiryModal";
 import { useServicePackages } from "@/exxonim/hooks/useServicePackages";
 import { useTestimonials } from "@/exxonim/hooks/useTestimonials";
@@ -633,32 +632,6 @@ export function ServicePackagesSection({
     return fn;
   }, [openModal]);
 
-  /* ── Card deck data (for mobile carousel) ── */
-  const carouselCards = useMemo(
-    () =>
-      currentPlans.map((plan) => {
-        const featured = plan.featured;
-        return {
-          key: `${activeSegment}-${plan.name}`,
-          content: (
-            <SegmentPlanCard
-              plan={plan}
-              featured={featured}
-              compact
-              onCtaClick={getCardCta(plan.name, featured)}
-            />
-          ),
-        };
-      }),
-    [currentPlans, activeSegment, getCardCta]
-  );
-
-  /* ── Default to middle card (Growth / "Most Popular") ── */
-  const defaultCarouselIndex = useMemo(() => {
-    const idx = currentPlans.findIndex((p) => p.featured);
-    return idx >= 0 ? idx : Math.floor(currentPlans.length / 2);
-  }, [currentPlans]);
-
   return (
     <section
       id={variant === "page" ? "packages" : undefined}
@@ -689,8 +662,11 @@ export function ServicePackagesSection({
               </h2>
             </div>
 
-            {/* Segment filter buttons - compact icon+short label on mobile, full label on desktop */}
-            <div className="flex gap-1.5 sm:gap-2 justify-center mb-6 md:mb-8">
+            {/* Segment filter — a clean, even 2×2 grid of equal pills on phones
+                (full-width columns, 44px tap targets, 14px labels), switching to
+                a centered pill row from sm up. Replaces the old wrapping row
+                whose pills were different widths and only 40px tall. */}
+            <div className="grid grid-cols-2 gap-2 mb-6 md:mb-8 sm:flex sm:flex-wrap sm:justify-center">
               {segments.map((seg) => {
                 const isActive = activeSegment === seg.key;
                 const Icon = seg.icon;
@@ -700,12 +676,11 @@ export function ServicePackagesSection({
                     type="button"
                     onClick={() => setActiveSegment(seg.key)}
                     className={cn(
-                      'flex-shrink-0 rounded-full min-h-[40px] font-medium',
+                      'min-h-[44px] rounded-full font-medium',
                       'transition-colors duration-200 ease-out',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                      'flex flex-col items-center justify-center gap-0.5',
-                      'sm:flex-row sm:gap-2 sm:px-4 sm:py-2',
-                      'px-3 py-1.5',
+                      'flex flex-row items-center justify-center gap-2',
+                      'px-3 py-2 sm:px-4',
                       isActive
                         ? 'bg-accent text-accent-contrast shadow-sm'
                         : 'bg-surface text-text-muted border border-border-soft hover:bg-accent-soft hover:text-accent hover:border-accent/30'
@@ -713,9 +688,9 @@ export function ServicePackagesSection({
                     aria-pressed={isActive}
                     aria-label={`Show packages for ${seg.label}`}
                   >
-                    <Icon className="w-4 h-4" aria-hidden="true" />
-                    {/* Short label on mobile, full label on desktop */}
-                    <span className="text-[11px] leading-none sm:text-sm sm:leading-normal">
+                    <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                    {/* Short label on phones (grid-sized pills), full label sm+ */}
+                    <span className="text-sm leading-none">
                       <span className="sm:hidden">{seg.shortLabel}</span>
                       <span className="hidden sm:inline">{seg.label}</span>
                     </span>
@@ -724,17 +699,31 @@ export function ServicePackagesSection({
               })}
             </div>
 
-            {/* ─── MOBILE: Card deck carousel ─── */}
-            <CardDeckCarousel
-              cards={carouselCards}
-              defaultIndex={defaultCarouselIndex}
-            />
+            {/* ─── PHONES (< md / 768px): uniform-height portrait cards ───
+             * A horizontal scroll-snap rail of the SAME portrait SegmentPlanCard
+             * used on desktop. `items-stretch` + the card's `h-full` + its
+             * `min-h-[540px]` floor make every card the SAME height and shape as
+             * the desktop grid (the old deck let each card size to its own
+             * content, so heights were uneven and cards didn't read as portrait).
+             * -mx-4/px-4 lets the rail scroll edge-to-edge while cards stay aligned. */}
+            <div className="md:hidden -mx-4 flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-4 pt-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {currentPlans.map((plan) => (
+                <div
+                  key={`${activeSegment}-${plan.name}`}
+                  className="flex w-[82vw] max-w-[330px] shrink-0 snap-center"
+                >
+                  <SegmentPlanCard
+                    plan={plan}
+                    featured={plan.featured}
+                    onCtaClick={getCardCta(plan.name, plan.featured)}
+                  />
+                </div>
+              ))}
+            </div>
 
-            {/* ─── DESKTOP: 3-column grid with portrait cards ───
-             * Wider container + 8pt gap + larger cards so the pricing tiers read
-             * as the prominent conversion element (they were boxed to 1100px /
-             * 320px, making them feel smaller than the full-width insights rail). */}
-            <div className="hidden lg:grid gap-8 lg:grid-cols-3 lg:max-w-[1180px] lg:mx-auto">
+            {/* ─── TABLET + DESKTOP (≥ md / 768px): 3-column grid ───
+             * Tighter gap on tablet, full 8pt gap on desktop. */}
+            <div className="hidden md:grid gap-6 lg:gap-8 md:grid-cols-3 md:max-w-[1180px] md:mx-auto">
               {currentPlans.map((plan) => {
                 const featured = plan.featured;
                 return (

@@ -33,7 +33,7 @@ export function AboutPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="max-w-[1240px] px-8 mx-auto pt-4">
+      <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
         <Breadcrumb items={[{ label: 'Home', href: routes.home, icon: Home }, { label: 'About' }]} />
       </div>
 
@@ -45,7 +45,7 @@ export function AboutPage() {
         className="relative pt-10 pb-14 md:pt-16 md:pb-20"
         aria-labelledby="about-hero-title"
       >
-        <div className="max-w-[1240px] px-8 mx-auto text-center flex flex-col items-center" data-reveal>
+        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto text-center flex flex-col items-center" data-reveal>
           <p className="m-0 mb-5 text-[0.78rem] font-extrabold tracking-[0.16em] uppercase text-accent">
             {content.hero?.eyebrow}
           </p>
@@ -72,7 +72,7 @@ export function AboutPage() {
           className="py-10 md:py-14 bg-surface-soft/30"
           aria-labelledby="about-audiences-title"
         >
-          <div className="max-w-[1240px] px-8 mx-auto">
+          <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto">
             <div className="mb-6 md:mb-8 text-center" data-reveal>
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
                 Who we serve
@@ -125,7 +125,7 @@ export function AboutPage() {
           className="py-14 md:py-24"
           aria-labelledby="about-mv-title"
         >
-          <div className="max-w-[1240px] px-8 mx-auto">
+          <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto">
             <div className="mb-10 md:mb-14 text-center" data-reveal>
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
                 What drives us
@@ -188,7 +188,7 @@ export function AboutPage() {
           className="py-14 md:py-24 bg-surface-soft/30"
           aria-labelledby="about-diff-title"
         >
-          <div className="max-w-[1240px] px-8 mx-auto">
+          <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto">
             <div className="mb-10 md:mb-14 text-center max-w-2xl mx-auto" data-reveal>
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-accent mb-2">
                 What sets us apart

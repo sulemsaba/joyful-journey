@@ -14,7 +14,9 @@ import { SmartLink } from "./primitives/SmartLink";
  *     so a stretching grid or flex row makes every card in a row match.
  *   - Title and excerpt each hold a FIXED 2-line box (`line-clamp-2` +
  *     `min-h`), so a 1-line and a 2-line title take identical space.
- *   - Fixed 16:10 media ratio → the cover never changes the card's proportions.
+ *   - Fixed 4:3 media ratio → a sensible landscape media that keeps the OVERALL
+ *     card gently portrait (once the text block is added) without a tall, empty
+ *     cover box on the wide Resources grid. Cover never shifts proportions.
  *   - Footer pinned with `mt-auto` → the author + "Read" row lines up across
  *     every card.
  *
@@ -26,7 +28,7 @@ import { SmartLink } from "./primitives/SmartLink";
 function BlogCardMedia({ post }: { post: BlogPost }) {
   const categoryLabel = post.category?.label;
   return (
-    <div className="relative isolate aspect-[16/9] overflow-hidden bg-surface-soft">
+    <div className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft">
       <span
         aria-hidden="true"
         className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_18%_20%,var(--color-accent-soft-strong),transparent_30%),radial-gradient(circle_at_85%_85%,var(--color-surface-elevated),transparent_26%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]"
@@ -67,17 +69,17 @@ export const BlogCard = memo(function BlogCard({ post }: { post: BlogPost }) {
       className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface no-underline transition-all duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
       <BlogCardMedia post={post} />
-      <div className="flex flex-1 flex-col p-[18px] pb-4">
-        <p className="m-0 mb-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-text-soft">
+      <div className="flex flex-1 flex-col p-5">
+        <p className="m-0 text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
           {metaParts.join(" · ")}
         </p>
-        <h3 className="m-0 text-[1.05rem] font-semibold leading-[1.28] tracking-tight text-text line-clamp-2 min-h-[2.56em] break-words">
+        <h3 className="m-0 mt-2.5 text-[1.15rem] font-semibold leading-[1.3] tracking-tight text-text line-clamp-2 min-h-[2.6em] break-words">
           {post.title}
         </h3>
-        <p className="m-0 mt-2 text-[0.85rem] leading-[1.5] text-text-muted line-clamp-2 min-h-[3em] break-words">
+        <p className="m-0 mt-2 text-[0.875rem] leading-[1.55] text-text-muted line-clamp-2 min-h-[2.71em] break-words">
           {post.excerpt}
         </p>
-        <div className="mt-auto flex items-center justify-between gap-3 pt-3.5">
+        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
           <span className="inline-flex min-w-0 items-center gap-2.5">
             {post.author?.avatarSrc ? (
               <img

@@ -106,7 +106,7 @@ export function CardDeckCarousel({
 
   return (
     <div
-      className={cn('relative lg:hidden', className)}
+      className={cn('relative md:hidden', className)}
       ref={containerRef}
       onKeyDown={handleKeyDown}
       tabIndex={0}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { cn } from "@/exxonim/utils/cn";
 
 interface WhatsAppButtonProps {
@@ -9,18 +10,41 @@ interface WhatsAppButtonProps {
  * Floating WhatsApp button with pulse animation.
  * Fixed bottom-right, links to the configured WhatsApp number.
  * Sits side-by-side with the Back-to-Top button.
+ *
+ * Hides itself while a form field is focused so it never covers the input a
+ * visitor is typing into (a real problem on mobile), and clears the phone's
+ * bottom safe-area (home indicator) so it isn't half off-screen.
  */
 export function WhatsAppButton({ phoneNumber, className }: WhatsAppButtonProps) {
+  const [fieldFocused, setFieldFocused] = useState(false);
+
+  useEffect(() => {
+    const isField = (el: EventTarget | null) =>
+      el instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+    const onIn = (e: FocusEvent) => { if (isField(e.target)) setFieldFocused(true); };
+    const onOut = (e: FocusEvent) => { if (isField(e.target)) setFieldFocused(false); };
+    document.addEventListener("focusin", onIn);
+    document.addEventListener("focusout", onOut);
+    return () => {
+      document.removeEventListener("focusin", onIn);
+      document.removeEventListener("focusout", onOut);
+    };
+  }, []);
+
   return (
     <a
       href={phoneNumber}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat on WhatsApp"
+      aria-hidden={fieldFocused || undefined}
+      tabIndex={fieldFocused ? -1 : undefined}
+      style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom, 0px))" }}
       className={cn(
-        "fixed bottom-5 right-5 z-[30] inline-flex h-11 w-11 items-center justify-center overflow-hidden",
+        "fixed right-5 z-[30] inline-flex h-11 w-11 items-center justify-center overflow-hidden",
         "rounded-full border border-border-soft bg-accent text-accent-contrast",
-        "transition-transform duration-150 ease-out hover:scale-110 hover:bg-accent-hover",
+        "transition-[transform,opacity] duration-200 ease-out hover:scale-110 hover:bg-accent-hover",
+        fieldFocused ? "pointer-events-none translate-y-3 opacity-0" : "opacity-100",
         className,
       )}
     >

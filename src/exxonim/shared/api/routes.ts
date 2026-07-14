@@ -222,6 +222,10 @@ export const apiRoutes = {
     jobs: {
       list: "/jobs",
       bySlug: (slug: string) => `/jobs/${slug}`,
+      apply: (id: string) => `/jobs/${id}/apply`,
+    },
+    newsletter: {
+      subscribe: "/newsletter/subscribe",
     },
     navigation: {
       list: "/navigation",

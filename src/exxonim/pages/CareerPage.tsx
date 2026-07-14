@@ -12,7 +12,7 @@
  *   GET    /api/v1/jobs                        - List published jobs (public)
  *   GET    /api/v1/jobs/{slug}                 - Get single job by slug (public)
  *
- * Job Application (inline modal, currently simulated):
+ * Job Application (inline modal):
  *   POST   /api/v1/jobs/{id}/apply             - Submit job application (multipart/form-data)
  *   Request: name (str, required), email (str, required), phone (str),
  *            cover_note (str), resume (File, required), academics (File), cover_letter (File)
@@ -106,17 +106,17 @@ import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
 import { routes } from "@/exxonim/routes";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
-import { getPublishedJobs } from "@/exxonim/services/jobsService";
+import { getPublishedJobs, applyToJob } from "@/exxonim/services/jobsService";
 import { fallbackJobs } from "@/exxonim/content/fallbackPublicContent";
 import type { ApiCareerJob, CareerPageContent } from "@/exxonim/types";
 import { StructuredData } from "@/exxonim/components/StructuredData";
 import { Button } from "@/exxonim/components/primitives/Button";
 
 /* ── Constants ── */
-const FALLBACK_BANNER = "/careers/banner-enhanced.png";
 const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ACCEPTED_FILE_TYPES = ".pdf,.doc,.docx";
+const ACCEPTED_FILE_TYPES = ".pdf,.jpg,.jpeg,.png,.webp";
+const ACCEPTED_EXTS = ["pdf", "jpg", "jpeg", "png", "webp"];
 
 /* ── Helpers ── */
 function uniqueSorted(values: string[]) {
@@ -311,8 +311,8 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
   const validateFile = useCallback((f: File): string | null => {
     if (f.size > MAX_FILE_SIZE) return "File must be under 5MB.";
     const ext = f.name.split(".").pop()?.toLowerCase();
-    if (!ext || !["pdf", "doc", "docx"].includes(ext))
-      return "Only PDF, DOC, or DOCX files are accepted.";
+    if (!ext || !ACCEPTED_EXTS.includes(ext))
+      return "Only PDF or image (JPG, PNG, WEBP) files are accepted.";
     return null;
   }, []);
 
@@ -358,28 +358,15 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
       if (academicsFile) formData.append("academics", academicsFile);
       if (coverNoteFile) formData.append("cover_letter", coverNoteFile);
 
-      // TODO: Replace with actual API call when backend is ready
-      // const response = await fetch(`/api/public/jobs/${job.id}/apply`, {
-      //   method: "POST",
-      //   body: formData,
-      // });
-
-      // Simulate API call for now
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log(`[Apply Modal] Application for "${job.title}" (ID: ${job.id})`, {
-        name, email, phone, coverNote,
-        cvFileName: cvFile?.name,
-        academicsFileName: academicsFile?.name,
-        coverNoteFileName: coverNoteFile?.name,
-      });
-
+      await applyToJob(String(job.id), formData);
       setIsSuccess(true);
-    } catch {
-      setSubmitError("Something went wrong. Please try again or contact us directly.");
+    } catch (err) {
+      const data = (err as { response?: { data?: { error?: string; detail?: string } } })?.response?.data;
+      setSubmitError(data?.error || data?.detail || "Something went wrong. Please try again or contact us directly.");
     } finally {
       setIsSubmitting(false);
     }
-  }, [name, email, phone, coverNote, cvFile, academicsFile, coverNoteFile, job.id, job.title]);
+  }, [name, email, phone, coverNote, cvFile, academicsFile, coverNoteFile, job.id]);
 
   /* Shared file upload zone component */
   const FileUploadZone = ({
@@ -436,7 +423,7 @@ function ApplyModal({ job, onClose }: ApplyModalProps) {
             <p className="text-sm text-text-muted">
               <span className="text-accent font-medium">Click to upload</span>
             </p>
-            <p className="text-xs text-text-soft mt-0.5">PDF, DOC, DOCX - max 5MB</p>
+            <p className="text-xs text-text-soft mt-0.5">PDF or image - max 5MB</p>
           </>
         )}
       </div>
@@ -629,7 +616,9 @@ export function CareerPage() {
   useResolvedPageSeo(page, routes.career);
 
   const content = page?.content;
-  const allJobs = jobsQuery.data ?? [];
+  // On a real error keep the page honest (empty state) instead of showing the
+  // 7 placeholder demo jobs; placeholderData still smooths the initial load.
+  const allJobs = jobsQuery.isError ? [] : (jobsQuery.data ?? []);
 
   /* ── State ── */
   const [activeTab, setActiveTab] = useState("all");
@@ -643,7 +632,7 @@ export function CareerPage() {
   const [applyJob, setApplyJob] = useState<ApiCareerJob | null>(null);
 
   /* ── Department tabs from job data ── */
-  const departmentTabs = useMemo(() => {
+  const departmentTabs = useMemo<Array<{ key: string; label: string; deptName?: string }>>(() => {
     const depts = uniqueSorted(allJobs.map((j) => j.department));
     return [
       { key: "all", label: "All Jobs" },
@@ -741,13 +730,16 @@ export function CareerPage() {
 
   if (!content) return null;
 
-  const bannerImage = content.hero.banner_image || FALLBACK_BANNER;
+  // AI-generated fallback banner removed (2026-07-13). If an admin uploads a
+  // real banner via the CMS we show it; otherwise the hero renders as a clean
+  // brand-teal card (no external/AI image).
+  const bannerImage = content.hero.banner_image;
 
   return (
     <div className="min-h-screen overflow-x-hidden" onClick={() => setShowDeptDropdown(false)}>
             <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'Careers', path: routes.career }]} pageType="CollectionPage" />
             {/* ── Breadcrumb ── */}
-            <div className="max-w-[1240px] px-8 mx-auto pt-4">
+            <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Career" }]} />
             </div>
 
@@ -758,14 +750,22 @@ export function CareerPage() {
              * Dark overlay gradient ensures white text readability.
              */}
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4">
-              <div className="relative w-full h-[240px] sm:h-[300px] md:h-[340px] rounded-2xl overflow-hidden">
-                <img
-                  src={bannerImage}
-                  alt="Exxonim Consult - Career opportunities"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                {/* Darker overlay for text contrast - left to right gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+              <div className="relative w-full h-[240px] sm:h-[300px] md:h-[340px] rounded-2xl overflow-hidden bg-[linear-gradient(120deg,#0b4b51_0%,#0f5c63_52%,#083a3f_100%)]">
+                {bannerImage ? (
+                  <>
+                    <img
+                      src={bannerImage}
+                      alt="Career opportunities at Exxonim Consult"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    {/* Darker overlay for text contrast when a real photo is set */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+                  </>
+                ) : (
+                  /* No AI-generated fallback image — a clean brand-teal card.
+                     A soft light bloom adds depth without any external asset. */
+                  <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+                )}
                 <div className="relative z-10 flex items-center h-full px-5 sm:px-8">
                   <div className="flex items-center gap-4 sm:gap-5 flex-1">
                     <div>
@@ -1266,7 +1266,7 @@ export function CareerPage() {
                       <Button
                         size="standard"
                         variant="primary"
-                        href={content.status.primary.href}
+                        href={content.status?.primary?.href ?? routes.contact}
                       >
                         Contact Exxonim
                       </Button>
@@ -1281,11 +1281,13 @@ export function CareerPage() {
               heading="Never miss a new role"
               description="Subscribe to get notified when Exxonim publishes new career opportunities. No spam - just job alerts that matter."
             >
-              <NewsletterForm />
+              <NewsletterForm source="career" />
             </UnifiedCtaSection>
 
             {/* ── CTA Banner ── */}
-            <CareerCTABanner primary={content.status.primary} secondary={content.status.secondary} />
+            {content.status?.primary && content.status?.secondary && (
+              <CareerCTABanner primary={content.status.primary} secondary={content.status.secondary} />
+            )}
 
             {/* ── Apply Modal ── */}
             {applyJob && <ApplyModal job={applyJob} onClose={closeApplyModal} />}

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from './primitives/Button';
+import { subscribeToNewsletter } from '@/exxonim/services/newsletterService';
 
 /**
  * NewsletterForm - Email subscription form for use inside UnifiedCtaSection.
@@ -14,7 +15,7 @@ import { Button } from './primitives/Button';
  *   Idle → Submitting... (button disabled + spinner) → Subscribed! (inline)
  *   Error → Inline error message, user can retry
  */
-export function NewsletterForm() {
+export function NewsletterForm({ source }: { source?: string } = {}) {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -28,20 +29,11 @@ export function NewsletterForm() {
     setSubmitError('');
 
     try {
-      // TODO: Replace with actual API call when newsletter backend is ready
-      // const response = await fetch('/api/v1/newsletter/subscribe', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email: email.trim() }),
-      // });
-      // if (!response.ok) throw new Error('Subscription failed');
-
-      // Simulated delay - remove when backend is wired
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
+      await subscribeToNewsletter(email.trim(), source);
       setSubmitted(true);
-    } catch {
-      setSubmitError('Something went wrong. Please try again.');
+    } catch (err) {
+      const data = (err as { response?: { data?: { error?: string; detail?: string } } })?.response?.data;
+      setSubmitError(data?.error || data?.detail || 'Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

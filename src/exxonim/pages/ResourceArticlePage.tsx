@@ -105,6 +105,7 @@ import type { BlogPost, ResourcesPageContent } from '@/exxonim/types';
 import { siteOrigin } from "@/exxonim/seo/constants";
 import { Button } from "@/exxonim/components/primitives/Button";
 import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
+import { BlogListCard } from "@/exxonim/components/BlogListCard";
 
 /** Renders BlogPosting JSON-LD structured data for Google rich results. */
 function ArticleStructuredData({ post }: { post: BlogPost }) {
@@ -420,7 +421,7 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
           const articleHtml = htmlWithIds || "";
           const introText = getBlogArticleIntro(post);
           const categoryLabel = post.category?.label;
-          const relatedPosts = getRelatedBlogPosts(post, posts).slice(0, 3);
+          const relatedPosts = getRelatedBlogPosts(post, posts).slice(0, 2);
 
           /* ── Tags: derived from category + highlights, max 4 ──
            * BACKEND / ADMIN NOTE:
@@ -729,52 +730,11 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                       </h2>
                       <span className="flex-1 h-px bg-border-soft" />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {/* Two horizontal list cards (same design as the Trending
+                        rail) — one flush to the left edge, one to the right. */}
+                    <div className="grid gap-x-10 gap-y-6 sm:grid-cols-2">
                       {relatedPosts.map((relatedPost) => (
-                        <article
-                          key={relatedPost.slug}
-                          className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-border-soft bg-surface transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5 hover:border-border-strong"
-                        >
-                          <div className="relative isolate aspect-[4/3] overflow-hidden bg-surface-soft">
-                            {relatedPost.coverImageSrc ? (
-                              <img
-                                src={relatedPost.coverImageSrc}
-                                alt={relatedPost.coverAlt ?? relatedPost.title}
-                                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="w-full h-full min-h-[160px] flex items-center justify-center bg-[radial-gradient(circle_at_30%_30%,var(--color-accent-soft-strong),transparent_40%),linear-gradient(135deg,var(--color-accent-soft),var(--color-page-strong))]">
-                                <svg className="w-8 h-8 text-accent/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                                  <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                                </svg>
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex flex-1 flex-col bg-surface p-5 pb-5">
-                            <span className="mb-2 text-[0.7rem] font-bold uppercase tracking-[0.12em] text-text-soft">
-                              {formatBlogDate(relatedPost.publishedAt)}
-                              {relatedPost.readTimeMinutes ? ` · ${relatedPost.readTimeMinutes} min read` : ""}
-                            </span>
-                            <h4 className="text-[0.95rem] font-semibold text-text leading-snug mb-2 line-clamp-2 group-hover:text-accent transition-colors">
-                              {relatedPost.title}
-                            </h4>
-                            <p className="text-sm text-text-muted leading-relaxed line-clamp-2">
-                              {relatedPost.excerpt}
-                            </p>
-                            <div className="mt-auto pt-4">
-                              <SmartLink
-                                href={resourceArticlePath(relatedPost.slug)}
-                                className="inline-flex items-center gap-1.5 text-sm font-bold text-accent transition-colors hover:text-accent-hover"
-                              >
-                                Read article
-                                <span aria-hidden="true" className="inline-block transition-transform group-hover:translate-x-[2px]">
-                                  &rarr;
-                                </span>
-                              </SmartLink>
-                            </div>
-                          </div>
-                        </article>
+                        <BlogListCard key={relatedPost.slug} post={relatedPost} />
                       ))}
                     </div>
                   </div>

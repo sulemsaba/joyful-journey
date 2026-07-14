@@ -864,6 +864,36 @@ html.theme-transition .hero-aurora-canvas {
 .stagger-5 { animation-delay: 0.4s; }
 .stagger-6 { animation-delay: 0.48s; }
 
+/* ── Stack section: "unboring scroll" — scroll-scrubbed parallax ──────
+ * Pure-CSS scroll-driven animation (0 KB JS). The media surface drifts
+ * vertically against its static text half as the row travels through the
+ * viewport, giving the stack a lively, non-static scroll.
+ *
+ * This is the site's ONE signature scroll flourish — everything else keeps
+ * the single shared [data-reveal] fade+rise behaviour for consistency.
+ *
+ * Progressive enhancement, on purpose:
+ *   • Only runs where animation-timeline is supported (Chromium today;
+ *     Safari/Firefox fall back to a static surface — the [data-reveal]
+ *     entrance still plays, so nothing looks broken).
+ *   • Fully disabled under prefers-reduced-motion.
+ * Applied to an INNER wrapper so its transform never fights the
+ * [data-reveal] transform on the outer element. */
+@keyframes stack-scroll-parallax {
+  from { transform: translate3d(0, 34px, 0); }
+  to   { transform: translate3d(0, -34px, 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .stack-scroll-parallax {
+      animation: stack-scroll-parallax linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+      will-change: transform;
+    }
+  }
+}
+
 /* ── Float/bob animation for hero floating chips ──── */
 .animate-float-bob {
   animation: float-bob 4s ease-in-out infinite;

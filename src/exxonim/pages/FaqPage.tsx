@@ -241,13 +241,13 @@ export function FaqPage() {
             <StructuredData heroTitle={content.hero.title} heroDescription={content.hero.description} breadcrumbs={[{ name: 'FAQ', path: routes.faq }]} pageType="FAQPage" />
 
             {/* ─── Breadcrumb ─── */}
-            <div className="max-w-[1240px] px-8 mx-auto pt-4">
+            <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources", href: routes.resources }, { label: "FAQ" }]} />
             </div>
 
             {/* ─── Two-Column FAQ Section ─── */}
             <section className="pb-16 md:pb-24">
-              <div className="max-w-[1240px] px-8 mx-auto pt-8 md:pt-14">
+              <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-8 md:pt-14">
                 <div className="grid lg:grid-cols-[2fr_3fr] lg:gap-16 gap-10 items-start">
 
                   {/* ═══ LEFT COLUMN: Title + Search + CTA ═══ */}
@@ -335,19 +335,21 @@ export function FaqPage() {
 
                     {/* Mobile: Contact CTA */}
                     <div className="lg:hidden mt-6 p-5 rounded-2xl bg-gradient-to-br from-accent/[0.04] via-accent/[0.01] to-transparent border border-accent/12">
-                      <div className="flex items-start gap-4">
-                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent shrink-0">
-                          <MessageCircle className="w-5 h-5" />
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-text mb-1">
-                            Can&apos;t find your answer?
-                          </p>
-                          <p className="text-xs text-text-muted leading-relaxed">
-                            Our team responds within one business day.
-                          </p>
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div className="flex items-start gap-4">
+                          <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 text-accent shrink-0">
+                            <MessageCircle className="w-5 h-5" />
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-text mb-1">
+                              Can&apos;t find your answer?
+                            </p>
+                            <p className="text-sm text-text-muted leading-relaxed">
+                              Our team responds within one business day.
+                            </p>
+                          </div>
                         </div>
-                        <Button size="standard" variant="primary" href={routes.contact} className="shrink-0">
+                        <Button size="standard" variant="primary" href={routes.contact} className="w-full sm:w-auto shrink-0">
                           Contact us
                         </Button>
                       </div>

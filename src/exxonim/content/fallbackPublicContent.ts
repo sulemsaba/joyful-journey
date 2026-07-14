@@ -31,7 +31,6 @@ const famaLogo = "/clients/fama.webp";
 const jotofaLogo = "/clients/jotofa.webp";
 const jkmLogo = "/clients/jkm.webp";
 const djemaLogo = "/clients/djema_consult.webp";
-const exxonimLogo = "/clients/exxonim-logo.webp";
 const lightLogo = "/branding/exxonimLogoLight.webp";
 const darkLogo = "/branding/logo-dark.png";
 
@@ -194,6 +193,27 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
     provider_section: {
       kicker: "Trusted by organisations across Tanzania",
       title: "We work with businesses, NGOs, and institutions nationwide.",
+      /*
+       * ── TRUST-STRIP LOGOS — add / remove partner & client logos here ──
+       *
+       * ADD A LOGO: (1) drop the file in `public/clients/`, (2) declare it at the
+       *   top of this file (e.g. `const acmeLogo = "/clients/acme.webp";`), then
+       *   (3) add `{ alt: "Acme", src: acmeLogo, opticalWeight: "wordmark" }`.
+       *   Use opticalWeight "solid" for icon/emblem marks (rendered a touch
+       *   smaller so they don't overpower) and "wordmark" for text logos.
+       *
+       * HOW MANY — aim for 8–12.
+       *   • MINIMUM ~8: the marquee repeats this list 3× and scrolls by exactly
+       *     one copy (see ProviderSection `repeatCount` + the `provider-marquee`
+       *     keyframe in globals.css). Fewer than ~8 can leave a visible GAP on
+       *     wide / ultrawide screens because one copy won't fill the viewport.
+       *   • MAXIMUM ~14: more just lengthens the loop and adds eager-loaded
+       *     images. Keep it tasteful.
+       *
+       * DO NOT add Exxonim's own logo here — this strip is third-party social
+       *   proof; the brand mark already appears in the header and footer.
+       *   (Removed on 2026-07-13 for exactly this reason.)
+       */
       logos: [
         { alt: "Utec", src: utecLogo, opticalWeight: "solid" },
         { alt: "TRCS", src: trcsLogo, opticalWeight: "solid" },
@@ -204,7 +224,6 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
         { alt: "Jotofa", src: jotofaLogo, opticalWeight: "wordmark" },
         { alt: "JKM", src: jkmLogo, opticalWeight: "solid" },
         { alt: "Djema Consult", src: djemaLogo, opticalWeight: "wordmark" },
-        { alt: "Exxonim", src: exxonimLogo, opticalWeight: "wordmark" },
       ],
     },
     stack_section: {

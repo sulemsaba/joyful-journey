@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigationType, useParams } from "react-router-dom";
 import { Footer } from "@/exxonim/components/Footer";
 import { Navigation } from "@/exxonim/components/Navigation";
 import { ShellStatusNotice } from "@/exxonim/components/ShellStatusNotice";
@@ -87,9 +87,16 @@ type IdleWindow = typeof window & {
 /* ── ScrollToTop on route change ──────────────────── */
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const navigationType = useNavigationType();
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    // Only jump to top for genuine forward navigations (link clicks / replaces).
+    // On POP — initial load, refresh, and browser back/forward — leave the
+    // scroll alone so the browser's native scrollRestoration returns the
+    // visitor to exactly where they were.
+    if (navigationType !== "POP") {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, navigationType]);
   return null;
 }
 
@@ -135,24 +142,18 @@ export function App({ onReady }: { onReady?: () => void }) {
   const location = useLocation();
   const readyFired = useRef(false);
 
-  /* ── Dismiss boot loader IMMEDIATELY on mount ─────────
-   * Before: waited for PageReady inside <Routes> which required the
-   * entire page component tree (HomePage → ReferenceHero → etc.) to
-   * commit before firing. On 6x CPU this added seconds of loader time.
+  /* ── Boot loader dismissal ─────────────────────────────
+   * The boot loader is dismissed by <PageReady> (rendered INSIDE <Routes>, see
+   * handlePageReady below) — i.e. only once the actual PAGE CONTENT has mounted,
+   * not just the nav + footer shell.
    *
-   * Now: dismisses on the FIRST commit of the <App> shell itself.
-   * The CSS fade-out runs while React continues rendering the page
-   * content underneath — the correct bg-color is already set via
-   * the blocking <style> in <head>, so no white flash.
-   *
-   * For lazy-loaded route changes, PageReady still fires from inside
-   * <Routes> to dismiss any subsequent loading state. */
-  useLayoutEffect(() => {
-    if (!readyFired.current && onReady) {
-      readyFired.current = true;
-      onReady();
-    }
-  }, [onReady]);
+   * We deliberately do NOT dismiss on the shell's first commit. The home page is
+   * eager, so its content commits together with the shell (fast). But every
+   * OTHER page is lazy — dismissing on the shell commit left those pages showing
+   * a blank middle (nav + footer, empty content) while the route chunk was still
+   * downloading. Waiting for PageReady keeps the branded loader up until the page
+   * is actually there. The 8s safety timeout in index.html still covers a stuck
+   * chunk. */
 
   /* ── Page transition animation ─────────────────────────
    * On route change, trigger a subtle opacity dip on

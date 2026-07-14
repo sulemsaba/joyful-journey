@@ -16,3 +16,23 @@ export async function getPublishedJobs() {
   const response = await api.get<ApiCareerJob[]>(apiRoutes.public.jobs.list);
   return response.data;
 }
+
+export interface JobApplicationResponse {
+  id: string;
+  status: string;
+  message: string;
+}
+
+/**
+ * Submit a job application. `formData` is a multipart FormData with:
+ *   name*, email*, phone, cover_note, resume* (File), academics?, cover_letter? (File).
+ * Uses a longer timeout than the default 4s to allow the file upload.
+ */
+export async function applyToJob(jobId: string, formData: FormData) {
+  const response = await api.post<JobApplicationResponse>(
+    apiRoutes.public.jobs.apply(jobId),
+    formData,
+    { timeout: 60_000 }
+  );
+  return response.data;
+}
