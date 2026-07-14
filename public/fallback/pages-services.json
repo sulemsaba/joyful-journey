@@ -1,1 +1,135 @@
-{"_meta":{"source":"hardcoded"},"data":{"id":0,"title":"Business Registration, Licensing & Compliance Services","slug":"services","content":{"overview":{"eyebrow":"Registration & Compliance","title":"Your business, registered and kept compliant - without the office visits","description":"From first registration to recurring filings - all handled.","panel_title":"Trusted by businesses across Tanzania","panel_body":"Every engagement is tracked from intake to resolution. You always know what is complete, what is pending, and what comes next.","service_signals":[{"value":"120+","label":"Companies registered","detail":"Businesses trust Exxonim for registration and compliance"},{"value":"100%","label":"Tracked","detail":"Every consultation assigned a reference ID"},{"value":"58+","label":"Google reviews","detail":"Verified reviews from real clients on Google"}],"service_nav_groups":[{"title":"Business Setup","summary":"Registration support for companies, business names, NGOs, and trademarks.","href":"/services/","items":["Company Registration","Business Name Registration","Trademark Registration","TIN Application"]},{"title":"Compliance Support","summary":"Annual returns, recurring filings, renewals, and regulatory follow-up.","href":"/services/","items":["Annual Returns","Statutory Filings","Regulatory Renewals","Operational Advisory"]},{"title":"Work Permits & Foreign Investment","summary":"Support for international investors and expatriate workers.","href":"/services/","items":["Work Permit Applications","TIC / TISEZA Registration","Foreign Company Registration"]}],"service_flow":[{"step":"01","title":"Intake","detail":"We confirm the entity type, document requirements, and filing sequence."},{"step":"02","title":"Preparation","detail":"Documents are reviewed and the submission path is mapped before filing."},{"step":"03","title":"Submission","detail":"Your application is submitted to the relevant authority with supporting documents."},{"step":"04","title":"Follow-through","detail":"We track the status, follow up, and confirm the outcome."}],"service_promises":["Every case is tracked with a reference ID.","Proactive follow-up on deadlines and queries.","Clear communication at every stage.","Structured support that fits how your team works."]},"catalog":{"eyebrow":"Service catalog","title":"What Exxonim covers","description":"A structured overview of the registration, licensing, and compliance services available.","service_groups":[{"title":"Business Setup","description":"End-to-end registration support for new entities.","benefitHeadline":"Legally trade within 5–10 business days","services":[{"id":"company-registration","label":"Company Registration","detail":"Incorporation and first-step authority submissions.","startingPrice":"From TZS 350,000"},{"id":"business-name-registration","label":"Business Name Registration","detail":"Sole proprietorship and trading name registration through BRELA.","startingPrice":"From TZS 150,000"},{"id":"ngo-registration","label":"NGO Registration","detail":"Non-profit entity setup and compliance baseline.","startingPrice":"From TZS 500,000"},{"id":"trademark-registration","label":"Trademark Registration","detail":"Brand and trade name protection through BRELA intellectual property office.","startingPrice":"From TZS 200,000"},{"id":"tin-application","label":"TIN Application","detail":"Tax Identification Number registration and account setup.","startingPrice":"From TZS 100,000"},{"id":"business-license","label":"Business License Applications","detail":"License applications and regulatory approvals."}]},{"title":"Compliance Support","description":"Ongoing obligations managed with clear follow-through.","benefitHeadline":"Never miss a filing deadline again","services":[{"id":"annual-returns","label":"Annual Returns","detail":"BRELA annual return filing and beneficial ownership updates.","startingPrice":"From TZS 150,000"},{"id":"statutory-filings","label":"Statutory Filings","detail":"Recurring filing obligations prepared and submitted on schedule.","startingPrice":"From TZS 100,000"},{"id":"regulatory-renewals","label":"Regulatory Renewals","detail":"Proactive tracking and timely processing of renewals.","startingPrice":"From TZS 100,000"},{"id":"operational-advisory","label":"Operational Advisory","detail":"Structured guidance for teams managing multiple obligations."}]},{"title":"Work Permits & Foreign Investment","description":"Support for international investors and expatriate workers.","benefitHeadline":"Set up in Tanzania without leaving home","services":[{"id":"work-permit","label":"Work Permit Applications","detail":"Residence and work permit processing for foreign investors and employees.","startingPrice":"From TZS 500,000"},{"id":"tic-registration","label":"TIC / TISEZA Registration","detail":"Investment centre registration and compliance for foreign-owned entities.","startingPrice":"From TZS 800,000"},{"id":"foreign-company-reg","label":"Foreign Company Registration","detail":"Branch office and subsidiary setup for international businesses.","startingPrice":"From TZS 600,000"}]}]},"problem_framing":[{"icon":"frustrated","quote":"I spent 3 days going back and forth to BRELA...","description":"Multiple office visits, unclear requirements, and long queues waste time you don't have."},{"icon":"documents","quote":"I never know which documents are right until they get rejected.","description":"Incomplete submissions mean rejections, delays, and costly resubmissions."},{"icon":"clock","quote":"I missed the BRELA return deadline again.","description":"Deadline surprises lead to penalties and compliance risks you could have avoided."}],"faq":[{"question":"Do I need to visit any office in person?","answer":"No. We file everything electronically and keep you updated via WhatsApp. Our team liaises with all regulators - BRELA, TRA, NSSF, WCF, OSHA - on your behalf.","cta":{"label":"Book a free consultation","href":"/contact/"}},{"question":"How long does company registration take?","answer":"Typically 5–10 business days from when we receive your complete documents. Delays can occur if BRELA requests additional information, but we follow up proactively.","cta":{"label":"Get started with registration","href":"/contact/"}},{"question":"What documents do I need to get started?","answer":"It depends on the service. For company registration, you'll need director details, a proposed company name, and a registered office address. We'll send you a clear checklist after your consultation.","cta":{"label":"Request a consultation","href":"/contact/"}},{"question":"Can I track my consultation status?","answer":"Yes - every engagement gets a 6-character tracking code. Enter it on our Track Your Consultation page for an instant status check. No login required.","cta":{"label":"Track your consultation","href":"/track-consultation/"}},{"question":"What's included in the compliance reminders?","answer":"We track all major compliance deadlines - BRELA returns, TRA filings, WCF, NSSF, OSHA renewals - and send you advance reminders via WhatsApp. No time limit, no cut-off.","cta":{"label":"Get compliance support","href":"/contact/"}},{"question":"Do you handle work permits for foreign employees?","answer":"Yes. We process work permits, residence permits, and TIC/TISEZA registration for foreign investors and employees. Everything is handled remotely - no office visits needed.","cta":{"label":"Apply for a work permit","href":"/contact/"}},{"question":"What are your service fees?","answer":"Fees vary by service. Company registration starts from TZS 350,000. We provide a clear quote before any work begins - no hidden charges, no surprises.","cta":{"label":"Get a quote","href":"/contact/"}},{"question":"What happens after I submit an inquiry?","answer":"You'll receive a tracking code via WhatsApp within one business day. Use it to check your status anytime. We also send milestone updates automatically.","cta":{"label":"Submit an inquiry","href":"/contact/"}}],"tracking_section":{"eyebrow":"Consultation tracking","title":"Track every consultation from intake to resolution","description":"Every consultation is assigned a unique reference ID. You can see what is complete, what is pending, and what comes next at every stage.","checkpoints":[{"title":"Intake","detail":"Case details confirmed, reference ID assigned.","status":"complete"},{"title":"Review","detail":"Documents verified, filing sequence prepared.","status":"complete"},{"title":"Submission","detail":"Application filed with the relevant authority.","status":"in_progress"},{"title":"Resolution","detail":"Outcome confirmed, documents delivered.","status":"pending"}],"case_examples":[{"title":"Company Registration","detail":"EXX-24091 - In submission phase"},{"title":"TIN Application","detail":"EXX-24088 - Resolved, TIN issued"}],"workflow_steps":[{"title":"Request submitted","detail":"Client reaches out, Exxonim logs the inquiry."},{"title":"Review and preparation","detail":"Team confirms documents and filing path."},{"title":"Authority submission","detail":"Application is filed with the relevant body."},{"title":"Resolution and delivery","detail":"Outcome confirmed, final documents delivered."}]}},"metaDescription":"Business registration, business name registration, trademark registration, TIN applications, licensing, annual returns, statutory filings, compliance, and work permit support services from Exxonim Consult.","isPublished":true,"createdAt":"fallback","updatedAt":"fallback"}}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:00.754673+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 1261655105,
+    "title": "Our Services | Exxonim Consult",
+    "slug": "services",
+    "content": {
+      "overview": {
+        "eyebrow": "Our Services",
+        "title": "What We Do",
+        "description": "Comprehensive business services across Tanzania.",
+        "panel_title": "End-to-end business support",
+        "panel_body": "From registration to compliance.",
+        "service_signals": [
+          {
+            "value": "500+",
+            "label": "Clients",
+            "detail": "Served across Tanzania"
+          },
+          {
+            "value": "99%",
+            "label": "Success Rate",
+            "detail": "First-pass approval"
+          }
+        ],
+        "service_nav_groups": [
+          {
+            "title": "Registration",
+            "summary": "Business and company registration",
+            "href": "/services#registration",
+            "items": [
+              "Company Registration",
+              "Business Name Registration"
+            ]
+          },
+          {
+            "title": "Compliance",
+            "summary": "Ongoing compliance management",
+            "href": "/services#compliance",
+            "items": [
+              "Annual Returns",
+              "Tax Compliance"
+            ]
+          }
+        ],
+        "service_flow": [
+          {
+            "step": "1",
+            "title": "Consult",
+            "detail": "Discuss your needs"
+          },
+          {
+            "step": "2",
+            "title": "Submit",
+            "detail": "Upload documents"
+          },
+          {
+            "step": "3",
+            "title": "Process",
+            "detail": "We handle the rest"
+          }
+        ],
+        "service_promises": [
+          "Fast turnaround",
+          "Transparent pricing"
+        ]
+      },
+      "catalog": {
+        "eyebrow": "Service Catalog",
+        "title": "Browse Services",
+        "description": "Choose the service that fits your needs.",
+        "service_groups": [
+          {
+            "title": "Registration",
+            "description": "Get your business registered",
+            "services": [
+              {
+                "id": "reg-1",
+                "label": "Company Registration",
+                "detail": "Full BRELA registration",
+                "startingPrice": "TZS 350,000"
+              },
+              {
+                "id": "reg-2",
+                "label": "Business Name",
+                "detail": "Business name reservation",
+                "startingPrice": "TZS 150,000"
+              }
+            ]
+          }
+        ]
+      },
+      "tracking_section": {
+        "eyebrow": "Track Your Progress",
+        "title": "Know exactly where things stand",
+        "description": "Real-time tracking for all your cases.",
+        "checkpoints": [
+          {
+            "title": "Documents Received",
+            "detail": "We confirm receipt",
+            "status": "completed"
+          }
+        ],
+        "case_examples": [
+          {
+            "title": "Company Registration",
+            "detail": "Track your registration status"
+          }
+        ],
+        "workflow_steps": [
+          {
+            "title": "Submit",
+            "detail": "Upload your documents"
+          }
+        ]
+      },
+      "faq": [
+        {
+          "question": "How long does registration take?",
+          "answer": "Typically 5-10 business days."
+        }
+      ]
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

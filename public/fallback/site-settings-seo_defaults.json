@@ -1,1 +1,20 @@
-{"data":null}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:01.603645+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 428277226,
+    "key": "seo_defaults",
+    "value": {
+      "siteName": "Exxonim Consult",
+      "canonicalBaseUrl": "https://consult.exxonim.tz",
+      "defaultMetaDescription": "Exxonim Consult — Professional business services in Tanzania. Registration, compliance, tax, and legal support.",
+      "defaultShareImageUrl": "https://consult.exxonim.tz/og-image.png",
+      "robotsIndex": true,
+      "robotsFollow": true
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-10T05:41:27.692326+00:00"
+  }
+}

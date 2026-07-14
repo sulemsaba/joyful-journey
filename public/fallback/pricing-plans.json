@@ -1,1 +1,64 @@
-{"_meta":{"source":"hardcoded"},"data":[{"id":1,"name":"Foundation","badge":"Getting started","description":"Registration and first-step compliance - ideal for new entities getting set up.","notes":"Use the Exxonim contact route for the latest package guidance.","recommended":false,"features":[{"label":"Company or business name registration filed on your behalf","included":true},{"label":"TIN application included","included":true},{"label":"Document checklist and readiness review","included":true},{"label":"Consultation tracking with milestone updates","included":true},{"label":"Annual return filing","included":false},{"label":"Compliance reminders","included":false}]},{"id":2,"name":"Operating","badge":"Recommended","description":"Registration, licensing, and recurring compliance support for active businesses.","notes":"Live package details return automatically after the next successful sync.","recommended":true,"features":[{"label":"Company or business name registration filed on your behalf","included":true},{"label":"TIN application included","included":true},{"label":"Business license application","included":true},{"label":"Annual return filing","included":true},{"label":"Ongoing compliance reminders","included":true},{"label":"Trademark registration","included":false}]},{"id":3,"name":"Continuity","badge":"Extended coverage","description":"Full-service support - registration, compliance, work permits, and ongoing advisory.","notes":"Contact Exxonim directly for a tailored scope while the live catalog reconnects.","recommended":false,"features":[{"label":"Everything in Operating","included":true},{"label":"Trademark registration and protection","included":true},{"label":"Work permit and TIC registration support","included":true},{"label":"Priority support coordination","included":true},{"label":"Multi-stream document management","included":true},{"label":"Quarterly compliance review and planning","included":true}]}]}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:01.042281+00:00",
+    "source": "backend-publish"
+  },
+  "data": [
+    {
+      "id": 1310357640,
+      "name": "Basic",
+      "badge": null,
+      "description": "Essential registration services",
+      "notes": null,
+      "price": null,
+      "features": [
+        {
+          "label": "Company Registration",
+          "included": true
+        },
+        {
+          "label": "TIN Registration",
+          "included": true
+        },
+        {
+          "label": "Business Permit",
+          "included": false
+        }
+      ],
+      "recommended": false,
+      "sort_order": 1,
+      "status": "published",
+      "is_active": true,
+      "created_at": "2026-07-04T16:37:18.195276+00:00",
+      "updated_at": "2026-07-04T16:37:18.195276+00:00"
+    },
+    {
+      "id": 2039316804,
+      "name": "Standard",
+      "badge": null,
+      "description": "Complete registration + compliance",
+      "notes": null,
+      "price": null,
+      "features": [
+        {
+          "label": "Company Registration",
+          "included": true
+        },
+        {
+          "label": "TIN Registration",
+          "included": true
+        },
+        {
+          "label": "Business Permit",
+          "included": true
+        }
+      ],
+      "recommended": true,
+      "sort_order": 2,
+      "status": "published",
+      "is_active": true,
+      "created_at": "2026-07-04T16:37:18.195276+00:00",
+      "updated_at": "2026-07-04T16:37:18.195276+00:00"
+    }
+  ]
+}

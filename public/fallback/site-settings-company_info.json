@@ -1,1 +1,25 @@
-{"_meta":{"source":"hardcoded"},"data":{"name":"Exxonim Consult","phones":["+255 794 689 099","+255 685 525 224"],"emails":["info@exxonim.tz","md@exxonim.tz"],"address":"House No. 9, Block H, Mbezi Beach B, Africana, Bagamoyo Road, Dar es Salaam, Tanzania","whatsapp":"https://wa.me/255794689099"}}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:01.517827+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 1026397956,
+    "key": "company_info",
+    "value": {
+      "name": "Exxonim Consult Ltd",
+      "legalCompanyName": "Exxonim Consult Limited",
+      "companyShortName": "Exxonim",
+      "phones": [
+        "+255794689099"
+      ],
+      "emails": [
+        "info@exxonim.tz"
+      ],
+      "address": "Dar es Salaam, Tanzania",
+      "whatsapp": "+255794689099"
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-02T17:04:20.251678+00:00"
+  }
+}

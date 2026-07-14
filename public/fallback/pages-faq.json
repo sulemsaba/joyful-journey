@@ -1,1 +1,26 @@
-{"_meta":{"source":"hardcoded"},"data":{"id":0,"title":"FAQ | Registration, Licensing & Compliance Questions","slug":"faq","content":{"hero":{"eyebrow":"Common questions","title":"Frequently asked questions","description":"Practical answers to the questions organisations ask most often about registration, compliance, and working with Exxonim."},"items":[{"question":"What types of entities can Exxonim help register?","answer":"Exxonim supports registration for companies, NGOs, and business names. The team guides you through entity type selection, document preparation, and authority submission."},{"question":"How long does company registration take?","answer":"Timelines depend on the entity type and authority processing speed. Exxonim tracks every submission and follows up proactively so you always know where things stand."},{"question":"What is a TIN and do I need one?","answer":"A Tax Identification Number is required for most registered entities in Tanzania. Exxonim handles TIN applications as part of the setup process."},{"question":"Can I track the status of my consultation?","answer":"Yes. Every consultation is assigned a reference ID. You can use it to check what is complete, what is pending, and what comes next at every stage."},{"question":"What happens after I submit a request?","answer":"The Exxonim team reviews your case, confirms the required documents, and prepares the filing sequence. You receive a reference ID to track progress throughout."},{"question":"Does Exxonim handle licensing renewals?","answer":"Yes. Exxonim tracks renewal deadlines, prepares the required documents, and submits renewals on your behalf so obligations do not lapse."}]},"metaDescription":"Answers to common questions about business registration, TIN applications, licensing renewals, and consultation tracking with Exxonim Consult in Tanzania.","isPublished":true,"createdAt":"fallback","updatedAt":"fallback"}}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:00.787313+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 811667595,
+    "title": "FAQ | Exxonim Consult",
+    "slug": "faq",
+    "content": {
+      "hero": {
+        "eyebrow": "FAQ",
+        "title": "Frequently Asked Questions",
+        "description": "Find answers to common questions about our services."
+      },
+      "items": []
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

@@ -1,1 +1,39 @@
-{"_meta":{"source":"hardcoded"},"data":{"id":0,"title":"Resources","slug":"resources","content":{"hero_title":"Guides, updates, and practical notes for setup and compliance work","trending_label":"Trending reads","top_media":{"hero":"/blog/company-registration-basics.webp","banner":"/blog/tin-registration-checklist.webp","trending":["/blog/licensing-renewal-prep.webp","/blog/compliance-calendar-basics.webp","/blog/company-registration-basics.webp"]},"article_sidebar":{"title":"Need direct help?","description":"Browse the available articles or contact Exxonim directly for personalised guidance on your specific situation.","primary_cta":{"label":"Contact Exxonim","href":"/contact/"}},"empty_state":{"title":"No articles match this filter.","description":"Try adjusting your search or filter, or contact Exxonim directly for immediate guidance."}},"metaTitle":"Guides, Compliance Updates & Articles | Exxonim Consult","metaDescription":"Practical guides, compliance updates, and articles on business registration, licensing, and regulatory requirements in Tanzania.","isPublished":true,"createdAt":"fallback","updatedAt":"fallback"}}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:00.938246+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 446301181,
+    "title": "Resources | Exxonim Consult",
+    "slug": "resources",
+    "content": {
+      "hero_title": "Resources",
+      "trending_label": "Trending",
+      "top_media": {
+        "hero": "/resources/hero.jpg",
+        "banner": "/resources/banner.jpg",
+        "trending": []
+      },
+      "article_sidebar": {
+        "title": "Need Help?",
+        "description": "Contact our team.",
+        "primary_cta": {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      },
+      "empty_state": {
+        "title": "No articles yet",
+        "description": "Check back soon for new content."
+      }
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

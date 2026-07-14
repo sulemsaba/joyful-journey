@@ -1,12 +1,12 @@
 {
   "_meta": {
-    "source": "seed-baseline",
-    "note": "Layer-3 last-known-good snapshot. Regenerated from live by scripts/refresh-fallbacks.mjs (key: service-packages)."
+    "generatedAt": "2026-07-14T08:34:01.173872+00:00",
+    "source": "backend-publish"
   },
   "data": [
     {
-      "id": "starter-local-entrepreneurs",
-      "name": "Starter",
+      "id": "cmrdhe1vy00068iijta2y050n",
+      "name": "okay",
       "badge": null,
       "description": "Essential registration and compliance to get your business legally operating.",
       "recommended": false,
@@ -29,20 +29,20 @@
         },
         {
           "label": "Annual Returns Filing",
-          "included": true
+          "included": false
         },
         {
           "label": "Statutory Filings (PAYE/SDL)",
-          "included": true
+          "included": false
         },
         {
           "label": "Dedicated Compliance Advisor",
-          "included": true
+          "included": false
         }
       ]
     },
     {
-      "id": "growth",
+      "id": "cmrdhby3500018iije2u1z2rx",
       "name": "Growth",
       "badge": "Most Popular",
       "description": "Full registration, ongoing compliance, and filing support for growing businesses.",
@@ -61,7 +61,7 @@
           "included": true
         },
         {
-          "label": "Annual Returns and Beneficial Ownership",
+          "label": "Annual Returns and Beneficial Ownhhhhhhhhhhership",
           "included": true
         },
         {
@@ -71,7 +71,7 @@
       ]
     },
     {
-      "id": "premium",
+      "id": "cmrdhe20b000d8iijrf3eyxoa",
       "name": "Premium",
       "badge": null,
       "description": "Complete compliance management with a dedicated advisor and proactive tracking.",
@@ -108,7 +108,7 @@
       ]
     },
     {
-      "id": "starter-foreign-investors",
+      "id": "cmrenn0sr0001yuijtc7hte37",
       "name": "Starter",
       "badge": null,
       "description": "Essential registration and work permit support to enter the Tanzanian market.",
@@ -145,7 +145,7 @@
       ]
     },
     {
-      "id": "growth-foreign-investors",
+      "id": "cmrenn0tc0008yuijylfku6i7",
       "name": "Growth",
       "badge": "Most Popular",
       "description": "Full registration, work permits, and investment centre compliance.",
@@ -182,8 +182,8 @@
       ]
     },
     {
-      "id": "premium-foreign-investors",
-      "name": "Premium",
+      "id": "cmrenn0u5000fyuij99laj2vg",
+      "name": "Premi",
       "badge": null,
       "description": "End-to-end foreign investment setup with ongoing compliance management.",
       "recommended": false,
@@ -219,7 +219,7 @@
       ]
     },
     {
-      "id": "starter-enterprises",
+      "id": "cmrenn0vg000nyuijowqy07dz",
       "name": "Starter",
       "badge": null,
       "description": "Core registration and statutory filings for established businesses.",
@@ -256,7 +256,7 @@
       ]
     },
     {
-      "id": "growth-enterprises",
+      "id": "cmrenn0vp000uyuijxz2cnlt7",
       "name": "Growth",
       "badge": "Most Popular",
       "description": "Comprehensive compliance management with proactive tracking and filing support.",
@@ -293,7 +293,7 @@
       ]
     },
     {
-      "id": "premium-enterprises",
+      "id": "cmrenn0w80011yuij12r7cvzf",
       "name": "Premium",
       "badge": null,
       "description": "Full-scale compliance operations with dedicated advisor and strategic guidance.",
@@ -330,7 +330,7 @@
       ]
     },
     {
-      "id": "starter-ngos",
+      "id": "cmrenn0xi0019yuijgve2rx9u",
       "name": "Starter",
       "badge": null,
       "description": "Essential NGO registration and initial compliance for new non-profits.",
@@ -367,7 +367,7 @@
       ]
     },
     {
-      "id": "growth-ngos",
+      "id": "cmrenn0xs001gyuij0r8wmcno",
       "name": "Growth",
       "badge": "Donor-Ready",
       "description": "Complete NGO setup with donor compliance and governance documentation.",
@@ -404,7 +404,7 @@
       ]
     },
     {
-      "id": "premium-ngos",
+      "id": "cmrenn0ye001nyuijhh5ergkq",
       "name": "Premium",
       "badge": null,
       "description": "Full NGO compliance management with ongoing reporting and governance support.",

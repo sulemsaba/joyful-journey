@@ -1,1 +1,112 @@
-{"_meta":{"source":"hardcoded"},"data":{"id":0,"title":"About Exxonim Consult | Tanzania Business Advisory","slug":"about","content":{"hero":{"eyebrow":"About Exxonim Consult","title":"We stand between you and the authorities.","description":"Registrations, filings, and compliance - all handled."},"company_profile":{"eyebrow":"Who we are","title":"We handle the authorities so you can handle your business.","paragraphs":["With many years of experience in business registration, licensing, and regulatory compliance, Exxonim Consult stands between organisations and government authorities — handling every filing, deadline, and authority interaction on our clients’ behalf.","We are not generalists. We are specialists in the regulatory interface — the space between an organisation and the authorities it must answer to. If the authority is the gate, we walk through it for you."],"working_style_label":"How we work","working_style":"Structured. Visible. Follow-through oriented."},"mission_vision":{"mission":"To make registration and compliance effortless for every organisation in Tanzania.","vision":"To be Tanzania's most trusted compliance partner - no business ever chases an office.","global_mission":"To become the regulatory interface for businesses operating across East Africa and beyond — one trusted partner for every jurisdiction, every filing, every milestone.","global_vision":"A world where any business can operate in any country without regulatory friction — where compliance is invisible, tracked, and handled."},"who_we_serve":[{"label":"Individuals","description":"Entrepreneurs and professionals starting their first business."},{"label":"Companies","description":"Local businesses managing registration, tax, and compliance."},{"label":"Foreign Businesses","description":"Investors entering Tanzania - permits, registration, setup."},{"label":"NGOs & Non-Profits","description":"Organisations handling registration and statutory obligations."},{"label":"Institutions","description":"Public and private institutions with regulatory obligations."}],"differentiators":[{"title":"Specialists, not generalists","description":"We are experts in the regulatory interface - the space between you and the authorities."},{"title":"Visibility at every step","description":"WhatsApp, email, or SMS updates at every milestone. Never wonder what's happening."},{"title":"One partner, every filing","description":"Registration to compliance, all under one roof. No chasing multiple offices."},{"title":"A progressive partner","description":"We remind you of every deadline and obligation - so you never get fined for missing a filing."}],"support_profiles":[],"service_scope":[],"operating_model":[],"client_expectations":[],"cta":{"title":"Ready to work with us?","description":"Get a tracking code on day one and stay informed at every milestone — from intake to resolution.","primary":{"label":"Book a Free Consultation","href":"/contact/"},"secondary":{"label":"Explore services","href":"/services/"}}},"metaDescription":"Exxonim Consult is a Tanzania-based business registration and compliance firm with many years of experience handling filings, registrations, and regulatory obligations on behalf of businesses, NGOs, and institutions.","isPublished":true,"createdAt":"fallback","updatedAt":"fallback"}}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:00.734939+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 1224853447,
+    "title": "About Exxonim Consult | Tanzania Business Advisory",
+    "slug": "about",
+    "content": {
+      "hero": {
+        "eyebrow": "About Exxonim Consult",
+        "title": "We stand between you and the authorities.",
+        "description": "Registrations, filings, and compliance — all handled."
+      },
+      "company_profile": {
+        "eyebrow": "Who we are",
+        "title": "Your Business Partner in Tanzania",
+        "paragraphs": [
+          "Exxonim Consult is a leading business advisory firm."
+        ],
+        "working_style": "We work closely with you."
+      },
+      "support_profiles": [
+        {
+          "title": "Startups",
+          "description": "Business registration and compliance."
+        },
+        {
+          "title": "Enterprises",
+          "description": "Full compliance management."
+        }
+      ],
+      "service_scope": [
+        {
+          "title": "Registration",
+          "description": "Company registration with BRELA."
+        },
+        {
+          "title": "Tax",
+          "description": "TRA tax registration and filings."
+        }
+      ],
+      "operating_model": [
+        {
+          "step": "1",
+          "title": "Consult",
+          "description": "Initial consultation."
+        },
+        {
+          "step": "2",
+          "title": "Submit",
+          "description": "Document submission."
+        },
+        {
+          "step": "3",
+          "title": "Process",
+          "description": "We handle processing."
+        }
+      ],
+      "client_expectations": [
+        "Clear communication",
+        "Timely delivery"
+      ],
+      "mission_vision": {
+        "mission": "Simplify business compliance in Tanzania.",
+        "vision": "A Tanzania where every business can focus on growth, not paperwork.",
+        "global_mission": "Expand access to Tanzanian markets.",
+        "global_vision": "Tanzania as a premier business destination."
+      },
+      "who_we_serve": [
+        {
+          "label": "Local Entrepreneurs",
+          "description": "First-time business owners."
+        },
+        {
+          "label": "Foreign Investors",
+          "description": "Entry into Tanzanian market."
+        }
+      ],
+      "differentiators": [
+        {
+          "title": "Speed",
+          "description": "5-10 day registration."
+        },
+        {
+          "title": "Support",
+          "description": "End-to-end assistance."
+        }
+      ],
+      "cta": {
+        "title": "Ready to get started?",
+        "description": "Contact us today.",
+        "primary": {
+          "label": "Contact Us",
+          "href": "/contact"
+        },
+        "secondary": {
+          "label": "Learn More",
+          "href": "/services"
+        }
+      }
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

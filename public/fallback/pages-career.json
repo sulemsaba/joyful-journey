@@ -1,1 +1,42 @@
-{"_meta":{"source":"hardcoded"},"data":{"id":0,"title":"Careers at Exxonim Consult | Tanzania","slug":"career","content":{"hero":{"eyebrow":"Join the team","title":"Build your career at Exxonim.","description":"Explore current opportunities and learn about the teams Exxonim is building across client operations, compliance, and advisory work.","banner_image":"/careers/banner-enhanced.png"},"focus_areas":["Client operations and workflow coordination","Regulatory and compliance support","Structured follow-up and document readiness"],"status":{"label":"Current opportunities","description":"Explore open roles and send your application through the contact page. The Exxonim team reviews every submission.","primary":{"label":"Contact Exxonim","href":"/contact/"},"secondary":{"label":"Browse resources","href":"/resources/"}}},"metaDescription":"Explore career opportunities at Exxonim Consult in Tanzania. Roles in client operations, compliance support, and regulatory advisory.","isPublished":true,"createdAt":"fallback","updatedAt":"fallback"}}
+{
+  "_meta": {
+    "generatedAt": "2026-07-14T08:34:00.807147+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 210773968,
+    "title": "Careers | Exxonim Consult",
+    "slug": "career",
+    "content": {
+      "hero": {
+        "eyebrow": "Careers",
+        "title": "Join Our Team",
+        "description": "Explore opportunities to grow with us."
+      },
+      "focus_areas": [
+        "Business Registration",
+        "Tax Compliance",
+        "Legal Advisory"
+      ],
+      "status": {
+        "label": "Now Hiring",
+        "description": "View our open positions below.",
+        "primary": {
+          "label": "View Openings",
+          "href": "#openings"
+        },
+        "secondary": {
+          "label": "Learn About Us",
+          "href": "/about"
+        }
+      }
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}
