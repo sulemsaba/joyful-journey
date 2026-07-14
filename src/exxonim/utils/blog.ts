@@ -65,13 +65,41 @@ function stripHtml(value = "") {
   return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+/* Declarations the editor bakes into pasted markup from its own (dark) chrome.
+ * Left in place they override the article's theme tokens — near-white body text
+ * on the light page, and the admin's UI font instead of ours. The article's own
+ * CSS owns colour and typography, so these are always dropped. */
+/* A declaration value runs to the next ";" — but the attribute arrives HTML-escaped,
+ * and entities such as &quot; in a font stack carry their own ";". Consume entities
+ * whole so the value isn't cut mid-token, stranding the rest as a broken style. */
+const STYLE_VALUE = String.raw`(?:[^;&]|&(?:[a-z][a-z0-9]*|#[0-9]+);|&)*`;
+const PASTED_CHROME_DECL = new RegExp(
+  String.raw`(?:^|;)\s*(?:color|background(?:-color)?|font-family|font-size)\s*:${STYLE_VALUE}`,
+  "gi"
+);
+
+function stripPastedChrome(styleBody: string) {
+  return styleBody.replace(PASTED_CHROME_DECL, "").replace(/^\s*;+|;+\s*$/g, "").trim();
+}
+
 export function sanitizeBlogHtml(value = "") {
   return value
     .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
     .replace(/\son[a-z]+="[^"]*"/gi, "")
     .replace(/\son[a-z]+='[^']*'/gi, "")
-    .replace(/javascript:/gi, "");
+    .replace(/javascript:/gi, "")
+    .replace(/\sstyle=("|')([\s\S]*?)\1/gi, (_match, quote, body) => {
+      const kept = stripPastedChrome(body);
+      return kept ? ` style=${quote}${kept}${quote}` : "";
+    });
+}
+
+/** True when a stored field carries markup rather than plain prose.
+ * The rich-text editor emits HTML, but older seeded posts stored bare text —
+ * this keeps both rendering correctly through one path. */
+export function looksLikeHtml(value = "") {
+  return /<[a-z][^>]*>/i.test(value);
 }
 
 export function hasUsableBlogBody(content?: BlogArticleContent | null) {

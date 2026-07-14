@@ -147,6 +147,8 @@ import {
   getRenderableBlogHtml,
   getRenderableBlogSections,
   hasUsableBlogBody,
+  looksLikeHtml,
+  sanitizeBlogHtml,
   extractTocFromHtml,
   extractTocFromSections,
   type TocItem,
@@ -557,8 +559,8 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                             Key highlights
                           </p>
                           <ul className="m-0 grid list-none gap-2.5 p-0">
-                            {article.highlights.map((h) => (
-                              <li key={h} className="flex items-start gap-2.5 text-sm leading-snug text-text sm:text-[0.95rem]">
+                            {article.highlights.map((h, hIdx) => (
+                              <li key={`highlight-${hIdx}`} className="flex items-start gap-2.5 text-sm leading-snug text-text sm:text-[0.95rem]">
                                 <span className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent/15 text-accent">
                                   <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20 6 9 17l-5-5" />
@@ -609,9 +611,19 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                         ) : (
                           <>
                             {/* Lead paragraph */}
-                            <p className="text-base sm:text-lg text-text/85 leading-relaxed mb-6 font-medium text-justify hyphens-auto">
-                              {introText}
-                            </p>
+                            {looksLikeHtml(introText) ? (
+                              <div
+                                className="text-base sm:text-lg text-text/85 leading-relaxed mb-6 font-medium max-w-none
+                                  [&_p]:mb-4 [&_p]:text-justify [&_p]:hyphens-auto
+                                  [&_a]:text-accent [&_a]:underline [&_a]:decoration-accent/30 [&_a]:underline-offset-2
+                                  [&_strong]:text-text [&_strong]:font-semibold"
+                                dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(introText) }}
+                              />
+                            ) : (
+                              <p className="text-base sm:text-lg text-text/85 leading-relaxed mb-6 font-medium text-justify hyphens-auto">
+                                {introText}
+                              </p>
+                            )}
 
                             {/* Structured sections - each heading gets an ID for TOC linking */}
                             {articleSections.map((section, idx) => {
@@ -621,11 +633,30 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                                   <h2 id={sectionId} className="scroll-mt-24 text-xl sm:text-2xl font-semibold text-text mb-4 mt-10">
                                     {section.heading}
                                   </h2>
-                                  {section.paragraphs.map((paragraph) => (
-                                    <p key={paragraph} className="text-sm sm:text-base text-text-muted leading-relaxed mb-4 text-justify hyphens-auto">
-                                      {paragraph}
-                                    </p>
-                                  ))}
+                                  {/* Keyed by position, not by text: a post may legitimately
+                                    * repeat a paragraph, and duplicate keys make React drop
+                                    * the repeats. The list is fixed and ordered, so the index
+                                    * is a stable identity here. */}
+                                  {section.paragraphs.map((paragraph, pIdx) =>
+                                    looksLikeHtml(paragraph) ? (
+                                      <div
+                                        key={`${sectionId}-p-${pIdx}`}
+                                        className="text-sm sm:text-base text-text-muted leading-relaxed mb-4 max-w-none
+                                          [&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-justify [&_p]:hyphens-auto
+                                          [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-text [&_h3]:mt-8 [&_h3]:mb-3
+                                          [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-6 [&_ul]:space-y-2
+                                          [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-6 [&_ol]:space-y-2
+                                          [&_a]:text-accent [&_a]:font-medium [&_a]:underline [&_a]:decoration-accent/30 [&_a]:underline-offset-2
+                                          [&_strong]:text-text [&_strong]:font-semibold
+                                          [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto"
+                                        dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(paragraph) }}
+                                      />
+                                    ) : (
+                                      <p key={`${sectionId}-p-${pIdx}`} className="text-sm sm:text-base text-text-muted leading-relaxed mb-4 text-justify hyphens-auto">
+                                        {paragraph}
+                                      </p>
+                                    )
+                                  )}
                                 </section>
                               );
                             })}
