@@ -296,10 +296,10 @@ function TrackingResultCard({
   const momentum = isCompleted
     ? ""
     : displayPercent >= 67
-      ? "Almost there — the finish line is in sight."
+      ? "Almost there. The finish line is in sight."
       : displayPercent >= 34
-        ? "Good momentum — this is moving."
-        : "Underway — we've got it from here.";
+        ? "Good momentum. This is moving."
+        : "Underway. We've got it from here.";
 
   const confettiRef = useCelebration(isCompleted);
   const [popped, setPopped] = useState(false);
@@ -402,7 +402,7 @@ function TrackingResultCard({
               <div>
                 <p className="m-0 text-sm font-bold text-text">Keep it that way</p>
                 <p className="m-0 mt-0.5 text-[0.85rem] text-text-muted">
-                  Staying compliant means annual filings and renewals — we can handle those too,
+                  Staying compliant means annual filings and renewals. We can handle those too,
                   and remind you before every deadline.
                 </p>
               </div>
@@ -467,7 +467,7 @@ function TrackingResultCard({
               </p>
               <p className="m-0 text-[0.8rem] text-text-muted">
                 {isOnHold
-                  ? "See the note below or message us — we'll sort it fast."
+                  ? "See the note below or message us. We'll sort it fast."
                   : "We'll message you the moment anything changes."}
               </p>
             </div>
@@ -515,7 +515,7 @@ function TrackingResultCard({
                 </a>
                 <p className="m-0 flex items-center gap-2.5 text-[0.85rem] text-text-muted">
                   <Bell className="h-4 w-4 flex-none text-accent" />
-                  We&rsquo;ll WhatsApp you at every step — no need to keep checking.
+                  We&rsquo;ll WhatsApp you at every step. No need to keep checking.
                 </p>
               </div>
             </div>
@@ -661,7 +661,7 @@ function TrackingNotFound({
         <p className="m-0 text-xs text-text-soft">
           It looks like{" "}
           <span className="font-mono font-semibold text-text-muted">11&nbsp;11&nbsp;1A</span>{" "}
-          — 5 numbers and 1 letter.
+          (5 numbers and 1 letter).
         </p>
       </div>
 
@@ -673,7 +673,7 @@ function TrackingNotFound({
           className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] text-sm font-bold text-white transition-colors hover:bg-[#1ebe57]"
         >
           <MessageCircle className="h-4 w-4" />
-          Message us — we&rsquo;ll find it for you
+          Message us and we&rsquo;ll find it for you
         </a>
         <button
           type="button"
@@ -948,13 +948,13 @@ export function TrackConsultationPage() {
               Where does your file stand?
             </h1>
             <p className="m-0 text-text-muted text-lg max-w-[36rem]">
-              Enter the code from your WhatsApp and see exactly where things stand —
+              Enter the code from your WhatsApp and see exactly where things stand:
               your full timeline, in real time. No login, no waiting on hold. And we
               message you at every step, so you never have to wonder.
             </p>
             <ul className="m-0 grid gap-2.5 p-0 list-none">
               {[
-                "See your whole journey — step by step, with dates",
+                "See your whole journey, step by step, with dates",
                 "We handle the authorities; you just watch the progress",
                 "Updates come to your WhatsApp automatically",
               ].map((line) => (
@@ -974,7 +974,7 @@ export function TrackConsultationPage() {
                   Look up your consultation
                 </span>
                 <p className="m-0 text-sm text-text-muted">
-                  No account, no password — just the code from your WhatsApp.
+                  No account, no password. Just the code from your WhatsApp.
                 </p>
               </div>
               <form onSubmit={handleLookup} className="grid gap-3">
@@ -991,14 +991,14 @@ export function TrackConsultationPage() {
                   <p className="m-0 flex items-start gap-1.5 text-xs text-warning">
                     <span aria-hidden="true">↳</span>
                     <span>
-                      Almost — that&rsquo;s 6 characters, but a code is{" "}
+                      Almost. That&rsquo;s 6 characters, but a code is{" "}
                       <strong>5 numbers + 1 letter</strong> (like 11&nbsp;11&nbsp;1A).
                       Double-check it.
                     </span>
                   </p>
                 ) : (
                   <p className="m-0 text-xs text-text-muted">
-                    6 characters — 5 numbers + 1 letter (e.g. 11&nbsp;11&nbsp;1A).
+                    6 characters: 5 numbers + 1 letter (e.g. 11&nbsp;11&nbsp;1A).
                     {canSearch && !isSearching ? " Press Enter to check." : ""}
                   </p>
                 )}
@@ -1157,14 +1157,14 @@ export function TrackConsultationPage() {
             {HOW_IT_WORKS_STEPS.map((step, i) => (
               <article
                 key={i}
-                className="group relative p-6 rounded-[1.35rem] border border-border-soft bg-surface-elevated transition-transform hover:-translate-y-1 hover:border-accent/40 grid gap-3"
+                className="group relative p-6 rounded-[1.35rem] border border-footer-border bg-footer-bg transition-transform hover:-translate-y-1 hover:border-white/25 grid gap-3"
               >
                 <span className="inline-flex items-center gap-2.5">
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-accent/10 text-accent text-xs font-bold">{i + 1}</span>
-                  <span className="text-accent">{step.icon}</span>
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-footer-heading text-xs font-bold">{i + 1}</span>
+                  <span className="text-white/85">{step.icon}</span>
                 </span>
-                <strong className="text-text text-base">{step.title}</strong>
-                <p className="m-0 text-text-muted text-sm leading-relaxed">
+                <strong className="text-footer-heading text-base">{step.title}</strong>
+                <p className="m-0 text-footer-text text-sm leading-relaxed">
                   {step.detail}
                 </p>
               </article>
