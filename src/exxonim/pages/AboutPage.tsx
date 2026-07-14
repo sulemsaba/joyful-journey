@@ -5,20 +5,26 @@ import { Breadcrumb } from '@/exxonim/components/Breadcrumb';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { UnifiedCtaSection } from '@/exxonim/components/UnifiedCtaSection';
 import { routes } from '@/exxonim/routes';
-import { usePage } from '@/exxonim/hooks/usePage';
 import { useResolvedPageSeo } from '@/exxonim/hooks/useResolvedSeo';
 import { StructuredData } from '@/exxonim/components/StructuredData';
-import type { AboutPageContent } from '@/exxonim/types';
+import { fallbackAboutPage } from '@/exxonim/content/fallbackPublicContent';
 
 /* Icon map for "Who we serve" - unique icon per audience type */
 const AUDIENCE_ICONS = [User, Building2, Globe, HeartHandshake, Landmark];
 
+/**
+ * About is intentionally STATIC — it is not admin-managed and does not read from
+ * the backend. This copy is the source of truth; edit it here.
+ *
+ * The `pages/about` DB row holds an older, thinner seed (2 audiences and 2
+ * differentiators against the 5 and 4 below, plus four sections this page has
+ * never rendered). While About went through usePage(), that seed outranked this
+ * copy and was what the live site served.
+ */
 export function AboutPage() {
-  const { data: page } = usePage<AboutPageContent>('about');
+  const page = fallbackAboutPage;
   useResolvedPageSeo(page, routes.about);
-  const content = page?.content;
-
-  if (!content) return null;
+  const content = page.content;
 
   const mv = content.mission_vision;
   const audiences = content.who_we_serve ?? [];
