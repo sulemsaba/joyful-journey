@@ -56,9 +56,28 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-// Register service worker for static asset caching (instant reload)
+// Register service worker for static asset caching (instant reload).
+//
+// Production only. A worker registered in dev keeps answering from its own cache
+// across restarts, and because it intercepts fetches before the HTTP cache it
+// survives both a hard refresh and "Disable cache" — the page just goes on
+// serving a build from a previous session. In dev we instead evict any worker
+// and cache an earlier session left behind, so a stale one heals on next load.
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
+  if (import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  } else {
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => Promise.all(registrations.map((r) => r.unregister())))
+      .catch(() => {});
+    if (typeof caches !== 'undefined') {
+      caches
+        .keys()
+        .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+        .catch(() => {});
+    }
+  }
 }
