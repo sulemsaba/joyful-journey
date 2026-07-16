@@ -439,29 +439,32 @@ export function ContactPage() {
                       </svg>
                     </span>
                     <h3 className="text-lg font-bold text-text mb-2">Your request has been received.</h3>
-                    <p className="text-text-muted text-sm mb-1">
-                      Your tracking code is:
-                    </p>
-                    {/*
-                      BACKEND TEAM: The tracking_id is now a 6-character code (5 digits + 1 letter).
-                      Format: "11111A" in storage, displayed as "11 11 1A" (three groups of 2).
-                      This code is also sent to the client via WhatsApp:
-                        "Your tracking number is 11 11 1A. Check your file status anytime at exxonim.tz/track."
-                    */}
-                    <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
-                      {submissionResult.tracking_id.length === 6
-                        ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
-                        : submissionResult.tracking_id}
-                    </code>
-                    <p className="text-text-muted text-sm mt-3">
-                      Use this code to check your status at any time on our{" "}
-                      <SmartLink href={routes.trackConsultation} className="text-accent hover:underline font-medium">
-                        tracking page
-                      </SmartLink>. No login required.
-                    </p>
-                    <p className="text-text-soft text-xs mt-1">
-                      We&apos;ve also sent this code to your WhatsApp.
-                    </p>
+                    {/* Only show a tracking code when the backend actually returns one.
+                        Today the submit endpoint responds without a tracking_id, so
+                        reading `.length` here used to crash the success screen. */}
+                    {submissionResult.tracking_id ? (
+                      <>
+                        <p className="text-text-muted text-sm mb-1">
+                          Your tracking code is:
+                        </p>
+                        <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
+                          {submissionResult.tracking_id.length === 6
+                            ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
+                            : submissionResult.tracking_id}
+                        </code>
+                        <p className="text-text-muted text-sm mt-3">
+                          Use this code to check your status at any time on our{" "}
+                          <SmartLink href={routes.trackConsultation} className="text-accent hover:underline font-medium">
+                            tracking page
+                          </SmartLink>. No login required.
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-text-muted text-sm mt-1">
+                        Thanks — our team will get back to you within 1 business day
+                        using the details you provided.
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">

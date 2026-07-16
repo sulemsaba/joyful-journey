@@ -215,19 +215,22 @@ export function PlanInquiryModal({
               <h3 className="text-lg font-bold text-text mb-2">
                 Your request has been received.
               </h3>
-              <p className="text-text-muted text-sm mb-3">
-                Your tracking code is:
-              </p>
-              <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
-                {submissionResult.tracking_id.length === 6
-                  ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
-                  : submissionResult.tracking_id}
-              </code>
+              {/* Show a tracking code only when the backend returns one — it
+                  currently doesn't, and reading `.length` here used to crash. */}
+              {submissionResult.tracking_id ? (
+                <>
+                  <p className="text-text-muted text-sm mb-3">
+                    Your tracking code is:
+                  </p>
+                  <code className="px-3 py-1.5 rounded-lg bg-accent-soft text-accent font-mono text-lg tracking-[0.2em]">
+                    {submissionResult.tracking_id.length === 6
+                      ? `${submissionResult.tracking_id.slice(0, 2)} ${submissionResult.tracking_id.slice(2, 4)} ${submissionResult.tracking_id.slice(4)}`
+                      : submissionResult.tracking_id}
+                  </code>
+                </>
+              ) : null}
               <p className="text-text-muted text-sm mt-4">
                 We&apos;ll get back to you within 1 business day.
-              </p>
-              <p className="text-text-soft text-xs mt-1">
-                We&apos;ve also sent this code to your WhatsApp.
               </p>
               <button
                 type="button"
