@@ -525,7 +525,7 @@ export function PhoneInput({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search country..."
-            className="w-full bg-transparent text-sm text-text placeholder:text-text-soft focus:outline-none"
+            className="w-full bg-transparent text-base sm:text-sm text-text placeholder:text-text-soft focus:outline-none"
           />
           {searchQuery && (
             <button
@@ -668,7 +668,8 @@ export function PhoneInput({
           disabled={disabled}
           placeholder={country.placeholder}
           className={cn(
-            "flex-1 min-w-0 px-3.5 py-3 bg-transparent text-text text-sm",
+            // text-base (16px) on phones stops iOS Safari zooming on focus.
+            "flex-1 min-w-0 px-3.5 py-3 bg-transparent text-text text-base sm:text-sm",
             "placeholder:text-text-soft",
             "focus:outline-none rounded-r-xl",
             "min-h-[44px]",

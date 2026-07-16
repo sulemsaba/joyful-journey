@@ -150,9 +150,10 @@ export function PlanInquiryModal({
     }
   };
 
-  /* ── Input styles ── */
+  /* ── Input styles ──
+     text-base (16px) on phones prevents iOS Safari auto-zoom on focus. */
   const inputCls =
-    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors text-sm min-h-[44px]";
+    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors text-base sm:text-sm min-h-[44px]";
 
   /* Don't render if not open */
   if (!open) return null;

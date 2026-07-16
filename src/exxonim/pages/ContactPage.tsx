@@ -45,6 +45,7 @@ import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { routes } from "@/exxonim/routes";
 import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { submitPublicConsultation } from "@/exxonim/services/consultationService";
+import { resolveServiceContext } from "@/exxonim/utils/serviceCta";
 import type {
   ApiPublicConsultationSubmissionResponse,
 } from "@/exxonim/types/api";
@@ -165,10 +166,24 @@ export function ContactPage() {
   }, []);
   const planInfo = planParam ? PLAN_SERVICE_MAP[planParam] : null;
 
+  /* ── Service param → pre-fill ──
+   * A "Get Started" click on a service card / detail page lands here as
+   *   /contact?service=company-registration
+   * We already know what they want, so pre-select the support area and seed
+   * the message. A plan CTA (from pricing) takes precedence if both are set. */
+  const serviceParam = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    return new URLSearchParams(window.location.search).get("service");
+  }, []);
+  const serviceInfo = !planInfo ? resolveServiceContext(serviceParam) : null;
+
   const [formValues, setFormValues] = useState(() => {
     const initial = createInitialFormState();
     if (planInfo) {
       initial.serviceTypeCode = planInfo.serviceCode;
+    } else if (serviceInfo) {
+      initial.serviceTypeCode = serviceInfo.supportArea;
+      initial.message = `Hi, I'd like to get started with ${serviceInfo.label}. `;
     }
     return initial;
   });
@@ -262,7 +277,7 @@ export function ContactPage() {
         service_type_code: formValues.serviceTypeCode,
         message: formValues.message.trim(),
         idempotency_key: formValues.idempotencyKey,
-        source_channel: planInfo ? "public_consultation_form" : "public_contact_form",
+        source_channel: planInfo || serviceInfo ? "public_consultation_form" : "public_contact_form",
       });
       setSubmissionResult(result);
       setFormValues(createInitialFormState());
@@ -277,8 +292,10 @@ export function ContactPage() {
   const hours = getBusinessHoursStatus();
 
   /* Shared input styling - using design tokens */
+  /* text-base (16px) on phones prevents iOS Safari from auto-zooming on focus;
+     drops to text-sm (14px) from sm up. */
   const inputCls =
-    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors text-sm min-h-[44px]";
+    "w-full px-3.5 py-3 sm:px-4 sm:py-3 rounded-xl border border-border-soft bg-page-strong/40 text-text placeholder:text-text-soft focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/40 transition-colors text-base sm:text-sm min-h-[44px]";
 
   /* Select-specific: hide native arrow, add custom chevron, style dropdown */
   const selectCls =
@@ -459,6 +476,18 @@ export function ContactPage() {
                         </span>
                         <span className="text-sm text-text">
                           {planInfo.segment}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* ── Selected Service banner (from a service card / detail CTA) ── */}
+                    {!planInfo && serviceInfo && (
+                      <div className="flex items-center gap-3 p-3 rounded-xl bg-accent-soft border border-accent/20 mb-1">
+                        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 bg-accent text-accent-contrast text-[11px] font-bold uppercase tracking-wider">
+                          Selected
+                        </span>
+                        <span className="text-sm text-text font-medium">
+                          {serviceInfo.label}
                         </span>
                       </div>
                     )}

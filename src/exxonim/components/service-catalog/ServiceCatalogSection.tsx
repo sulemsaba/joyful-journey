@@ -5,6 +5,7 @@ import { Container } from '@/exxonim/components/primitives/Container';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 import { serviceDetailPath } from '@/exxonim/routes';
+import { contactLinkWithService } from '@/exxonim/utils/serviceCta';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
 
@@ -137,7 +138,8 @@ function ServiceCardExact({
   service: ServiceCatalogItem;
   Icon: typeof Briefcase;
 }) {
-  const ctaLink = service.cta_link || '/contact';
+  // Always carry ?service=<slug> so the contact form knows what they picked.
+  const ctaLink = contactLinkWithService(service.cta_link, service.slug);
   const ctaText = service.cta_text || 'Get Started';
   const detailLink = serviceDetailPath(service.slug);
   const deliverables = (service.deliverables ?? []).slice(0, 3);

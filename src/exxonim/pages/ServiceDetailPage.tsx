@@ -12,6 +12,7 @@ import { StructuredData } from '@/exxonim/components/StructuredData';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import { useFaqItems } from '@/exxonim/hooks/useFaqItems';
 import { routes, serviceDetailPath } from '@/exxonim/routes';
+import { contactLinkWithService } from '@/exxonim/utils/serviceCta';
 
 /**
  * Service Detail Page - dedicated page for each service.
@@ -59,7 +60,7 @@ export function ServiceDetailPage() {
     ...(service.deliverables_full ?? []),
   ];
 
-  const ctaLink = service.cta_link || routes.contact;
+  const ctaLink = contactLinkWithService(service.cta_link ?? routes.contact, service.slug);
   const ctaText = service.cta_text || 'Get Started';
 
   // FAQs from the manager (tagged for this service); fall back to sensible
