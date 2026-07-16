@@ -33,6 +33,7 @@
  */
 
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Home } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 import { cn } from "@/exxonim/utils/cn";
@@ -266,7 +267,10 @@ export function ContactPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!validateAll()) return;
+    if (!validateAll()) {
+      toast.error("Please fix the highlighted fields and try again.");
+      return;
+    }
     setSubmitError(null);
     try {
       const result = await submissionMutation.mutateAsync({
@@ -281,10 +285,12 @@ export function ContactPage() {
       });
       setSubmissionResult(result);
       setFormValues(createInitialFormState());
+      toast.success("Request received — we'll get back to you within 1 business day.");
     } catch {
       setSubmitError(
         "We couldn't send your request. Please try again or use one of the direct contact paths."
       );
+      toast.error("We couldn't send your request. Please try again or use a direct contact path.");
     }
   };
 
@@ -467,7 +473,7 @@ export function ContactPage() {
                     )}
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-4 lg:space-y-5">
                     <h2 className="text-lg sm:text-xl font-bold text-text mb-0.5">Send us a message</h2>
                     <p className="text-text-muted text-sm mb-2">Fill out the form below and we&apos;ll get back to you.</p>
 

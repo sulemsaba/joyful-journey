@@ -16,6 +16,7 @@
 import { createPortal } from "react-dom";
 import { useEffect, useId, useState, type FormEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { X, Check } from "lucide-react";
 import { submitPublicConsultation } from "@/exxonim/services/consultationService";
 import { resolveServiceContext } from "@/exxonim/utils/serviceCta";
@@ -115,8 +116,10 @@ export function ServiceInquiryModal({
         source_channel: `service_card_${serviceSlug ?? "unknown"}`,
       });
       setSubmitted(true);
+      toast.success(`Request received — we'll reach out about ${label}.`);
     } catch {
       setSubmitError("We couldn't send your request. Please try again, or use the contact page.");
+      toast.error("We couldn't send your request. Please try again, or use the contact page.");
     }
   };
 
@@ -193,7 +196,7 @@ export function ServiceInquiryModal({
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4 lg:space-y-5">
               {/* Header */}
               <div>
                 <h2 className="text-base sm:text-lg font-bold text-text pr-8">

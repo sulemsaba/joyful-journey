@@ -7,6 +7,7 @@ import { NetworkStatus } from "@/exxonim/components/NetworkStatus";
 import { WhatsAppButton } from "@/exxonim/components/WhatsAppButton";
 import { ScrollToTopButton } from "@/exxonim/components/ScrollToTopButton";
 import { ErrorBoundary } from "@/exxonim/components/ErrorBoundary";
+import { Toaster } from "sonner";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useContentVersion } from "@/exxonim/hooks/useContentVersion";
 import { useRevealOnScroll } from "@/exxonim/hooks/useRevealOnScroll";
@@ -305,6 +306,15 @@ export function App({ onReady }: { onReady?: () => void }) {
 
         {whatsappUrl && <WhatsAppButton phoneNumber={whatsappUrl} />}
         <ScrollToTopButton />
+
+        {/* App-wide toast host — inquiry/contact feedback surfaces here instead
+            of native browser popups. */}
+        <Toaster
+          position="top-center"
+          richColors
+          closeButton
+          theme={theme === "dark" ? "dark" : "light"}
+        />
       </div>
     </ErrorBoundary>
   );
