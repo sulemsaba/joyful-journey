@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { AlertCircle, RefreshCw, ArrowRight, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
 import { cn } from '@/exxonim/utils/cn';
 import { Container } from '@/exxonim/components/primitives/Container';
 import { Button } from '@/exxonim/components/primitives/Button';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
+import { ServiceInquiryModal } from '@/exxonim/components/ServiceInquiryModal';
 import { serviceDetailPath } from '@/exxonim/routes';
-import { contactLinkWithService } from '@/exxonim/utils/serviceCta';
 import { useServiceCatalog } from '@/exxonim/hooks/useServiceCatalog';
 import type { ServiceCatalogItem } from '@/exxonim/types/service-catalog';
 
@@ -30,6 +30,10 @@ const CATEGORY_ICONS: Record<string, typeof Briefcase> = {
 
 export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalogSectionProps) {
   const { data, isPending, isError, refetch } = useServiceCatalog();
+
+  /* Which service's quick-inquiry modal is open (null = closed). Lifted here so a
+     single modal instance serves every card. */
+  const [inquiryService, setInquiryService] = useState<ServiceCatalogItem | null>(null);
 
   const allServices = data?.data?.services ?? [];
   const hasServices = allServices.length > 0;
@@ -107,6 +111,7 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
                         key={service.id}
                         service={service}
                         Icon={Icon}
+                        onGetStarted={() => setInquiryService(service)}
                       />
                     ))}
                   </div>
@@ -116,6 +121,15 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
           </div>
         )}
       </Container>
+
+      {/* One shared quick-inquiry modal, opened by any card's "Get Started". */}
+      <ServiceInquiryModal
+        open={inquiryService !== null}
+        serviceSlug={inquiryService?.slug ?? null}
+        serviceTitle={inquiryService?.title ?? null}
+        serviceCategory={inquiryService?.category ?? null}
+        onClose={() => setInquiryService(null)}
+      />
     </section>
   );
 }
@@ -134,12 +148,12 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
 function ServiceCardExact({
   service,
   Icon,
+  onGetStarted,
 }: {
   service: ServiceCatalogItem;
   Icon: typeof Briefcase;
+  onGetStarted: () => void;
 }) {
-  // Always carry ?service=<slug> so the contact form knows what they picked.
-  const ctaLink = contactLinkWithService(service.cta_link, service.slug);
   const ctaText = service.cta_text || 'Get Started';
   const detailLink = serviceDetailPath(service.slug);
   const deliverables = (service.deliverables ?? []).slice(0, 3);
@@ -310,7 +324,13 @@ function ServiceCardExact({
           <Button
             size="standard"
             variant="primary"
-            href={ctaLink}
+            onClick={(e) => {
+              // Sits above the whole-card detail link — don't let the click fall
+              // through to it; open the quick-inquiry modal instead of navigating.
+              e.preventDefault();
+              e.stopPropagation();
+              onGetStarted();
+            }}
             className="flex-1 service-card-btn-primary"
           >
             {ctaText}

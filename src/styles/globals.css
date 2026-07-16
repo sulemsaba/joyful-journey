@@ -1062,6 +1062,20 @@ html[data-theme="dark"] ::selection {
   background-color: rgba(15, 92, 99, 0.05) !important;
 }
 
+/* Touch devices wider than the mobile breakpoint (e.g. tablets in landscape /
+   iPad ≥769px) have no hover, so the hover-revealed panel — which holds the
+   "Get Started" / "Details" CTAs — would never appear and the buttons would be
+   unreachable. Reveal it permanently there so the CTAs are always tappable. */
+@media (hover: none) and (min-width: 769px) {
+  .service-card-exact .service-card-bg-fade { opacity: 1 !important; }
+  .service-card-exact .service-card-arc { transform: scale(1) !important; }
+  .service-card-exact .service-card-default { opacity: 0; pointer-events: none; }
+  .service-card-exact .service-card-expanded {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
 /* Mobile: permanently expanded, no hover, white bg, full-width stack */
 @media (max-width: 768px) {
   .service-card-rail {

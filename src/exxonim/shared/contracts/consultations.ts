@@ -71,13 +71,16 @@ export interface ApiConsultation {
 
 export interface ApiPublicConsultationSubmission {
   full_name: string;
-  email: string;
+  // Optional: a quick inquiry (from a service card) collects only name + phone.
+  // The backend requires name plus at least one of email/phone.
+  email?: string | null;
   phone?: string | null;
   company?: string | null;
   service_type_code?: string | null;
   message: string;
   idempotency_key?: string | null;
-  source_channel?: ApiServiceRequestSourceChannel;
+  // Free-form on submit (e.g. "service_card_company-registration"); stored as-is.
+  source_channel?: ApiServiceRequestSourceChannel | string;
 }
 
 export interface ApiPublicConsultationSubmissionResponse {
