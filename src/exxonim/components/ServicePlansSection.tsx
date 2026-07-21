@@ -279,9 +279,18 @@ const TestimonialCard = memo(function TestimonialCard({
         &ldquo;{testimonial.quote}&rdquo;
       </p>
       <div className="mt-auto flex items-center gap-2.5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-2xs font-bold text-accent-contrast">
-          {testimonial.initials}
-        </div>
+        {testimonial.avatar_url ? (
+          <img
+            src={testimonial.avatar_url}
+            alt={testimonial.name}
+            className="h-8 w-8 shrink-0 rounded-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-2xs font-bold text-accent-contrast">
+            {testimonial.initials}
+          </div>
+        )}
         <div>
           <p className="text-sm font-semibold text-text">{testimonial.name}</p>
           <p className="text-xs text-text-muted">{testimonial.role}</p>

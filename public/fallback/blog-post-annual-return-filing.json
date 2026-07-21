@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T15:12:32.474488+00:00",
+    "generatedAt": "2026-07-21T16:35:03.025829+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 826699199,
+    "id": 8545664,
     "title": "Annual Return Filing Guide",
     "slug": "annual-return-filing",
     "excerpt": "Deadlines and tips for BRELA annual returns.",
@@ -33,14 +33,14 @@
     "is_published": true,
     "published_at": "2026-07-04T15:48:14.847000",
     "category": {
-      "id": 1881855716,
+      "id": 2057763851,
       "name": "Compliance",
       "slug": "compliance",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 177122387,
+      "id": 440311184,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

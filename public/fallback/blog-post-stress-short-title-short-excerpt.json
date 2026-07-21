@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T15:12:32.467703+00:00",
+    "generatedAt": "2026-07-21T16:35:03.015584+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 1839311864,
+    "id": 1824975795,
     "title": "TIN in a Day",
     "slug": "stress-short-title-short-excerpt",
     "excerpt": "The fast path to a TIN.",
@@ -75,14 +75,14 @@
     "is_published": true,
     "published_at": "2026-07-10T20:47:13.755000",
     "category": {
-      "id": 1881855716,
+      "id": 2057763851,
       "name": "Compliance",
       "slug": "compliance",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 177122387,
+      "id": 440311184,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

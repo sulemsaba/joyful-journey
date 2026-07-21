@@ -180,6 +180,8 @@ export interface Testimonial {
   role: string;
   /** Auto-generated from name. Displayed in avatar circle when no avatar_url. */
   initials: string;
+  /** Optional avatar image URL. Falls back to initials circle if empty. */
+  avatar_url?: string | null;
 }
 
 export interface PricingFeature {

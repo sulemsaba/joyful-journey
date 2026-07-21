@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T15:30:51.392894+00:00",
+    "generatedAt": "2026-07-21T16:35:03.318197+00:00",
     "source": "backend-publish"
   },
   "data": [
     {
-      "id": 1281265761,
+      "id": 1670627023,
       "author": "Jane Msaba",
       "author_role": "CEO, Tanzania Logistics Ltd",
       "content": "Exxonim made our company registration seamless. From name search to COI, everything was handled professionally and within the promised timeline.",
@@ -13,11 +13,12 @@
       "sort_order": 1,
       "status": "published",
       "is_active": true,
+      "avatar_url": null,
       "created_at": "2026-07-21T13:19:43.505000",
       "updated_at": "2026-07-21T13:19:43.505000"
     },
     {
-      "id": 769290588,
+      "id": 1426293093,
       "author": "David Kimario",
       "author_role": "Director, Mwalimu Consulting",
       "content": "We needed TIN and tax registration urgently. Exxonim team guided us through every step and we were fully compliant within a week.",
@@ -25,11 +26,12 @@
       "sort_order": 2,
       "status": "published",
       "is_active": true,
+      "avatar_url": null,
       "created_at": "2026-07-21T13:02:50.161000",
       "updated_at": "2026-07-21T13:02:50.161000"
     },
     {
-      "id": 1094324312,
+      "id": 2103860302,
       "author": "Sarah Lissu",
       "author_role": "Founder, GreenPath NGO",
       "content": "NGO registration felt overwhelming until we found Exxonim. They handled constitution drafting, ministry registration, and donor compliance setup.",
@@ -37,11 +39,12 @@
       "sort_order": 3,
       "status": "published",
       "is_active": true,
+      "avatar_url": null,
       "created_at": "2026-07-21T13:00:48.687000",
       "updated_at": "2026-07-21T13:00:48.687000"
     },
     {
-      "id": 2051315345,
+      "id": 192277378,
       "author": "James Mngoma",
       "author_role": "Operations Manager, Sunrise Traders",
       "content": "Annual returns and regulatory renewals used to stress us out. Now Exxonim handles everything on time. Worth every shilling.",
@@ -49,11 +52,12 @@
       "sort_order": 4,
       "status": "published",
       "is_active": true,
+      "avatar_url": null,
       "created_at": "2026-07-21T12:56:55.688000",
       "updated_at": "2026-07-21T12:56:55.688000"
     },
     {
-      "id": 396602014,
+      "id": 697820718,
       "author": "Amina Hassan",
       "author_role": "Finance Director, Coastal Imports Ltd",
       "content": "Work permit processing for our expat staff was smooth and fast. Exxonim liaison with Ministry of Labour saved us weeks of back-and-forth.",
@@ -61,6 +65,7 @@
       "sort_order": 5,
       "status": "published",
       "is_active": true,
+      "avatar_url": null,
       "created_at": "2026-07-21T12:51:37.160000",
       "updated_at": "2026-07-21T12:51:37.160000"
     }

@@ -157,6 +157,7 @@ export function mapTestimonial(testimonial: ApiTestimonial): Testimonial {
     name,
     role: testimonial.author_role ?? "",
     initials,
+    avatar_url: testimonial.avatar_url ?? null,
   };
 }
 
