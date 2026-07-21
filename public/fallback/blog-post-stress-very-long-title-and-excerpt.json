@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-20T17:07:19.096042+00:00",
+    "generatedAt": "2026-07-21T15:12:32.466433+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 841701455,
+    "id": 57921984,
     "title": "The Complete, Exhaustive, No-Stone-Left-Unturned Guide to Registering a Limited Company in Tanzania Through BRELA in 2026",
     "slug": "stress-very-long-title-and-excerpt",
     "excerpt": "From reserving your company name and drafting a memorandum of association to obtaining your certificate of incorporation, TIN, business licence and the sector permits nobody warns you about — this is the long version that leaves absolutely nothing out, written for founders who would rather read too much than get surprised at the registry window.",
@@ -75,14 +75,14 @@
     "is_published": true,
     "published_at": "2026-07-10T20:47:13.755000",
     "category": {
-      "id": 770776563,
+      "id": 1343496989,
       "name": "Registration",
       "slug": "registration",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1359784894,
+      "id": 177122387,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

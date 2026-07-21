@@ -18,6 +18,19 @@ import type {
   ApiTestimonial,
 } from "@/exxonim/types/api";
 
+/* ─────────────────────────────────────────────────────────────── */
+
+function generateInitialsFromName(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  }
+  if (words.length === 1 && words[0].length >= 2) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+  return "";
+}
+
 function toDateOnly(value?: string | null) {
   if (!value) {
     return "";
@@ -133,15 +146,17 @@ function mapNavigationItem(item: ApiNavigationItem): NavigationItem {
 }
 
 export function mapTestimonial(testimonial: ApiTestimonial): Testimonial {
+  const name = testimonial.author || '';
+  const initials = generateInitialsFromName(name);
   return {
     id: testimonial.id,
     eyebrow: testimonial.eyebrow ?? "",
     headline: testimonial.headline ?? "",
     support: testimonial.support ?? "",
     quote: testimonial.content,
-    name: testimonial.author,
+    name,
     role: testimonial.author_role ?? "",
-    initials: testimonial.initials ?? "",
+    initials,
   };
 }
 

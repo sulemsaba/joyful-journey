@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-20T17:07:19.105801+00:00",
+    "generatedAt": "2026-07-21T15:12:32.475591+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 561409036,
+    "id": 226146571,
     "title": "Work Permits for Foreign Investors",
     "slug": "work-permit-foreign-investors",
     "excerpt": "How to obtain work permits in Tanzania.",
@@ -33,14 +33,14 @@
     "is_published": true,
     "published_at": "2026-07-04T15:48:14.847000",
     "category": {
-      "id": 1111156828,
+      "id": 783781572,
       "name": "Permits",
       "slug": "permits",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1359784894,
+      "id": 177122387,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,
