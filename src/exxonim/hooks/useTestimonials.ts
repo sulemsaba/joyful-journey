@@ -34,31 +34,20 @@ import { fetchTestimonialsRaw } from "@/exxonim/services/testimonialService";
 import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
 import { mapTestimonial } from "@/exxonim/utils/contentMappers";
 import type { Testimonial } from "@/exxonim/types";
-import { fallbackTestimonials } from "@/exxonim/content/fallbackPublicContent";
 
 export function useTestimonials() {
   const query = useQuery({
     queryKey: ["testimonials"],
-    // Map AFTER the fallback so the snapshot lands in the same shape as the API.
     queryFn: async () => {
       const raw = await fetchWithJsonFallback(fetchTestimonialsRaw, "testimonials");
       return (Array.isArray(raw) ? raw : []).map(mapTestimonial) as Testimonial[];
     },
-    placeholderData: fallbackTestimonials,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 1,
   });
 
-  // Use the bundled fallback when there is no data — including an EMPTY array.
-  // `?? ` only catches null/undefined, so a successful empty API response ([])
-  // would otherwise override the fallback and hide the whole testimonials
-  // section (the API currently returns [] until testimonials are added in admin).
-  const data =
-    query.data && query.data.length > 0 ? query.data : fallbackTestimonials;
-
   return {
     ...query,
-    data,
-    isPending: query.isPending && !fallbackTestimonials.length,
+    data: query.data ?? [],
   };
 }

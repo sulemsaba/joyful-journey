@@ -156,42 +156,7 @@ function formatAbsoluteDate(isoString: string): string {
   }
 }
 
-/* ─────────────────────────────────────────────────────────
- * DEMO CODES - env-gated
- * ───────────────────────────────────────────────────────── */
-const SHOW_DEMO_HINT =
-  typeof import.meta !== "undefined" &&
-  (import.meta as { env?: Record<string, string | undefined> }).env?.VITE_SHOW_DEMO_HINT === "true";
 
-const DEMO_CODES = ["A11111", "22A222", "333A33", "4444A4"] as const;
-
-/* ─────────────────────────────────────────────────────────
- * HOW IT WORKS STEPS - uses Lucide icons
- * ───────────────────────────────────────────────────────── */
-const HOW_IT_WORKS_STEPS = [
-  {
-    icon: <Clock className="w-8 h-8" />,
-    title: "Receive your code",
-    detail:
-      "Sent to your WhatsApp when you start a consultation.",
-  },
-  {
-    icon: <Search className="w-8 h-8" />,
-    title: "Check instantly",
-    detail:
-      "Enter your code here - no login, no account needed.",
-  },
-  {
-    icon: <Bell className="w-8 h-8" />,
-    title: "Stay updated",
-    detail:
-      "WhatsApp updates at every milestone. No need to keep checking.",
-  },
-];
-
-/* ─────────────────────────────────────────────────────────
- * TRACKING RESULT COMPONENT
- * ───────────────────────────────────────────────────────── */
 /* Confetti burst for the completed celebration - a canvas overlay over its
  * parent. Runs once when `active` becomes true; skipped for reduced-motion. */
 function useCelebration(active: boolean) {
@@ -892,21 +857,6 @@ export function TrackConsultationPage() {
   const formatLooksOff =
     rawCode.length === 6 && !isValidTrackingCode(normalizeTrackingCode(rawCode));
 
-  /** Fill the input with a demo code */
-  const handleDemoFill = useCallback(
-    (code: string) => {
-      setRawCode(code);
-      setLookupResult(null);
-      setNotFound(false);
-      setSearchError(null);
-      // Auto-focus after fill
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
-    },
-    []
-  );
-
   return (
     <main>
       <StructuredData heroTitle="Track Your Consultation" heroDescription="Check the status of your consultation with Exxonim using your tracking code." breadcrumbs={[{ name: 'Track Consultation', path: routes.trackConsultation }]} />
@@ -1078,23 +1028,6 @@ export function TrackConsultationPage() {
                   </span>
                 </div>
               </div>
-
-              {/* Demo hint - env-gated, clickable chips, no pattern text */}
-              {SHOW_DEMO_HINT && (
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <span className="text-2xs text-text-soft/60">Demo:</span>
-                  {DEMO_CODES.map((code) => (
-                    <button
-                      key={code}
-                      type="button"
-                      onClick={() => handleDemoFill(code)}
-                      className="text-2xs font-mono text-accent hover:bg-accent-soft px-1.5 py-0.5 rounded transition-colors"
-                    >
-                      {formatTrackingCode(code)}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -1163,40 +1096,9 @@ export function TrackConsultationPage() {
 
       {/* First-time / explainer content - hidden once a result (or not-found)
           is shown, so a visitor who already got their answer isn't buried under
-          "how to track" + "lost your code" content. */}
+          extra content. */}
       {!lookupResult && !notFound && (
         <>
-      {/* ── How it works ── */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto grid gap-10">
-          <div className="grid gap-3 max-w-[42rem]">
-            <span className="text-2xs font-extrabold tracking-[0.2em] uppercase text-accent">
-              How it works
-            </span>
-            <h2 className="m-0 text-[clamp(1.8rem,3vw,2.6rem)] font-semibold tracking-tight text-text">
-              Your timeline is your dashboard
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {HOW_IT_WORKS_STEPS.map((step, i) => (
-              <article
-                key={i}
-                className="group relative p-6 rounded-[1.35rem] border border-footer-border bg-footer-bg transition-transform hover:-translate-y-1 hover:border-white/25 grid gap-3"
-              >
-                <span className="inline-flex items-center gap-2.5">
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-footer-heading text-xs font-bold">{i + 1}</span>
-                  <span className="text-white/85">{step.icon}</span>
-                </span>
-                <strong className="text-footer-heading text-base">{step.title}</strong>
-                <p className="m-0 text-footer-text text-sm leading-relaxed">
-                  {step.detail}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Privacy + Lost code - combined to reduce redundancy ── */}
       <section id="lost-code" className="py-16 md:py-20 scroll-mt-8">
         <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto max-w-[42rem] grid gap-4">
