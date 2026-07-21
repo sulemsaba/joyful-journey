@@ -1,12 +1,12 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T16:35:02.729482+00:00",
+    "generatedAt": "2026-07-21T19:22:13.097327+00:00",
     "source": "backend-publish"
   },
   "data": {
     "items": [
       {
-        "id": 1171511334,
+        "id": 1217226732,
         "title": "Starting a business in Tanzania is an exciting journey, but it all begins with a crucial step: registration with the Business Registrations and Licensing Agency (BRELA). Whether you're launching a small side hustle or a large multinational operation, unde",
         "slug": "be-matching-let-me-check-exactly-how-login-is-called",
         "excerpt": "be matching. Let me check exactly how login is called.be matching. Let me check exactly how login is called.be matching. Let me check exactly how login is called.",
@@ -63,14 +63,14 @@
         "is_published": true,
         "published_at": "2026-07-13T12:30:14.611000",
         "category": {
-          "id": 2057763851,
+          "id": 569494840,
           "name": "Compliance",
           "slug": "compliance",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -82,7 +82,7 @@
         "updated_at": "2026-07-18T05:53:14.385000"
       },
       {
-        "id": 1966965051,
+        "id": 1329237060,
         "title": "The Complete, Exhaustive, No-Stone-Left-Unturned Guide to Registering a Limited Company in Tanzania Through BRELA in 2026",
         "slug": "stress-very-long-title-and-excerpt",
         "excerpt": "From reserving your company name and drafting a memorandum of association to obtaining your certificate of incorporation, TIN, business licence and the sector permits nobody warns you about — this is the long version that leaves absolutely nothing out, written for founders who would rather read too much than get surprised at the registry window.",
@@ -153,14 +153,14 @@
         "is_published": true,
         "published_at": "2026-07-10T20:47:13.755000",
         "category": {
-          "id": 874581715,
+          "id": 1745242434,
           "name": "Registration",
           "slug": "registration",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -172,7 +172,7 @@
         "updated_at": "2026-07-13T12:06:23.318000"
       },
       {
-        "id": 1824975795,
+        "id": 2129959595,
         "title": "TIN in a Day",
         "slug": "stress-short-title-short-excerpt",
         "excerpt": "The fast path to a TIN.",
@@ -243,14 +243,14 @@
         "is_published": true,
         "published_at": "2026-07-10T20:47:13.755000",
         "category": {
-          "id": 2057763851,
+          "id": 569494840,
           "name": "Compliance",
           "slug": "compliance",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -262,7 +262,7 @@
         "updated_at": "2026-07-10T20:47:13.755000"
       },
       {
-        "id": 1812541265,
+        "id": 298640833,
         "title": "Work Permits for Foreign Investors",
         "slug": "stress-long-excerpt-only",
         "excerpt": "Class A, B and C permits each have their own eligibility rules, supporting documents, quotas and renewal cycles, and the immigration department is unforgiving about missing paperwork — here is how to pick the right class the first time, assemble a file that clears review, and avoid the resubmission loop that adds months to your timeline and real money to your budget.",
@@ -331,14 +331,14 @@
         "is_published": true,
         "published_at": "2026-07-10T20:47:13.755000",
         "category": {
-          "id": 668071296,
+          "id": 1686012028,
           "name": "Permits",
           "slug": "permits",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -350,7 +350,7 @@
         "updated_at": "2026-07-11T23:02:59.027000"
       },
       {
-        "id": 1714451294,
+        "id": 307587205,
         "title": "Understanding PAYE/SDL/WCF/NHIF/NSSF Statutory-Filing-Obligations for Employers",
         "slug": "stress-long-unbroken-token",
         "excerpt": "The five payroll deductions every Tanzanian employer files every month, and what happens when you don't.",
@@ -419,14 +419,14 @@
         "is_published": true,
         "published_at": "2026-07-10T20:47:13.755000",
         "category": {
-          "id": 791126568,
+          "id": 2079031664,
           "name": "Tax & Compliance",
           "slug": "tax-compliance",
           "description": "Tax and compliance information",
           "created_at": "2026-07-04T16:37:18.195000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -438,7 +438,7 @@
         "updated_at": "2026-07-10T20:47:13.755000"
       },
       {
-        "id": 940028393,
+        "id": 1008602657,
         "title": "Setting Up an NGO That Donors Actually Trust",
         "slug": "stress-with-cover-image",
         "excerpt": "Registration, a constitution, a governance framework and a donor-readiness pack — in the right order.",
@@ -469,14 +469,14 @@
         "is_published": true,
         "published_at": "2026-07-10T20:47:13.755000",
         "category": {
-          "id": 1571320265,
+          "id": 1704435949,
           "name": "NGOs",
           "slug": "ngos",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -488,7 +488,7 @@
         "updated_at": "2026-07-16T16:45:30.106000"
       },
       {
-        "id": 539688822,
+        "id": 372016521,
         "title": "Understanding Tanzania Tax Compliance",
         "slug": "tanzania-tax-compliance-small-business",
         "excerpt": "Everything you need to know about tax compliance in Tanzania.",
@@ -532,14 +532,14 @@
         "is_published": true,
         "published_at": "2026-07-04T16:37:18.195000",
         "category": {
-          "id": 791126568,
+          "id": 2079031664,
           "name": "Tax & Compliance",
           "slug": "tax-compliance",
           "description": "Tax and compliance information",
           "created_at": "2026-07-04T16:37:18.195000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -551,7 +551,7 @@
         "updated_at": "2026-07-14T09:14:33.402000"
       },
       {
-        "id": 1763224710,
+        "id": 1743322432,
         "title": "TIN Registration Checklist",
         "slug": "tin-registration-checklist",
         "excerpt": "Everything you need before applying for TIN with TRA.",
@@ -580,14 +580,14 @@
         "is_published": true,
         "published_at": "2026-07-04T15:48:14.847000",
         "category": {
-          "id": 874581715,
+          "id": 1745242434,
           "name": "Registration",
           "slug": "registration",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -599,7 +599,7 @@
         "updated_at": "2026-07-04T15:48:14.847000"
       },
       {
-        "id": 8545664,
+        "id": 970550461,
         "title": "Annual Return Filing Guide",
         "slug": "annual-return-filing",
         "excerpt": "Deadlines and tips for BRELA annual returns.",
@@ -628,14 +628,14 @@
         "is_published": true,
         "published_at": "2026-07-04T15:48:14.847000",
         "category": {
-          "id": 2057763851,
+          "id": 569494840,
           "name": "Compliance",
           "slug": "compliance",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -647,7 +647,7 @@
         "updated_at": "2026-07-13T16:24:30.566000"
       },
       {
-        "id": 1644759330,
+        "id": 1720789691,
         "title": "Work Permits for Foreign Investors",
         "slug": "work-permit-foreign-investors",
         "excerpt": "How to obtain work permits in Tanzania.",
@@ -676,14 +676,14 @@
         "is_published": true,
         "published_at": "2026-07-04T15:48:14.847000",
         "category": {
-          "id": 668071296,
+          "id": 1686012028,
           "name": "Permits",
           "slug": "permits",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -695,7 +695,7 @@
         "updated_at": "2026-07-04T15:48:14.847000"
       },
       {
-        "id": 772272271,
+        "id": 11344143,
         "title": "How to Register a Company in Tanzania",
         "slug": "how-to-register-company-tanzania",
         "excerpt": "Step-by-step guide to registering your business with BRELA.",
@@ -724,14 +724,14 @@
         "is_published": true,
         "published_at": "2026-07-04T15:48:14.847000",
         "category": {
-          "id": 874581715,
+          "id": 1745242434,
           "name": "Registration",
           "slug": "registration",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,
@@ -743,7 +743,7 @@
         "updated_at": "2026-07-18T05:46:00.362000"
       },
       {
-        "id": 1122112366,
+        "id": 784346030,
         "title": "NGO Registration Guide",
         "slug": "ngo-registration-guide",
         "excerpt": "Complete guide to registering an NGO in Tanzania.",
@@ -772,14 +772,14 @@
         "is_published": true,
         "published_at": "2026-07-04T15:48:14.847000",
         "category": {
-          "id": 1571320265,
+          "id": 1704435949,
           "name": "NGOs",
           "slug": "ngos",
           "description": null,
           "created_at": "2026-07-04T15:48:14.808000"
         },
         "author": {
-          "id": 440311184,
+          "id": 1317385308,
           "slug": "exxonim-team",
           "name": "Exxonim Team",
           "role": null,

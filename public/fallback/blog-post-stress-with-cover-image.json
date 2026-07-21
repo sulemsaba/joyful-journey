@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T16:35:03.021068+00:00",
+    "generatedAt": "2026-07-21T19:22:13.304198+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 940028393,
+    "id": 1008602657,
     "title": "Setting Up an NGO That Donors Actually Trust",
     "slug": "stress-with-cover-image",
     "excerpt": "Registration, a constitution, a governance framework and a donor-readiness pack — in the right order.",
@@ -35,14 +35,14 @@
     "is_published": true,
     "published_at": "2026-07-10T20:47:13.755000",
     "category": {
-      "id": 1571320265,
+      "id": 1704435949,
       "name": "NGOs",
       "slug": "ngos",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 440311184,
+      "id": 1317385308,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,

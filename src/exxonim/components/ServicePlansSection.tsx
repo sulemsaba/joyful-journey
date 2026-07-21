@@ -301,12 +301,12 @@ const TestimonialCard = memo(function TestimonialCard({
 });
 
 /* ═══════════════════════════════════════════════════════════════
- * TestimonialMarquee - lightweight scroll-based marquee
+ * TestimonialMarquee - horizontal scroll container
  *
- * Auto-scrolls using a lightweight setInterval (not rAF).
- * No variable speed, no fractional pixel accumulation.
- * Pauses on hover/touch, resumes after 3s of inactivity.
- * Arrow buttons skip by one card width.
+ * Shows only the actual testimonials received from the API / fallback.
+ * No auto-scroll, no infinite duplication.
+ * On desktop: scrollable row with arrow buttons when overflow detected.
+ * On mobile: native horizontal swipe.
  * ═══════════════════════════════════════════════════════════════ */
 const TestimonialMarquee = memo(function TestimonialMarquee({
   testimonials,
@@ -315,117 +315,84 @@ const TestimonialMarquee = memo(function TestimonialMarquee({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
-  const rafIdRef = useRef<number>(0);
-  const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scrollingPaused = useRef(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const items = [...testimonials, ...testimonials, ...testimonials];
-  const CARD_WIDTH = 320;
+  const checkOverflow = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const hasOverflow = el.scrollWidth > el.clientWidth + 1;
+    setShowArrows(hasOverflow);
+    setCanScrollLeft(el.scrollLeft > 1);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1);
+  }, []);
 
-  const startScrolling = useCallback(() => {
-    if (rafIdRef.current) return;
-    let lastTime = performance.now();
-    const animate = (now: number) => {
-      if (document.hidden) {
-        rafIdRef.current = requestAnimationFrame(animate);
-        return;
-      }
-      const delta = now - lastTime;
-      if (delta >= 16 && !scrollingPaused.current) {
-        lastTime = now;
-        const el = trackRef.current;
-        if (!el) return;
-        el.scrollLeft += 0.3;
-        const setWidth = el.scrollWidth / 3;
-        if (el.scrollLeft >= setWidth) el.scrollLeft -= setWidth;
-      }
-      rafIdRef.current = requestAnimationFrame(animate);
+  useEffect(() => {
+    checkOverflow();
+    const el = trackRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', checkOverflow, { passive: true });
+    window.addEventListener('resize', checkOverflow);
+    return () => {
+      el.removeEventListener('scroll', checkOverflow);
+      window.removeEventListener('resize', checkOverflow);
     };
-    rafIdRef.current = requestAnimationFrame(animate);
-  }, []);
+  }, [checkOverflow, testimonials]);
 
-  const stopScrolling = useCallback(() => {
-    if (rafIdRef.current) {
-      cancelAnimationFrame(rafIdRef.current);
-      rafIdRef.current = 0;
-    }
-  }, []);
-
-  /* ── Pause on interaction, auto-resume after 3s ── */
-  const pauseTemporarily = useCallback(() => {
-    scrollingPaused.current = true;
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-    pauseTimerRef.current = setTimeout(() => { scrollingPaused.current = false; }, 3000);
-  }, []);
-
-  /* ── Arrow navigation ── */
   const handleArrowClick = useCallback((direction: "left" | "right") => {
     const el = trackRef.current;
     if (!el) return;
-    el.scrollBy({ left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH, behavior: "smooth" });
-    pauseTemporarily();
-  }, [pauseTemporarily]);
-
-  /* ── Auto-scroll ONLY while the marquee is on-screen ──
-   * The loop does el.scrollLeft += 0.3 every frame, which forces a layout each
-   * frame. Left running while off-screen it competed for the main thread and
-   * janked the whole page during scroll (e.g. made the trusted-by logos above it
-   * look like they were stepping). An IntersectionObserver starts it when it
-   * enters the viewport and stops it when it leaves. */
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) startScrolling();
-        else stopScrolling();
-      },
-      { threshold: 0 }
-    );
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      stopScrolling();
-    };
-  }, [startScrolling, stopScrolling]);
-
-  useEffect(() => {
-    return () => {
-      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-    };
+    const CARD_WIDTH = 320;
+    el.scrollBy({
+      left: direction === "left" ? -CARD_WIDTH : CARD_WIDTH,
+      behavior: "smooth",
+    });
   }, []);
 
   return (
     <div
-      className="full-bleed group relative overflow-hidden [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+      className="relative"
       aria-label="Client testimonials"
-      onMouseEnter={() => { setShowArrows(true); pauseTemporarily(); }}
-      onMouseLeave={() => { setShowArrows(false); pauseTemporarily(); }}
     >
+      {/* Left arrow */}
+      {showArrows && canScrollLeft && (
+        <button
+          type="button"
+          onClick={() => handleArrowClick("left")}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
+          aria-label="Previous testimonials"
+        >
+          <ChevronLeft className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+        </button>
+      )}
+
+      {/* Right arrow */}
+      {showArrows && canScrollRight && (
+        <button
+          type="button"
+          onClick={() => handleArrowClick("right")}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
+          aria-label="Next testimonials"
+        >
+          <ChevronRight className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+        </button>
+      )}
+
       <div
         ref={trackRef}
-        onPointerDown={() => pauseTemporarily()}
-        className="flex overflow-x-auto scrollbar-none select-none touch-pan-y"
-        style={{ WebkitOverflowScrolling: "touch", cursor: "grab" }}
+        className="flex overflow-x-auto scrollbar-none select-none touch-pan-y gap-4 px-1"
+        style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
       >
-        {items.map((testimonial, index) => (
-          <div key={`${testimonial.id}-${index}`} className="flex-none w-[280px] md:w-80">
+        {testimonials.map((testimonial, index) => (
+          <div
+            key={`${testimonial.id}-${index}`}
+            className="flex-none w-[280px] md:w-80"
+            style={{ scrollSnapAlign: "start" }}
+          >
             <TestimonialCard testimonial={testimonial} />
           </div>
         ))}
       </div>
-      <Button size="icon" variant="secondary"
-        className={cn("shadow-md backdrop-blur-sm", "absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10", "hidden md:flex", "opacity-0 pointer-events-none", showArrows && "md:opacity-100 md:pointer-events-auto")}
-        onClick={() => handleArrowClick("left")} aria-label="Previous testimonials"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </Button>
-      <Button size="icon" variant="secondary"
-        className={cn("shadow-md backdrop-blur-sm", "absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-10", "hidden md:flex", "opacity-0 pointer-events-none", showArrows && "md:opacity-100 md:pointer-events-auto")}
-        onClick={() => handleArrowClick("right")} aria-label="Next testimonials"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </Button>
     </div>
   );
 });

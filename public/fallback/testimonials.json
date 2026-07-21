@@ -1,11 +1,11 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T16:35:03.318197+00:00",
+    "generatedAt": "2026-07-21T18:13:49.345738+00:00",
     "source": "backend-publish"
   },
   "data": [
     {
-      "id": 1670627023,
+      "id": 1219279517,
       "author": "Jane Msaba",
       "author_role": "CEO, Tanzania Logistics Ltd",
       "content": "Exxonim made our company registration seamless. From name search to COI, everything was handled professionally and within the promised timeline.",
@@ -13,12 +13,12 @@
       "sort_order": 1,
       "status": "published",
       "is_active": true,
-      "avatar_url": null,
+      "avatar_url": "http://localhost:3032/uploads/avatars/633e53742e694d58a9b95f5704f9bc5a.png",
       "created_at": "2026-07-21T13:19:43.505000",
       "updated_at": "2026-07-21T13:19:43.505000"
     },
     {
-      "id": 1426293093,
+      "id": 1856916089,
       "author": "David Kimario",
       "author_role": "Director, Mwalimu Consulting",
       "content": "We needed TIN and tax registration urgently. Exxonim team guided us through every step and we were fully compliant within a week.",
@@ -31,7 +31,7 @@
       "updated_at": "2026-07-21T13:02:50.161000"
     },
     {
-      "id": 2103860302,
+      "id": 819909686,
       "author": "Sarah Lissu",
       "author_role": "Founder, GreenPath NGO",
       "content": "NGO registration felt overwhelming until we found Exxonim. They handled constitution drafting, ministry registration, and donor compliance setup.",
@@ -44,7 +44,7 @@
       "updated_at": "2026-07-21T13:00:48.687000"
     },
     {
-      "id": 192277378,
+      "id": 177845691,
       "author": "James Mngoma",
       "author_role": "Operations Manager, Sunrise Traders",
       "content": "Annual returns and regulatory renewals used to stress us out. Now Exxonim handles everything on time. Worth every shilling.",
@@ -57,7 +57,7 @@
       "updated_at": "2026-07-21T12:56:55.688000"
     },
     {
-      "id": 697820718,
+      "id": 230787549,
       "author": "Amina Hassan",
       "author_role": "Finance Director, Coastal Imports Ltd",
       "content": "Work permit processing for our expat staff was smooth and fast. Exxonim liaison with Ministry of Labour saved us weeks of back-and-forth.",
