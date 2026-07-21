@@ -1,0 +1,233 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.321529+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "success": true,
+    "data": {
+      "services": [
+        {
+          "id": "cmr6ho3hw000af0ijnqw1rw3q",
+          "title": "Statutory Filings",
+          "slug": "statutory-filings",
+          "category": "Compliance Support",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "PAYE, SDL, WCF, NSSF filings",
+          "deliverables": [
+            "PAYE returns",
+            "SDL contributions",
+            "WCF filings",
+            "NSSF registrations"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3i1000bf0ijhp7i5gws",
+          "title": "Business License",
+          "slug": "business-license",
+          "category": "Business Setup",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "Sector licences, Local permits",
+          "deliverables": [
+            "Sector-specific licence applications",
+            "Local authority permits",
+            "Renewal tracking"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3i5000cf0ijah3aostw",
+          "title": "Trademark Registration",
+          "slug": "trademark-registration",
+          "category": "Business Setup",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "Trademark search, Application filing",
+          "deliverables": [
+            "Trademark search",
+            "Application filing",
+            "Opposition handling"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3gv0004f0ijhsp245jz",
+          "title": "Company Registration",
+          "slug": "company-registration",
+          "category": "Business Setup",
+          "primary_segment": [],
+          "badge": "Most Popular",
+          "short_description": "BRELA name search, Certificate of Incorporation, TIN, Business licence",
+          "deliverables": [
+            "BRELA name search & reservation",
+            "Certificate of Incorporation",
+            "TIN registration",
+            "Business licence guidance"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3hd0005f0ijfw1ee8f9",
+          "title": "Business Name Registration",
+          "slug": "business-name-registration",
+          "category": "Business Setup",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "Name search, BRELA registration, Certificate",
+          "deliverables": [
+            "Business name search",
+            "BRELA registration",
+            "Certificate of registration"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3hh0006f0ij3pyufrce",
+          "title": "TIN Application",
+          "slug": "tin-application",
+          "category": "Business Setup",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "TIN application, TRA compliance check",
+          "deliverables": [
+            "TIN application filing",
+            "TRA account setup",
+            "Tax compliance check"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3hl0007f0ijq4kswt6j",
+          "title": "Annual Returns",
+          "slug": "annual-returns",
+          "category": "Compliance Support",
+          "primary_segment": [],
+          "badge": "Deadline-Driven",
+          "short_description": "Annual return filing, Beneficial ownership, Penalty avoidance",
+          "deliverables": [
+            "Annual return filing",
+            "Beneficial ownership update",
+            "Penalty avoidance",
+            "Deadline reminders"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3hp0008f0ijc0ywv2ie",
+          "title": "Work Permit Application",
+          "slug": "work-permit",
+          "category": "Work Permits & Foreign Investment",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "Eligibility check, Application filing, Documents",
+          "deliverables": [
+            "Eligibility assessment",
+            "Application preparation",
+            "Immigration submission",
+            "Follow-up tracking"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        },
+        {
+          "id": "cmr6ho3ht0009f0ijrb7kx2v1",
+          "title": "NGO Registration",
+          "slug": "ngo-registration",
+          "category": "NGOs & Non-Profits",
+          "primary_segment": [],
+          "badge": null,
+          "short_description": "NGO registration, Compliance, Annual reporting",
+          "deliverables": [
+            "NGO registration filing",
+            "Compliance guidance",
+            "Annual reporting support"
+          ],
+          "deliverables_full": [],
+          "cta_text": "Get Started",
+          "cta_link": "/contact",
+          "status": "published",
+          "sort_order": 0,
+          "created_at": "1970-01-21T15:19:37.207000+00:00",
+          "updated_at": "1970-01-21T15:19:37.207000+00:00"
+        }
+      ],
+      "total": 9,
+      "categories": [
+        {
+          "id": "cmr6ho3e40000f0ijq1by3ga4",
+          "name": "Business Setup",
+          "slug": "business-setup",
+          "service_count": 5
+        },
+        {
+          "id": "cmr6ho3gn0001f0ijtsy9mzu3",
+          "name": "Compliance Support",
+          "slug": "compliance-support",
+          "service_count": 2
+        },
+        {
+          "id": "cmr6ho3gq0002f0ij3mn61v97",
+          "name": "Work Permits & Foreign Investment",
+          "slug": "work-permits",
+          "service_count": 1
+        },
+        {
+          "id": "cmr6ho3gs0003f0ij5b3ja4v6",
+          "name": "NGOs & Non-Profits",
+          "slug": "ngos",
+          "service_count": 1
+        }
+      ]
+    }
+  }
+}

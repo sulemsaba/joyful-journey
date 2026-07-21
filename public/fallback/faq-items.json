@@ -1,0 +1,74 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.130592+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "items": [
+      {
+        "id": "cmr3r84yf000g8biju6coscan",
+        "question": "What services does Exxonim offer?",
+        "answer": "We offer business registration, tax compliance, legal advisory, and ongoing compliance management services.",
+        "category": "general",
+        "page": "faq",
+        "sortOrder": 1,
+        "isActive": true
+      },
+      {
+        "id": "cmr3r84yl000j8bij0k6ms6t3",
+        "question": "Do you offer support for foreign investors?",
+        "answer": "Yes, we specialize in helping foreign investors navigate Tanzanian regulations and set up their businesses.",
+        "category": "general",
+        "page": "faq",
+        "sortOrder": 2,
+        "isActive": true
+      },
+      {
+        "id": "cmr3r84yh000h8bijjt7gbq38",
+        "question": "How long does company registration take?",
+        "answer": "Company registration typically takes 5-10 business days after all documents are submitted.",
+        "category": "registration",
+        "page": "faq",
+        "sortOrder": 3,
+        "isActive": true
+      },
+      {
+        "id": "cmr3r84yj000i8bijx7myr80y",
+        "question": "What documents are needed for registration?",
+        "answer": "You'll need a valid ID/passport, proof of address, and company details. We'll guide you through the full list.",
+        "category": "registration",
+        "page": "faq",
+        "sortOrder": 4,
+        "isActive": true
+      },
+      {
+        "id": "cmr3r84yn000k8bijmaz3qzqo",
+        "question": "What are your office hours?",
+        "answer": "Monday to Friday, 8:00 AM to 5:00 PM East Africa Time (EAT).",
+        "category": "general",
+        "page": "faq",
+        "sortOrder": 5,
+        "isActive": true
+      },
+      {
+        "id": "cmr3r84yp000l8bij6bg3nk0x",
+        "question": "How can I track my application?",
+        "answer": "You can track your application using the tracking code provided after submission on our Track Consultation page.",
+        "category": "support",
+        "page": "faq",
+        "sortOrder": 6,
+        "isActive": true
+      },
+      {
+        "id": "cmrip5y1w0000d1ijuddpvrhb",
+        "question": "How long does registration take?",
+        "answer": "Typically 5-10 business days.",
+        "category": null,
+        "page": "services",
+        "sortOrder": 7,
+        "isActive": true
+      }
+    ],
+    "total": 7
+  }
+}

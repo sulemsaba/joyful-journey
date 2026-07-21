@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.337409+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 61442690,
+    "key": "brand",
+    "value": {
+      "name": "Exxonim Consult",
+      "companyShortName": "Exxonim",
+      "tagline": "Your trusted business partner in Tanzania",
+      "lightLogoSrc": "/logo-light.png",
+      "darkLogoSrc": "/logo-dark.png",
+      "faviconUrl": "/favicon.ico",
+      "brandColors": {
+        "primary": "#1a365d",
+        "secondary": "#2b6cb0"
+      }
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-02T17:04:20.251678+00:00"
+  }
+}

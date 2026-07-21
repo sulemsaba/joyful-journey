@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.183315+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 760099532,
+    "title": "Contact | Exxonim Consult",
+    "slug": "contact",
+    "content": {
+      "hero": {
+        "eyebrow": "Contact",
+        "title": "Get In Touch",
+        "description": "We're here to help. Reach out to us."
+      },
+      "cards": [
+        {
+          "label": "Phone",
+          "value": "+255 794 689 099",
+          "description": "Mon-Fri 8AM-5PM EAT",
+          "action": {
+            "label": "Call Now",
+            "href": "tel:+255794689099"
+          }
+        },
+        {
+          "label": "Email",
+          "value": "info@exxonim.tz",
+          "description": "We respond within 24 hours",
+          "action": {
+            "label": "Send Email",
+            "href": "mailto:info@exxonim.tz"
+          }
+        },
+        {
+          "label": "Office",
+          "value": "Dar es Salaam",
+          "description": "Tanzania",
+          "action": {
+            "label": "Get Directions",
+            "href": "#"
+          }
+        }
+      ]
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

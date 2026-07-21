@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.346365+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 664162458,
+    "key": "footer",
+    "value": {
+      "quickLinks": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "About",
+          "href": "/about"
+        },
+        {
+          "label": "Services",
+          "href": "/services"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      ],
+      "otherResources": [],
+      "tagline": "Your trusted business partner in Tanzania",
+      "primaryCta": {
+        "label": "Get Started",
+        "href": "/contact"
+      },
+      "copyright": "© 2026 Exxonim Consult. All rights reserved."
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-02T17:04:20.251678+00:00"
+  }
+}

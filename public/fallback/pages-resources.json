@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.213450+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 1871167168,
+    "title": "Resources | Exxonim Consult",
+    "slug": "resources",
+    "content": {
+      "hero_title": "Resources",
+      "trending_label": "Trending",
+      "top_media": {
+        "hero": "/resources/hero.jpg",
+        "banner": "/resources/banner.jpg",
+        "trending": []
+      },
+      "article_sidebar": {
+        "title": "Need Help?",
+        "description": "Contact our team.",
+        "primary_cta": {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      },
+      "empty_state": {
+        "title": "No articles yet",
+        "description": "Check back soon for new content."
+      }
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

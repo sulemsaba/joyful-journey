@@ -1,0 +1,749 @@
+/**
+ * Resources landing page - the hub for ALL Exxonim resources.
+ *
+ * LAYOUT:
+ * ─────────
+ * ┌───────────────────────────────────────────────────────────┐
+ * │  Hero: "Resources" title + description + SEARCH BAR      │
+ * ├───────────────────────────────────────────────────────────┤
+ * │  Quick-access cards (3: Guides & Articles, FAQ, Support) │
+ * ├───────────────────────────────────────────────────────────┤
+ * │  Trending reads (hero post + 3 rail items)                │
+ * │  (hidden when search is active)                           │
+ * ├───────────────────────────────────────────────────────────┤
+ * │  Category filter pills + Sort toggle + Result count      │
+ * │  ┌──────────┐ ┌──────────┐ ┌──────────┐                  │
+ * │  │  card 1  │ │  card 2  │ │  card 3  │                  │
+ * │  └──────────┘ └──────────┘ └──────────┘                  │
+ * │              [See more]                                    │
+ * ├───────────────────────────────────────────────────────────┤
+ * │  Newsletter subscription (email input + subscribe button)  │
+ * ├───────────────────────────────────────────────────────────┤
+ * │  CTA: "Can't find what you need?"                         │
+ * └───────────────────────────────────────────────────────────┘
+ *
+ * FEATURES:
+ * ─────────
+ * 1. SEARCH: Filters posts by title and excerpt (case-insensitive).
+ *    When search is active, the trending section is hidden.
+ * 2. SORT: Toggle between "Latest" (newest first) and "Popular"
+ *    (heuristic: featuredSlot posts first, then by readTimeMinutes).
+ * 3. NEWSLETTER: Email subscription section with inline input + button.
+ * 4. QUICK-ACCESS: 3 cards only (Guides & Articles, FAQ, Support).
+ *    Track Consultation is NOT a resource - it's a service feature
+ *    already prominent in the navigation.
+ * 5. EMPTY STATES: Friendly "No results" when search/filter returns nothing.
+ * 6. SEARCH + FILTER: Search works together with category filter.
+ *
+ * BACKEND / ADMIN INTEGRATION NOTES:
+ * ──────────────────────────────────
+ * 1. SEARCH: Client-side filtering only. For larger post counts,
+ *    move to server-side search via blog posts API with ?q= parameter.
+ *
+ * 2. SORT: "Popular" uses a heuristic (featuredSlot weighting +
+ *    readTimeMinutes). Replace with real view counts from analytics
+ *    when available via the API.
+ *
+ * 3. NEWSLETTER: Currently a UI placeholder. Wire to a real email
+ *    subscription endpoint (e.g., POST /api/newsletter/subscribe).
+ *
+ * 4. QUICK-ACCESS CARDS: Static links to key resource pages.
+ *    Admin can manage these via the pages API in the future.
+ *
+ * 5. TRENDING SECTION: hero post + 3 rail items determined by
+ *    featuredSlot ("hero", "popular", "editors-pick").
+ *
+ * 6. CATEGORY FILTER + GRID: Categories from blog_categories API,
+ *    posts from blog posts API. INITIAL_VISIBLE_COUNT = 6 cards,
+ *    "See more" adds 6 more.
+ *
+ * 7. This page lives at /resources/. The /blog/ route is an alias.
+ *    Individual articles live at /resources/{slug}/.
+ */
+
+import { useMemo, useState, useEffect, useRef } from "react";
+import { useDebounce } from "@/exxonim/hooks/useDebounce";
+import { Home, Sparkles } from "lucide-react";
+import { Breadcrumb } from "@/exxonim/components/Breadcrumb";
+import { UnifiedCtaSection } from "@/exxonim/components/UnifiedCtaSection";
+import { NewsletterForm } from "@/exxonim/components/NewsletterForm";
+import { useBlogCategories } from "@/exxonim/hooks/useBlogCategories";
+import { useBlogPosts } from "@/exxonim/hooks/useBlogPosts";
+import { usePage } from "@/exxonim/hooks/usePage";
+import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
+import { resourceArticlePath, routes } from "@/exxonim/routes";
+import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
+import { BlogCard } from "@/exxonim/components/BlogCard";
+import { BlogListCard } from "@/exxonim/components/BlogListCard";
+import type {
+  BlogCategoryId,
+  BlogFeaturedSlot,
+  BlogPost,
+  ResourcesPageContent,
+} from '@/exxonim/types';
+import { StructuredData } from '@/exxonim/components/StructuredData';
+import { buildResourcesBlogLayout, formatBlogDate, getAuthorInitials, getBlogSearchText, getVisibleBlogPosts } from "@/exxonim/utils/blog";
+import { Button } from "@/exxonim/components/primitives/Button";
+import { useViewportPreloadMany } from "@/exxonim/hooks/useViewportPreload";
+
+const INITIAL_VISIBLE_COUNT = 9;
+type ActiveCategory = BlogCategoryId | "all";
+type SortMode = "latest" | "popular";
+
+/* ── Popular sort heuristic ── */
+function comparePostsPopularFirst(left: BlogPost, right: BlogPost) {
+  // Featured posts come first (hero > popular > editors-pick)
+  const slotWeight: Record<string, number> = { hero: 3, popular: 2, "editors-pick": 1 };
+  const leftWeight = left.featuredSlot ? (slotWeight[left.featuredSlot] ?? 0) : 0;
+  const rightWeight = right.featuredSlot ? (slotWeight[right.featuredSlot] ?? 0) : 0;
+  if (leftWeight !== rightWeight) return rightWeight - leftWeight;
+
+  // Then by read time (longer reads assumed more substantive/popular)
+  const leftRead = left.readTimeMinutes ?? 0;
+  const rightRead = right.readTimeMinutes ?? 0;
+  if (rightRead !== leftRead) return rightRead - leftRead;
+
+  // Tie-break by date
+  return new Date(`${right.publishedAt}T00:00:00Z`).getTime() - new Date(`${left.publishedAt}T00:00:00Z`).getTime();
+}
+
+/* ── Quick-access resource cards (3 only - Track Consultation is a service, not a resource) ── */
+const RESOURCE_CARDS = [
+  {
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+      </svg>
+    ),
+    title: "Guides & Articles",
+    description: "Step-by-step guides, checklists, and practical notes for registration, compliance, and operations.",
+    href: "#articles",
+    cta: "Browse articles",
+    accent: "bg-accent/10 text-accent",
+  },
+  {
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+      </svg>
+    ),
+    title: "FAQ",
+    description: "Quick answers to the most common questions about business setup, licensing, and compliance in Tanzania.",
+    href: routes.faq,
+    cta: "View FAQ",
+    accent: "bg-accent/10 text-accent",
+  },
+  {
+    icon: (
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+      </svg>
+    ),
+    title: "Support",
+    description: "Get direct help from Exxonim - WhatsApp, email, or phone. We respond during business hours.",
+    href: routes.support,
+    cta: "Get help",
+    accent: "bg-accent/10 text-accent",
+  },
+];
+
+/* ── Top section: hero post + trending rail ──
+   Byline rendered in WHITE, sitting over the hero's image scrim. */
+function renderTopHeroByline(post: BlogPost) {
+  const authorName = post.author?.name ?? "Exxonim Team";
+  return (
+    <div className="mt-4 flex items-center gap-2.5">
+      {post.author?.avatarSrc ? (
+        <img className="h-8 w-8 flex-none rounded-full object-cover ring-2 ring-white/30" src={post.author.avatarSrc} alt="" loading="lazy" />
+      ) : (
+        <span className="inline-flex h-8 w-8 flex-none items-center justify-center rounded-full bg-white/15 text-xs font-bold text-white ring-2 ring-white/20" aria-hidden="true">
+          {getAuthorInitials(authorName)}
+        </span>
+      )}
+      <span className="text-sm font-semibold text-white">{authorName}</span>
+    </div>
+  );
+}
+
+/* ── Category filter pills ── */
+function CategoryFilter({
+  categories,
+  selectedCategory,
+  onSelect,
+}: {
+  categories: { id: ActiveCategory; label: string }[];
+  selectedCategory: ActiveCategory;
+  onSelect: (id: ActiveCategory) => void;
+}) {
+  return (
+    <div
+      className="flex gap-2.5 overflow-x-auto scrollbar-none pb-1"
+      aria-label="Blog categories"
+      style={{ scrollbarWidth: 'none' }}
+    >
+      {/* "All" button — pinned, always visible (no mask on the left) */}
+      {categories.map((cat, index) => {
+        const isActive = selectedCategory === cat.id;
+        const isAllButton = cat.id === "all";
+        return (
+          <button
+            key={cat.id}
+            type="button"
+            className={`flex-none inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold transition-colors ${
+              isActive
+                ? "bg-accent text-accent-contrast border-accent"
+                : "border-border-soft bg-surface/60 text-text-muted hover:bg-surface hover:text-text"
+            }`}
+            aria-pressed={isActive}
+            onClick={() => onSelect(cat.id)}
+          >
+            {cat.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Sort toggle ── */
+function SortToggle({
+  sortMode,
+  onChange,
+}: {
+  sortMode: SortMode;
+  onChange: (mode: SortMode) => void;
+}) {
+  return (
+    <div className="inline-flex items-center rounded-full border border-border-soft bg-surface/60 p-0.5" role="radiogroup" aria-label="Sort articles">
+      <button
+        type="button"
+        role="radio"
+        aria-checked={sortMode === "latest"}
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
+          sortMode === "latest"
+            ? "bg-accent text-accent-contrast"
+            : "text-text-muted hover:text-text"
+        }`}
+        onClick={() => onChange("latest")}
+      >
+        Latest
+      </button>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={sortMode === "popular"}
+        className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
+          sortMode === "popular"
+            ? "bg-accent text-accent-contrast"
+            : "text-text-muted hover:text-text"
+        }`}
+        onClick={() => onChange("popular")}
+      >
+        Popular
+      </button>
+    </div>
+  );
+}
+
+/* ── Search bar ── */
+function SearchBar({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="relative w-full max-w-sm">
+      <svg
+        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-soft"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Search articles..."
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full h-9 pl-10 pr-4 rounded-full border border-border-soft bg-surface-elevated text-text placeholder:text-text-soft text-sm outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden"
+        aria-label="Search articles by title or content"
+      />
+      {value ? (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-accent/10 text-text-soft hover:text-text transition-colors"
+          aria-label="Clear search"
+        >
+          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+/* ── Empty search results ── */
+function EmptySearchState({ searchQuery, onClear }: { searchQuery: string; onClear: () => void }) {
+  return (
+    <article className="p-10 md:p-12 rounded-2xl border border-border-soft bg-surface/60 text-center">
+      <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-accent/10 text-accent mb-4">
+        <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+          <path d="M8 11h6" />
+        </svg>
+      </span>
+      <h3 className="m-0 text-xl font-bold text-text">
+        No results for &ldquo;{searchQuery}&rdquo;
+      </h3>
+      <p className="mt-3 m-0 text-text-muted max-w-md mx-auto text-sm leading-relaxed">
+        We couldn&rsquo;t find any articles matching your search. Try different keywords or browse all articles by category.
+      </p>
+      <Button size="standard" variant="primary" onClick={onClear} className="mt-5">Clear search</Button>
+    </article>
+  );
+}
+
+/* ── Main ResourcesPage component ── */
+export function ResourcesPage() {
+  const [selectedCategory, setSelectedCategory] = useState<ActiveCategory>("all");
+  const [sortMode, setSortMode] = useState<SortMode>("latest");
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to page 1 when search/sort/category changes
+  const resetPagination = () => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    setCurrentPage(1);
+  };
+
+  // Viewport-based preloading: when the articles grid section becomes
+  // visible, preload the ResourceArticlePage chunk for instant mobile taps.
+  // Using a 2-segment path triggers preloadRoute()'s dynamic article
+  // detection, which loads loadResourceArticlePage (not loadResourcesPage).
+  const articlesSectionRef = useViewportPreloadMany(["/resources/_article"]);
+
+  const { data: posts = [] } = useBlogPosts();
+  const { data: categories = [] } = useBlogCategories();
+  const { data: page } = usePage<ResourcesPageContent>("resources");
+
+  useResolvedPageSeo(page, routes.resources);
+
+  const isSearchActive = debouncedSearchQuery.trim().length > 0;
+  const normalizedQuery = debouncedSearchQuery.trim().toLowerCase();
+
+  const topMedia = page?.content.top_media;
+  const { heroPost, topRailPosts, topSectionSlugs: defaultTopSectionSlugs } =
+    buildResourcesBlogLayout(posts);
+
+  // When search is active, don't exclude top-section slugs (show all matching posts)
+  const topSectionSlugs =
+    selectedCategory === "all" && !isSearchActive ? defaultTopSectionSlugs : [];
+
+  // Get posts filtered by category (and search)
+  const categoryFilteredPosts = getVisibleBlogPosts({
+    posts,
+    categoryId: selectedCategory,
+    excludeSlugs: topSectionSlugs,
+  });
+
+  // Apply search filter on top of category filter — matches title, excerpt,
+  // category AND the full article body (see getBlogSearchText).
+  const searchFilteredPosts = useMemo(() => {
+    if (!isSearchActive) return categoryFilteredPosts;
+    return categoryFilteredPosts.filter((post) =>
+      getBlogSearchText(post).includes(normalizedQuery)
+    );
+  }, [categoryFilteredPosts, isSearchActive, normalizedQuery]);
+
+  // Apply sort
+  const filteredPosts = useMemo(() => {
+    if (sortMode === "popular") {
+      return [...searchFilteredPosts].sort(comparePostsPopularFirst);
+    }
+    // "latest" - already sorted newest-first from getVisibleBlogPosts
+    return searchFilteredPosts;
+  }, [searchFilteredPosts, sortMode]);
+
+  // Progressive expand + pagination:
+  // - Page starts with 6 articles
+  // - "See more" adds 6 each click (12, 18, 24...)
+  // - When user has expanded at least once AND there are more articles beyond
+  //   what's visible, show pagination to jump between pages (each page = 6)
+  const visiblePosts = filteredPosts.slice(0, visibleCount);
+  const hasMorePosts = filteredPosts.length > visiblePosts.length;
+  const totalPages = Math.ceil(filteredPosts.length / INITIAL_VISIBLE_COUNT);
+  const hasMultiplePages = totalPages > 1;
+  // Show pagination after the first "See more" click (visibleCount > 6 means
+  // the user has expanded at least once)
+  const showPagination = hasMultiplePages && visibleCount > INITIAL_VISIBLE_COUNT;
+
+  const activeCategory =
+    selectedCategory === "all"
+      ? null
+      : categories.find((category) => category.id === selectedCategory);
+  const heroMediaSrc = heroPost?.coverImageSrc ?? topMedia?.hero;
+  const heroMediaAlt = heroPost?.coverAlt ?? heroPost?.title ?? page?.content.hero_title;
+
+  // Trending section ALWAYS visible (not affected by search/filter)
+  const showTopSection = !!heroPost;
+
+  const categoryOptions: { id: ActiveCategory; label: string }[] = [
+    { id: "all", label: "All" },
+    ...categories.map((cat) => ({ id: cat.id, label: cat.label })),
+  ];
+
+  const handleSelectCategory = (categoryId: ActiveCategory) => {
+    setSelectedCategory(categoryId);
+    resetPagination();
+  };
+
+  const handleSortChange = (mode: SortMode) => {
+    setSortMode(mode);
+    resetPagination();
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    resetPagination();
+  };
+
+  if (!page) return null;
+  if (!page.content) return null;
+
+  return (
+    <div>
+            <StructuredData heroTitle="Resources & Insights" heroDescription="Practical guidance for registration, compliance, and operational planning." breadcrumbs={[{ name: 'Resources', path: routes.resources }]} pageType="CollectionPage" />
+            {/* ── Breadcrumb ── */}
+            <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto pt-4">
+              <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Resources" }]} />
+            </div>
+
+            {/* ── Hero ── */}
+            <section className="relative overflow-hidden pb-12 md:pb-16">
+              <div
+                className="absolute inset-0 -z-10 opacity-50"
+                style={{
+                  background:
+                    "radial-gradient(50% 60% at 80% 0%, hsl(var(--accent) / 0.14), transparent 70%), radial-gradient(30% 40% at 10% 20%, hsl(var(--accent) / 0.08), transparent 70%)",
+                }}
+              />
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
+                <h1 className="text-[clamp(2rem,4vw,3.2rem)] font-semibold tracking-tight text-text leading-[1.1]">
+                  {page.content.hero_title}
+                </h1>
+                <p className="mt-4 text-text-muted text-lg max-w-[42rem] leading-relaxed">
+                  Everything you need to navigate Tanzanian business processes - guides, checklists, FAQs, and real-time consultation tracking.
+                </p>
+              </div>
+            </section>
+
+            {/* ── Quick-access resource cards (3 items) ──
+             * Mobile: vertical stack of compact horizontal cards (all 3 visible, no scroll)
+             * Desktop: 3-column grid of centered cards */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-16">
+              {/* Mobile: vertical stack — compact footer-teal rows. */}
+              <div className="flex flex-col gap-2.5 sm:hidden">
+                {RESOURCE_CARDS.map((card) => (
+                  <SmartLink
+                    key={card.title}
+                    href={card.href}
+                    className="group flex items-center gap-3 p-3 rounded-xl border border-footer-border bg-footer-bg transition-transform duration-300 hover:-translate-y-0.5"
+                  >
+                    <span className="inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-lg bg-white/10 text-footer-heading transition-transform duration-300 group-hover:scale-105 [&_svg]:h-5 [&_svg]:w-5">
+                      {card.icon}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <strong className="text-footer-heading text-sm block font-bold leading-tight">{card.title}</strong>
+                      <p className="m-0 text-footer-text text-2xs leading-snug line-clamp-1 mt-0.5">
+                        {card.description}
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center text-footer-heading text-sm font-bold shrink-0">
+                      &rarr;
+                    </span>
+                  </SmartLink>
+                ))}
+              </div>
+
+              {/* Desktop: 3-column grid — compact, footer-teal quick-access cards. */}
+              <div className="hidden sm:grid grid-cols-3 gap-3.5">
+                {RESOURCE_CARDS.map((card) => (
+                  <SmartLink
+                    key={card.title}
+                    href={card.href}
+                    className="group flex h-full flex-col items-start gap-2.5 rounded-xl border border-footer-border bg-footer-bg p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                  >
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-footer-heading transition-transform duration-300 group-hover:scale-105 [&_svg]:h-5 [&_svg]:w-5">
+                      {card.icon}
+                    </span>
+                    <div className="flex flex-1 flex-col">
+                      <strong className="text-sm font-bold text-footer-heading">{card.title}</strong>
+                      <p className="m-0 mt-1 text-xs leading-relaxed text-footer-text line-clamp-2">
+                        {card.description}
+                      </p>
+                      <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-footer-heading">
+                        {card.cta}
+                        <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">&rarr;</span>
+                      </span>
+                    </div>
+                  </SmartLink>
+                ))}
+              </div>
+            </section>
+
+            {/* ── Trending section: Hero + Rail (hidden during search) ── */}
+            {showTopSection ? (
+              <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 md:mb-16">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="text-2xs font-extrabold tracking-[0.2em] uppercase text-accent">
+                    {page.content.trending_label ?? "Trending reads"}
+                  </span>
+                  <span className="flex-1 h-px bg-border-soft" />
+                </div>
+                {/* items-stretch + a fixed hero aspect ratio → the hero's height
+                    is driven by its width, and the rail column stretches to match
+                    it, so the big hero card and the 3 stacked rail rows are always
+                    the exact same total height (aligned top and bottom). */}
+                <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr] lg:gap-5 items-stretch">
+                  {/* Hero post — image-dominant, byline/title overlaid on a scrim */}
+                  <SmartLink
+                    href={resourceArticlePath(heroPost!.slug)}
+                    aria-label={heroPost!.title}
+                    className="group relative isolate flex aspect-[16/10] flex-col justify-end overflow-hidden rounded-2xl bg-surface-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:aspect-[5/4]"
+                  >
+                    {/* branded monogram sits underneath a missing/failed cover */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 -z-[2] grid place-items-center bg-[radial-gradient(circle_at_18%_20%,var(--color-accent-soft-strong),transparent_30%),radial-gradient(circle_at_85%_85%,var(--color-surface-elevated),transparent_26%),linear-gradient(150deg,var(--color-accent-soft),var(--color-page-strong))]"
+                    >
+                      <span className="grid h-16 w-16 place-items-center rounded-2xl border border-border-soft bg-surface/60 text-2xl font-bold text-accent">
+                        E
+                      </span>
+                    </span>
+                    {heroMediaSrc ? (
+                      <img
+                        className="absolute inset-0 -z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        src={heroMediaSrc}
+                        alt={heroMediaAlt}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : null}
+                    {/* dark scrim so the overlaid text stays legible on any cover */}
+                    <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                    {heroPost!.category?.label ? (
+                      <span className="absolute left-4 top-4 z-[1] inline-flex items-center rounded-full bg-accent px-3 py-1 text-2xs font-bold uppercase tracking-[0.12em] text-accent-contrast shadow-sm">
+                        {heroPost!.category.label}
+                      </span>
+                    ) : null}
+                    <div className="relative z-[1] p-7">
+                      <p className="m-0 text-xs font-medium text-white/70">
+                        {formatBlogDate(heroPost!.publishedAt)}
+                      </p>
+                      <h2 className="mt-2.5 text-2xl font-bold leading-[1.1] tracking-tight text-white line-clamp-2 md:text-[2.4rem]">
+                        {heroPost!.title}
+                      </h2>
+                      <p className="mt-3 hidden text-sm leading-relaxed text-white/85 line-clamp-2 sm:block">
+                        {heroPost!.excerpt}
+                      </p>
+                      {renderTopHeroByline(heroPost!)}
+                    </div>
+                  </SmartLink>
+
+                  {/* Trending rail — 3 borderless rows split by thin divider
+                      lines, spread with space-between so the first row's top and
+                      the last row's bottom align with the hero (same height level). */}
+                  <aside className="flex flex-col justify-between lg:h-full" aria-label={page.content.trending_label ?? "Trending articles"}>
+                    {topRailPosts.map((post) => (
+                      <div key={post.slug} className="border-b border-border-soft py-[18px] first:pt-0 last:border-0 last:pb-0">
+                        <BlogListCard post={post} />
+                      </div>
+                    ))}
+                  </aside>
+                </div>
+              </section>
+            ) : null}
+
+            {/* ── Articles section with filter + sort ── */}
+            <section id="articles" ref={articlesSectionRef as React.RefObject<HTMLElement>} className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
+              <div className="flex flex-col gap-4 mb-8">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] font-semibold tracking-tight text-text">
+                    {isSearchActive ? "Search Results" : "All Articles"}
+                  </h2>
+                  <span className="flex-1 h-px bg-border-soft" />
+                  <span className="text-sm text-text-muted font-mono whitespace-nowrap">
+                    {filteredPosts.length} {filteredPosts.length === 1 ? "article" : "articles"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <SearchBar value={searchQuery} onChange={handleSearchChange} />
+                </div>
+              </div>
+
+              {/* Category filter + Sort toggle */}
+              <div className="flex flex-wrap items-center gap-4 mb-10">
+                <CategoryFilter
+                  categories={categoryOptions}
+                  selectedCategory={selectedCategory}
+                  onSelect={handleSelectCategory}
+                />
+                <div className="ml-auto">
+                  <SortToggle sortMode={sortMode} onChange={handleSortChange} />
+                </div>
+              </div>
+
+              {/* Grid cards or empty state */}
+              {visiblePosts.length > 0 ? (
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {visiblePosts.map((post) => (
+                    <BlogCard key={post.slug} post={post} />
+                  ))}
+                </div>
+              ) : isSearchActive ? (
+                <EmptySearchState
+                  searchQuery={searchQuery}
+                  onClear={() => handleSearchChange("")}
+                />
+              ) : (
+                <article className="p-10 md:p-12 rounded-2xl border border-border-soft bg-surface/60 text-center">
+                  <span className="text-xs text-text-soft font-medium uppercase tracking-wider">No posts in view</span>
+                  <h3 className="mt-4 text-xl font-bold text-text">
+                    {activeCategory
+                      ? `${activeCategory.label} posts will appear here.`
+                      : page.content.empty_state.title}
+                  </h3>
+                  <p className="mt-3 m-0 text-text-muted max-w-md mx-auto text-sm leading-relaxed">
+                    {activeCategory?.description ??
+                      page.content.empty_state.description}
+                  </p>
+                </article>
+              )}
+
+              {/* See more + Pagination */}
+              {hasMorePosts ? (
+                <div className="flex flex-col items-center gap-6 mt-10">
+                  <Button size="standard" variant="primary" onClick={() => setVisibleCount((currentCount) => currentCount + INITIAL_VISIBLE_COUNT)}>See more</Button>
+                </div>
+              ) : null}
+
+              {/* Pagination — appears after first "See more" click if multiple pages exist */}
+              {showPagination && (
+                <nav className="flex items-center justify-center gap-2 mt-8" aria-label="Article pages">
+                  {/* Prev button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newPage = Math.max(1, currentPage - 1);
+                      setCurrentPage(newPage);
+                      setVisibleCount(newPage * INITIAL_VISIBLE_COUNT);
+                      // Scroll to top of articles section
+                      articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    disabled={currentPage === 1}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-colors hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+                    aria-label="Previous page"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+
+                  {/* Page numbers */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        setVisibleCount(pageNum * INITIAL_VISIBLE_COUNT);
+                        articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === pageNum
+                          ? "bg-accent text-accent-contrast border border-accent"
+                          : "border border-border-soft bg-surface text-text-muted hover:bg-surface-elevated hover:text-text"
+                      }`}
+                      aria-label={`Page ${pageNum}`}
+                      aria-current={currentPage === pageNum ? "page" : undefined}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+
+                  {/* Next button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newPage = Math.min(totalPages, currentPage + 1);
+                      setCurrentPage(newPage);
+                      setVisibleCount(newPage * INITIAL_VISIBLE_COUNT);
+                      articlesSectionRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    disabled={currentPage === totalPages}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-border-soft bg-surface text-text text-sm font-medium transition-colors hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+                    aria-label="Next page"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+                </nav>
+              )}
+            </section>
+
+            {/* ── Newsletter subscription ── */}
+            <UnifiedCtaSection
+              eyebrow={{ icon: <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />, text: "Stay Updated" }}
+              heading="Get the latest from Exxonim"
+              description="Business insights, regulatory updates, and practical compliance tips delivered to your inbox."
+            >
+              <NewsletterForm />
+            </UnifiedCtaSection>
+
+            {/* ── CTA (compact) ── */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+              <div className="relative overflow-hidden rounded-2xl border border-border-soft bg-surface-elevated">
+                <div className="flex flex-col sm:flex-row items-center gap-4 px-6 py-5 sm:px-8">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <span className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-accent/10 text-accent">
+                      <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                      </svg>
+                    </span>
+                    <div className="min-w-0">
+                      <h2 className="m-0 text-sm font-semibold tracking-tight text-text">
+                        Can&rsquo;t find what you need?
+                      </h2>
+                      <p className="m-0 text-text-muted text-xs leading-relaxed truncate">
+                        Contact Exxonim Consult directly for personalised guidance.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <Button size="standard" variant="primary" href={routes.contact}>Contact Exxonim</Button>
+                    <Button size="standard" variant="secondary" href="tel:+255794689099" className="gap-1.5">
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                      </svg>
+                      Call Us Now
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+  );
+}

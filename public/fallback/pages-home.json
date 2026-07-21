@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.155737+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 322950614,
+    "title": "Exxonim Consult | Business Setup, Compliance & Permits Tanzania",
+    "slug": "home",
+    "content": {
+      "hero": {
+        "eyebrow": "Business Setup, Compliance & Permits, Tanzania",
+        "title": "Get Your Company Registered, Licensed & Ready to Operate in Days, Not Weeks.",
+        "description": "Let our experts handle everything from setup to annual filings, keeping you informed every step of the way.",
+        "cta": {
+          "label": "Start My Registration",
+          "href": "/contact"
+        },
+        "secondary_cta": {
+          "label": "View All Services",
+          "href": "/services"
+        },
+        "highlights": [
+          {
+            "title": "5–10 Days",
+            "detail": "Company registration turnaround"
+          },
+          {
+            "title": "500+ Clients",
+            "detail": "Trusted by businesses across Tanzania"
+          },
+          {
+            "title": "99% Compliance",
+            "detail": "First-pass approval rate"
+          }
+        ]
+      },
+      "provider_section": {
+        "kicker": "REGULATORY PARTNERS",
+        "title": "We work with all major Tanzanian authorities",
+        "logos": [
+          {
+            "alt": "BRELA",
+            "src": "/logos/brela.svg",
+            "opticalWeight": "wordmark"
+          },
+          {
+            "alt": "TRA",
+            "src": "/logos/tra.svg",
+            "opticalWeight": "wordmark"
+          },
+          {
+            "alt": "NIDA",
+            "src": "/logos/nida.svg",
+            "opticalWeight": "wordmark"
+          },
+          {
+            "alt": "OSHA",
+            "src": "/logos/osha.svg",
+            "opticalWeight": "wordmark"
+          }
+        ]
+      },
+      "stack_section": {
+        "items": [
+          {
+            "title": "Business Registration",
+            "subtitle": "Company & Business Name Registration",
+            "description": "Register your company or business name with BRELA quickly.",
+            "ctaLabel": "Register Now",
+            "ctaHref": "/services",
+            "windowTitle": "Registration Portal",
+            "windowTag": "Popular",
+            "videoSources": []
+          },
+          {
+            "title": "Compliance & Filings",
+            "subtitle": "Annual Returns & Tax Compliance",
+            "description": "Stay compliant with TRA, BRELA, and other authorities.",
+            "ctaLabel": "Learn More",
+            "ctaHref": "/services",
+            "windowTitle": "Compliance Dashboard",
+            "windowTag": "Essential",
+            "videoSources": []
+          }
+        ],
+        "default_feature_rows": [],
+        "feature_visual_content": {}
+      },
+      "insights_section": {
+        "title": "Latest Insights",
+        "intro": "Stay informed with our latest articles and guides.",
+        "footer_copy": "View all resources"
+      }
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

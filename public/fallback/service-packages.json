@@ -1,0 +1,444 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.279741+00:00",
+    "source": "backend-publish"
+  },
+  "data": [
+    {
+      "id": "cmrdhe1vy00068iijta2y050n",
+      "name": "okay",
+      "badge": null,
+      "description": "Essential registration and compliance to get your business legally operating.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "local-entrepreneurs",
+      "segment_name": "Local Entrepreneurs",
+      "sort_order": 0,
+      "features": [
+        {
+          "label": "Business Name Registration",
+          "included": true
+        },
+        {
+          "label": "TIN Application",
+          "included": true
+        },
+        {
+          "label": "Business License (1 sector)",
+          "included": true
+        },
+        {
+          "label": "Annual Returns Filing",
+          "included": false
+        },
+        {
+          "label": "Statutory Filings (PAYE/SDL)",
+          "included": false
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrdhby3500018iije2u1z2rx",
+      "name": "Growth",
+      "badge": "Most Popular",
+      "description": "Full registration, ongoing compliance, and filing support for growing businesses.",
+      "recommended": true,
+      "cta": "Book a Consultation",
+      "segment_slug": "local-entrepreneurs",
+      "segment_name": "Local Entrepreneurs",
+      "sort_order": 1,
+      "features": [
+        {
+          "label": "Company Registration (COI)",
+          "included": true
+        },
+        {
+          "label": "TIN plus Business License",
+          "included": true
+        },
+        {
+          "label": "Annual Returns and Beneficial",
+          "included": true
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrdhe20b000d8iijrf3eyxoa",
+      "name": "Premium",
+      "badge": null,
+      "description": "Complete compliance management with a dedicated advisor and proactive tracking.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "local-entrepreneurs",
+      "segment_name": "Local Entrepreneurs",
+      "sort_order": 2,
+      "features": [
+        {
+          "label": "Everything in Growth",
+          "included": true
+        },
+        {
+          "label": "Trademark Registration",
+          "included": true
+        },
+        {
+          "label": "Statutory Filings (all obligations)",
+          "included": true
+        },
+        {
+          "label": "Regulatory Renewals and Reminders",
+          "included": true
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": true
+        },
+        {
+          "label": "Quarterly Compliance Review",
+          "included": true
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0sr0001yuijtc7hte37",
+      "name": "Starter",
+      "badge": null,
+      "description": "Essential registration and work permit support to enter the Tanzanian market.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "foreign-investors",
+      "segment_name": "Foreign Investors",
+      "sort_order": 0,
+      "features": [
+        {
+          "label": "Company Registration (COI)",
+          "included": true
+        },
+        {
+          "label": "TIN Application",
+          "included": true
+        },
+        {
+          "label": "Work Permit (Class A or B)",
+          "included": true
+        },
+        {
+          "label": "TIC/TISEZA Registration",
+          "included": false
+        },
+        {
+          "label": "Regulatory Renewals Tracking",
+          "included": false
+        },
+        {
+          "label": "Cross-border Document Support",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0tc0008yuijylfku6i7",
+      "name": "Growth",
+      "badge": "Most Popular",
+      "description": "Full registration, work permits, and investment centre compliance.",
+      "recommended": true,
+      "cta": "Book a Consultation",
+      "segment_slug": "foreign-investors",
+      "segment_name": "Foreign Investors",
+      "sort_order": 1,
+      "features": [
+        {
+          "label": "Company Registration (COI)",
+          "included": true
+        },
+        {
+          "label": "TIN plus Business License",
+          "included": true
+        },
+        {
+          "label": "Work Permit Application",
+          "included": true
+        },
+        {
+          "label": "TIC/TISEZA Registration",
+          "included": true
+        },
+        {
+          "label": "Annual Returns and Renewals",
+          "included": true
+        },
+        {
+          "label": "Cross-border Document Support",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0u5000fyuij99laj2vg",
+      "name": "Premi",
+      "badge": null,
+      "description": "End-to-end foreign investment setup with ongoing compliance management.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "foreign-investors",
+      "segment_name": "Foreign Investors",
+      "sort_order": 2,
+      "features": [
+        {
+          "label": "Everything in Growth",
+          "included": true
+        },
+        {
+          "label": "Foreign Company Registration",
+          "included": true
+        },
+        {
+          "label": "Cross-border Document Legalisation",
+          "included": true
+        },
+        {
+          "label": "Regulatory Renewals and Reminders",
+          "included": true
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": true
+        },
+        {
+          "label": "Quarterly Compliance Review",
+          "included": true
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0vg000nyuijowqy07dz",
+      "name": "Starter",
+      "badge": null,
+      "description": "Core registration and statutory filings for established businesses.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "enterprises",
+      "segment_name": "Enterprises",
+      "sort_order": 0,
+      "features": [
+        {
+          "label": "Company Registration",
+          "included": true
+        },
+        {
+          "label": "TIN plus Business License",
+          "included": true
+        },
+        {
+          "label": "Annual Returns Filing",
+          "included": true
+        },
+        {
+          "label": "Statutory Filings (PAYE/SDL/WCF)",
+          "included": true
+        },
+        {
+          "label": "Operational Advisory",
+          "included": false
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0vp000uyuijxz2cnlt7",
+      "name": "Growth",
+      "badge": "Most Popular",
+      "description": "Comprehensive compliance management with proactive tracking and filing support.",
+      "recommended": true,
+      "cta": "Book a Consultation",
+      "segment_slug": "enterprises",
+      "segment_name": "Enterprises",
+      "sort_order": 1,
+      "features": [
+        {
+          "label": "Full Registration Suite",
+          "included": true
+        },
+        {
+          "label": "All Statutory Filings",
+          "included": true
+        },
+        {
+          "label": "Annual Returns and Beneficial Ownership",
+          "included": true
+        },
+        {
+          "label": "Regulatory Renewals Tracking",
+          "included": true
+        },
+        {
+          "label": "Trademark Protection",
+          "included": true
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0w80011yuij12r7cvzf",
+      "name": "Premium",
+      "badge": null,
+      "description": "Full-scale compliance operations with dedicated advisor and strategic guidance.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "enterprises",
+      "segment_name": "Enterprises",
+      "sort_order": 2,
+      "features": [
+        {
+          "label": "Everything in Growth",
+          "included": true
+        },
+        {
+          "label": "Operational Advisory",
+          "included": true
+        },
+        {
+          "label": "Dedicated Compliance Advisor",
+          "included": true
+        },
+        {
+          "label": "Document Management System",
+          "included": true
+        },
+        {
+          "label": "Quarterly Compliance Review",
+          "included": true
+        },
+        {
+          "label": "Forward-looking Strategy",
+          "included": true
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0xi0019yuijgve2rx9u",
+      "name": "Starter",
+      "badge": null,
+      "description": "Essential NGO registration and initial compliance for new non-profits.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "ngos",
+      "segment_name": "NGOs & Non-Profits",
+      "sort_order": 0,
+      "features": [
+        {
+          "label": "NGO Registration",
+          "included": true
+        },
+        {
+          "label": "Constitution Drafting",
+          "included": true
+        },
+        {
+          "label": "Initial Governance Roadmap",
+          "included": true
+        },
+        {
+          "label": "Donor-readiness Pack",
+          "included": false
+        },
+        {
+          "label": "Tax Exemption Guidance",
+          "included": false
+        },
+        {
+          "label": "Annual Compliance Reporting",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0xs001gyuij0r8wmcno",
+      "name": "Growth",
+      "badge": "Donor-Ready",
+      "description": "Complete NGO setup with donor compliance and governance documentation.",
+      "recommended": true,
+      "cta": "Book a Consultation",
+      "segment_slug": "ngos",
+      "segment_name": "NGOs & Non-Profits",
+      "sort_order": 1,
+      "features": [
+        {
+          "label": "NGO Registration (Enhanced)",
+          "included": true
+        },
+        {
+          "label": "Constitution plus Governance Framework",
+          "included": false
+        },
+        {
+          "label": "Tax Exemption Certificate Guidance",
+          "included": true
+        },
+        {
+          "label": "Donor-readiness Pack",
+          "included": true
+        },
+        {
+          "label": "Annual Compliance Reporting",
+          "included": true
+        },
+        {
+          "label": "Board Meeting Templates",
+          "included": false
+        }
+      ]
+    },
+    {
+      "id": "cmrenn0ye001nyuijhh5ergkq",
+      "name": "Premium",
+      "badge": null,
+      "description": "Full NGO compliance management with ongoing reporting and governance support.",
+      "recommended": false,
+      "cta": "Get Started",
+      "segment_slug": "ngos",
+      "segment_name": "NGOs & Non-Profits",
+      "sort_order": 2,
+      "features": [
+        {
+          "label": "Everything in Growth",
+          "included": true
+        },
+        {
+          "label": "Annual Activity and Financial Reports",
+          "included": true
+        },
+        {
+          "label": "Donor Compliance Attestation",
+          "included": true
+        },
+        {
+          "label": "Board Minutes and Governance File",
+          "included": true
+        },
+        {
+          "label": "Tax Exemption Renewal Support",
+          "included": true
+        },
+        {
+          "label": "Dedicated NGO Compliance Advisor",
+          "included": true
+        }
+      ]
+    }
+  ]
+}

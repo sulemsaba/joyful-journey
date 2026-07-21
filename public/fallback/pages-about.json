@@ -1,0 +1,112 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.162127+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 625256550,
+    "title": "About Exxonim Consult | Tanzania Business Advisory",
+    "slug": "about",
+    "content": {
+      "hero": {
+        "eyebrow": "About Exxonim Consult",
+        "title": "We stand between you and the authorities.",
+        "description": "Registrations, filings, and compliance — all handled."
+      },
+      "company_profile": {
+        "eyebrow": "Who we are",
+        "title": "Your Business Partner in Tanzania",
+        "paragraphs": [
+          "Exxonim Consult is a leading business advisory firm."
+        ],
+        "working_style": "We work closely with you."
+      },
+      "support_profiles": [
+        {
+          "title": "Startups",
+          "description": "Business registration and compliance."
+        },
+        {
+          "title": "Enterprises",
+          "description": "Full compliance management."
+        }
+      ],
+      "service_scope": [
+        {
+          "title": "Registration",
+          "description": "Company registration with BRELA."
+        },
+        {
+          "title": "Tax",
+          "description": "TRA tax registration and filings."
+        }
+      ],
+      "operating_model": [
+        {
+          "step": "1",
+          "title": "Consult",
+          "description": "Initial consultation."
+        },
+        {
+          "step": "2",
+          "title": "Submit",
+          "description": "Document submission."
+        },
+        {
+          "step": "3",
+          "title": "Process",
+          "description": "We handle processing."
+        }
+      ],
+      "client_expectations": [
+        "Clear communication",
+        "Timely delivery"
+      ],
+      "mission_vision": {
+        "mission": "Simplify business compliance in Tanzania.",
+        "vision": "A Tanzania where every business can focus on growth, not paperwork.",
+        "global_mission": "Expand access to Tanzanian markets.",
+        "global_vision": "Tanzania as a premier business destination."
+      },
+      "who_we_serve": [
+        {
+          "label": "Local Entrepreneurs",
+          "description": "First-time business owners."
+        },
+        {
+          "label": "Foreign Investors",
+          "description": "Entry into Tanzanian market."
+        }
+      ],
+      "differentiators": [
+        {
+          "title": "Speed",
+          "description": "5-10 day registration."
+        },
+        {
+          "title": "Support",
+          "description": "End-to-end assistance."
+        }
+      ],
+      "cta": {
+        "title": "Ready to get started?",
+        "description": "Contact us today.",
+        "primary": {
+          "label": "Contact Us",
+          "href": "/contact"
+        },
+        "secondary": {
+          "label": "Learn More",
+          "href": "/services"
+        }
+      }
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

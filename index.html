@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns. We handle it all from registration to compliance, Tanzania." />
+    <meta name="keywords" content="Exxonim Consult, business advisory, Tanzania, company registration, compliance, licensing, tax support" />
+    <meta name="author" content="Exxonim Consult" />
+    <meta property="og:title" content="Business Setup, Compliance & Permits Tanzania | Exxonim Consult" />
+    <meta property="og:description" content="From registration to compliance. Company setup, TIN, licensing, work permits, NGO registration, and annual returns, all under one roof." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Exxonim Consult" />
+    <meta property="og:url" content="https://consult.exxonim.tz/" />
+    <meta property="og:image" content="https://consult.exxonim.tz/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Exxonim Consult — Business Setup, Compliance & Permits in Tanzania" />
+    <meta property="og:locale" content="en_TZ" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@exxonim" />
+    <meta name="twitter:title" content="Business Setup, Compliance & Permits Tanzania | Exxonim Consult" />
+    <meta name="twitter:description" content="From registration to compliance. Company setup, TIN, licensing, work permits, NGO registration, and annual returns, all under one roof." />
+    <meta name="twitter:image" content="https://consult.exxonim.tz/og-image.png" />
+    <link rel="canonical" href="https://consult.exxonim.tz/" data-exxonim="canonical" />
+    <title>Business Setup, Compliance & Permits Tanzania | Exxonim Consult</title>
+
+    <!-- Blocking script: read saved theme from localStorage and set data-theme
+         BEFORE first paint, preventing a flash of the wrong theme.
+         This ensures the correct logo shows instantly (CSS uses html[data-theme]
+         for logo visibility — no React dependency).
+         First-time visitors (no saved theme) get light — the primary design
+         system — unless their OS explicitly prefers dark. -->
+    <script>
+      (function(){try{var t=localStorage.getItem('exxonim-theme')||localStorage.getItem('koro-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})()
+    </script>
+
+    <!-- Favicons (light for light OS theme, dark for dark OS theme) -->
+    <link rel="icon" type="image/png" href="/branding/exxonim-favicon-light.png" id="favicon-light" />
+    <link rel="icon" type="image/png" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
+    <link rel="apple-touch-icon" href="/branding/exxonim-favicon-light.png" />
+
+    <!-- Google Fonts: Public Sans (the Minimal design-system typeface), loaded
+         async (media=print swap). Preconnect warms the DNS/TLS handshake to
+         Google's font hosts so the woff2 arrives faster on slow connections. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" /></noscript>
+
+    <!-- Pre-React shell: theme tokens + minimal styles
+         These CSS custom properties allow the correct theme background
+         to render instantly BEFORE Vite's CSS bundle loads. -->
+    <style>
+      :root {
+        --color-page: #FFFFFF;
+        --color-text: #212B36;
+        --color-text-muted: #637381;
+        --color-accent-soft: rgba(15, 92, 99, 0.08);
+        --color-hero-bg: #FFFFFF;
+        --color-surface: #FFFFFF;
+        --color-border-soft: rgba(145, 158, 171, 0.2);
+      }
+      html[data-theme="dark"] {
+        --color-page: #161C24;
+        --color-text: #F9FAFB;
+        --color-text-muted: #919EAB;
+        --color-accent-soft: rgba(127, 188, 193, 0.12);
+        --color-hero-bg: #161C24;
+        --color-surface: #212B36;
+        --color-border-soft: rgba(145, 158, 171, 0.2);
+      }
+
+      /* Toggle by display (not opacity) so only ONE logo is ever in the layout.
+         The theme is fixed by the blocking script before this paints, so there's
+         no swap — and no chance of both flashing at once. */
+      .boot-loader__favicon img.sk-logo-light { display: block; }
+      .boot-loader__favicon img.sk-logo-dark  { display: none; }
+      html[data-theme="dark"] .boot-loader__favicon img.sk-logo-light { display: none; }
+      html[data-theme="dark"] .boot-loader__favicon img.sk-logo-dark  { display: block; }
+
+      /* ── Boot / Emergency Loader ─────────────────────
+       * CSS-only loader shown between HTML parse and React mount.
+       * Automatically disappears when React renders into #root.
+       * Only visible when JS fails to load or startup is slow.
+       *
+       * Visual: Pulsing Exxonim favicon + "Loading" + animated dots
+       * Duration: Shows for as long as React hasn't mounted
+       * Timeout: After 8s, fades to subtle "Taking longer than expected" message
+       */
+      @keyframes boot-pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 0.9; }
+      }
+      @keyframes boot-dot {
+        0%, 20% { opacity: 0; }
+        40% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+      @keyframes boot-fade-in {
+        /* Opacity-only: a translateY here made the logo visibly slide ~4px as it
+           faded in (janky because the JS bundle loads at the same moment). No
+           movement now — it just fades. */
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      /* Reserve the scrollbar gutter from the FIRST paint (inline, not the async
+         CSS bundle) so the vertical scrollbar appearing when content mounts never
+         shifts centred content left. */
+      html { scrollbar-gutter: stable; }
+
+      .boot-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: var(--color-page);
+        animation: boot-fade-in 0.3s ease forwards;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+      }
+      .boot-loader--hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      /* Absolutely centred on the viewport, so the logo's position can NEVER be
+         affected by the text below it re-flowing when the CSS bundle / fonts load
+         (that was nudging it down ~6px). boot-pulse is opacity-only, so this
+         static transform is preserved. */
+      .boot-loader__favicon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 3rem;
+        height: 3rem;
+        animation: boot-pulse 2s ease-in-out infinite;
+      }
+      .boot-loader__favicon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      .boot-loader__text {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(2.5rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* System font (not Geist): the pre-React loader must not wait on an async
+           webfont — when Geist swapped in, the text height changed and re-centred
+           the flex column, nudging the logo down ~6px. */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        color: var(--color-text-muted);
+        opacity: 0.5;
+      }
+      .boot-loader__dots {
+        display: inline-flex;
+        margin-left: 1px;
+      }
+      .boot-loader__dots span {
+        animation: boot-dot 1.4s ease-in-out infinite;
+        opacity: 0;
+      }
+      .boot-loader__dots span:nth-child(1) { animation-delay: 0s; }
+      .boot-loader__dots span:nth-child(2) { animation-delay: 0.2s; }
+      .boot-loader__dots span:nth-child(3) { animation-delay: 0.4s; }
+      .boot-loader__timeout {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(4.25rem);
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 0.6875rem;
+        color: var(--color-text-muted);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .boot-loader--timeout .boot-loader__timeout {
+        opacity: 0.8;
+      }
+      .boot-loader__reload {
+        background: none;
+        border: none;
+        padding: 0;
+        margin-left: 0.375rem;
+        font: inherit;
+        color: var(--color-text);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        cursor: pointer;
+      }
+    </style>
+
+    <!-- Local business structured data — static so non-JS social/search crawlers
+         see it (local/geo SEO: address, geo, area served, opening hours). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "@id": "https://consult.exxonim.tz/#business",
+      "name": "Exxonim Consult",
+      "url": "https://consult.exxonim.tz/",
+      "image": "https://consult.exxonim.tz/og-image.png",
+      "logo": "https://consult.exxonim.tz/branding/exxonim-favicon-light.png",
+      "description": "Company registration, TIN, licensing, work permits, NGO registration, statutory filing and annual compliance in Tanzania — handled end to end.",
+      "telephone": "+255794689099",
+      "email": "info@exxonim.tz",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "House No. 9, Block H, Mbezi Beach B, Africana, Bagamoyo Road",
+        "addressLocality": "Dar es Salaam",
+        "addressRegion": "Dar es Salaam",
+        "addressCountry": "TZ"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -6.7030171,
+        "longitude": 39.2096286
+      },
+      "areaServed": [
+        { "@type": "Country", "name": "Tanzania" },
+        { "@type": "City", "name": "Dar es Salaam" }
+      ],
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "16:30"
+      }],
+      "sameAs": [
+        "https://x.com/exxonim",
+        "https://linkedin.com/company/exxonim",
+        "https://instagram.com/exxonim"
+      ]
+    }
+    </script>
+  </head>
+  <body class="antialiased bg-page text-text font-sans" style="background-color:var(--color-page)">
+    <div id="root" style="background-color:var(--color-page)">
+    </div>
+    <!-- Boot / Emergency Loader: CSS-only overlay that covers the page
+         until React mounts AND the first page content renders.
+         Stays on top of the shell (nav+footer) during chunk download.
+         Fades out smoothly when React signals readiness. -->
+    <div class="boot-loader" id="boot-loader">
+      <div class="boot-loader__favicon">
+        <img src="/branding/exxonim-favicon-light.png" alt="" class="sk-logo-light" />
+        <img src="/branding/exxonim-favicon-dark.png" alt="" class="sk-logo-dark" />
+      </div>
+      <div class="boot-loader__text">
+        <span>Loading</span>
+        <span class="boot-loader__dots" aria-hidden="true">
+          <span>.</span><span>.</span><span>.</span>
+        </span>
+      </div>
+      <p class="boot-loader__timeout">Taking longer than expected —<button type="button" class="boot-loader__reload" onclick="window.location.reload()">Reload</button></p>
+    </div>
+    <!-- Timeout: show message + manual Reload after 10 seconds if React still
+         hasn't mounted. No auto-reload: if startup is genuinely stuck (JS error,
+         network failure), reloading just replays the same failure — the visitor
+         decides when to retry. -->
+    <script>
+      (function(){
+        var t=setTimeout(function(){
+          var l=document.getElementById('boot-loader');
+          if(l)l.classList.add('boot-loader--timeout');
+        },10000);
+        window.__bootLoaderTimer=t;
+      })()
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

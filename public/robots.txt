@@ -1,0 +1,21 @@
+# Exxonim Consult — robots.txt
+# https://consult.exxonim.tz
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/login/
+
+Sitemap: https://consult.exxonim.tz/sitemap.xml

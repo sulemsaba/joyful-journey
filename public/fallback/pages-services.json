@@ -1,0 +1,135 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.167455+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 1335967778,
+    "title": "Our Services | Exxonim Consult",
+    "slug": "services",
+    "content": {
+      "overview": {
+        "eyebrow": "Our Services",
+        "title": "What We Do",
+        "description": "Comprehensive business services across Tanzania.",
+        "panel_title": "End-to-end business support",
+        "panel_body": "From registration to compliance.",
+        "service_signals": [
+          {
+            "value": "500+",
+            "label": "Clients",
+            "detail": "Served across Tanzania"
+          },
+          {
+            "value": "99%",
+            "label": "Success Rate",
+            "detail": "First-pass approval"
+          }
+        ],
+        "service_nav_groups": [
+          {
+            "title": "Registration",
+            "summary": "Business and company registration",
+            "href": "/services#registration",
+            "items": [
+              "Company Registration",
+              "Business Name Registration"
+            ]
+          },
+          {
+            "title": "Compliance",
+            "summary": "Ongoing compliance management",
+            "href": "/services#compliance",
+            "items": [
+              "Annual Returns",
+              "Tax Compliance"
+            ]
+          }
+        ],
+        "service_flow": [
+          {
+            "step": "1",
+            "title": "Consult",
+            "detail": "Discuss your needs"
+          },
+          {
+            "step": "2",
+            "title": "Submit",
+            "detail": "Upload documents"
+          },
+          {
+            "step": "3",
+            "title": "Process",
+            "detail": "We handle the rest"
+          }
+        ],
+        "service_promises": [
+          "Fast turnaround",
+          "Transparent pricing"
+        ]
+      },
+      "catalog": {
+        "eyebrow": "Service Catalog",
+        "title": "Browse Services",
+        "description": "Choose the service that fits your needs.",
+        "service_groups": [
+          {
+            "title": "Registration",
+            "description": "Get your business registered",
+            "services": [
+              {
+                "id": "reg-1",
+                "label": "Company Registration",
+                "detail": "Full BRELA registration",
+                "startingPrice": "TZS 350,000"
+              },
+              {
+                "id": "reg-2",
+                "label": "Business Name",
+                "detail": "Business name reservation",
+                "startingPrice": "TZS 150,000"
+              }
+            ]
+          }
+        ]
+      },
+      "tracking_section": {
+        "eyebrow": "Track Your Progress",
+        "title": "Know exactly where things stand",
+        "description": "Real-time tracking for all your cases.",
+        "checkpoints": [
+          {
+            "title": "Documents Received",
+            "detail": "We confirm receipt",
+            "status": "completed"
+          }
+        ],
+        "case_examples": [
+          {
+            "title": "Company Registration",
+            "detail": "Track your registration status"
+          }
+        ],
+        "workflow_steps": [
+          {
+            "title": "Submit",
+            "detail": "Upload your documents"
+          }
+        ]
+      },
+      "faq": [
+        {
+          "question": "How long does registration take?",
+          "answer": "Typically 5-10 business days."
+        }
+      ]
+    },
+    "meta_title": null,
+    "meta_description": null,
+    "og_image_url": null,
+    "status": "published",
+    "is_published": true,
+    "created_at": "2026-07-04T16:34:23.683868+00:00",
+    "updated_at": "2026-07-04T16:34:23.683868+00:00"
+  }
+}

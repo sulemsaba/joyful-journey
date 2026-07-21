@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.240717+00:00",
+    "source": "backend-publish"
+  },
+  "data": [
+    {
+      "id": 300115053,
+      "name": "Basic",
+      "badge": null,
+      "description": "Essential registration services",
+      "notes": null,
+      "price": null,
+      "features": [
+        {
+          "label": "Company Registration",
+          "included": true
+        },
+        {
+          "label": "TIN Registration",
+          "included": true
+        },
+        {
+          "label": "Business Permit",
+          "included": false
+        }
+      ],
+      "recommended": false,
+      "sort_order": 1,
+      "status": "published",
+      "is_active": true,
+      "created_at": "2026-07-04T16:37:18.195276+00:00",
+      "updated_at": "2026-07-04T16:37:18.195276+00:00"
+    },
+    {
+      "id": 1809998209,
+      "name": "Standard",
+      "badge": null,
+      "description": "Complete registration + compliance",
+      "notes": null,
+      "price": null,
+      "features": [
+        {
+          "label": "Company Registration",
+          "included": true
+        },
+        {
+          "label": "TIN Registration",
+          "included": true
+        },
+        {
+          "label": "Business Permit",
+          "included": true
+        }
+      ],
+      "recommended": true,
+      "sort_order": 2,
+      "status": "published",
+      "is_active": true,
+      "created_at": "2026-07-04T16:37:18.195276+00:00",
+      "updated_at": "2026-07-04T16:37:18.195276+00:00"
+    }
+  ]
+}

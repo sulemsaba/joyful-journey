@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-20T17:07:19.342178+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 819156403,
+    "key": "company_info",
+    "value": {
+      "name": "Exxonim Consult Ltd",
+      "legalCompanyName": "Exxonim Consult Limited",
+      "companyShortName": "Exxonim",
+      "phones": [
+        "+255794689099"
+      ],
+      "emails": [
+        "info@exxonim.tz"
+      ],
+      "address": "Dar es Salaam, Tanzania",
+      "whatsapp": "+255794689099"
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-02T17:04:20.251678+00:00"
+  }
+}

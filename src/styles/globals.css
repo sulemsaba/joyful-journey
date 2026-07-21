@@ -1,0 +1,1287 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@source "./src/**/*.{ts,tsx,js,jsx,mdx}";
+
+/* ── Prevent horizontal scroll from full-bleed elements ── */
+html, body {
+  overflow-x: hidden; /* fallback for older browsers */
+  overflow-x: clip;   /* modern: clips without creating a stacking context */
+}
+/* Reserve the scrollbar gutter always, so the vertical scrollbar APPEARING once
+ * the page content mounts doesn't shrink the viewport and shift centred content
+ * (e.g. the boot loader) to the left. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* ── Prevent orphaned words in hero and section headings ──
+ * Widows (single word alone on last line) look like text
+ * was "cut in the middle of the screen". text-wrap: pretty
+ * avoids orphans; balance distributes words more evenly. */
+.hero-section h1 {
+  text-wrap: pretty;
+}
+@media (min-width: 768px) {
+  .hero-section h1 {
+    text-wrap: balance;
+  }
+}
+.hero-section p,
+section[aria-label="Service guidance overview"] h2 {
+  text-wrap: balance;
+}
+
+/* ── Full-bleed utility - safe for iOS Safari ────────────
+ * Replaces w-screen / 100vw which includes scrollbar width
+ * on iOS Safari, causing horizontal overflow.
+ * Uses 100dvw (dynamic viewport width) which excludes the
+ * scrollbar. Fallback to 100vw for older browsers.
+ *
+ * Usage: Replace `w-screen -ml-[50vw] left-1/2` or
+ *        `w-screen ml-[calc(50%-50vw)]` with `full-bleed`
+ */
+.full-bleed {
+  width: 100vw;
+  width: 100dvw;
+  max-width: 100vw;
+  max-width: 100dvw;
+  margin-left: calc(50% - 50vw);
+  margin-left: calc(50% - 50dvw);
+}
+
+/* ── CSS Custom Property Animation Registration ──────────
+ * @property tells the browser these custom properties hold
+ * animatable <color> values. This enables smooth transitions
+ * on :root - when a custom property transitions, ALL elements
+ * using var(--that-property) automatically update smoothly,
+ * including backgrounds, text colors, borders, AND gradients.
+ *
+ * BROWSER COMPATIBILITY (Samsung Internet / older browsers):
+ * ─────────────────────────────────────────────────────────
+ * ONLY hex color values are used in initial-value. rgba()
+ * values in initial-value cause @property registration to
+ * fail silently in Samsung Internet and some Chromium forks,
+ * making the property "guaranteed-invalid" - which means
+ * even :root declarations can't override it, resulting in
+ * black/missing colors. Hex values are universally supported.
+ *
+ * Semi-transparent tokens (surface-elevated, text-muted, etc.)
+ * do NOT use @property registration - they rely on :root
+ * declarations only. This sacrifices smooth theme transitions
+ * for those tokens but guarantees correct color rendering
+ * in all browsers.
+ *
+ * Progressive enhancement: browsers without @property support
+ * (Firefox < 128) get instant theme swaps instead of smooth
+ * transitions. The site still works perfectly.
+ */
+@property --color-page { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
+@property --color-page-strong { syntax: '<color>'; inherits: true; initial-value: #F4F6F8; }
+@property --color-surface { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
+@property --color-surface-soft { syntax: '<color>'; inherits: true; initial-value: #F9FAFB; }
+@property --color-text { syntax: '<color>'; inherits: true; initial-value: #212B36; }
+@property --color-accent { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+@property --color-accent-hover { syntax: '<color>'; inherits: true; initial-value: #0b4b51; }
+@property --color-accent-secondary { syntax: '<color>'; inherits: true; initial-value: #7fbcc1; }
+@property --color-accent-contrast { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --color-hero-bg { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
+@property --color-hero-bg-fade { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
+@property --color-success { syntax: '<color>'; inherits: true; initial-value: #118D57; }
+@property --color-error { syntax: '<color>'; inherits: true; initial-value: #B71D18; }
+@property --color-warning { syntax: '<color>'; inherits: true; initial-value: #B76E00; }
+@property --color-star { syntax: '<color>'; inherits: true; initial-value: #FAAF00; }
+@property --color-footer-bg { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+@property --color-cta-primary { syntax: '<color>'; inherits: true; initial-value: #0f5c63; }
+@property --color-cta-secondary { syntax: '<color>'; inherits: true; initial-value: #212B36; }
+
+/* shadcn/ui color tokens - registered for smooth transitions
+ * NOTE: Using hex/rgba instead of oklch() for Samsung Internet / older browser support.
+ * oklch() is not supported in Samsung Internet Browser, causing colors to appear black. */
+@property --background { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --foreground { syntax: '<color>'; inherits: true; initial-value: #0a0a0a; }
+@property --card { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --card-foreground { syntax: '<color>'; inherits: true; initial-value: #0a0a0a; }
+@property --popover { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --popover-foreground { syntax: '<color>'; inherits: true; initial-value: #0a0a0a; }
+@property --primary { syntax: '<color>'; inherits: true; initial-value: #171717; }
+@property --primary-foreground { syntax: '<color>'; inherits: true; initial-value: #fafafa; }
+@property --secondary { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
+@property --secondary-foreground { syntax: '<color>'; inherits: true; initial-value: #171717; }
+@property --muted { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
+@property --muted-foreground { syntax: '<color>'; inherits: true; initial-value: #737373; }
+@property --accent { syntax: '<color>'; inherits: true; initial-value: #f5f5f5; }
+@property --accent-foreground { syntax: '<color>'; inherits: true; initial-value: #171717; }
+@property --destructive { syntax: '<color>'; inherits: true; initial-value: #ef4444; }
+@property --border { syntax: '<color>'; inherits: true; initial-value: #e5e5e5; }
+@property --input { syntax: '<color>'; inherits: true; initial-value: #e5e5e5; }
+@property --ring { syntax: '<color>'; inherits: true; initial-value: #a1a1a1; }
+
+/* ── Exxonim theme system ──────────────────────────────
+ * Uses data-theme attribute (not .dark class) for theme switching.
+ * Tokens: @theme generates Tailwind utility classes.
+ * Runtime values: :root (light) and html[data-theme="dark"] (dark).
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Keep shadcn/ui compatibility tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Public Sans — the Minimal design-system typeface. The previous value
+   * pointed at --font-geist-sans, which was never defined anywhere, so the
+   * whole site silently rendered in the browser fallback font. */
+  --font-sans: 'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* ── Exxonim design tokens ──────────────────────────
+   * NOTE: These MUST be in @theme (not @theme inline) so that
+   * Tailwind generates utility classes using var(--color-*) refs.
+   * This allows html[data-theme="dark"] to override them at runtime.
+   * With @theme inline, values are baked into utility classes and
+   * dark mode overrides have no effect.
+   */
+  /* Minimal-style neutral system: white surfaces over grey-100/200 sections,
+   * grey-800/600/500 text, grey-500-alpha borders. The Exxonim teal stays as
+   * the brand accent — only the neutrals around it changed. */
+  --color-page: #FFFFFF;
+  --color-page-strong: #F4F6F8;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #F9FAFB;
+  --color-surface-elevated: rgba(255, 255, 255, 0.92);
+  --color-text: #212B36;
+  --color-text-muted: #637381;
+  --color-text-soft: #919EAB;
+  --color-accent: #0f5c63;
+  --color-accent-hover: #0b4b51;
+  --color-accent-secondary: #7fbcc1;
+  --color-accent-soft: rgba(15, 92, 99, 0.08);
+  --color-accent-soft-strong: rgba(15, 92, 99, 0.16);
+  --color-accent-contrast: #ffffff;
+  --color-border-soft: rgba(145, 158, 171, 0.2);
+  --color-border-strong: rgba(145, 158, 171, 0.32);
+  --color-overlay: rgba(22, 28, 36, 0.48);
+  --color-hero-bg: #FFFFFF;
+  --color-hero-bg-fade: rgba(255, 255, 255, 0.8);
+  --color-cinematic-card-border: rgba(145, 158, 171, 0.16);
+  --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.24);
+  --color-success: #118D57;
+  --color-success-soft: rgba(34, 197, 94, 0.16);
+  --color-warning: #B76E00;
+  --color-warning-soft: rgba(255, 171, 0, 0.16);
+  --color-error: #B71D18;
+  --color-error-soft: rgba(255, 86, 48, 0.16);
+  --color-star: #FAAF00;
+  --color-footer-bg: #0f5c63;
+  --color-footer-text: rgba(247, 251, 251, 0.70);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+  --color-footer-heading: rgba(247, 251, 251, 0.90);
+  --color-footer-border: rgba(247, 251, 251, 0.12);
+  --color-cta-primary: #0f5c63;
+  --color-cta-secondary: #212B36;
+
+  /* Minimal elevation ladder (grey-500-based soft shadows). Was all zeroed —
+   * the single biggest reason the old design read flat. */
+  --shadow-panel: 0 8px 16px 0 rgba(145, 158, 171, 0.16);
+  --shadow-panel-strong: 0 16px 32px -4px rgba(145, 158, 171, 0.16);
+  --shadow-hero: 0 24px 48px 0 rgba(145, 158, 171, 0.16);
+  --shadow-cinematic: 0 24px 48px 0 rgba(145, 158, 171, 0.16);
+  --shadow-card: 0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12);
+  --shadow-popover: 0 0 2px 0 rgba(145, 158, 171, 0.24), 0 20px 40px -4px rgba(145, 158, 171, 0.24);
+  --shadow-accent-glow: 0 8px 16px 0 rgba(15, 92, 99, 0.24);
+
+  --animate-whatsapp-pulse: whatsapp-pulse 2s ease-out infinite;
+  --animate-phone-ring: phone-ring 2s ease-in-out infinite;
+  --animate-provider-marquee: provider-marquee 44s linear infinite;
+  --animate-code-pan: code-pan 12s linear infinite alternate;
+  --animate-call-shimmer: call-shimmer 4.5s linear infinite;
+  --animate-call-ping: call-ping 1.85s ease-out infinite;
+  --animate-tagline-float: footer-tagline-float 5.8s ease-in-out infinite;
+  --animate-tagline-line: footer-tagline-line 4.8s ease-in-out infinite;
+  --animate-reference-slide-primary: reference-hero-slide-primary 14s ease-in-out infinite;
+  --animate-reference-slide-secondary: reference-hero-slide-secondary 14s ease-in-out infinite;
+  --animate-page-enter: page-enter 0.6s ease-out both;
+  --animate-scale-in: scale-in 0.4s ease-out both;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-float-bob: float-bob 3.4s ease-in-out infinite;
+  --animate-float-bob-delayed: float-bob 3.4s ease-in-out 1.7s infinite;
+  --animate-accent-pulse: accent-pulse 2.2s ease-in-out infinite;
+  --animate-reveal-up: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-reveal-fade: reveal-fade 0.6s ease forwards;
+  /* Retired: --animate-shimmer - skeleton loaders permanently retired */
+  --animate-dropdown-enter: dropdown-enter 200ms ease-out;
+  --animate-progress-sheen: progress-sheen 2.1s ease-in-out infinite;
+
+  /* Minimal card radius: 16px (was 1.7rem ≈ 27px, which read balloon-y) */
+  --radius-2xl: 1rem;
+  --radius-pill: 999px;
+
+  /* ── Type scale extension ────────────────────────────
+   * text-2xs (11px) is the one sanctioned micro size (badges, counts,
+   * overlines). Rem-based so it scales with the browser's font-size /
+   * magnification setting — the hardcoded px sizes it replaces did not. */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+}
+
+/* ── Keyframes ─────────────────────────────────────── */
+@keyframes dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes whatsapp-pulse {
+  0% { transform: scale(1); opacity: 0.65; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes phone-ring {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-10deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-10deg); }
+  50% { transform: rotate(0deg); }
+}
+@keyframes provider-marquee {
+  /* The track renders 3 identical copies of the logos. To loop seamlessly the
+   * transform must move by EXACTLY one copy = one third of the track. calc(-100%/3)
+   * is exact; the old rounded -33.3333% drifted a hair each cycle, and -50% before
+   * that moved 1.5 copies (restarted mid-pattern → a visible jump/step). */
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(-100% / 3), 0, 0); }
+}
+/* Promote the marquee track to its own compositor layer so the transform
+ * animation stays on the GPU and doesn't get re-rasterised on the main thread. */
+.provider-marquee-track {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Pause the logo marquee while the pointer is over it; resumes on leave. Pure
+ * CSS on the stationary wrapper — no JS, no re-render. (The old resume stutter
+ * was main-thread contention from an off-screen animation loop, now fixed.) */
+.provider-marquee-wrap:hover .provider-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes call-shimmer {
+  0% { transform: translateX(0) skewX(-22deg); }
+  100% { transform: translateX(420%) skewX(-22deg); }
+}
+@keyframes call-ping {
+  0% { transform: scale(0.92); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: scale(1.42); opacity: 0; }
+}
+@keyframes footer-tagline-float {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-2px); opacity: 0.92; }
+}
+@keyframes footer-tagline-line {
+  0%, 100% { transform: scaleX(0.45); opacity: 0.14; }
+  50% { transform: scaleX(1); opacity: 0.5; }
+}
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes accent-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(15, 92, 99, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(15, 92, 99, 0); }
+}
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes reference-hero-slide-primary {
+  0%, 44% { opacity: 1; transform: scale(1); }
+  50%, 94% { opacity: 0; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes reference-hero-slide-secondary {
+  0%, 44% { opacity: 0; transform: scale(1.02); }
+  50%, 94% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* Progress-bar sheen: a soft highlight that sweeps across the fill to signal
+   "work in progress". Paired with motion-reduce:animate-none at the call site. */
+@keyframes progress-sheen {
+  0% { transform: translateX(-100%); }
+  55%, 100% { transform: translateX(340%); }
+}
+/* Staggered entrance for the tracking-result blocks (each direct child rises
+   in turn). page-enter has both-fill, so children hold hidden during their
+   delay - no flash. Fully disabled under reduced-motion. */
+.track-cascade > * {
+  animation: page-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.track-cascade > *:nth-child(2) { animation-delay: 70ms; }
+.track-cascade > *:nth-child(3) { animation-delay: 140ms; }
+.track-cascade > *:nth-child(4) { animation-delay: 210ms; }
+.track-cascade > *:nth-child(5) { animation-delay: 280ms; }
+@media (prefers-reduced-motion: reduce) {
+  .track-cascade > * { animation: none; }
+}
+/* Retired: @keyframes shimmer - skeleton loaders permanently retired.
+   Boot/emergency loader is now CSS-only in index.html (boot-pulse/boot-dot keyframes). */
+@keyframes gradient-rotate {
+  0% { --gradient-angle: 0deg; }
+  100% { --gradient-angle: 360deg; }
+}
+@keyframes code-pan {
+  from { transform: translateY(0); }
+  to { transform: translateY(-18%); }
+}
+/* Retired: @keyframes loader-pulse, loader-fade, .loader-dots, @keyframes loader-dot
+   Boot/emergency loader is now CSS-only in index.html (boot-pulse/boot-dot keyframes). */
+
+/* ── Hero section - responsive height (no CLS) ──── */
+.hero-section {
+  /* Mobile: auto height so content never clips, with a min-height for visual impact */
+  height: auto;
+  min-height: 70svh;
+  min-height: 70dvh;
+}
+@media (min-width: 768px) {
+  .hero-section {
+    /* Desktop/tablet: fixed 94.5svh so hero + review bar (5.5svh) = 100svh.
+     * Stays full-viewport even when the user zooms (svh scales with zoom).
+     * Content is centered via flex items-center and sized to fit. */
+    height: 94.5svh;
+    min-height: 0;
+  }
+}
+/* Hero shrink-on-scroll removed: scaling the hero (which contains the animated
+   aurora canvas) re-rasterised it every frame and made the hero "fall apart" /
+   stack when scrolling back to top. */
+
+/* ── Scroll indicator - fades out when user scrolls ──
+ * data-faded is set by HeroScrollIndicator's own rAF-throttled listener. */
+.hero-scroll-indicator {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+.hero-scroll-indicator[data-faded] {
+  opacity: 0;
+}
+
+/* ── Review bar - stable height (no CLS) ────────── */
+.hero-review-bar {
+  height: 5.5svh;
+  min-height: 48px;
+}
+@media (max-width: 767px) {
+  .hero-section + .hero-review-bar {
+    height: auto;
+    min-height: 40px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+/* ── Scroll-reveal: progressive enhancement with html.js gate ──
+ * PROGRESSIVE ENHANCEMENT: Before JS loads, all content is VISIBLE.
+ * When JS loads, it adds .js to <html> AND synchronously reveals
+ * all in-viewport elements BEFORE the CSS opacity:0 takes effect.
+ * This eliminates the flash-of-invisible-content that occurred when
+ * the boot loader dismissed before useRevealOnScroll could process.
+ *
+ * FLOW: No-JS → content visible. JS loads → reveal in-viewport →
+ * add .js → in-viewport stays visible (has .revealed),
+ * below-fold hidden until scroll triggers intersection.
+ *
+ * ROUTE NAVIGATION: html.reveal-instant skips the transition
+ * so in-viewport elements appear instantly on route change.
+ * The class is added briefly during route transitions.
+ */
+html.js.reveal-ready [data-reveal]:not(.revealed) {
+  opacity: 0;
+  -webkit-transform: translateY(20px);
+  transform: translateY(20px);
+}
+/* The enter animation lives on .revealed so it plays when the class is added.
+ * Elements are revealed ~1.5 viewports ahead of view (observer rootMargin +
+ * scroll fail-safe in useRevealOnScroll), so this fade completes off-screen —
+ * you never see a mid-fade (or opacity:0 black) element on a fast scroll. */
+html.js.reveal-ready [data-reveal].revealed {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  -webkit-transition: opacity 0.5s ease-out, -webkit-transform 0.5s ease-out;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+/* Instant reveal: skip animation during route transitions and initial load */
+html.reveal-instant [data-reveal] {
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+
+/* ── Runtime theme variables ───────────────────────── */
+:root {
+  /* shadcn/ui tokens - hex/rgba for Samsung Internet / older browser support */
+  --radius: 0.625rem;
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  --destructive: #ef4444;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #a1a1a1;
+  --chart-1: #e85d04;
+  --chart-2: #1b8a7a;
+  --chart-3: #3a7ca5;
+  --chart-4: #dba63e;
+  --chart-5: #cc8833;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #171717;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #a1a1a1;
+
+  /* ── Exxonim light-mode tokens — Minimal neutral system ── */
+  --color-page: #FFFFFF;
+  --color-page-strong: #F4F6F8;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #F9FAFB;
+  --color-surface-elevated: rgba(255, 255, 255, 0.92);
+  --color-text: #212B36;
+  --color-text-muted: #637381;
+  --color-text-soft: #919EAB;
+  --color-accent: #0f5c63;
+  --color-accent-hover: #0b4b51;
+  --color-accent-secondary: #7fbcc1;
+  --color-accent-soft: rgba(15, 92, 99, 0.08);
+  --color-accent-soft-strong: rgba(15, 92, 99, 0.16);
+  --color-accent-contrast: #ffffff;
+  --color-border-soft: rgba(145, 158, 171, 0.2);
+  --color-border-strong: rgba(145, 158, 171, 0.32);
+  --color-overlay: rgba(22, 28, 36, 0.48);
+  --color-hero-bg: #FFFFFF;
+  --color-hero-bg-fade: rgba(255, 255, 255, 0.8);
+  --shadow-panel: 0 8px 16px 0 rgba(145, 158, 171, 0.16);
+  --shadow-panel-strong: 0 16px 32px -4px rgba(145, 158, 171, 0.16);
+  --shadow-hero: 0 24px 48px 0 rgba(145, 158, 171, 0.16);
+  --shadow-cinematic: 0 24px 48px 0 rgba(145, 158, 171, 0.16);
+  --shadow-card: 0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12);
+  --shadow-popover: 0 0 2px 0 rgba(145, 158, 171, 0.24), 0 20px 40px -4px rgba(145, 158, 171, 0.24);
+  --shadow-accent-glow: 0 8px 16px 0 rgba(15, 92, 99, 0.24);
+  --color-cinematic-card-border: rgba(145, 158, 171, 0.16);
+  --color-cinematic-card-hover-border: rgba(15, 92, 99, 0.24);
+  --color-success: #118D57;
+  --color-success-soft: rgba(34, 197, 94, 0.16);
+  --color-warning: #B76E00;
+  --color-warning-soft: rgba(255, 171, 0, 0.16);
+  --color-error: #B71D18;
+  --color-error-soft: rgba(255, 86, 48, 0.16);
+  --color-star: #FAAF00;
+  --color-footer-bg: #0f5c63;
+  --color-footer-text: rgba(247, 251, 251, 0.70);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+  --color-footer-heading: rgba(247, 251, 251, 0.90);
+  --color-footer-border: rgba(247, 251, 251, 0.12);
+  --color-cta-primary: #0f5c63;
+  --color-cta-secondary: #212B36;
+
+  /* ── Accent gradient tokens (replace color-mix() for Samsung Internet compatibility) ──
+   * color-mix(in srgb, var(--color-accent) 18%, transparent) is not supported
+   * in Samsung Internet < v23. Pre-computed values for each theme instead. */
+  --color-accent-gradient-subtle: rgba(15, 92, 99, 0.18);
+  --color-accent-gradient-weak: rgba(15, 92, 99, 0.10);
+  --color-accent-gradient-medium: rgba(15, 92, 99, 0.22);
+}
+
+html[data-theme="dark"] {
+  /* shadcn/ui dark tokens - hex/rgba for Samsung Internet / older browser support */
+  --background: #0f0f0f;
+  --foreground: #e9e9e9;
+  --card: #161616;
+  --card-foreground: #e9e9e9;
+  --popover: #161616;
+  --popover-foreground: #e9e9e9;
+  --primary: #e5e5e5;
+  --primary-foreground: #171717;
+  --secondary: #2b2b2b;
+  --secondary-foreground: #e9e9e9;
+  --muted: #2b2b2b;
+  --muted-foreground: #8f8f8f;
+  --accent: #2b2b2b;
+  --accent-foreground: #e9e9e9;
+  --destructive: #f87171;
+  --border: rgba(255, 255, 255, 0.14);
+  --input: rgba(255, 255, 255, 0.18);
+  --ring: #737373;
+  --chart-1: #4f46e5;
+  --chart-2: #10b981;
+  --chart-3: #cc8833;
+  --chart-4: #8b5cf6;
+  --chart-5: #f97316;
+  --sidebar: #171717;
+  --sidebar-foreground: #e9e9e9;
+  --sidebar-primary: #4f46e5;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #2b2b2b;
+  --sidebar-accent-foreground: #e9e9e9;
+  --sidebar-border: rgba(255, 255, 255, 0.14);
+  --sidebar-ring: #737373;
+
+  /* ── Exxonim dark-mode tokens - comfortable dark palette ──
+   *
+   * DESIGN RATIONALE:
+   * Previous values were near-black (~3% lightness), causing:
+   *   1. "Dark cave" feeling instead of comfortable dark room
+   *   2. Excessive text contrast (>17:1) → eye strain
+   *   3. Indistinguishable surface layers (page vs surface vs surface-soft)
+   *   4. Invisible borders and shadows
+   *
+   * New values use ~13% base lightness with clear surface steps,
+   * softer text (~87% lightness), and visible borders. This follows
+   * Material Design 3 and Apple HIG dark mode best practices.
+   */
+  /* Minimal dark system: grey-900 page (#161C24), grey-800 cards (#212B36),
+   * white/grey-500 text, grey-alpha borders. Brand light-teal accent kept. */
+  --color-page: #161C24;
+  --color-page-strong: #1C252E;
+  --color-surface: #212B36;
+  --color-surface-soft: #28323D;
+  --color-surface-elevated: rgba(33, 43, 54, 0.92);
+  --color-text: #F9FAFB;
+  --color-text-muted: #919EAB;
+  --color-text-soft: #637381;
+  --color-accent: #7fbcc1;
+  --color-accent-hover: #96cacf;
+  --color-accent-secondary: #aacfd2;
+  --color-accent-soft: rgba(127, 188, 193, 0.12);
+  --color-accent-soft-strong: rgba(127, 188, 193, 0.24);
+  --color-accent-contrast: #0f1a1c;
+  --color-border-soft: rgba(145, 158, 171, 0.2);
+  --color-border-strong: rgba(145, 158, 171, 0.32);
+  --color-overlay: rgba(22, 28, 36, 0.64);
+  --color-hero-bg: #161C24;
+  --color-hero-bg-fade: rgba(22, 28, 36, 0.8);
+  --shadow-panel: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
+  --shadow-panel-strong: 0 16px 32px -4px rgba(0, 0, 0, 0.16);
+  --shadow-hero: 0 24px 48px 0 rgba(0, 0, 0, 0.16);
+  --shadow-cinematic: 0 24px 48px 0 rgba(0, 0, 0, 0.16);
+  --shadow-card: 0 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+  --shadow-popover: 0 0 2px 0 rgba(0, 0, 0, 0.24), 0 20px 40px -4px rgba(0, 0, 0, 0.24);
+  --shadow-accent-glow: 0 8px 16px 0 rgba(127, 188, 193, 0.24);
+  --color-cinematic-card-border: rgba(145, 158, 171, 0.16);
+  --color-cinematic-card-hover-border: rgba(127, 188, 193, 0.32);
+  --color-success: #34d399;
+  --color-success-soft: rgba(52, 211, 153, 0.16);
+  --color-warning: #FFAB00;
+  --color-warning-soft: rgba(255, 171, 0, 0.16);
+  --color-error: #FF5630;
+  --color-error-soft: rgba(255, 86, 48, 0.16);
+  --color-star: #FAAF00;
+  --color-footer-bg: #161C24;
+  --color-footer-text: rgba(249, 250, 251, 0.64);
+  --color-footer-text-muted: #919EAB;
+  --color-footer-heading: #F9FAFB;
+  --color-footer-border: rgba(145, 158, 171, 0.2);
+  --color-cta-primary: #7fbcc1;
+  --color-cta-secondary: #7fbcc1;
+
+  /* Accent gradient tokens - dark mode values */
+  --color-accent-gradient-subtle: rgba(127, 188, 193, 0.18);
+  --color-accent-gradient-weak: rgba(127, 188, 193, 0.10);
+  --color-accent-gradient-medium: rgba(127, 188, 193, 0.22);
+}
+
+/* ── Theme switch via the View Transitions API ─────────────────────────────
+ * The theme toggle (useTheme.ts) wraps the data-theme flip in
+ * document.startViewTransition(), so the browser snapshots the whole page
+ * before + after and crossfades the two snapshots on the COMPOSITOR.
+ *
+ * Why this replaced the previous CSS approaches:
+ *   - Transitioning 8 :root vars only  → most elements snapped (staggered
+ *     "changes from the left").
+ *   - Transitioning every element's paint props → uniform but far too heavy
+ *     (hundreds of simultaneous transitions), so the fade lagged even on pages
+ *     with no aurora (e.g. About).
+ *   The View Transition is BOTH uniform (one whole-page image) AND cheap (a
+ *   single GPU crossfade — zero per-element transitions, zero var interpolation),
+ *   so it stays smooth on every page and even while the hero aurora is running.
+ *
+ * Browsers without the API (e.g. Firefox) fall back to an instant swap in JS.
+ * Only the crossfade duration is tuned here; the default cross-fade animation is
+ * what we want. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.32s;
+  animation-timing-function: ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* While the theme view-transition is in flight, force every element to adopt
+ * the new theme INSTANTLY. Elements with their own transition-colors /
+ * transition-all (blog card borders, links, inputs, …) would otherwise still be
+ * showing the old colour when the browser snapshots the "after" state, then
+ * finish transitioning after the crossfade — so they'd visibly change a beat
+ * late and look inconsistent with the rest of the page. The crossfade is the
+ * only animation we want here. */
+html.theme-swapping *,
+html.theme-swapping *::before,
+html.theme-swapping *::after {
+  transition: none !important;
+}
+
+/* ── Logo crossfade during theme transition ───────────
+ * Both logos are always rendered - one visible, one hidden
+ * via opacity. During theme transitions, opacity smoothly
+ * crossfades between them. Without .theme-transition, the
+ * swap is instant (no initial-load flash).
+ *
+ * BLEND MODES: The logo images have solid colored backgrounds
+ * (light logo = teal text on white, dark logo = white text on black).
+ * mix-blend-mode eliminates these backgrounds:
+ *   - logo-light uses multiply → white bg becomes transparent
+ *   - logo-dark uses screen → black bg becomes transparent
+ * This makes both logos appear as if they have transparent backgrounds.
+ *
+ * NO-FLASH ARCHITECTURE: Logo visibility is controlled ENTIRELY by CSS
+ * using html[data-theme]. The data-theme attribute is set by a blocking
+ * <script> in <head> BEFORE first paint, so the correct logo shows
+ * instantly on every page load - no React hydration flash.
+ *
+ * header[data-over-hero] is set on the <header> when it's transparent
+ * (homepage, scroll top). In light mode over hero, the header elements
+ * need dark text/icons. In dark mode over hero, they need light text/icons.
+ * CSS handles this with attribute selectors - zero React dependency.
+ */
+
+/* ── Default: light mode ─────────────────────────── */
+.logo-light {
+  opacity: 1;
+  mix-blend-mode: multiply;
+}
+.logo-dark {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  mix-blend-mode: screen;
+}
+
+/* ── Dark mode ───────────────────────────────────── */
+html[data-theme="dark"] .logo-light { opacity: 0; }
+html[data-theme="dark"] .logo-dark { opacity: 1; }
+
+/* ── Smooth crossfade during theme transition ────── */
+html.theme-transition .logo-light,
+html.theme-transition .logo-dark {
+  transition: opacity 0.4s ease;
+}
+
+/* ── Header elements when transparent over hero ────
+ * In light mode over hero: elements need to be dark (hero is light teal).
+ * In dark mode over hero: elements need to be light (hero is dark).
+ * The default CSS above already handles this correctly:
+ *   - Light mode → logo-light visible (dark text) ✓
+ *   - Dark mode → logo-dark visible (light text) ✓
+ * No overrides needed - the theme-based CSS just works.
+ *
+ * However, for the hamburger icon, theme toggle, and other nav elements
+ * that use Tailwind color classes (not logo images), we need CSS overrides
+ * when the header is transparent over the hero.
+ */
+
+/* Light mode over hero: nav elements need dark color for readability
+ * (hero bg is light teal #e4f0f2) - already handled by default text colors.
+ * But if the header was previously showing white text (e.g., from a
+ * dark→light theme switch while at scroll top), these ensure correct colors. */
+
+/* Dark mode over hero: nav elements need light/white color
+ * (hero bg is dark #131f23) - override text colors to white */
+html[data-theme="dark"] header[data-over-hero] {
+  color: #f7fbfb;
+}
+/* Force nav link colors when header is over hero in dark mode */
+html[data-theme="dark"] header[data-over-hero] a,
+html[data-theme="dark"] header[data-over-hero] button {
+  color: #f7fbfb;
+}
+
+/* Light mode over hero: ensure dark text (not white)
+ * This overrides any stale white from a theme transition.
+ * Only applies to desktop header (xl+) which still uses data-over-hero. */
+
+/* ── Navigation logo blend modes ────────────────────
+ * The nav logo images have solid colored backgrounds
+ * (light logo = teal text on white, dark logo = white text on black).
+ * mix-blend-mode eliminates these backgrounds:
+ *   - logo-light uses multiply → white bg becomes transparent
+ *   - logo-dark uses screen → black bg becomes transparent
+ * Scoped to header only so favicons/PageLoader are unaffected.
+ */
+header .logo-light { mix-blend-mode: multiply; }
+header .logo-dark { mix-blend-mode: screen; }
+
+/* ── Hamburger morph icon colors ───────────────────────
+ * Light mode: dark lines. Dark mode: light lines.
+ * When header is transparent over hero (mobile & desktop),
+ * the same theme-based rules apply. */
+.nav-hamburger-line {
+  background-color: #102529;
+}
+html[data-theme="dark"] .nav-hamburger-line {
+  background-color: #f7fbfb;
+}
+
+/* ── Mobile nav panel scrollbar styling ────────────── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(127, 188, 193, 0.25);
+  border-radius: 2px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(127, 188, 193, 0.4);
+}
+
+/* ── Smooth theme transition for hamburger lines ── */
+html.theme-transition .nav-hamburger-line {
+  transition: background-color 0.4s ease;
+}
+
+/* ── Provider logos - muted, full color on hover ── */
+/* Uses opacity only (compositor-friendly, no paint cost).
+ * The muted state (0.6) provides subtle brand presence without
+ * distracting from the page content. On hover/interaction, logos
+ * reveal at full opacity for engagement.
+ *
+ * filter:grayscale was retired because it triggers per-frame
+ * rasterization on hover (jank on mid-range devices). */
+.provider-logo-img {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.provider-logo-item:hover .provider-logo-img {
+  opacity: 1;
+}
+/* Dark mode: slightly dimmer muted state (logos tend to
+ * look brighter against dark backgrounds) */
+html[data-theme="dark"] .provider-logo-img {
+  opacity: 0.5;
+}
+html[data-theme="dark"] .provider-logo-item:hover .provider-logo-img {
+  opacity: 1;
+}
+
+/* ── Hero aurora canvas - theme-reactive opacity ──── */
+/* The aurora canvas has different visual weight in light vs dark.
+ * Light: near-full (0.9) for a vivid glow.
+ * Dark: full (1.0) for visual richness against dark bg.
+ * No transition on initial load - only during theme changes. */
+.hero-aurora-canvas { opacity: 0.9; }
+html[data-theme="dark"] .hero-aurora-canvas { opacity: 1; }
+html.theme-transition .hero-aurora-canvas {
+  transition: opacity 0.4s ease;
+}
+
+/* ── Respect user motion preferences ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Base layer ──────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-page text-text;
+  }
+  /* Minimal-style heading floor: bold, slightly tightened. Utility classes on
+   * individual headings still win over these (utilities layer > base layer). */
+  h1, h2, h3, h4 {
+    @apply font-bold;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ── Scroll-reveal animation utilities ────────────── */
+.animate-reveal-up {
+  animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+.animate-reveal-fade {
+  animation: reveal-fade 0.6s ease forwards;
+  opacity: 0;
+}
+
+/* ── Stagger delay utilities ──────────────────────── */
+.stagger-1 { animation-delay: 0.08s; }
+.stagger-2 { animation-delay: 0.16s; }
+.stagger-3 { animation-delay: 0.24s; }
+.stagger-4 { animation-delay: 0.32s; }
+.stagger-5 { animation-delay: 0.4s; }
+.stagger-6 { animation-delay: 0.48s; }
+
+/* ── Stack section: "unboring scroll" — scroll-scrubbed parallax ──────
+ * Pure-CSS scroll-driven animation (0 KB JS). The media surface drifts
+ * vertically against its static text half as the row travels through the
+ * viewport, giving the stack a lively, non-static scroll.
+ *
+ * This is the site's ONE signature scroll flourish — everything else keeps
+ * the single shared [data-reveal] fade+rise behaviour for consistency.
+ *
+ * Progressive enhancement, on purpose:
+ *   • Only runs where animation-timeline is supported (Chromium today;
+ *     Safari/Firefox fall back to a static surface — the [data-reveal]
+ *     entrance still plays, so nothing looks broken).
+ *   • Fully disabled under prefers-reduced-motion.
+ * Applied to an INNER wrapper so its transform never fights the
+ * [data-reveal] transform on the outer element. */
+@keyframes stack-scroll-parallax {
+  from { transform: translate3d(0, 34px, 0); }
+  to   { transform: translate3d(0, -34px, 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .stack-scroll-parallax {
+      animation: stack-scroll-parallax linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+      will-change: transform;
+    }
+  }
+}
+
+/* ── Float/bob animation for hero floating chips ──── */
+.animate-float-bob {
+  animation: float-bob 4s ease-in-out infinite;
+}
+.animate-float-bob-delayed {
+  animation: float-bob 4s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* Retired: .animate-shimmer - skeleton loaders permanently retired */
+
+/* ── Smooth page content entrance ─────────────────── */
+.animate-page-enter {
+  animation: page-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Route transition: subtle opacity dip on page change ──
+ * Triggered by adding .page-transition-enter to <main>
+ * on route navigation. A very short (120ms) opacity dip
+ * from 1 → 0.92 → 1 gives polish without feeling slow.
+ * GPU-composited opacity only - zero layout/paint cost.
+ * Intentionally NO slide/transform - that would add
+ * perceived delay, which we spent effort eliminating. */
+.page-transition-enter {
+  animation: page-transition-dip 120ms ease-out both;
+}
+@keyframes page-transition-dip {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.92; }
+  100% { opacity: 1; }
+}
+
+/* ── Pulse glow for accent elements ───────────────── */
+.animate-accent-pulse {
+  animation: accent-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── iOS safe area utilities ──────────────────────── */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pb-env {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* ── Better scrollbar styling ─────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-page);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ── Custom select dropdown chevron - dark mode ──── */
+html[data-theme="dark"] select[class*="appearance-none"] {
+  background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%237fbcc1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E') !important;
+}
+
+/* ── Hide scrollbar for carousel / marquee tracks ── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Image placeholder background (zero CLS) ────────
+ * Only applies to images that explicitly opt in via the
+ * .img-placeholder class. Avoids tinting logos, icons,
+ * and decorative images that look bad with a bg color.
+ */
+.img-placeholder {
+  background-color: var(--color-accent-soft);
+}
+
+/* ── Smooth selection color ───────────────────────── */
+::selection {
+  background: rgba(15, 92, 99, 0.2);
+  color: var(--color-text);
+}
+html[data-theme="dark"] ::selection {
+  background: rgba(127, 188, 193, 0.25);
+}
+
+/* ── Responsive visibility utilities ── */
+.show-on-lg {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .show-on-lg {
+    display: flex;
+  }
+}
+.hide-on-lg {
+  display: flex;
+}
+@media (min-width: 1024px) {
+  .hide-on-lg {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Service Card — EXACT replica of services card.html reference
+ * Desktop: 380px navy cards with hover-to-expand (white arc sweep)
+ * Mobile: permanently expanded, white bg, no hover
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* Desktop/Tablet: cards are fixed-width (320px) in a horizontal scroll rail */
+.service-card-rail .service-card-exact {
+  flex: none;
+  width: 320px;
+}
+
+/* Smooth hover lift (CSS-only, no JS) */
+.service-card-exact:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-popover);
+}
+
+/* Hover: show bg fade + arc + expanded, hide default */
+.service-card-exact:hover .service-card-bg-fade {
+  opacity: 1 !important;
+}
+.service-card-exact:hover .service-card-arc {
+  transform: scale(1) !important;
+}
+.service-card-exact:hover .service-card-default {
+  opacity: 0;
+  transform: translateY(15px);
+  pointer-events: none;
+}
+.service-card-exact:hover .service-card-expanded {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.service-card-default {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Button color overrides for the expanded card (white bg).
+   The Button primitive uses theme colors (light teal in dark mode),
+   but the expanded card has a white arc bg — deep teal #0f5c63 is correct. */
+.service-card-btn-primary {
+  background-color: #0f5c63 !important;
+  color: #f7fbfb !important;
+}
+.service-card-btn-primary:hover {
+  background-color: #0b4b51 !important;
+}
+.service-card-btn-secondary {
+  color: #0f5c63 !important;
+  border-color: rgba(15, 92, 99, 0.3) !important;
+}
+.service-card-btn-secondary:hover {
+  border-color: #0f5c63 !important;
+  background-color: rgba(15, 92, 99, 0.05) !important;
+}
+
+/* Touch devices wider than the mobile breakpoint (e.g. tablets in landscape /
+   iPad ≥769px) have no hover, so the hover-revealed panel — which holds the
+   "Get Started" / "Details" CTAs — would never appear and the buttons would be
+   unreachable. Reveal it permanently there so the CTAs are always tappable. */
+@media (hover: none) and (min-width: 769px) {
+  .service-card-exact .service-card-bg-fade { opacity: 1 !important; }
+  .service-card-exact .service-card-arc { transform: scale(1) !important; }
+  .service-card-exact .service-card-default { opacity: 0; pointer-events: none; }
+  .service-card-exact .service-card-expanded {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Mobile: permanently expanded, no hover, white bg, full-width stack */
+@media (max-width: 768px) {
+  .service-card-rail {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    overflow: visible;
+  }
+  .service-card-rail .service-card-exact {
+    width: auto;
+    height: auto !important;
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    box-shadow: var(--shadow-card) !important;
+  }
+  .service-card-exact:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-card) !important;
+  }
+  .service-card-exact .service-card-arc,
+  .service-card-exact .service-card-bg-fade,
+  .service-card-exact .service-card-default {
+    display: none !important;
+  }
+  .service-card-exact .service-card-expanded {
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    padding: 32px 24px !important;
+  }
+}
+
+
+
+
+/* ── Business map (Leaflet + OSM, BusinessMap.tsx) ─────────
+ * Single branded pin; OSM tiles carry no clickable business listings, so no
+ * competitor POIs appear (the reason the Google embed was replaced). */
+.exx-map-pin {
+  position: relative;
+  display: block;
+  width: 34px;
+  height: 40px;
+}
+.exx-map-pin::before {
+  /* Teardrop pin body */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  background: var(--color-accent);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+}
+.exx-map-pin::after {
+  /* Inner dot */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* Theme-aware popup + rounded corners to match the card system */
+.business-map .leaflet-popup-content-wrapper,
+.business-map .leaflet-popup-tip {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+.business-map .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+}
+.business-map .leaflet-popup-content {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: 10px 14px;
+}
+.business-map .leaflet-container {
+  font-family: inherit;
+  background: var(--color-surface-soft);
+}
+
+/* Dark theme: invert the light OSM tiles so the map doesn't glow. The filter
+ * only touches tile images — pin, popup, and controls keep brand colors. */
+html[data-theme="dark"] .business-map .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.7);
+}
+html[data-theme="dark"] .business-map .leaflet-control-zoom a {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border-soft);
+}
+html[data-theme="dark"] .business-map .leaflet-control-attribution {
+  background: rgba(17, 29, 32, 0.8);
+  color: var(--color-text-muted);
+}
+
+/* ── Mobile menu open choreography (MobileNavigationPanel) ──
+ * The panel wrapper glides down while the menu items follow with a light
+ * stagger. Opacity + transform only (compositor-friendly — no layout work,
+ * which is why the old grid-rows height animation stays retired). Delays
+ * apply only while open; on close everything fades together, fast. */
+.mobile-menu-panel .mobile-menu-stagger > * {
+  opacity: 0;
+  transform: translateY(-10px);
+  /* Pre-promoted: without will-change each item gets its compositor layer
+   * created mid-animation on the first open, which drops frames. */
+  will-change: opacity, transform;
+  transition:
+    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mobile-menu-panel.is-open .mobile-menu-stagger > * {
+  opacity: 1;
+  transform: none;
+}
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(1) { transition-delay: 40ms; }
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(2) { transition-delay: 70ms; }
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(3) { transition-delay: 95ms; }
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(4) { transition-delay: 120ms; }
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(5) { transition-delay: 145ms; }
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(6) { transition-delay: 170ms; }
+.mobile-menu-panel.is-open .mobile-menu-stagger > *:nth-child(n+7) { transition-delay: 195ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-panel .mobile-menu-stagger > * {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Search-landing flash: ServiceSearchBox adds this for 2s after scrolling a
+ * card into view, so the visitor sees exactly which card they landed on.
+ * !important because the card carries an inline box-shadow; the card's own
+ * inline transition animates the change smoothly. */
+.service-card-exact.service-card-highlight {
+  box-shadow:
+    0 0 0 3px var(--color-accent-secondary),
+    0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Landmark dots + always-visible labels on the business map (BusinessMap.tsx).
+ * Muted styling so the office pin stays dominant. */
+.exx-landmark-dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-accent-secondary);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.business-map .exx-landmark-label {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.business-map .exx-landmark-label::before {
+  display: none; /* no tooltip arrow — reads as a place label, not a hint */
+}

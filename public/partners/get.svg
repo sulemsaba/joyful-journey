@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <linearGradient id="get-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon: Open book / education symbol -->
+  <g transform="translate(8, 6)">
+    <!-- Book left page -->
+    <path d="M24 10 C24 10 18 8 8 8 L8 38 C18 38 24 40 24 40 Z" fill="#FED7AA" stroke="url(#get-grad)" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Book right page -->
+    <path d="M24 10 C24 10 30 8 40 8 L40 38 C30 38 24 40 24 40 Z" fill="#FFEDD5" stroke="url(#get-grad)" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Book spine -->
+    <line x1="24" y1="10" x2="24" y2="40" stroke="url(#get-grad)" stroke-width="2"/>
+    <!-- Page lines left -->
+    <line x1="12" y1="16" x2="20" y2="17" stroke="#FB923C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <line x1="12" y1="22" x2="20" y2="23" stroke="#FB923C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <line x1="12" y1="28" x2="20" y2="29" stroke="#FB923C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <!-- Page lines right -->
+    <line x1="28" y1="17" x2="36" y2="16" stroke="#FB923C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <line x1="28" y1="23" x2="36" y2="22" stroke="#FB923C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <line x1="28" y1="29" x2="36" y2="28" stroke="#FB923C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <!-- Graduation cap tassel hint -->
+    <circle cx="24" cy="6" r="2" fill="#F97316"/>
+  </g>
+  <!-- Text: GET -->
+  <text x="58" y="39" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="3" fill="#0F172A">
+    <tspan fill="#F97316">G</tspan><tspan fill="#0F172A">ET</tspan>
+  </text>
+</svg>
