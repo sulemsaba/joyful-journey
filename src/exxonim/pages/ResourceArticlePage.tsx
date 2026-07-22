@@ -533,6 +533,10 @@ export function ResourceArticlePage({ slug }: ResourceArticlePageProps) {
                               alt={post.coverAlt ?? post.title}
                               className="w-full h-[250px] sm:h-[350px] lg:h-[460px] object-cover"
                               loading="eager"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/fallback-blog-image.svg";
+                              }}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
                           </>

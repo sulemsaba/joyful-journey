@@ -1,12 +1,12 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T19:22:13.499600+00:00",
+    "generatedAt": "2026-07-22T18:57:32.322798+00:00",
     "source": "backend-publish"
   },
   "data": [
     {
       "id": "cmrdhe1vy00068iijta2y050n",
-      "name": "okay",
+      "name": "Perfect",
       "badge": null,
       "description": "Essential registration and compliance to get your business legally operating.",
       "recommended": false,
@@ -67,6 +67,14 @@
         {
           "label": "Dedicated Compliance Advisor",
           "included": false
+        },
+        {
+          "label": "final feature",
+          "included": true
+        },
+        {
+          "label": "the new feature",
+          "included": true
         }
       ]
     },

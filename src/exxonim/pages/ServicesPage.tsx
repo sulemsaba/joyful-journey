@@ -41,8 +41,15 @@ export function ServicesPage() {
   const { data: page } = usePage<ServicesPageContent>("services");
   useResolvedPageSeo(page, routes.services);
   // FAQs now come from the single FAQ manager (tagged page="services").
-  // Fall back to the page's own content while the manager has no items yet.
+  // Prefer managed FAQ always; if empty, show nothing (no legacy page-content fallback).
   const { items: managedFaq } = useFaqItems("services");
+
+  const faqItems = useMemo(() => {
+    if (managedFaq.length > 0) {
+      return managedFaq.map((f) => ({ question: f.question, answer: f.answer }));
+    }
+    return [];
+  }, [managedFaq]);
 
   /* ── Search data = the CATALOG the cards render from ──
    * The search must find exactly what's on the page, so it's fed by the same
@@ -66,10 +73,7 @@ export function ServicesPage() {
   if (!page) return null;
   if (!page.content) return null;
 
-  const { overview, catalog, faq } = page.content;
-  const faqItems = managedFaq.length > 0
-    ? managedFaq.map((f) => ({ question: f.question, answer: f.answer }))
-    : (faq ?? []);
+  const { overview, catalog } = page.content;
 
   return (
     <>

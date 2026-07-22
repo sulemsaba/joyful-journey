@@ -17,8 +17,8 @@ import { SmartLink } from "./primitives/SmartLink";
  * stretches to it (title pinned top, meta pinned bottom via `mt-auto`) so the
  * title lines up with the thumbnail's top and the meta with its bottom.
  *
- * IMAGES: no cover, or a cover that fails to load, falls back to the same
- * branded monogram as BlogCard (placeholder underneath, <img> hides onError).
+ * IMAGES: no cover, or a cover that fails to load, falls back to
+ * /fallback-blog-image.svg (same as ResourcesPage and ResourceArticlePage).
  */
 function ListThumb({ post }: { post: BlogPost }) {
   return (
@@ -38,7 +38,8 @@ function ListThumb({ post }: { post: BlogPost }) {
           alt=""
           loading="lazy"
           onError={(e) => {
-            e.currentTarget.style.display = "none";
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/fallback-blog-image.svg";
           }}
         />
       ) : null}

@@ -1,26 +1,17 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T19:22:13.334281+00:00",
+    "generatedAt": "2026-07-22T18:57:32.129337+00:00",
     "source": "backend-publish"
   },
   "data": {
     "items": [
-      {
-        "id": "cmr3r84yf000g8biju6coscan",
-        "question": "What services does Exxonim offer?",
-        "answer": "We offer business registration, tax compliance, legal advisory, and ongoing compliance management services.",
-        "category": "general",
-        "page": "faq",
-        "sortOrder": 1,
-        "isActive": true
-      },
       {
         "id": "cmr3r84yl000j8bij0k6ms6t3",
         "question": "Do you offer support for foreign investors?",
         "answer": "Yes, we specialize in helping foreign investors navigate Tanzanian regulations and set up their businesses.",
         "category": "general",
         "page": "faq",
-        "sortOrder": 2,
+        "sortOrder": 1,
         "isActive": true
       },
       {
@@ -28,6 +19,15 @@
         "question": "How long does company registration take?",
         "answer": "Company registration typically takes 5-10 business days after all documents are submitted.",
         "category": "registration",
+        "page": "faq",
+        "sortOrder": 2,
+        "isActive": true
+      },
+      {
+        "id": "cmr3r84yf000g8biju6coscan",
+        "question": "What services does Exxonim offer?",
+        "answer": "We offer business registration, tax compliance, legal advisory, and ongoing compliance management services.",
+        "category": "general",
         "page": "faq",
         "sortOrder": 3,
         "isActive": true
@@ -67,8 +67,17 @@
         "page": "services",
         "sortOrder": 7,
         "isActive": true
+      },
+      {
+        "id": "cmrvndx570006x7ijeinqppan",
+        "question": "is this working?",
+        "answer": "yes this is working that is why you see it here",
+        "category": "general",
+        "page": "faq",
+        "sortOrder": 8,
+        "isActive": true
       }
     ],
-    "total": 7
+    "total": 8
   }
 }

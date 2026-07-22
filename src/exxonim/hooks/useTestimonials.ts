@@ -31,7 +31,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { fetchTestimonialsRaw } from "@/exxonim/services/testimonialService";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import { mapTestimonial } from "@/exxonim/utils/contentMappers";
 import type { Testimonial } from "@/exxonim/types";
 
@@ -39,7 +39,11 @@ export function useTestimonials() {
   const query = useQuery({
     queryKey: ["testimonials"],
     queryFn: async () => {
-      const raw = await fetchWithJsonFallback(fetchTestimonialsRaw, "testimonials");
+      const raw = await fetchWithPublicSnapshotFallback(
+        fetchTestimonialsRaw,
+        "testimonials",
+        "testimonials"
+      );
       return (Array.isArray(raw) ? raw : []).map(mapTestimonial) as Testimonial[];
     },
     staleTime: 1000 * 60 * 5, // 5 minutes

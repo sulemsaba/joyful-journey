@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generatedAt": "2026-07-21T19:22:13.304198+00:00",
+    "generatedAt": "2026-07-22T18:57:32.073829+00:00",
     "source": "backend-publish"
   },
   "data": {
-    "id": 1008602657,
+    "id": 378125269,
     "title": "Setting Up an NGO That Donors Actually Trust",
     "slug": "stress-with-cover-image",
     "excerpt": "Registration, a constitution, a governance framework and a donor-readiness pack — in the right order.",
@@ -17,9 +17,12 @@
     "featured_image_url": "https://picsum.photos/seed/exxonim-ngo/800/450",
     "cover_alt": "be matching. Let me check exactly how login is called.",
     "media_label": null,
-    "featured_positions": [],
-    "featured_slot": null,
-    "featured_on_home": false,
+    "featured_positions": [
+      "hero",
+      "home"
+    ],
+    "featured_slot": "hero",
+    "featured_on_home": true,
     "read_time_minutes": 7,
     "related_slugs": [],
     "meta_title": null,
@@ -33,24 +36,24 @@
     ],
     "status": "published",
     "is_published": true,
-    "published_at": "2026-07-10T20:47:13.755000",
+    "published_at": "2026-07-22T15:55:15.710000",
     "category": {
-      "id": 1704435949,
+      "id": 830394055,
       "name": "NGOs",
       "slug": "ngos",
       "description": null,
       "created_at": "2026-07-04T15:48:14.808000"
     },
     "author": {
-      "id": 1317385308,
+      "id": 871596552,
       "slug": "exxonim-team",
       "name": "Exxonim Team",
       "role": null,
       "avatar_src": "",
       "bio": null
     },
-    "view_count": 218,
+    "view_count": 226,
     "created_at": "2026-07-10T20:47:13.755000",
-    "updated_at": "2026-07-16T16:45:30.106000"
+    "updated_at": "2026-07-22T15:55:33.399000"
   }
 }
