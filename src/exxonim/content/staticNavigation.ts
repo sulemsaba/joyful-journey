@@ -92,9 +92,9 @@ export const staticNav = {
           icon: "building" as const,
         },
         {
-          label: "Tax & Licensing",
+          label: "Licensing ",
           href: `${routes.services}tin-application/`,
-          description: "TIN, VAT, and business licence applications",
+          description: "TIN, and business licence applications & Update",
           icon: "receipt" as const,
         },
         {

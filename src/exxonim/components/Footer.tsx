@@ -4,15 +4,23 @@ import { routes } from '@/exxonim/routes'
 import { fallbackBrand } from '@/exxonim/content/fallbackShell'
 import type { BrandAssets, CompanyInfo } from '@/exxonim/types'
 import type { SiteSettingFooterValue, SiteSettingSocialLinkValue } from '@/exxonim/types/api'
+import { useTheme } from '@/exxonim/hooks/useTheme'
 
 const footerSocialPlatforms: SiteSettingSocialLinkValue["platform"][] = [
   "x",
   "linkedin",
   "instagram",
+  "facebook",
 ];
 
 function renderSocialIcon(platform: SiteSettingSocialLinkValue["platform"]) {
   switch (platform) {
+    case "facebook":
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        </svg>
+      );
     case "instagram":
       return (
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
@@ -90,7 +98,9 @@ function FooterLink({ label, href }: { label: string; href: string }) {
 }
 
 export function Footer({ brand, company: _company, footer: _footer }: FooterProps) {
+  const { theme } = useTheme();
   const currentYear = new Date().getFullYear();
+  const logoSrc = theme === 'dark' ? brand.darkLogoSrc : brand.lightLogoSrc;
   const socialLinks = footerSocialPlatforms
     .map((platform) =>
       (_footer.social_links ?? []).find(
@@ -125,7 +135,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               className="inline-flex items-center"
             >
               <img
-                src={brand.darkLogoSrc}
+                src={logoSrc}
                 alt={brand.name}
                 width={160}
                 height={44}
@@ -141,7 +151,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
             </SmartLink>
 
             <p className="text-footer-text-muted text-xs sm:text-sm leading-relaxed max-w-xs">
-              Where Innovation Meets Efficiency
+              {_footer.tagline || 'Where Innovation Meets Efficiency'}
             </p>
 
             {/* Follow Us */}
@@ -197,7 +207,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   <circle cx="12" cy="10" r="3" />
                 </svg>
                 <span className="text-footer-text text-xs leading-relaxed">
-                  Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
+                  {_company.address || 'Dar es Salaam, Tanzania'}
                 </span>
               </div>
               {/* Emails (left) & Phone numbers (right) - side by side */}
@@ -209,12 +219,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                   </svg>
                   <div className="grid gap-0.5">
-                    <a href="mailto:info@exxonim.tz" className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
-                      info@exxonim.tz
-                    </a>
-                    <a href="mailto:md@exxonim.tz" className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
-                      md@exxonim.tz
-                    </a>
+                    {(_company.emails ?? []).map((email) => (
+                      <a key={email} href={`mailto:${email}`} className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
+                        {email}
+                      </a>
+                    ))}
                   </div>
                 </div>
                 {/* Phone numbers */}
@@ -223,12 +232,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                   <div className="grid gap-0.5">
-                    <a href="tel:+255794689099" className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
-                      +255 794 689 099
-                    </a>
-                    <a href="tel:+255685525224" className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
-                      +255 685 525 224
-                    </a>
+                    {(_company.phones ?? []).map((phone) => (
+                      <a key={phone} href={`tel:${phone.replace(/\s/g, '')}`} className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
+                        {phone}
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -243,7 +251,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   <circle cx="12" cy="10" r="3" />
                 </svg>
                 <span className="text-footer-text text-sm leading-relaxed">
-                  Mbezi Beach B, Africana, Bagamoyo Road, Block no H, House number 9, Dar es Salaam
+                  {_company.address || 'Dar es Salaam, Tanzania'}
                 </span>
               </li>
               {/* Emails */}
@@ -253,12 +261,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
                 <div className="grid gap-0.5">
-                  <a href="mailto:info@exxonim.tz" className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
-                    info@exxonim.tz
-                  </a>
-                  <a href="mailto:md@exxonim.tz" className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
-                    md@exxonim.tz
-                  </a>
+                  {(_company.emails ?? []).map((email) => (
+                    <a key={email} href={`mailto:${email}`} className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
+                      {email}
+                    </a>
+                  ))}
                 </div>
               </li>
               {/* Phone numbers */}
@@ -267,12 +274,11 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
                 <div className="grid gap-0.5">
-                  <a href="tel:+255794689099" className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
-                    +255 794 689 099
-                  </a>
-                  <a href="tel:+255685525224" className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
-                    +255 685 525 224
-                  </a>
+                  {(_company.phones ?? []).map((phone) => (
+                    <a key={phone} href={`tel:${phone.replace(/\s/g, '')}`} className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
+                      {phone}
+                    </a>
+                  ))}
                 </div>
               </li>
             </ul>
@@ -282,7 +288,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
         {/* Copyright & Credit */}
         <div className="text-center grid gap-1">
           <p className="text-footer-text-muted text-xs sm:text-sm">
-            © {currentYear} Exxonim Company Limited
+            {(_footer.copyright ?? `© ${currentYear} Exxonim Company Limited`).replace('{YEAR}', String(currentYear))}
           </p>
           <p className="text-footer-text-muted text-2xs sm:text-xs">
             Designed &amp; Built by{' '}

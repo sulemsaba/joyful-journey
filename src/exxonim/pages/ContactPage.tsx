@@ -45,6 +45,14 @@ import { PhoneInput } from "@/exxonim/components/PhoneInput";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { usePublicShell } from "@/exxonim/hooks/usePublicShell";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
+import { getSiteSetting } from "@/exxonim/services/siteSettingsService";
+import type { SiteSettingOfficeHourValue } from "@/exxonim/shared/contracts/site-settings";
+import {
+  useQuery
+} from "@tanstack/react-query";
+import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { api } from "@/exxonim/app/apiClient";
+import { apiRoutes } from "@/exxonim/shared/api/routes";
 import { routes } from "@/exxonim/routes";
 import { SmartLink } from "@/exxonim/components/primitives/SmartLink";
 import { submitPublicConsultation } from "@/exxonim/services/consultationService";
@@ -111,9 +119,9 @@ function createInitialFormState() {
 }
 
 /* ────────────────────────────────────────────
-   Live Business Hours - shows Open / Closed
-   based on the visitor's current time (EAT).
-   ──────────────────────────────────────────── */
+    Live Business Hours - uses admin-configured
+    schedule + visitor EAT-aware open/closed status.
+    ──────────────────────────────────────────── */
 
 interface BusinessHoursStatus {
   isOpen: boolean;
@@ -121,40 +129,101 @@ interface BusinessHoursStatus {
   detail: string;
 }
 
-function getBusinessHoursStatus(): BusinessHoursStatus {
-  if (typeof Intl === "undefined" || typeof Intl.DateTimeFormat === "undefined") {
+const DAYS_EAT = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] as const;
+
+async function fetchHolidaysToday(): Promise<string[]> {
+  try {
+    const today = new Date().toISOString().split("T")[0];
+    const response = await api.get<{ items: { name: string; holidayDate: string; isRecurring: boolean }[] }>(
+      `${apiRoutes.public.holidays}?date=${today}`
+    );
+    return response.data.items.map(h => h.name);
+  } catch {
+    return [];
+  }
+}
+
+function parseSchedule(schedule: unknown): SiteSettingOfficeHourValue[] {
+  if (!schedule || typeof schedule !== "object") return [];
+  const entries = (schedule as { days?: SiteSettingOfficeHourValue[] }).days;
+  if (Array.isArray(entries)) return entries;
+  return [];
+}
+
+function getBusinessHoursStatus(hours: SiteSettingOfficeHourValue[] | undefined, holidays: string[]): BusinessHoursStatus {
+  if (!hours || hours.length === 0) {
     return { isOpen: false, label: "Business Hours", detail: "Mon–Fri 8AM–4:30PM (EAT)" };
+  }
+
+  if (holidays.length > 0) {
+    return { isOpen: false, label: "Closed (Holiday)", detail: `Closed today · ${holidays[0]}` };
   }
 
   const now = new Date();
   const eatHour = (now.getUTCHours() + 3) % 24;
   const eatMinute = now.getUTCMinutes();
-  const day = now.getUTCDay(); // 0=Sun, 6=Sat
+  const dayIndex = now.getUTCDay(); // 0=Sun
+  const dayName = DAYS_EAT[dayIndex];
+
+  const todayHours = hours.find(h => h.day === dayName);
+  
+  if (!todayHours || todayHours.closed) {
+    const tomorrowIndex = (dayIndex + 1) % 7;
+    const tomorrowName = DAYS_EAT[tomorrowIndex];
+    const tomorrowHours = hours.find(h => h.day === tomorrowName);
+    const openTime = tomorrowHours && !tomorrowHours.closed ? formatTime(tomorrowHours.open) : "8AM";
+    return {
+      isOpen: false,
+      label: "Closed",
+      detail: `Closed today · Opens ${tomorrowName} ${openTime}`,
+    };
+  }
 
   const currentMinutes = eatHour * 60 + eatMinute;
+  const [openH, openM] = (todayHours.open || "08:00").split(":").map(Number);
+  const [closeH, closeM] = (todayHours.close || "17:00").split(":").map(Number);
+  const openMinutes = openH * 60 + openM;
+  const closeMinutes = closeH * 60 + closeM;
 
-  let isOpen: boolean;
-  let detail: string;
+  const isOpen = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+  
+  if (isOpen) {
+    return {
+      isOpen: true,
+      label: "Open",
+      detail: `Open now · Closes at ${formatTime(todayHours.close)}`,
+    };
+  }
 
-  if (day === 0 || day === 6) {
-    isOpen = false;
-    detail = day === 6
-      ? "Closed today · Opens Mon 8AM"
-      : "Closed today · Opens Mon 8AM";
-  } else {
-    isOpen = currentMinutes >= 480 && currentMinutes < 990;
-    detail = isOpen
-      ? "Open now · Closes at 4:30PM"
-      : currentMinutes < 480
-        ? "Closed · Opens at 8AM"
-        : "Closed for today · Opens tomorrow 8AM";
+  if (currentMinutes < openMinutes) {
+    return {
+      isOpen: false,
+      label: "Closed",
+      detail: `Closed · Opens at ${formatTime(todayHours.open)}`,
+    };
   }
 
   return {
-    isOpen,
-    label: isOpen ? "Open" : "Closed",
-    detail,
+    isOpen: false,
+    label: "Closed",
+    detail: `Closed for today · Opens tomorrow 8AM`,
   };
+}
+
+function formatTime(time: string | undefined): string {
+  if (!time) return "8AM";
+  const [h, m] = time.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const hour12 = h % 12 || 12;
+  return `${hour12}${m > 0 ? ":" + String(m).padStart(2, "0") : ""}${period}`;
+}
+
+function formatDayRange(days: { day: string }[], start: number, end: number): string {
+  const dayNames: Record<string, string> = { monday: "Mon", tuesday: "Tue", wednesday: "Wed", thursday: "Thu", friday: "Fri", saturday: "Sat", sunday: "Sun" };
+  const startName = dayNames[days[start].day] || days[start].day;
+  if (end - start === 1) return startName;
+  const endName = dayNames[days[end - 1].day] || days[end - 1].day;
+  return `${startName}–${endName}`;
 }
 
 /* ────────────────────────────────────────────
@@ -314,7 +383,57 @@ export function ContactPage() {
   };
 
   const { emails, phones, whatsapp, address } = shell.company;
-  const hours = getBusinessHoursStatus();
+
+  const officeHoursQuery = useQuery({
+    queryKey: ["site-settings", "office_hours"],
+    queryFn: () => fetchWithJsonFallback(
+      () => getSiteSetting<{ days?: SiteSettingOfficeHourValue[] }>("office_hours"),
+      "site-settings-office_hours"
+    ),
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+
+  const contactMapQuery = useQuery({
+    queryKey: ["site-settings", "contact_map"],
+    queryFn: () => fetchWithJsonFallback(
+      () => getSiteSetting<{ lat: number; lng: number; label?: string }>("contact_map"),
+      "site-settings-contact_map"
+    ),
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+
+  const officeHours = officeHoursQuery.data?.value?.days;
+  const contactMap = contactMapQuery.data?.value;
+
+  const [holidays, setHolidays] = useState<string[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    fetchHolidaysToday().then(names => { if (alive) setHolidays(names); });
+    return () => { alive = false; };
+  }, []);
+
+  const scheduleText = useMemo(() => {
+    if (!officeHours || officeHours.length === 0) return "Mon–Fri: 8AM–4:30PM (EAT)";
+    const parts: string[] = [];
+    let i = 0;
+    while (i < officeHours.length) {
+      const curr = officeHours[i];
+      if (curr.closed) { i++; continue; }
+      let j = i + 1;
+      while (j < officeHours.length && !officeHours[j].closed && officeHours[j].open === curr.open && officeHours[j].close === curr.close) {
+        j++;
+      }
+      const label = formatDayRange(officeHours, i, j);
+      parts.push(`${label}: ${formatTime(curr.open)} – ${formatTime(curr.close)}`);
+      i = j;
+    }
+    return parts.join(" · ") + " (EAT)";
+  }, [officeHours]);
+
+  const hours = getBusinessHoursStatus(officeHours, holidays);
 
   /* Shared input styling - using design tokens */
   /* text-base (16px) on phones prevents iOS Safari from auto-zooming on focus;
@@ -423,9 +542,11 @@ export function ContactPage() {
                       <p className="mt-0.5 text-text-muted leading-relaxed">
                         {hours.detail}
                       </p>
-                      <p className="text-text-soft text-xs mt-0.5">
-                        Mon–Fri: 8AM–4:30PM (EAT)
-                      </p>
+                      {scheduleText && (
+                        <p className="text-text-soft text-xs mt-0.5">
+                          {scheduleText}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -449,7 +570,13 @@ export function ContactPage() {
                     is much shorter than the form card, so this space was
                     empty), which keeps the office location visible without
                     scrolling. On mobile the map renders full-width below. */}
-                <BusinessMap className="hidden lg:block h-[300px] rounded-2xl ring-1 ring-border-soft" />
+                <BusinessMap
+                  className="hidden lg:block h-[300px] rounded-2xl ring-1 ring-border-soft"
+                  lat={contactMap?.lat}
+                  lng={contactMap?.lng}
+                  label={contactMap?.label}
+                  googleMapsUrl={contactMap?.label ? `https://www.google.com/maps/search/?api=1&query=${contactMap.lat},${contactMap.lng}` : undefined}
+                />
               </div>
 
               {/* ── Right column: Form card ── */}
@@ -680,7 +807,13 @@ export function ContactPage() {
 
           {/* Map — mobile/tablet: full width below the form. (Desktop shows
               the map inside the left column instead — see above.) */}
-          <BusinessMap className="w-full lg:hidden h-[240px] sm:h-[300px] md:h-[360px]" />
+          <BusinessMap
+            className="w-full lg:hidden h-[240px] sm:h-[300px] md:h-[360px]"
+            lat={contactMap?.lat}
+            lng={contactMap?.lng}
+            label={contactMap?.label}
+            googleMapsUrl={contactMap?.label ? `https://www.google.com/maps/search/?api=1&query=${contactMap.lat},${contactMap.lng}` : undefined}
+          />
         </section>
   );
 }

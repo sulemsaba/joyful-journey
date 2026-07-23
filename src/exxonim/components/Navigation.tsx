@@ -11,6 +11,7 @@ import { useMobileMenuFocusTrap } from "@/exxonim/components/navigation/useMobil
 import { normalizePathname, routes } from "@/exxonim/routes";
 import type { BrandAssets, CompanyInfo, Theme } from '@/exxonim/types';
 import { cn } from "@/exxonim/utils/cn";
+import { useTheme } from "@/exxonim/hooks/useTheme";
 
 /**
  * Navigation component - the fixed site header.
@@ -89,6 +90,7 @@ export function Navigation({
   onToggleTheme,
 }: NavigationProps) {
   const brandName = company.name?.trim() || brand.name;
+  const logoSrc = theme === 'dark' ? brand.darkLogoSrc : brand.lightLogoSrc;
   const mobilePanelRef = useRef<HTMLDivElement>(null);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const servicesMenuId = useId();
@@ -207,7 +209,7 @@ export function Navigation({
         )}
       >
         <div className="h-full px-4 flex items-center justify-between">
-          {/* Logo - matches footer size: h-8 sm:h-11 */}
+          {/* Logo - matches footer size: h-10 sm:h-11 */}
           <SmartLink
             href={routes.home}
             onClick={closeAllMenus}
@@ -215,31 +217,18 @@ export function Navigation({
             className="relative flex items-center min-w-0"
           >
             <img
-              src={brand.lightLogoSrc}
+              src={logoSrc}
               alt={brand.name}
               width="160"
               height="44"
-              onError={(event) => {
-                const img = event.currentTarget;
-                if (img.dataset.fallbackApplied) return;
-                img.dataset.fallbackApplied = "true";
-                img.src = fallbackBrand.lightLogoSrc;
-              }}
-              className="logo-light block h-10 sm:h-11 w-auto"
-            />
-            <img
-              src={brand.darkLogoSrc}
-              alt=""
-              aria-hidden="true"
-              width="160"
-              height="44"
+              loading="eager"
               onError={(event) => {
                 const img = event.currentTarget;
                 if (img.dataset.fallbackApplied) return;
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className="logo-dark h-8 sm:h-11 w-auto"
+              className="block h-10 sm:h-11 w-auto"
             />
           </SmartLink>
 
@@ -330,31 +319,18 @@ export function Navigation({
             className="relative flex items-center min-w-0"
           >
             <img
-              src={brand.lightLogoSrc}
+              src={logoSrc}
               alt={brand.name}
               width="176"
               height="44"
-              onError={(event) => {
-                const img = event.currentTarget;
-                if (img.dataset.fallbackApplied) return;
-                img.dataset.fallbackApplied = "true";
-                img.src = fallbackBrand.lightLogoSrc;
-              }}
-              className="logo-light block h-11 w-auto"
-            />
-            <img
-              src={brand.darkLogoSrc}
-              alt=""
-              aria-hidden="true"
-              width="176"
-              height="44"
+              loading="eager"
               onError={(event) => {
                 const img = event.currentTarget;
                 if (img.dataset.fallbackApplied) return;
                 img.dataset.fallbackApplied = "true";
                 img.src = fallbackBrand.darkLogoSrc;
               }}
-              className="logo-dark h-11 w-auto"
+              className="block h-11 w-auto"
             />
           </SmartLink>
 

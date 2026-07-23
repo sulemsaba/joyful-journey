@@ -45,6 +45,7 @@ interface FaqItemFromApi {
   category?: string | null;
   /** Which public surface this FAQ shows on: "faq" | "services" | "service:<slug>". */
   page?: string | null;
+  showInServices?: boolean;
   sortOrder?: number;
   isActive?: boolean;
 }
@@ -61,6 +62,7 @@ export interface PublicFaqItem {
   answer: string;
   category?: string | null;
   page: string;
+  showInServices?: boolean;
 }
 
 const EMPTY_FAQ: FaqApiResponse = { items: [], total: 0 };
@@ -89,19 +91,26 @@ export function useFaqItems(page?: string) {
   });
 
   const all = (query.data ?? EMPTY_FAQ).items ?? [];
-  const items = useMemo<PublicFaqItem[]>(
-    () =>
-      all
-        .map((i) => ({
-          id: i.id,
-          question: i.question,
-          answer: i.answer,
-          category: i.category ?? null,
-          page: i.page || "faq",
-        }))
-        .filter((i) => !page || i.page === page),
-    [all, page]
-  );
+  const items = useMemo<PublicFaqItem[]>(() => {
+    const mapped = all.map((i) => ({
+      id: i.id,
+      question: i.question,
+      answer: i.answer,
+      category: i.category ?? null,
+      page: i.page || "faq",
+      showInServices: i.showInServices,
+    }));
+
+    if (!page) return mapped;
+
+    if (page === "services") {
+      return mapped.filter(
+        (i) => i.page === "services" || (i.page === "faq" && i.showInServices)
+      );
+    }
+
+    return mapped.filter((i) => i.page === page);
+  }, [all, page]);
 
   return { ...query, items, data: query.data ?? EMPTY_FAQ };
 }

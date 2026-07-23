@@ -251,5 +251,8 @@ export const apiRoutes = {
     faq: {
       list: "/faq",
     },
+    holidays: {
+      list: "/holidays",
+    },
   },
 } as const;
