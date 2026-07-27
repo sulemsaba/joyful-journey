@@ -271,7 +271,7 @@ function ServiceCardExact({
           <Button size="standard" variant="primary" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onGetStarted(); }} className="flex-1 service-card-btn-primary">
             {ctaText}
           </Button>
-          <Button size="standard" variant="outline" to={detailLink} className="flex-1 service-card-btn-secondary">
+          <Button size="standard" variant="outline" href={detailLink} className="flex-1 service-card-btn-secondary">
             Details
             <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
           </Button>
