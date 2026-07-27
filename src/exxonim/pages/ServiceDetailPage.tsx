@@ -89,7 +89,7 @@ export function ServiceDetailPage() {
     <>
       <StructuredData
         heroTitle={service.title}
-        heroDescription={service.short_description}
+        heroDescription={service.short_description ?? undefined}
         breadcrumbs={[
           { name: 'Services', path: routes.services },
           { name: service.title, path: serviceDetailPath(service.slug) },

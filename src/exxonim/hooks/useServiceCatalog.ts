@@ -94,8 +94,8 @@ export function useServiceCatalog(segment?: string) {
   const rawData = apiHasServices ? apiData : fallback;
 
   const normalizedData: ServicesResponse = rawData?.data
-    ? rawData as ServicesResponse
-    : { success: true, data: rawData } as ServicesResponse;
+    ? rawData as unknown as ServicesResponse
+    : { success: true, data: rawData as unknown as ServicesResponse };
 
   return {
     ...query,
