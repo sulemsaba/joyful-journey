@@ -199,7 +199,9 @@ function ServiceCardExact({
       }}
     >
       {/* Whole-card link → service detail */}
-      <SmartLink to={detailLink} aria-label={`${service.title} — view details`} className="absolute inset-0 z-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fbcc1] focus-visible:ring-inset" />
+      <SmartLink to={detailLink} aria-label={`${service.title} — view details`} className="absolute inset-0 z-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fbcc1] focus-visible:ring-inset" >
+        <span />
+      </SmartLink>
 
       {/* Background arc — white sweep from bottom-left on hover. */}
       <span className="service-card-bg-fade absolute inset-0 pointer-events-none" style={{ backgroundColor: '#f7fbfb', opacity: 0, transition: 'opacity 0.3s ease', zIndex: 1, borderRadius: '12px' }} />
