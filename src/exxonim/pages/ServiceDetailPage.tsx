@@ -63,15 +63,26 @@ export function ServiceDetailPage() {
   const ctaLink = contactLinkWithService(service.cta_link ?? routes.contact, service.slug);
   const ctaText = service.cta_text || 'Get Started';
 
-  // FAQs from the manager (tagged for this service); fall back to sensible
-  // generic questions until the admin adds service-specific ones.
-  const serviceFaqs = managedFaq.length > 0
-    ? managedFaq.map((f) => ({ q: f.question, a: f.answer }))
+  // Use service-specific FAQs from the service object first, fall back to
+  // the global FAQ manager, then to sensible generic questions.
+  const serviceFaqs = (service.faqs && service.faqs.length > 0)
+    ? service.faqs.map((f) => ({ q: f.question, a: f.answer }))
+    : managedFaq.length > 0
+      ? managedFaq.map((f) => ({ q: f.question, a: f.answer }))
+      : [
+          { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
+          { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
+          { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates — no login required.' },
+          { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
+        ];
+
+  // Use service-specific process steps if available, otherwise show the hardcoded fallback
+  const processSteps = (service.process_steps && service.process_steps.length > 0)
+    ? service.process_steps
     : [
-        { q: `How long does ${service.title.toLowerCase()} take?`, a: 'Timelines depend on the service type and authority processing speed. We track every submission and follow up proactively so you always know where things stand.' },
-        { q: 'What documents do I need to provide?', a: 'We send you a customized checklist after your initial consultation. Most services require identification, proof of address, and service-specific documents.' },
-        { q: 'How do I track the progress?', a: 'You receive a tracking code after submission. Use it on our Track Consultation page to see real-time milestone updates - no login required.' },
-        { q: 'What does this cost?', a: 'Pricing depends on your segment and package. Check the Packages section or contact us for a custom quote.' },
+        { step: '01', title: 'Submit your request', detail: 'Fill out the contact form or call us. We review your needs and confirm the scope before any work begins.' },
+        { step: '02', title: 'We handle the process', detail: 'Our team manages every filing, submission, and authority interaction on your behalf. You stay informed at every milestone.' },
+        { step: '03', title: 'Track and receive', detail: 'Use your tracking code to see real-time updates. Receive your final documents and certificates directly.' },
       ];
 
   return (
@@ -133,10 +144,10 @@ export function ServiceDetailPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 2: What's included - simple checkmark list (NOT cards).
-       *  Clean list with checkmarks, no boxes/borders.
-       *  Pulls from service.deliverables + deliverables_full.
-       * ────────────────────────────────────────────────────────────── */}
+        *  SECTION 2: What's included - simple checkmark list (NOT cards).
+        *  Clean list with checkmarks, no boxes/borders.
+        *  Pulls from service.deliverables + deliverables_full.
+        * ────────────────────────────────────────────────────────────── */}
       {allDeliverables.length > 0 && (
         <section className="py-12 md:py-20 border-t border-border-soft" aria-labelledby="service-includes-title">
           <Container>
@@ -150,6 +161,9 @@ export function ServiceDetailPage() {
               >
                 Everything we handle for you.
               </h2>
+              <p className="mt-3 text-sm md:text-base text-text-muted max-w-2xl mx-auto">
+                These are the standard deliverables for this service. Exact scope may vary based on your specific situation and segment.
+              </p>
             </div>
 
             {/* Simple list - no cards, no borders. Just checkmarks + text. */}
@@ -166,10 +180,9 @@ export function ServiceDetailPage() {
       )}
 
       {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 3: Process - how this service works.
-       *  Placeholder UI - content to be filled later.
-       *  Shows a 3-step timeline structure.
-       * ────────────────────────────────────────────────────────────── */}
+        *  SECTION 3: Process - how this service works.
+        *  Uses service.process_steps from the admin-configured data.
+        * ────────────────────────────────────────────────────────────── */}
       <section className="py-12 md:py-20 bg-surface-soft/30" aria-labelledby="service-process-title">
         <Container>
           <div className="mb-10 md:mb-14 text-center" data-reveal>
@@ -182,17 +195,16 @@ export function ServiceDetailPage() {
             >
               A clear path from start to finish.
             </h2>
+            <p className="mt-3 text-sm md:text-base text-text-muted max-w-2xl mx-auto">
+              Every service follows a transparent process so you always know what happens next.
+            </p>
           </div>
 
-          {/* Process timeline - content to be filled per service later */}
+          {/* Process timeline - rendered from service.process_steps */}
           <div className="relative max-w-2xl mx-auto">
-            <div className="absolute left-6 top-3 bottom-3 w-0.5 bg-gradient-to-b from-accent via-accent/30 to-transparent" />
+            <div className="absolute left-6 top-3 bottom-3 w-0.5 bg-gradient-to-b from-accent via-accent/30 to-transparent" aria-hidden="true" />
             <div className="flex flex-col gap-8">
-              {[
-                { step: '01', title: 'Submit your request', detail: 'Fill out the contact form or call us. We review your needs and confirm the scope.' },
-                { step: '02', title: 'We handle the process', detail: 'Our team manages every filing, submission, and authority interaction on your behalf.' },
-                { step: '03', title: 'Track and receive', detail: 'Get updates at every milestone. Receive your final documents and certificates.' },
-              ].map((item, i) => (
+              {processSteps.map((item, i) => (
                 <div key={i} className="relative pl-20 flex flex-col gap-2" data-reveal>
                   <div className="absolute left-0 top-0 flex items-center justify-center w-12 h-12 rounded-full bg-accent text-accent-contrast text-base font-bold tabular-nums shadow-lg shadow-accent/20">
                     {item.step}
@@ -206,11 +218,11 @@ export function ServiceDetailPage() {
         </Container>
       </section>
 
-      {/* ──────────────────────────────────────────────────────────────
-       *  SECTION 4: FAQ - service-specific questions.
-       *  Accordion. Content to be filled per service later.
-       *  Renders placeholder FAQs until admin content is added.
-       * ────────────────────────────────────────────────────────────── */}
+{/* ──────────────────────────────────────────────────────────────
+        *  SECTION 4: FAQ - service-specific questions.
+        *  Uses service.faqs from admin, falls back to global FAQ manager,
+        *  then to sensible generic questions.
+        * ────────────────────────────────────────────────────────────── */}
       <section className="py-12 md:py-20" aria-labelledby="service-faq-title">
         <Container>
           <div className="mb-10 md:mb-14 text-center" data-reveal>
@@ -225,7 +237,7 @@ export function ServiceDetailPage() {
             </h2>
           </div>
 
-          {/* FAQ accordion - flat list with dividers, Plus/X toggle (matches main FAQ page) */}
+          {/* FAQ accordion - sourced from service.faqs (admin-managed), global FAQ manager, or fallback */}
           <div className="max-w-2xl mx-auto" data-reveal>
             {serviceFaqs.map((faq, i) => (
               <div

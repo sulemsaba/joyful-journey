@@ -6,10 +6,16 @@ export interface ServiceCatalogItem {
   primary_segment: string[];
   badge: string | null;
   short_description: string;
+  body: string | null;
+  hero_image: string | null;
   deliverables: string[];
   deliverables_full: string[] | null;
+  process_steps: Array<{ step: string; title: string; detail: string }> | null;
   cta_text: string;
   cta_link: string;
+  hover_hint: string | null;
+  card_preview: string | null;
+  faqs: Array<{ question: string; answer: string }> | null;
   status: 'draft' | 'published' | 'archived';
   sort_order: number;
   created_at: string;
