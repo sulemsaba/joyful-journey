@@ -20,7 +20,7 @@ export default defineConfig({
         server.middlewares.use((req, res, next) => {
           if (req.url?.startsWith("/api/")) {
             const requestPath = req.url.split("?")[0];
-            // Skip both services (3031) and FastAPI (3032) prefixes — they're handled by proxies
+            // Skip FastAPI (3032) prefix — handled by the proxy above.
             const isFastApiPrefix = requestPath.startsWith(LOCAL_FASTAPI_API_PREFIX);
             if (isFastApiPrefix) {
               next();
