@@ -65,6 +65,8 @@ export function ServicesPage() {
         name: s.title,
         group: s.category,
         href: routes.services,
+        description: s.short_description ?? '',
+        deliverables: s.deliverables ?? [],
       }));
     }
     return flattenServiceNavGroups(page?.content?.overview?.service_nav_groups);

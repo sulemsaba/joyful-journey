@@ -21,6 +21,8 @@ export interface FlatService {
   name: string;
   group: string;
   href: string;
+  description?: string;
+  deliverables?: string[];
 }
 
 /**
@@ -74,11 +76,18 @@ export function ServiceSearchBox({ services, compact = false, inputRef, onNaviga
   const filteredServices = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const q = searchQuery.toLowerCase().trim();
-    return services.filter(
-      (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.group.toLowerCase().includes(q)
-    );
+    return services.filter((s) => {
+      const haystack = [
+        s.name,
+        s.group,
+        s.description,
+        ...(s.deliverables ?? []),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
   }, [searchQuery, services]);
 
   const handleSearchChange = useCallback((value: string) => {

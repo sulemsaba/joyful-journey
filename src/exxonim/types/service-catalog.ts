@@ -5,7 +5,7 @@ export interface ServiceCatalogItem {
   category: string;
   primary_segment: string[];
   badge: string | null;
-  short_description: string;
+  short_description: string | null;
   body: string | null;
   hero_image: string | null;
   deliverables: string[];
