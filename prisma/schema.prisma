@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FaqItem {
+  id         String   @id @default(cuid())
+  question   String   // max 120 chars
+  answer     String   // max 500 chars
+  category   String   @default("general") // registration, licensing, tax, tracking, general
+  sort_order Int      @default(0)
+  is_active  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ServiceCategory {
+  id         String    @id @default(cuid())
+  name       String    @unique
+  slug       String    @unique
+  sort_order Int       @default(0)
+  services   Service[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model ServiceSegment {
+  id        String             @id @default(cuid())
+  name      String             @unique
+  slug      String             @unique
+  sortOrder Int                @default(0) @map("sort_order")
+  services  ServiceToSegment[]
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+  
+  @@map("service_segments")
+}
+
+model Service {
+  id                 String            @id @default(cuid())
+  title              String
+  slug               String            @unique
+  categoryId         String            @map("category_id")
+  category           ServiceCategory   @relation(fields: [categoryId], references: [id])
+  badge              String?
+  shortDescription   String            @map("short_description")
+  deliverables       String            // JSON array of strings
+  deliverablesFull   String?           @map("deliverables_full") // JSON array of strings (optional expanded)
+  ctaText            String            @default("Get Started →") @map("cta_text")
+  ctaLink            String            @default("/contact") @map("cta_link")
+  status             String            @default("published") // draft, published, archived
+  sortOrder          Int               @default(0) @map("sort_order")
+  segments           ServiceToSegment[]
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+
+  @@map("services")
+}
+
+model ServiceToSegment {
+  serviceId  String          @map("service_id")
+  segmentId  String          @map("segment_id")
+  service    Service         @relation(fields: [serviceId], references: [id])
+  segment    ServiceSegment  @relation(fields: [segmentId], references: [id])
+
+  @@id([serviceId, segmentId])
+  @@map("service_to_segment")
+}

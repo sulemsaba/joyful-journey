@@ -1,0 +1,45 @@
+/* ── Self-hosted Geist fonts ──────────────────────────
+ * WHY SELF-HOST?
+ *   - Eliminates 2 DNS lookups (fonts.googleapis.com + fonts.gstatic.com)
+ *   - Eliminates render-blocking Google Fonts CSS
+ *   - Saves ~2-3 seconds on 3G connections
+ *   - Only 4 weights (400+700) instead of 11
+ *
+ * Font files: /public/fonts/
+ *   geist-400.ttf      (73 KB) — Geist Regular
+ *   geist-700.ttf      (73 KB) — Geist Bold
+ *   geist-mono-400.ttf (71 KB) — Geist Mono Regular
+ *   geist-mono-700.ttf (71 KB) — Geist Mono Bold
+ */
+
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/geist-400.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/geist-700.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/geist-mono-400.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/geist-mono-700.ttf') format('truetype');
+}
