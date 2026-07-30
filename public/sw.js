@@ -16,9 +16,9 @@
  * - HTML pages — always fetched fresh (stale-while-revalidate)
  */
 
-const CACHE_NAME = 'exxonim-v1';
-const STATIC_CACHE = 'exxonim-static-v1';
-const IMAGE_CACHE = 'exxonim-images-v1';
+const CACHE_NAME = 'exxonim-v2';
+const STATIC_CACHE = 'exxonim-static-v2';
+const IMAGE_CACHE = 'exxonim-images-v2';
 
 // Assets to cache immediately on install (critical path)
 const PRECACHE_URLS = [
@@ -27,6 +27,9 @@ const PRECACHE_URLS = [
   '/branding/logo-dark.png',
   '/branding/exxonim-favicon-light.png',
   '/branding/exxonim-favicon-dark.png',
+  '/branding/icon-192.png',
+  '/branding/icon-512.png',
+  '/manifest.webmanifest',
   '/videos/track-consultation-poster.webp',
 ];
 

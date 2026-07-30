@@ -37,10 +37,10 @@
  * ADMIN / UI INTEGRATION NOTES
  * ══════════════════════════════════════════════════════════════
  *
- * 1. BANNER IMAGE
- *    - Hero banner comes from `content.hero.banner_image`.
- *    - Admin uploads a 1344×768px WebP via CMS. Fallback: /careers/banner-enhanced.png.
- *    - Dark overlay gradient applied via CSS for text readability.
+ * 1. HERO
+ *    - No image asset: the hero is a CSS-only decorative brand-teal card
+ *      (dot-grid + corner glows + concentric rings). `content.hero.banner_image`
+ *      is unused — the render never references it.
  *
  * 2. JOB DATA (ApiCareerJob)
  *    - Fetched from `/api/public/jobs` via jobsService.
@@ -107,7 +107,7 @@ import { routes } from "@/exxonim/routes";
 import { usePage } from "@/exxonim/hooks/usePage";
 import { useResolvedPageSeo } from "@/exxonim/hooks/useResolvedSeo";
 import { getPublishedJobs, applyToJob } from "@/exxonim/services/jobsService";
-import { fallbackJobs } from "@/exxonim/content/fallbackPublicContent";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import type { ApiCareerJob, CareerPageContent } from "@/exxonim/types";
 import { StructuredData } from "@/exxonim/components/StructuredData";
 import { Button } from "@/exxonim/components/primitives/Button";
@@ -639,17 +639,20 @@ export function CareerPage() {
   const { data: page } = usePage<CareerPageContent>("career");
   const jobsQuery = useQuery({
     queryKey: ["career-jobs"],
-    queryFn: getPublishedJobs,
-    placeholderData: () => fallbackJobs,
+    // Blog-model fallback: live API → static /snapshot/jobs/jobs.json (real
+    // published jobs, backend-generated). Never fabricated placeholders.
+    queryFn: () => fetchWithPublicSnapshotFallback(getPublishedJobs, "jobs", "jobs"),
     staleTime: 1000 * 60 * 30,
     retry: 1,
   });
   useResolvedPageSeo(page, routes.career);
 
   const content = page?.content;
-  // On a real error keep the page honest (empty state) instead of showing the
-  // 7 placeholder demo jobs; placeholderData still smooths the initial load.
-  const allJobs = jobsQuery.isError ? [] : (jobsQuery.data ?? []);
+  // Only ever render REAL openings. We never seed fabricated demo jobs — a
+  // visitor must never see (or apply to) a role that doesn't exist. While the
+  // query is pending we show a loading state; on empty/error, an honest
+  // "no positions" state.
+  const allJobs = jobsQuery.data ?? [];
 
   /* ── State ── */
   const [activeTab, setActiveTab] = useState("all");
@@ -776,11 +779,9 @@ export function CareerPage() {
               <Breadcrumb items={[{ label: "Home", href: routes.home, icon: Home }, { label: "Career" }]} />
             </div>
 
-            {/* ═══ 1. HERO BANNER ═══
-             * Banner image: 1344×768px WebP (16:9 aspect ratio).
-             * Admin uploads via CMS → content.hero.banner_image.
-             * Fallback: /careers/banner-enhanced.png
-             * Dark overlay gradient ensures white text readability.
+            {/* ═══ 1. HERO ═══
+             * CSS-only decorative brand-teal card (no image asset).
+             * `content.hero.banner_image` is intentionally not rendered.
              */}
             <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4">
               <div className="relative w-full h-[220px] sm:h-[250px] md:h-[280px] rounded-2xl overflow-hidden bg-[linear-gradient(120deg,#0b4b51_0%,#0f5c63_52%,#083a3f_100%)]">
@@ -982,8 +983,16 @@ export function CareerPage() {
             )}
 
             {/* ═══ 5. JOB LISTINGS - ONE HUGE CARD ═══ */}
-            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-6 mb-12">
-                {filteredJobs.length > 0 ? (
+            <div id="openings" className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-6 mb-12 scroll-mt-24">
+                {jobsQuery.isPending ? (
+                  /* ── Loading State (never fabricated jobs) ── */
+                  <div className="bg-surface-elevated rounded-2xl border border-border-soft p-10 sm:p-16 text-center">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-soft mb-4">
+                      <div className="w-6 h-6 rounded-full border-2 border-text-muted/30 border-t-text-muted animate-spin" aria-hidden="true" />
+                    </div>
+                    <p className="text-sm text-text-muted">Loading open positions…</p>
+                  </div>
+                ) : filteredJobs.length > 0 ? (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <p className="text-sm text-text-muted">
@@ -1324,7 +1333,7 @@ export function CareerPage() {
                       <Button
                         size="standard"
                         variant="primary"
-                        href={content.status?.primary?.href ?? routes.contact}
+                        href={routes.contact}
                       >
                         Contact Exxonim
                       </Button>

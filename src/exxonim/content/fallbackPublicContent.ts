@@ -13,7 +13,7 @@ import type {
   Testimonial,
 } from '@/exxonim/types';
 import type { BrandAssets, CompanyInfo } from '@/exxonim/types';
-import type { ApiCareerJob, SiteSettingFooterValue } from "@/exxonim/types/api";
+import type { SiteSettingFooterValue } from "@/exxonim/types/api";
 import {
   fallbackBrand,
   fallbackCompanyInfo,
@@ -707,17 +707,8 @@ const fallbackCareerPage: PageRecord<CareerPageContent> = createFallbackPage(
       title: "Build your career at Exxonim.",
       description:
         "Explore current opportunities and learn about the teams Exxonim is building across client operations, compliance, and advisory work.",
-      banner_image: "/careers/banner-enhanced.png",
     },
-    focus_areas: [
-      "Client operations and workflow coordination",
-      "Regulatory and compliance support",
-      "Structured follow-up and document readiness",
-    ],
     status: {
-      label: "Current opportunities",
-      description:
-        "Explore open roles and send your application through the contact page. The Exxonim team reviews every submission.",
       primary: {
         label: "Contact Exxonim",
         href: routes.contact,
@@ -815,252 +806,6 @@ export const fallbackTestimonials: Testimonial[] = [
   },
 ];
 
-/* BACKEND / ADMIN INTEGRATION NOTES (Job listings):
- * ──────────────────────────────────────────────────────────
- * These 7 fallback jobs are used when the jobs API is unavailable.
- * The admin should create real jobs matching the ApiCareerJob structure.
- *
- * Key fields for admin:
- *   - title: Clear, specific role title (max ~60 chars)
- *   - department: Short, 1-2 words (used for pills and filtering)
- *   - employment_type: "Full-time" | "Part-time" | "Contract" | "Internship"
- *   - experience_label: "Entry-level" | "Mid-level" | "Senior" | "Lead"
- *   - location_mode: "on-site" | "hybrid" | "remote"
- *   - city/country: Physical location for the role
- *   - compensation_label: Optional salary range (e.g., "TZS 1.5M–2.5M/mo")
- *   - summary: 1-sentence overview (shown in collapsed/preview)
- *   - description: 1-2 sentence full description (shown in full details)
- *   - responsibilities[]: 3-5 action-oriented bullet points
- *   - requirements[]: 3-5 qualification bullet points
- *   - published_at: ISO date string - used for "Posted X" and 72h+ indicator
- *
- * 72-hour indicator: If published_at is >72h ago, a "72h+ posted" pill appears.
- * This is VISUAL ONLY - jobs are never auto-removed. Admin must unpublish to remove.
- *
- * Application flow: "Apply Now" opens an application modal (not the contact page).
- * The modal collects: name, email, phone, cover note, and CV/resume file upload.
- * Submission sends to the email configured for the job (fallback: info@exxonim.co.tz).
- * Backend endpoint: POST /api/public/jobs/{id}/apply
- */
-export const fallbackJobs: ApiCareerJob[] = [
-  {
-    id: "fallback-1",
-    title: "Client Operations Coordinator",
-    slug: "client-operations-coordinator",
-    department: "Operations",
-    employment_type: "Full-time",
-    location_mode: "hybrid",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Mid-level",
-    summary:
-      "Coordinate internal follow-through, document readiness, and status visibility across active client work.",
-    description:
-      "Coordinate internal follow-through, document readiness, and status visibility across active client work. You will be the connective tissue between case managers, compliance officers, and clients - making sure nothing falls through the cracks.",
-    requirements: [
-      "Comfort working with operational checklists",
-      "Clear written communication",
-      "Confidence handling structured follow-up work",
-    ],
-    responsibilities: [
-      "Track active workstreams",
-      "Coordinate next actions with the team",
-      "Help keep filing and follow-up work organized",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-04-01T00:00:00Z",
-    created_at: "2026-04-01T00:00:00Z",
-    updated_at: "2026-04-01T00:00:00Z",
-  },
-  {
-    id: "fallback-2",
-    title: "Compliance Support Analyst",
-    slug: "compliance-support-analyst",
-    department: "Compliance",
-    employment_type: "Full-time",
-    location_mode: "on-site",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Entry-level",
-    summary:
-      "Assist with regulatory filings, license renewals, and compliance deadline tracking for Exxonim clients.",
-    description:
-      "Support the compliance team by preparing filing documents, tracking renewal deadlines, and following up with regulatory bodies. Ideal for someone starting their career in regulatory operations.",
-    requirements: [
-      "Degree in business, law, or related field",
-      "Attention to detail and deadline awareness",
-      "Ability to follow structured processes",
-    ],
-    responsibilities: [
-      "Prepare and review filing documents",
-      "Track compliance deadlines and send reminders",
-      "Follow up with regulatory authorities on pending applications",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-04-02T00:00:00Z",
-    created_at: "2026-04-02T00:00:00Z",
-    updated_at: "2026-04-02T00:00:00Z",
-  },
-  {
-    id: "fallback-3",
-    title: "Tax & Filing Assistant",
-    slug: "tax-filing-assistant",
-    department: "Accounting",
-    employment_type: "Full-time",
-    location_mode: "on-site",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Entry-level",
-    summary:
-      "Support TIN applications, VAT filings, and tax registration workflows for new and existing entities.",
-    description:
-      "Work alongside the accounting team to process tax registration applications, prepare VAT returns, and maintain accurate filing records. A great starting role for someone interested in Tanzanian tax operations.",
-    requirements: [
-      "Basic understanding of tax concepts (TIN, VAT)",
-      "Organized and comfortable with numbers",
-      "Willingness to learn TRA processes",
-    ],
-    responsibilities: [
-      "Process TIN and VAT registration applications",
-      "Prepare monthly VAT return drafts",
-      "Maintain filing records and client tax schedules",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-04-03T00:00:00Z",
-    created_at: "2026-04-03T00:00:00Z",
-    updated_at: "2026-04-03T00:00:00Z",
-  },
-  {
-    id: "fallback-4",
-    title: "Business Setup Consultant",
-    slug: "business-setup-consultant",
-    department: "Advisory",
-    employment_type: "Full-time",
-    location_mode: "hybrid",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Senior",
-    summary:
-      "Lead entity registration engagements - from entity type selection through to authority submission and certificate delivery.",
-    description:
-      "Guide clients through company, NGO, and business name registration from start to certificate. You will manage the full engagement cycle, advise on entity structures, and ensure every submission is complete and timely.",
-    requirements: [
-      "3+ years in business registration or legal advisory",
-      "Deep knowledge of Tanzanian entity types and registration procedures",
-      "Strong client communication and case management skills",
-    ],
-    responsibilities: [
-      "Advise clients on entity type and registration path",
-      "Manage end-to-end registration engagements",
-      "Review all submissions before authority filing",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-03-28T00:00:00Z",
-    created_at: "2026-03-28T00:00:00Z",
-    updated_at: "2026-03-28T00:00:00Z",
-  },
-  {
-    id: "fallback-5",
-    title: "Systems & Tools Coordinator",
-    slug: "systems-tools-coordinator",
-    department: "IT",
-    employment_type: "Part-time",
-    location_mode: "remote",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Mid-level",
-    summary:
-      "Maintain internal tools, manage system workflows, and support digital operations across the consulting team.",
-    description:
-      "Keep Exxonim's digital tools running smoothly - from case tracking systems to internal dashboards. You will coordinate with vendors, troubleshoot issues, and help improve how the team uses technology day-to-day.",
-    requirements: [
-      "Experience with SaaS tools and workflow automation",
-      "Problem-solving mindset and clear communication",
-      "Comfort working independently in a remote setup",
-    ],
-    responsibilities: [
-      "Maintain and configure internal tools and dashboards",
-      "Troubleshoot technical issues and coordinate with vendors",
-      "Document workflows and suggest process improvements",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-04-04T00:00:00Z",
-    created_at: "2026-04-04T00:00:00Z",
-    updated_at: "2026-04-04T00:00:00Z",
-  },
-  {
-    id: "fallback-6",
-    title: "Document Readiness Associate",
-    slug: "document-readiness-associate",
-    department: "Operations",
-    employment_type: "Full-time",
-    location_mode: "on-site",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Entry-level",
-    summary:
-      "Ensure client documents are complete, properly formatted, and ready for submission before filing deadlines.",
-    description:
-      "Review incoming client documents for completeness, flag missing items, and prepare document packages for the filing team. A detail-oriented role ideal for someone who enjoys structured, methodical work.",
-    requirements: [
-      "Strong attention to detail",
-      "Comfort reviewing and organizing paperwork",
-      "Reliable and consistent follow-through",
-    ],
-    responsibilities: [
-      "Review client documents for completeness and accuracy",
-      "Flag missing or incorrect items for follow-up",
-      "Prepare organized document packages for submission",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-04-05T00:00:00Z",
-    created_at: "2026-04-05T00:00:00Z",
-    updated_at: "2026-04-05T00:00:00Z",
-  },
-  {
-    id: "fallback-7",
-    title: "Regulatory Renewals Officer",
-    slug: "regulatory-renewals-officer",
-    department: "Compliance",
-    employment_type: "Full-time",
-    location_mode: "hybrid",
-    city: "Dar es Salaam",
-    country: "Tanzania",
-    compensation_label: null,
-    experience_label: "Mid-level",
-    summary:
-      "Own the renewals pipeline - track deadlines, prepare submissions, and ensure no client obligation lapses.",
-    description:
-      "Manage Exxonim's renewals pipeline end-to-end: track upcoming deadlines across all clients, prepare renewal applications, submit on time, and confirm outcomes. You will be the person who makes sure nothing expires unnoticed.",
-    requirements: [
-      "1-2 years in compliance, licensing, or regulatory operations",
-      "Strong organizational and deadline management skills",
-      "Comfort working with government portals and processes",
-    ],
-    responsibilities: [
-      "Track all upcoming license and permit renewals",
-      "Prepare and submit renewal applications on schedule",
-      "Confirm outcomes and update client records",
-    ],
-    status: "published",
-    is_published: true,
-    published_at: "2026-04-06T00:00:00Z",
-    created_at: "2026-04-06T00:00:00Z",
-    updated_at: "2026-04-06T00:00:00Z",
-  },
-];
 
 const fallbackBrandSetting = createFallbackSiteSetting<BrandAssets>(
   "brand",
@@ -1075,6 +820,18 @@ const fallbackCompanyInfoSetting = createFallbackSiteSetting<CompanyInfo>(
 const fallbackFooterSetting =
   createFallbackSiteSetting<SiteSettingFooterValue>("footer", fallbackFooter);
 
+// SEO defaults — so page <head> (canonical, meta description, robots, share image)
+// stays correct even when the API and the frozen /fallback JSON are both absent.
+const fallbackSeoDefaultsSetting = createFallbackSiteSetting("seo_defaults", {
+  siteName: "Exxonim Consult",
+  canonicalBaseUrl: "https://consult.exxonim.tz",
+  defaultMetaDescription:
+    "Exxonim Consult — company registration, TIN, licensing, work permits, NGO registration and annual compliance in Tanzania, handled end to end.",
+  defaultShareImageUrl: "https://consult.exxonim.tz/og-image.png",
+  robotsIndex: true,
+  robotsFollow: true,
+});
+
 export function getFallbackSiteSetting(key: string) {
   switch (key) {
     case "brand":
@@ -1083,6 +840,8 @@ export function getFallbackSiteSetting(key: string) {
       return fallbackCompanyInfoSetting;
     case "footer":
       return fallbackFooterSetting;
+    case "seo_defaults":
+      return fallbackSeoDefaultsSetting;
     default:
       return undefined;
   }

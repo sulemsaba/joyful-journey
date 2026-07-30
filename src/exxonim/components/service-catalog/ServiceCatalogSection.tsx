@@ -1,8 +1,6 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { AlertCircle, RefreshCw, ArrowRight, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
-import { cn } from '@/exxonim/utils/cn';
+import { AlertCircle, RefreshCw, ArrowRight, Check, Briefcase, ShieldCheck, Plane, Heart } from 'lucide-react';
 import { Container } from '@/exxonim/components/primitives/Container';
-import { Button } from '@/exxonim/components/primitives/Button';
 import { SmartLink } from '@/exxonim/components/primitives/SmartLink';
 /* Lazy: keeps PhoneInput + country flags out of this section's chunk until a
    visitor opens an inquiry. */
@@ -52,24 +50,17 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
     return groups;
   }, [allServices]);
 
+  // Show the four known categories first (in their fixed order), then ANY other
+  // category that appears in the data — so a newly-added category shows up here
+  // automatically instead of being hidden by a hard-coded list.
+  const categoryList = useMemo(() => {
+    const known = CATEGORY_ORDER.filter((c) => (groupedServices[c] ?? []).length > 0);
+    const extra = Object.keys(groupedServices).filter((c) => !(CATEGORY_ORDER as readonly string[]).includes(c));
+    return [...known, ...extra];
+  }, [groupedServices]);
+
   return (
-    <>
-      <style>{`
-        @media (max-width: 767px) {
-          .service-card-expanded {
-            opacity: 1 !important;
-            visibility: visible !important;
-            position: relative !important;
-          }
-          .service-card-default {
-            display: none !important;
-          }
-          .service-card-bg-fade {
-            opacity: 1 !important;
-          }
-        }
-      `}</style>
-      <section id="service-catalog" className="pt-4 pb-6 md:pt-8 md:pb-16">
+    <section id="service-catalog" className="pt-4 pb-6 md:pt-8 md:pb-16">
       <Container>
         <div className="mb-8 md:mb-12">
           {heroEyebrow && (
@@ -99,15 +90,15 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
         )}
 
         {!isPending && hasServices && (
-          <div className="flex flex-col gap-10 md:gap-16">
-            {CATEGORY_ORDER.map((categoryName) => {
+          <div className="flex flex-col gap-10 md:gap-14">
+            {categoryList.map((categoryName) => {
               const services = groupedServices[categoryName] ?? [];
               if (services.length === 0) return null;
               const Icon = CATEGORY_ICONS[categoryName] ?? Briefcase;
 
               return (
                 <div key={categoryName} data-reveal>
-                  {/* Category heading - white text with left teal border */}
+                  {/* Category heading — left teal rule */}
                   <h2
                     className="text-text font-semibold mb-6"
                     style={{
@@ -121,14 +112,14 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
                     {categoryName}
                   </h2>
 
-                  {/* Horizontal scroll rail on desktop/tablet.
-                      Mobile: cards stack in a 1-col grid (via CSS). */}
+                  {/* Horizontal scroll rail — cards keep full, auto-height content
+                      (no clipped deliverables); they just scroll sideways. */}
                   <div
-                    className="service-card-rail flex gap-7 overflow-x-auto pb-2 snap-x snap-mandatory"
+                    className="flex gap-6 overflow-x-auto pb-3 snap-x snap-mandatory"
                     style={{ scrollbarWidth: 'none' }}
                   >
                     {services.map((service) => (
-                      <ServiceCardExact
+                      <ServiceCard
                         key={service.id}
                         service={service}
                         Icon={Icon}
@@ -156,19 +147,15 @@ export function ServiceCatalogSection({ heroEyebrow, heroTitle }: ServiceCatalog
         </Suspense>
       )}
     </section>
-    </>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * ServiceCardExact — fully controlled by admin via the new fields.
- *
- * Default view: icon + category label + title
- * Hover view:  category (deep teal) + title + hover_hint + card_preview
- *              + process_steps (mini) + faqs (mini) + 2 buttons
- * Mobile:      permanently expanded, white bg, no hover
+ * ServiceCard — always-visible card (icon + category + title + blurb +
+ * up to 4 deliverables + Get Started / Details). Auto height so nothing
+ * clips; the whole card links to the detail page, buttons sit above it.
  * ═══════════════════════════════════════════════════════════════ */
-function ServiceCardExact({
+function ServiceCard({
   service,
   Icon,
   onGetStarted,
@@ -179,105 +166,74 @@ function ServiceCardExact({
 }) {
   const ctaText = service.cta_text || 'Get Started';
   const detailLink = serviceDetailPath(service.slug);
-  const hasHoverContent = !!(service.hover_hint || service.card_preview || service.process_steps?.length || service.faqs?.length);
+  const blurb = service.short_description || service.hover_hint || service.card_preview || '';
+  const deliverables = (service.deliverables ?? []).filter(Boolean).slice(0, 4);
 
   return (
     <div
       id={serviceAnchorId(service.title)}
       data-service-title={service.title}
-      className="service-card-exact group relative overflow-hidden cursor-pointer scroll-mt-24"
-      style={{
-        height: '320px',
-        backgroundColor: '#08181b',
-        borderRadius: '12px',
-        padding: '28px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-        transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-      }}
+      className="group relative flex w-[340px] shrink-0 snap-start flex-col scroll-mt-24 transition-transform duration-300 hover:-translate-y-1"
+      style={{ backgroundColor: '#08181b', borderRadius: 14, padding: 26, boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}
     >
-      {/* Whole-card link → service detail */}
-      <SmartLink to={detailLink} aria-label={`${service.title} — view details`} className="absolute inset-0 z-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fbcc1] focus-visible:ring-inset" >
+      {/* Whole-card link → service detail (buttons sit above it). */}
+      <SmartLink
+        to={detailLink}
+        aria-label={`${service.title} — view details`}
+        className="absolute inset-0 z-0 rounded-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7fbcc1] focus-visible:ring-inset"
+      >
         <span />
       </SmartLink>
 
-      {/* Background arc — white sweep from bottom-left on hover. */}
-      <span className="service-card-bg-fade absolute inset-0 pointer-events-none" style={{ backgroundColor: '#f7fbfb', opacity: 0, transition: 'opacity 0.3s ease', zIndex: 1, borderRadius: '12px' }} />
-      <span className="service-card-arc absolute pointer-events-none" style={{ bottom: '-30%', left: '-30%', width: '160%', height: '160%', backgroundColor: '#f7fbfb', borderRadius: '50%', transform: 'scale(0)', transformOrigin: 'bottom left', transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)', zIndex: 2 }} />
+      {service.badge && (
+        <span
+          className="absolute top-5 right-5 z-10 rounded-full px-2.5 py-1 pointer-events-none"
+          style={{ background: 'rgba(127,188,193,0.16)', color: '#7fbcc1', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}
+        >
+          {service.badge}
+        </span>
+      )}
 
-      {/* Default content — visible by default, hidden on hover. Icon is in-flow. */}
-      <div className="service-card-default pointer-events-none relative z-10 flex flex-col gap-3">
-        <div style={{ color: '#7fbcc1' }}>
-          <Icon style={{ width: '40px', height: '40px', strokeWidth: 1.5 }} aria-hidden="true" />
-        </div>
-        <span className="block" style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', color: '#7fbcc1' }}>
+      <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
+        <Icon style={{ width: 38, height: 38, color: '#7fbcc1', strokeWidth: 1.5 }} aria-hidden="true" />
+        <span className="mt-4 block" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', color: '#7fbcc1' }}>
           {service.category}
         </span>
-        <h3 className="m-0" style={{ color: '#ffffff', fontSize: '20px', fontWeight: 700, lineHeight: 1.3 }}>
+        <h3 className="m-0 mt-1" style={{ color: '#ffffff', fontSize: 20, fontWeight: 700, lineHeight: 1.3 }}>
           {service.title}
         </h3>
-      </div>
-
-      {/* Expanded content — hidden by default, visible on hover. */}
-      <div className="service-card-expanded pointer-events-none absolute inset-0 flex flex-col" style={{ zIndex: 3, padding: '28px', opacity: 0, visibility: 'hidden', transition: 'opacity 0.4s ease 0.15s, visibility 0.4s', justifyContent: 'flex-start', overflowY: 'auto', scrollbarWidth: 'thin' }}>
-        {/* Expanded label & title */}
-        <span className="block mb-2 shrink-0" style={{ fontSize: '11px', fontWeight: 800, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#0f5c63' }}>
-          {service.category}
-        </span>
-        <h3 className="m-0 mb-3 shrink-0" style={{ color: '#08181b', fontSize: '22px', fontWeight: 800, lineHeight: 1.2 }}>
-          {service.title}
-        </h3>
-
-        {/* hover_hint — tooltip-style hint shown on hover */}
-        {service.hover_hint && (
-          <p className="mb-3 shrink-0 text-sm leading-relaxed" style={{ color: '#102529' }}>
-            {service.hover_hint}
-          </p>
+        {blurb && (
+          <p className="m-0 mt-2 text-sm" style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>{blurb}</p>
         )}
-
-        {/* card_preview — custom content shown on hover */}
-        {service.card_preview && (
-          <p className="mb-3 shrink-0 text-sm leading-relaxed" style={{ color: '#102529', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-            {service.card_preview}
-          </p>
-        )}
-
-        {/* Deliverables fallback if no hover content */}
-        {!service.hover_hint && !service.card_preview && (service.deliverables ?? []).length > 0 && (
-          <ul className="mb-3 shrink-0 flex flex-col gap-1" style={{ maxHeight: '60px', overflowY: 'auto' }}>
-            {(service.deliverables ?? []).slice(0, 3).map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm" style={{ color: '#102529', fontWeight: 600, lineHeight: 1.4 }}>
-                <svg className="shrink-0 mt-0.5" style={{ width: '16px', height: '16px', stroke: '#0f5c63', fill: 'none', strokeWidth: 3 }} viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+        {deliverables.length > 0 && (
+          <ul className="mt-4 mb-0 flex flex-col gap-2 list-none p-0">
+            {deliverables.map((item, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.4 }}>
+                <Check className="shrink-0" style={{ width: 16, height: 16, color: '#7fbcc1', strokeWidth: 3, marginTop: 2 }} aria-hidden="true" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
         )}
+      </div>
 
-        {/* process_steps — mini timeline on hover */}
-        {service.process_steps && service.process_steps.length > 0 && (
-          <div className="mb-3 shrink-0 flex flex-col gap-1.5">
-            {service.process_steps.slice(0, 3).map((step, i) => (
-              <div key={i} className="flex items-center gap-2 text-xs">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-accent text-accent-contrast font-bold" style={{ fontSize: '10px' }}>{step.step || i + 1}</span>
-                <span style={{ color: '#102529', fontWeight: 600 }}>{step.title}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Button group — HORIZONTAL */}
-        <div className="pointer-events-auto relative z-[1] mt-auto flex flex-row gap-2.5 shrink-0">
-          <Button size="standard" variant="primary" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onGetStarted(); }} className="flex-1 service-card-btn-primary">
-            {ctaText}
-          </Button>
-          <Button size="standard" variant="outline" href={detailLink} className="flex-1 service-card-btn-secondary">
-            Details
-            <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-          </Button>
-        </div>
+      {/* Buttons — above the whole-card link. */}
+      <div className="pointer-events-auto relative z-[1] mt-6 flex gap-2.5">
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onGetStarted(); }}
+          className="flex-1 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90"
+          style={{ background: '#7fbcc1', color: '#08181b', padding: '10px 0' }}
+        >
+          {ctaText}
+        </button>
+        <SmartLink
+          to={detailLink}
+          className="flex-1 inline-flex items-center justify-center gap-1 rounded-lg border border-white/30 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+        >
+          Details
+          <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+        </SmartLink>
       </div>
     </div>
   );

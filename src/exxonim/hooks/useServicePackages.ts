@@ -18,7 +18,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { getServicePackages } from "@/exxonim/services/pricingService";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import type { SegmentPackage } from "@/exxonim/types";
 
 const EMPTY: SegmentPackage[] = [];
@@ -26,7 +26,7 @@ const EMPTY: SegmentPackage[] = [];
 export function useServicePackages() {
   const query = useQuery({
     queryKey: ["pricing", "packages"],
-    queryFn: () => fetchWithJsonFallback(getServicePackages, "service-packages"),
+    queryFn: () => fetchWithPublicSnapshotFallback(getServicePackages, "pricing", "service-packages"),
     placeholderData: EMPTY,
     staleTime: 1000 * 60 * 5, // 5 minutes — pricing changes propagate quickly
     retry: 1,

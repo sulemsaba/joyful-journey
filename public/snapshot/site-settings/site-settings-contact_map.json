@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-30T04:11:33.547775+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 1711036673,
+    "key": "contact_map",
+    "value": {
+      "lat": -6.7030171,
+      "lng": 39.2096286,
+      "label": "Exxonim Consult HQ"
+    },
+    "created_at": "2026-07-23T19:26:36.074185+00:00",
+    "updated_at": "2026-07-23T21:35:50.729786+00:00"
+  }
+}

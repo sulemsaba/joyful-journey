@@ -118,6 +118,10 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
     ? socialLinks.map((l) => ({ platform: l.platform, url: l.url }))
     : fallbackSocials;
 
+  // Footer nav/resource links are HARDCODED on purpose — the admin has no field
+  // to edit them (footer.quick_links / other_resources are not exposed in the
+  // settings UI), so they are structural like the main navigation.
+
   return (
     <footer
       id="site-footer"

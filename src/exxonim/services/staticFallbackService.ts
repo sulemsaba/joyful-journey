@@ -17,64 +17,7 @@
  * This file implements Layer 3. See queryClient.ts for Layers 0-1.
  */
 
-/* ── Legacy JSON fallback (/fallback/{key}.json) ─────────────── */
-
-/**
- * Load a static fallback JSON file from /fallback/{key}.json.
- * Used internally by fetchWithJsonFallback. Kept for hooks that have
- * not yet migrated to the public snapshot architecture.
- */
-async function loadStaticFallback<T>(
-  key: string,
-  timeoutMs = 800
-): Promise<T | undefined> {
-  const cache = new Map<string, unknown>();
-  if (cache.has(key)) {
-    return cache.get(key) as T;
-  }
-
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    const response = await fetch(`/fallback/${key}.json`, {
-      signal: controller.signal,
-      headers: { Accept: "application/json" },
-    });
-    clearTimeout(timer);
-
-    if (!response.ok) return undefined;
-
-    const raw = (await response.json()) as {
-      _meta?: { generatedAt?: string; source?: string };
-      data?: T;
-    } | T;
-
-    const data =
-      raw && typeof raw === "object" && "data" in raw && "_meta" in raw
-        ? (raw as { data: T }).data
-        : (raw as T);
-
-    cache.set(key, data);
-    return data;
-  } catch {
-    return undefined;
-  }
-}
-
-export async function fetchWithJsonFallback<T>(
-  apiFn: () => Promise<T>,
-  fallbackKey: string
-): Promise<T> {
-  try {
-    return await apiFn();
-  } catch {
-    const raw = await loadStaticFallback<T>(fallbackKey);
-    if (raw !== undefined) return raw;
-    throw new Error(`API and JSON fallback both failed for: ${fallbackKey}`);
-  }
-}
-
-/* ── Public snapshot fallback (new architecture) ────────────── */
+/* ── Public snapshot fallback (the single fallback architecture) ────────────── */
 
 const snapshotCaches = new Map<string, Map<string, unknown>>();
 

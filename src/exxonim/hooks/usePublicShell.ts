@@ -35,7 +35,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { getSiteSetting } from "@/exxonim/services/siteSettingsService";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import type { SiteSettingFooterValue } from "@/exxonim/types/api";
 import type { BrandAssets, CompanyInfo, SiteSetting } from '@/exxonim/types';
 import {
@@ -87,8 +87,9 @@ export function usePublicShell() {
   const brandQuery = useQuery({
     queryKey: ["site-settings", "brand"],
     queryFn: () =>
-      fetchWithJsonFallback(
+      fetchWithPublicSnapshotFallback(
         () => getSiteSetting<BrandAssets>("brand"),
+        "site-settings",
         "site-settings-brand"
       ),
     placeholderData: PLACEHOLDER_BRAND,
@@ -99,8 +100,9 @@ export function usePublicShell() {
   const footerQuery = useQuery({
     queryKey: ["site-settings", "footer"],
     queryFn: () =>
-      fetchWithJsonFallback(
+      fetchWithPublicSnapshotFallback(
         () => getSiteSetting<SiteSettingFooterValue>("footer"),
+        "site-settings",
         "site-settings-footer"
       ),
     placeholderData: PLACEHOLDER_FOOTER,
@@ -111,8 +113,9 @@ export function usePublicShell() {
   const companyQuery = useQuery({
     queryKey: ["site-settings", "company_info"],
     queryFn: () =>
-      fetchWithJsonFallback(
+      fetchWithPublicSnapshotFallback(
         () => getSiteSetting<CompanyInfo>("company_info"),
+        "site-settings",
         "site-settings-company_info"
       ),
     placeholderData: PLACEHOLDER_COMPANY,

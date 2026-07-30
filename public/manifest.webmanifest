@@ -1,0 +1,35 @@
+{
+  "name": "Exxonim Consult",
+  "short_name": "Exxonim",
+  "description": "Company registration, TIN, licensing, work permits, NGO registration and annual compliance in Tanzania — handled end to end.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0f5c63",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "/branding/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/branding/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/branding/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

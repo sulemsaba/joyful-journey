@@ -31,7 +31,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { getSiteSetting } from "@/exxonim/services/siteSettingsService";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import { getFallbackSiteSetting } from "@/exxonim/content/fallbackPublicContent";
 import type { SiteSetting } from '@/exxonim/types';
 
@@ -41,8 +41,9 @@ export function useSiteSetting<TValue = unknown>(key: string) {
   const query = useQuery({
     queryKey: ["site-settings", key],
     queryFn: () =>
-      fetchWithJsonFallback(
+      fetchWithPublicSnapshotFallback(
         () => getSiteSetting<TValue>(key),
+        "site-settings",
         `site-settings-${key}`
       ),
     placeholderData: fallback,

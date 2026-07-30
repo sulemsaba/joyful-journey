@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-30T04:11:33.553625+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 717045699,
+    "key": "footer",
+    "value": {
+      "quick_links": [
+        {
+          "label": "About",
+          "href": "/about"
+        },
+        {
+          "label": "Services",
+          "href": "/services"
+        },
+        {
+          "label": "Track Consultation",
+          "href": "/track-consultation"
+        },
+        {
+          "label": "Resources",
+          "href": "/resources"
+        },
+        {
+          "label": "Career",
+          "href": "/career"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact"
+        }
+      ],
+      "other_resources": [
+        {
+          "label": "FAQ",
+          "href": "/faq"
+        },
+        {
+          "label": "Support",
+          "href": "/support"
+        },
+        {
+          "label": "Terms",
+          "href": "/terms"
+        }
+      ],
+      "tagline": "where innovation meets efficientcy not words",
+      "primary_cta": {
+        "label": "Contact Exxonim",
+        "href": "/contact"
+      },
+      "social_links": [
+        {
+          "platform": "facebook",
+          "label": "Facebook",
+          "url": "https://facebook.com/",
+          "isActive": true
+        },
+        {
+          "platform": "x",
+          "label": "X",
+          "url": "https://twitter.com/",
+          "isActive": true
+        },
+        {
+          "platform": "instagram",
+          "label": "Instagram",
+          "url": "https://instagram.com/",
+          "isActive": true
+        },
+        {
+          "platform": "linkedin",
+          "label": "Linkedin",
+          "url": "https://linkedin.com/company/",
+          "isActive": true
+        }
+      ],
+      "copyright": "© {YEAR} Exxonim Company Limited"
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-30T04:11:28.357441+00:00"
+  }
+}

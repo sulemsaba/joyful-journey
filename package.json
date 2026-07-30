@@ -6,7 +6,6 @@
     "dev": "vite --port 3001",
     "build": "vite build",
     "build:spa": "vite build",
-    "prerender": "node scripts/prerender.mjs",
     "start": "vite preview",
     "lint": "eslint .",
     "db:push": "prisma db push",

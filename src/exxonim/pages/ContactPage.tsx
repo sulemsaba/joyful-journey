@@ -50,7 +50,7 @@ import type { SiteSettingOfficeHourValue } from "@/exxonim/shared/contracts/site
 import {
   useQuery
 } from "@tanstack/react-query";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
 import { routes } from "@/exxonim/routes";
@@ -386,8 +386,9 @@ export function ContactPage() {
 
   const officeHoursQuery = useQuery({
     queryKey: ["site-settings", "office_hours"],
-    queryFn: () => fetchWithJsonFallback(
+    queryFn: () => fetchWithPublicSnapshotFallback(
       () => getSiteSetting<{ days?: SiteSettingOfficeHourValue[] }>("office_hours"),
+      "site-settings",
       "site-settings-office_hours"
     ),
     staleTime: 1000 * 60 * 5,
@@ -396,8 +397,9 @@ export function ContactPage() {
 
   const contactMapQuery = useQuery({
     queryKey: ["site-settings", "contact_map"],
-    queryFn: () => fetchWithJsonFallback(
+    queryFn: () => fetchWithPublicSnapshotFallback(
       () => getSiteSetting<{ lat: number; lng: number; label?: string }>("contact_map"),
+      "site-settings",
       "site-settings-contact_map"
     ),
     staleTime: 1000 * 60 * 5,

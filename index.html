@@ -39,6 +39,17 @@
     <link rel="icon" type="image/png" href="/branding/exxonim-favicon-dark.png" media="(prefers-color-scheme: dark)" id="favicon-dark" />
     <link rel="apple-touch-icon" href="/branding/exxonim-favicon-light.png" />
 
+    <!-- PWA: installable web app manifest + theme-color. theme-color tints the
+         mobile browser UI (address bar) and is theme-aware so it matches the
+         page background in light and dark. The manifest supplies name, icons
+         (incl. a maskable icon) and standalone display for Add-to-Home-Screen. -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161C24" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Exxonim" />
+
     <!-- Google Fonts: Public Sans (the Minimal design-system typeface), loaded
          async (media=print swap). Preconnect warms the DNS/TLS handshake to
          Google's font hosts so the woff2 arrives faster on slow connections. -->

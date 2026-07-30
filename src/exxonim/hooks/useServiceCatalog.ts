@@ -31,16 +31,13 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import type { ServicesResponse } from '@/exxonim/types/service-catalog';
-import { fallbackServices, fallbackCategories } from '@/exxonim/content/fallbackServiceCatalog';
-import { fetchWithJsonFallback } from '@/exxonim/services/staticFallbackService';
+import { fetchWithPublicSnapshotFallback } from '@/exxonim/services/staticFallbackService';
 
-const FALLBACK_RESPONSE: ServicesResponse = {
+// Empty initial state — the catalog is 100% admin-driven (live API → committed
+// /snapshot/services/services.json). No hardcoded/fabricated services.
+const EMPTY_RESPONSE: ServicesResponse = {
   success: true,
-  data: {
-    services: fallbackServices,
-    total: fallbackServices.length,
-    categories: fallbackCategories,
-  },
+  data: { services: [], total: 0, categories: [] },
 };
 
 async function fetchServices(segment?: string): Promise<ServicesResponse> {
@@ -51,55 +48,22 @@ async function fetchServices(segment?: string): Promise<ServicesResponse> {
   return (await resp.json()) as ServicesResponse;
 }
 
-function filterFallbackBySegment(segment?: string): ServicesResponse {
-  const filtered =
-    segment && segment !== 'all'
-      ? fallbackServices.filter((s) =>
-          s.primary_segment.some(
-            (seg) => seg.toLowerCase().replace(/\s+/g, '-') === segment
-          )
-        )
-      : fallbackServices;
-
-  return {
-    success: true,
-    data: {
-      services: filtered,
-      total: filtered.length,
-      categories: fallbackCategories,
-    },
-  };
-}
-
 export function useServiceCatalog(segment?: string) {
-  const fallback = filterFallbackBySegment(segment);
-
   const query = useQuery({
     queryKey: ['services', segment],
     queryFn: () =>
-      fetchWithJsonFallback(
+      fetchWithPublicSnapshotFallback(
         () => fetchServices(segment),
+        'services',
         'services'
       ),
-    placeholderData: fallback,
+    placeholderData: EMPTY_RESPONSE,
     staleTime: 5 * 60 * 1000,
   });
 
-  // FALLBACK GUARANTEE: Always use hardcoded fallback when the API returns
-  // zero services (common when DB is empty/unseeded). Without this check,
-  // an empty API response replaces the 15 hardcoded fallback services,
-  // causing the catalog to disappear on refresh.
   const apiData = query.data;
-  const apiHasServices = apiData?.data?.services && apiData.data.services.length > 0;
-  const rawData = apiHasServices ? apiData : fallback;
+  const normalizedData: ServicesResponse =
+    apiData?.data ? (apiData as unknown as ServicesResponse) : EMPTY_RESPONSE;
 
-  const normalizedData: ServicesResponse = rawData?.data
-    ? rawData as unknown as ServicesResponse
-    : { success: true, data: rawData as unknown as ServicesResponse };
-
-  return {
-    ...query,
-    data: normalizedData,
-    isPending: query.isPending && !fallback.data.services.length,
-  };
+  return { ...query, data: normalizedData };
 }

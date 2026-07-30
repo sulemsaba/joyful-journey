@@ -40,7 +40,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { fetchPageBySlugRaw } from "@/exxonim/services/pageService";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 import { mapPage } from "@/exxonim/utils/contentMappers";
 import { getFallbackPage } from "@/exxonim/content/fallbackPublicContent";
 import type { PageRecord } from '@/exxonim/types';
@@ -53,8 +53,9 @@ export function usePage<TContent = Record<string, unknown>>(slug: string) {
     // Map AFTER the fallback so the live API response and the Layer-3 snapshot
     // both land in the same domain shape (see fetchPageBySlugRaw).
     queryFn: async () => {
-      const raw = await fetchWithJsonFallback(
+      const raw = await fetchWithPublicSnapshotFallback(
         () => fetchPageBySlugRaw<TContent>(slug),
+        "pages",
         `pages-${slug}`
       );
       return mapPage(raw) as PageRecord<TContent>;

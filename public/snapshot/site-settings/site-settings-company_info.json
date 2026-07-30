@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-30T04:11:33.526740+00:00",
+    "source": "backend-publish"
+  },
+  "data": {
+    "id": 181249198,
+    "key": "company_info",
+    "value": {
+      "name": "Exxonim Consult",
+      "phones": [
+        "+255 794 689 099"
+      ],
+      "emails": [
+        "info@exxonim.tz",
+        "md@exxonim.tz"
+      ],
+      "address": "House No. 9, Block H, Mbezi Beach B, Africana, Bagamoyo Road, Dar es Salaam, Tanzania",
+      "whatsapp": null
+    },
+    "created_at": "2026-07-02T17:04:20.251678+00:00",
+    "updated_at": "2026-07-23T19:26:36.066892+00:00"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "generatedAt": "2026-07-29T17:23:52.141542+00:00",
+    "source": "backend-publish"
+  },
+  "data": [
+    {
+      "id": "cmrunty5p000jo4ij8ik13p26",
+      "title": "hiisisi",
+      "slug": "hiisisi",
+      "department": "Operations",
+      "employment_type": "Full-time",
+      "location_mode": "on-site",
+      "city": "dar",
+      "country": "Tanzania",
+      "summary": "awe mrefu mnene",
+      "description": "",
+      "requirements": [],
+      "responsibilities": [],
+      "experience_label": "Mid-level",
+      "status": "published",
+      "is_published": true,
+      "published_at": "2026-07-21T12:59:06.925067+00:00",
+      "created_at": "2026-07-21T12:59:06.932023+00:00",
+      "updated_at": "2026-07-21T12:59:06.932043+00:00"
+    }
+  ]
+}

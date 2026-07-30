@@ -36,7 +36,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/exxonim/app/apiClient";
 import { apiRoutes } from "@/exxonim/shared/api/routes";
-import { fetchWithJsonFallback } from "@/exxonim/services/staticFallbackService";
+import { fetchWithPublicSnapshotFallback } from "@/exxonim/services/staticFallbackService";
 
 interface FaqItemFromApi {
   id: string;
@@ -84,7 +84,7 @@ async function fetchFaqItems(): Promise<FaqApiResponse> {
 export function useFaqItems(page?: string) {
   const query = useQuery({
     queryKey: ["faq-items"],
-    queryFn: () => fetchWithJsonFallback(fetchFaqItems, "faq-items"),
+    queryFn: () => fetchWithPublicSnapshotFallback(fetchFaqItems, "faq", "faq-items"),
     placeholderData: EMPTY_FAQ,
     staleTime: 1000 * 60 * 5,
     retry: 1,

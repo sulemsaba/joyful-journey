@@ -444,19 +444,13 @@ export interface CareerPageContent {
     description: string;
     /**
      * BACKEND/ADMIN: Banner image URL for the career page hero.
-     * - In production: CDN URL from /media/ endpoint (admin upload).
-     * - Fallback: /careers/banner-enhanced.png
-     * - Recommended dimensions: 1344×768px (16:9 landscape).
-     * - Format: WebP preferred (better compression).
-     * - Max file size: 500KB.
-     * - The image should have a slight dark overlay applied via CSS for text readability.
+     * NOTE: currently UNUSED — the hero renders a CSS-only decorative card and
+     * never reads this field. Kept optional for a future CMS-driven banner; if
+     * wired up, upload a ~1344×768 WebP and render it with a dark overlay.
      */
     banner_image?: string;
   };
-  focus_areas: string[];
   status: {
-    label: string;
-    description: string;
     primary: {
       label: string;
       href: string;
