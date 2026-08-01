@@ -17,8 +17,8 @@
  */
 
 const CACHE_NAME = 'exxonim-v2';
-const STATIC_CACHE = 'exxonim-static-v2';
-const IMAGE_CACHE = 'exxonim-images-v2';
+const STATIC_CACHE = 'exxonim-static-v3';
+const IMAGE_CACHE = 'exxonim-images-v3';
 
 // Assets to cache immediately on install (critical path)
 const PRECACHE_URLS = [
@@ -30,7 +30,6 @@ const PRECACHE_URLS = [
   '/branding/icon-192.png',
   '/branding/icon-512.png',
   '/manifest.webmanifest',
-  '/videos/track-consultation-poster.webp',
 ];
 
 self.addEventListener('install', (event) => {

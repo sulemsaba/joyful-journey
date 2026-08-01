@@ -79,7 +79,9 @@ function LazyVideo({ sources, poster, playbackRate, className, mobileStyle, desk
           if (!video.paused) video.pause();
         }
       },
-      { rootMargin: "100px", threshold: 0.05 }
+      // Start buffering/playing ~half a screen early so it's already running by
+      // the time the section is in view (no cold-start delay on first visit).
+      { rootMargin: "500px", threshold: 0.05 }
     );
     observer.observe(video);
 
@@ -123,7 +125,7 @@ function LazyVideo({ sources, poster, playbackRate, className, mobileStyle, desk
       autoPlay
       disablePictureInPicture
       disableRemotePlayback
-      preload="metadata"
+      preload="auto"
       aria-hidden="true"
       className={className}
       style={activeStyle}
@@ -201,7 +203,9 @@ function ImageSlideshow({ images }: { images: { src: string; alt: string }[] }) 
 
   return (
     <div
-      className="group/slides relative size-full"
+      /* bg-page placeholder so a still-loading photo reads as a filling frame,
+         not a half-rendered image, on a cold first visit. */
+      className="group/slides relative size-full bg-page"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -228,6 +232,7 @@ function ImageSlideshow({ images }: { images: { src: string; alt: string }[] }) 
           src={img.src}
           alt={img.alt}
           loading={i === 0 ? "eager" : "lazy"}
+          fetchPriority={i === 0 ? "high" : "auto"}
           decoding="async"
           aria-hidden={i !== active}
           className={cn(
@@ -408,7 +413,6 @@ function StackItemRow({ item, index, isReversed }: StackItemRowProps) {
               {hasVideo ? (
                 <LazyVideo
                   sources={item.videoSources}
-                  poster="/videos/track-consultation-poster.webp"
                   playbackRate={0.7}
                   className="pointer-events-none absolute rounded-[20px] object-cover object-top shadow-[0px_8px_40px_0px_rgba(0,0,0,0.06)] border border-border-soft"
                   mobileStyle={{

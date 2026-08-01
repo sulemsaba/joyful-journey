@@ -249,8 +249,8 @@ export const fallbackHomePage: PageRecord<HomePageContent> = createFallbackPage(
           windowTitle: "Tracking",
           windowTag: "",
           videoSources: [
-            { src: "/videos/track-consultation.webm?v=2", type: "video/webm" },
-            { src: "/videos/track-consultation.mp4?v=2", type: "video/mp4" },
+            { src: "/videos/track-consultation.webm?v=3", type: "video/webm" },
+            { src: "/videos/track-consultation.mp4?v=3", type: "video/mp4" },
           ],
           mobileTitle: "Live Case Tracking",
           mobileDescription:
