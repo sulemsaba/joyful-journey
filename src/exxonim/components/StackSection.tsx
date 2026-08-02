@@ -69,11 +69,10 @@ function LazyVideo({ sources, poster, playbackRate, className, mobileStyle, desk
 
         if (entry.isIntersecting) {
           isVisible.current = true;
-          // If already ready, play immediately
-          if (video.readyState >= 3) {
-            tryPlay();
-          }
-          // Otherwise, onCanPlay will handle it
+          // Approaching: kick off the load + play. For preload="none" this is what
+          // actually starts the download (play() loads the video); once buffered,
+          // onCanPlay is a backup. For an already-buffered video it plays instantly.
+          tryPlay();
         } else {
           isVisible.current = false;
           if (!video.paused) video.pause();
@@ -122,10 +121,13 @@ function LazyVideo({ sources, poster, playbackRate, className, mobileStyle, desk
       muted
       loop
       playsInline
-      autoPlay
       disablePictureInPicture
       disableRemotePlayback
-      preload="auto"
+      /* preload="none" + no `autoPlay`: the video is NOT downloaded on page load
+         (it's below the fold), so it doesn't compete with first paint / hurt the
+         mobile Lighthouse score. The IntersectionObserver below calls play() when
+         the section is ~500px away, which loads + starts it just before it's seen. */
+      preload="none"
       aria-hidden="true"
       className={className}
       style={activeStyle}
