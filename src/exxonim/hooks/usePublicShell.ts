@@ -60,10 +60,25 @@ function sanitizeBrandAssets(value: BrandAssets): BrandAssets {
   };
 }
 
+/** Build a wa.me link from a phone number (keeps only digits). */
+function whatsappFromPhone(phones: readonly string[] | undefined): string {
+  const primary = phones?.find((phone) => hasText(phone));
+  const digits = primary?.replace(/\D/g, "") ?? "";
+  return digits ? `https://wa.me/${digits}` : "";
+}
+
 function sanitizeCompanyInfo(value: CompanyInfo): CompanyInfo {
+  // The admin often leaves `whatsapp` unset (the published snapshot ships it as
+  // null), which silently hides the floating WhatsApp button. Backfill it the
+  // same way we backfill `name`: prefer a configured wa.me link, otherwise
+  // derive one from the primary phone, otherwise the packaged default.
+  const whatsapp = hasText(value.whatsapp)
+    ? value.whatsapp.trim()
+    : whatsappFromPhone(value.phones) || defaultCompanyInfo.whatsapp;
   return {
     ...value,
     name: hasText(value.name) ? value.name.trim() : defaultCompanyInfo.name,
+    whatsapp,
   };
 }
 
