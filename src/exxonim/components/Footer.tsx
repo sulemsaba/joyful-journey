@@ -4,7 +4,6 @@ import { routes } from '@/exxonim/routes'
 import { fallbackBrand } from '@/exxonim/content/fallbackShell'
 import type { BrandAssets, CompanyInfo } from '@/exxonim/types'
 import type { SiteSettingFooterValue, SiteSettingSocialLinkValue } from '@/exxonim/types/api'
-import { useTheme } from '@/exxonim/hooks/useTheme'
 
 const footerSocialPlatforms: SiteSettingSocialLinkValue["platform"][] = [
   "x",
@@ -98,9 +97,13 @@ function FooterLink({ label, href }: { label: string; href: string }) {
 }
 
 export function Footer({ brand, company: _company, footer: _footer }: FooterProps) {
-  const { theme } = useTheme();
   const currentYear = new Date().getFullYear();
-  const logoSrc = theme === 'dark' ? brand.darkLogoSrc : brand.lightLogoSrc;
+  // The footer sits on the teal brand surface (--color-footer-bg) in BOTH themes,
+  // so the logo must always be the light/inverse variant. Switching it by page
+  // theme put the teal logo on the teal footer in light mode (invisible), and
+  // flashed the teal logo for dark visitors before hydration. Always use the
+  // white logo (darkLogoSrc = the "legible on a dark background" variant).
+  const logoSrc = brand.darkLogoSrc;
   const socialLinks = footerSocialPlatforms
     .map((platform) =>
       (_footer.social_links ?? []).find(
