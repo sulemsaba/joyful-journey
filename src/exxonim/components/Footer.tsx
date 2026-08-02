@@ -141,7 +141,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               <img
                 src={logoSrc}
                 alt={brand.name}
-                width={160}
+                width={140}
                 height={44}
                 loading="lazy"
                 onError={(event) => {
@@ -168,9 +168,9 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Navigation */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
+            <h2 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Navigation
-            </h4>
+            </h2>
             <nav aria-label="Footer navigation">
               <ul className="grid gap-0">
                 {navigationLinks.map((link) => (
@@ -184,9 +184,9 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Resources & Legal */}
           <section>
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
+            <h2 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Resources &amp; Legal
-            </h4>
+            </h2>
             <ul className="grid gap-0">
               {resourceLinks.map((link) => (
                 <li key={link.label}>
@@ -198,9 +198,9 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
 
           {/* Contact Us - mobile: address + emails/phones side by side | desktop: original stacked layout */}
           <section className="col-span-2 sm:col-span-1">
-            <h4 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
+            <h2 className="text-xs font-extrabold tracking-[0.14em] uppercase text-footer-heading mb-2 sm:mb-3">
               Contact Us
-            </h4>
+            </h2>
 
             {/* ── Mobile only (below sm): compact layout ── */}
             <div className="grid gap-2 sm:hidden">
@@ -224,7 +224,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   </svg>
                   <div className="grid gap-0.5">
                     {(_company.emails ?? []).map((email) => (
-                      <a key={email} href={`mailto:${email}`} className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
+                      <a key={email} href={`mailto:${email}`} className="inline-block py-1 text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
                         {email}
                       </a>
                     ))}
@@ -237,7 +237,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                   </svg>
                   <div className="grid gap-0.5">
                     {(_company.phones ?? []).map((phone) => (
-                      <a key={phone} href={`tel:${phone.replace(/\s/g, '')}`} className="text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
+                      <a key={phone} href={`tel:${phone.replace(/\s/g, '')}`} className="inline-block py-1 text-footer-text text-xs hover:text-footer-heading transition-colors duration-200">
                         {phone}
                       </a>
                     ))}
@@ -266,7 +266,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                 </svg>
                 <div className="grid gap-0.5">
                   {(_company.emails ?? []).map((email) => (
-                    <a key={email} href={`mailto:${email}`} className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
+                    <a key={email} href={`mailto:${email}`} className="inline-block py-1 text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
                       {email}
                     </a>
                   ))}
@@ -279,7 +279,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
                 </svg>
                 <div className="grid gap-0.5">
                   {(_company.phones ?? []).map((phone) => (
-                    <a key={phone} href={`tel:${phone.replace(/\s/g, '')}`} className="text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
+                    <a key={phone} href={`tel:${phone.replace(/\s/g, '')}`} className="inline-block py-1 text-footer-text text-sm hover:text-footer-heading transition-colors duration-200">
                       {phone}
                     </a>
                   ))}
@@ -300,7 +300,7 @@ export function Footer({ brand, company: _company, footer: _footer }: FooterProp
               href="https://exxonim.tz"
               target="_blank"
               rel="noreferrer noopener"
-              className="text-footer-text hover:text-footer-heading transition-colors duration-200"
+              className="text-footer-text underline underline-offset-2 hover:text-footer-heading transition-colors duration-200"
             >
               exxonim.tz
             </a>

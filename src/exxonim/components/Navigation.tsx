@@ -321,7 +321,7 @@ export function Navigation({
             <img
               src={logoSrc}
               alt={brand.name}
-              width="176"
+              width="140"
               height="44"
               loading="eager"
               onError={(event) => {

@@ -59,7 +59,7 @@ export function UnifiedCtaSection({
           {/* Copy */}
           <div className="relative max-w-xl">
             {eyebrow && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-accent-secondary">
+              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-footer-heading">
                 {eyebrow.icon}
                 {eyebrow.text}
               </span>

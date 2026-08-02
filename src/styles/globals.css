@@ -204,8 +204,8 @@ section[aria-label="Service guidance overview"] h2 {
   --color-error-soft: rgba(255, 86, 48, 0.16);
   --color-star: #FAAF00;
   --color-footer-bg: #0f5c63;
-  --color-footer-text: rgba(247, 251, 251, 0.70);
-  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+  --color-footer-text: rgba(247, 251, 251, 0.85);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.78);
   --color-footer-heading: rgba(247, 251, 251, 0.90);
   --color-footer-border: rgba(247, 251, 251, 0.12);
   --color-cta-primary: #0f5c63;
@@ -540,8 +540,8 @@ html.reveal-instant [data-reveal] {
   --color-error-soft: rgba(255, 86, 48, 0.16);
   --color-star: #FAAF00;
   --color-footer-bg: #0f5c63;
-  --color-footer-text: rgba(247, 251, 251, 0.70);
-  --color-footer-text-muted: rgba(247, 251, 251, 0.50);
+  --color-footer-text: rgba(247, 251, 251, 0.85);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.78);
   --color-footer-heading: rgba(247, 251, 251, 0.90);
   --color-footer-border: rgba(247, 251, 251, 0.12);
   --color-cta-primary: #0f5c63;
