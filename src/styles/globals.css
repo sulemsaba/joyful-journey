@@ -603,17 +603,19 @@ html[data-theme="dark"] {
    * Material Design 3 and Apple HIG dark mode best practices.
    */
   /* Minimal dark system — mirrors light mode's flat approach: one uniform page
-   * colour (#161C24) with cards on the SAME fill, separated by borders (not a
-   * lighter tier). Only subtle lifts for soft/strong sections, like light mode's
-   * near-white greys. Brand light-teal accent kept. */
-  --color-page: #161C24;
-  --color-page-strong: #1B222C;
-  --color-surface: #161C24;
-  --color-surface-soft: #1C232E;
-  --color-surface-elevated: rgba(22, 28, 36, 0.92);
+   * colour with cards on the SAME fill, separated by borders (not a lighter
+   * tier). Base is #212B36 — the comfortable "not too dark" dark surface (L≈17%),
+   * NOT the near-black #161C24 (L≈11%) that read as too dark. Soft/strong sections
+   * step a whisper DARKER (recessed), so cards read as lifted on them — the mirror
+   * of light mode's near-white greys under white cards. Brand light-teal accent kept. */
+  --color-page: #212B36;
+  --color-page-strong: #1A232D;
+  --color-surface: #212B36;
+  --color-surface-soft: #1D2731;
+  --color-surface-elevated: rgba(33, 43, 54, 0.92);
   --color-text: #F9FAFB;
   --color-text-muted: #919EAB;
-  --color-text-soft: #637381;
+  --color-text-soft: #7C8A97;
   --color-accent: #7fbcc1;
   --color-accent-hover: #96cacf;
   --color-accent-secondary: #aacfd2;
@@ -622,9 +624,9 @@ html[data-theme="dark"] {
   --color-accent-contrast: #0f1a1c;
   --color-border-soft: rgba(145, 158, 171, 0.2);
   --color-border-strong: rgba(145, 158, 171, 0.32);
-  --color-overlay: rgba(22, 28, 36, 0.64);
-  --color-hero-bg: #161C24;
-  --color-hero-bg-fade: rgba(22, 28, 36, 0.8);
+  --color-overlay: rgba(33, 43, 54, 0.64);
+  --color-hero-bg: #212B36;
+  --color-hero-bg-fade: rgba(33, 43, 54, 0.8);
   --shadow-panel: 0 8px 16px 0 rgba(0, 0, 0, 0.16);
   --shadow-panel-strong: 0 16px 32px -4px rgba(0, 0, 0, 0.16);
   --shadow-hero: 0 24px 48px 0 rgba(0, 0, 0, 0.16);
@@ -641,11 +643,11 @@ html[data-theme="dark"] {
   --color-error: #FF5630;
   --color-error-soft: rgba(255, 86, 48, 0.16);
   --color-star: #FAAF00;
-  --color-footer-bg: #161C24;
-  --color-footer-text: rgba(249, 250, 251, 0.64);
-  --color-footer-text-muted: #919EAB;
-  --color-footer-heading: #F9FAFB;
-  --color-footer-border: rgba(145, 158, 171, 0.2);
+  --color-footer-bg: #0E4A50;
+  --color-footer-text: rgba(247, 251, 251, 0.85);
+  --color-footer-text-muted: rgba(247, 251, 251, 0.78);
+  --color-footer-heading: rgba(247, 251, 251, 0.96);
+  --color-footer-border: rgba(247, 251, 251, 0.14);
   --color-cta-primary: #7fbcc1;
   --color-cta-secondary: #7fbcc1;
 
