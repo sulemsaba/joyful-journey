@@ -270,7 +270,9 @@ const TestimonialCard = memo(function TestimonialCard({
       className="flex h-[200px] md:h-[220px] flex-col rounded-2xl border border-border-soft bg-surface py-5 md:py-6 px-4 mx-1"
       aria-label={`Testimonial from ${testimonial.name}`}
     >
-      <p className="flex items-center gap-0.5 text-star mb-3" aria-label="5 out of 5 stars">
+      {/* role="img" so the aria-label is permitted (a paragraph role can't be
+          named by aria-label) — the five icons are one labelled rating graphic. */}
+      <p className="flex items-center gap-0.5 text-star mb-3" role="img" aria-label="5 out of 5 stars">
         {[...Array(5)].map((_, i) => (
           <Star key={i} className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
         ))}

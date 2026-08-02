@@ -1,0 +1,26 @@
+# Exxonim Consult
+
+> Exxonim Consult is a Tanzanian business consultancy that takes a client from
+> first inquiry through company registration, licensing, and ongoing compliance.
+> Services include company registration, TIN, business licensing, work permits,
+> NGO registration, statutory filing, and annual returns. Clients track their
+> case by number on the public site and are notified through their chosen channel.
+
+## Main pages
+
+- [Home](https://consult.exxonim.tz/): Overview of Exxonim Consult's business setup and compliance services in Tanzania.
+- [Services](https://consult.exxonim.tz/services/): Full list of services — company registration, TIN, licensing, work permits, NGO registration, statutory filing, and annual returns.
+- [Track a consultation](https://consult.exxonim.tz/track-consultation/): Follow the status of a case by its tracking number, with notifications by the client's chosen channel.
+- [About](https://consult.exxonim.tz/about/): Who Exxonim Consult is and how the firm works.
+- [Resources](https://consult.exxonim.tz/resources/): Articles and guides on registration, compliance, and doing business in Tanzania.
+- [FAQ](https://consult.exxonim.tz/faq/): Answers to common questions about registration, timelines, and requirements.
+- [Contact](https://consult.exxonim.tz/contact/): Get in touch or start a new engagement.
+- [Careers](https://consult.exxonim.tz/career/): Open roles at Exxonim Consult.
+
+## Support and legal
+
+- [Support](https://consult.exxonim.tz/support/): Help and support for clients.
+- [Terms of Service](https://consult.exxonim.tz/terms/): Terms governing use of the site and services.
+- [Privacy Policy](https://consult.exxonim.tz/privacy/): How client and visitor data is handled.
+- [Cookie Policy](https://consult.exxonim.tz/cookies/): How cookies are used on the site.
+- [Data Rights](https://consult.exxonim.tz/data-rights/): How to exercise data-subject rights.
