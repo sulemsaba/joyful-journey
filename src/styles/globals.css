@@ -602,13 +602,15 @@ html[data-theme="dark"] {
    * softer text (~87% lightness), and visible borders. This follows
    * Material Design 3 and Apple HIG dark mode best practices.
    */
-  /* Minimal dark system: grey-900 page (#161C24), grey-800 cards (#212B36),
-   * white/grey-500 text, grey-alpha borders. Brand light-teal accent kept. */
+  /* Minimal dark system — mirrors light mode's flat approach: one uniform page
+   * colour (#161C24) with cards on the SAME fill, separated by borders (not a
+   * lighter tier). Only subtle lifts for soft/strong sections, like light mode's
+   * near-white greys. Brand light-teal accent kept. */
   --color-page: #161C24;
-  --color-page-strong: #1C252E;
-  --color-surface: #212B36;
-  --color-surface-soft: #28323D;
-  --color-surface-elevated: rgba(33, 43, 54, 0.92);
+  --color-page-strong: #1B222C;
+  --color-surface: #161C24;
+  --color-surface-soft: #1C232E;
+  --color-surface-elevated: rgba(22, 28, 36, 0.92);
   --color-text: #F9FAFB;
   --color-text-muted: #919EAB;
   --color-text-soft: #637381;

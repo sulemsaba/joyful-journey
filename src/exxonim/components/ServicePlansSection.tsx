@@ -361,7 +361,7 @@ const TestimonialMarquee = memo(function TestimonialMarquee({
         <button
           type="button"
           onClick={() => handleArrowClick("left")}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full bg-white/90 dark:bg-surface-soft/90 shadow-lg border border-gray-200 dark:border-border-strong flex items-center justify-center hover:bg-white dark:hover:bg-page-strong transition-colors"
           aria-label="Previous testimonials"
         >
           <ChevronLeft className="w-4 h-4 text-gray-700 dark:text-gray-200" />
@@ -373,7 +373,7 @@ const TestimonialMarquee = memo(function TestimonialMarquee({
         <button
           type="button"
           onClick={() => handleArrowClick("right")}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full bg-white/90 dark:bg-gray-800/90 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 size-9 rounded-full bg-white/90 dark:bg-surface-soft/90 shadow-lg border border-gray-200 dark:border-border-strong flex items-center justify-center hover:bg-white dark:hover:bg-page-strong transition-colors"
           aria-label="Next testimonials"
         >
           <ChevronRight className="w-4 h-4 text-gray-700 dark:text-gray-200" />
