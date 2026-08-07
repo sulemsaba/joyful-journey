@@ -30,5 +30,3 @@ cp .env.example .env
 ## Deploy
 
 Build output goes to `dist/`. Point your reverse proxy (Caddy / Nginx) at the built files.
-
-Docker is available via the project Dockerfile.
