@@ -311,12 +311,13 @@ export function Navigation({
         )}
       >
         <div className="h-full w-full px-[clamp(12px,2vw,24px)] grid md:grid-cols-[1fr_auto_1fr] items-center justify-between md:justify-center gap-4">
-          {/* Left: Brand logo */}
+          {/* Left: Brand logo — nudged in from the left gutter on desktop so it
+              doesn't hug the viewport edge on wide screens. */}
           <SmartLink
             href={routes.home}
             onClick={closeAllMenus}
             aria-label={`${brand.name} home`}
-            className="relative flex items-center min-w-0"
+            className="relative flex items-center min-w-0 ml-4 2xl:ml-8"
           >
             <img
               src={logoSrc}
